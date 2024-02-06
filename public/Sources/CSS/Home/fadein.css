@@ -1,0 +1,24 @@
+.fade-in-right-h1 {
+    animation: fadeInRight 500ms ease-in-out;
+}
+
+.fade-in-right-p {
+    animation: fadeInRight 600ms ease-in-out;
+}
+
+.fade-in-right-button {
+    animation: fadeInRight 700ms ease-in-out;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
