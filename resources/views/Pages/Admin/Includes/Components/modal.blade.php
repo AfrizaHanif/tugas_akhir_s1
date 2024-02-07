@@ -1675,6 +1675,42 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-res-finish-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('results.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Kunci Data ({{ $period->name }})</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" hidden>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda telah selesai melakukan validasi dan mengunci data dari periode ini? Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modal-res-get-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

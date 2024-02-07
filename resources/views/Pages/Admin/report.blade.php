@@ -3,12 +3,12 @@
 
 <!--TITLE-->
 @section('title')
-<title>Analisis WP | Tugas Akhir</title>
+<title>Laporan | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.wp')
+@include('Pages.Admin.Includes.Contents.report')
 @endsection
 
 <!--MODALS-->

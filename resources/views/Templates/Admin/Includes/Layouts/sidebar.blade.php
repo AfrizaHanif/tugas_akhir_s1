@@ -53,7 +53,7 @@
                     <li>
                         <a href="/masters/criterias" class="{{ (request()->is('masters/criterias')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                             <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#criteria"/></svg>
-                            Kriteria (Beta)
+                            Kriteria
                         </a>
                     </li>
                     <li>
@@ -92,8 +92,8 @@
                     @elseif (Auth::user()->part == "KBPS")
                     <li>
                         <a href="/inputs/results" class="{{ (request()->is('inputs/results')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#dashboard"/></svg>
-                            Hasil
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#result"/></svg>
+                            Hasil / Validasi
                         </a>
                     </li>
                     @endif
@@ -104,20 +104,20 @@
             <button class="nav-link text-white collapsed dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#analysis-collapse" aria-expanded="
             {{ (request()->is('analysis*')) ? 'true' : 'false' }}
             ">
-                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#input"/></svg>
+                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
                 Analysis
             </button>
             <div class="{{ (request()->is('analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse">
                 <ul class="list-unstyled fw-normal pb-1 small">
                     <li>
                         <a href="/analysis/saw" class="{{ (request()->is('analysis/saw*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#user"/></svg>
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#saw"/></svg>
                             SAW
                         </a>
                     </li>
                     <li>
                         <a href="/analysis/wp" class="{{ (request()->is('analysis/wp*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#user"/></svg>
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#wp"/></svg>
                             WP
                         </a>
                     </li>

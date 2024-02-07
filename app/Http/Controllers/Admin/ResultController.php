@@ -16,7 +16,7 @@ class ResultController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $results = Result::with('officer')->orderBy('final_score', 'DESC')->get();
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
         $performances = Performance::get();
@@ -39,7 +39,7 @@ class ResultController extends Controller
 
     public function get($period)
     {
-        $periods = Period::orderBy('id_period', 'ASC')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
 
@@ -207,7 +207,7 @@ class ResultController extends Controller
         $name = Officer::where('id_officer', $result->id_officer)->first()->name;
 
         Result::where('id', $id)->update([
-            'status'=> 'Accepted'
+            'status'=>'Accepted'
         ]);
 
         Presence::where('id_period', $period)->where('id_officer', $officer)->update([
@@ -229,7 +229,7 @@ class ResultController extends Controller
         $name = Officer::where('id_officer', $result->id_officer)->first()->name;
 
         Result::where('id', $id)->update([
-            'status'=> 'Rejected'
+            'status'=>'Rejected'
         ]);
 
         Presence::where('id_period', $period)->where('id_officer', $officer)->update([
@@ -241,5 +241,14 @@ class ResultController extends Controller
         ]);
 
         return redirect()->route('results.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan');
+    }
+
+    public function finish($period)
+    {
+        Period::where('id_period', $period)->update([
+            'status'=>'Finish',
+        ]);
+
+        return redirect()->route('results.index')->with('success','Data berhasil dikunci');
     }
 }

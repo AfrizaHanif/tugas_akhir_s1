@@ -59,7 +59,9 @@ class PeriodController extends Controller
         Period::insert([
             'id_period'=>$id_period,
             'name'=>$name_month.' '.$request->year,
-            'status'=>'Belum Selesai',
+            'month'=>$name_month,
+            'year'=>$request->year,
+            'status'=>'In Progress',
 		]);
 
         //RETURN TO VIEW

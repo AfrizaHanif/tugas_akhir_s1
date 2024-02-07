@@ -42,11 +42,11 @@
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}">
-                                    <i class="bi bi-person-plus"></i>
+                                    <i class="bi bi-file-spreadsheet"></i>
                                     Hanya Data Ini
                                 </a>
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
-                                    <i class="bi bi-person-plus"></i>
+                                    <i class="bi bi-database"></i>
                                     Semua Data
                                 </a>
                             </div>

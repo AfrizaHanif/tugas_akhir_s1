@@ -14,7 +14,7 @@
     </div>
     @elseif (Request::is('analysis/wp'))
     <div class="btn-group" role="group" aria-label="Basic example">
-        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wpr-view">
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wp-view">
             <i class="bi bi-folder-plus"></i>
             Pilih Periode
         </a>

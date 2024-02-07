@@ -55,8 +55,8 @@ class OfficerController extends Controller
         //UPLOAD PHOTO
         $photo = '';
         if($request->photo){
-            $photo = $request->nip_bps.'.'.$request->photo->extension();
-            $request->photo->move(public_path('Images/Photo/'), $photo);
+            $photo = 'IMG-'.$request->nip_bps.'.'.$request->photo->extension();
+            $request->photo->move(public_path('Images/'), $photo);
         }else{
             //SKIP
         }
@@ -120,11 +120,11 @@ class OfficerController extends Controller
         //UPDATE IMAGE
         $photo = '';
         $id_officer = Officer::find($officer->id_officer);
-        $path_photo = public_path('Images/Photo/'.$id_officer->photo);
+        $path_photo = public_path('Images/'.$id_officer->photo);
         if($request->hasFile('photo')){
             File::delete($path_photo);
-            $photo = $request->nip_bps.'.'.$request->photo->extension();
-            $request->photo->move(public_path('Images/Photo/'), $photo);
+            $photo = 'IMG-'.$request->nip_bps.'.'.$request->photo->extension();
+            $request->photo->move(public_path('Images/'), $photo);
             $officer->update([
                 'photo'=>$request['image'] = $photo,
             ]);
@@ -152,7 +152,7 @@ class OfficerController extends Controller
 
         //DESTROY IMAGE
         $id_officer = Officer::find($officer->id_officer);
-        $path_photo = public_path('Images/Photo/'.$id_officer->photo);
+        $path_photo = public_path('Images/'.$id_officer->photo);
         if(File::exists($path_photo)){
             File::delete($path_photo);
         }

@@ -22,7 +22,7 @@ class PresenceController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $subcriterias = SubCriteria::with('criteria')
         ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})

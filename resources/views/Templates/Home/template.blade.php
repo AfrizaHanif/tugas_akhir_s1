@@ -21,7 +21,11 @@
         <!--HEADER-->
         @include('Templates.Home.Includes.Layouts.header')
         <!--BODY / CONTENTS-->
-        @yield('contents')
+        <main>
+            <div class="container">
+                @yield('contents')
+            </div>
+        </main>
         <!--MODALS IN EVERY TEMPLATES-->
         @include('Templates.Includes.Components.modal')
         <!--MODALS IN HOME TEMPLATE ONLY-->

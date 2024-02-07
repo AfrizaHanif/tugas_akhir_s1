@@ -22,7 +22,15 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $period->name }}</td>
-            <td>{{ $period->status }}</td>
+            <td>
+                @if ($period->status == "Finish")
+                <span class="badge text-bg-success">Selesai</span>
+                @elseif ($period->status == "Skip")
+                <span class="badge text-bg-secondary">Dilewatkan</span>
+                @elseif ($period->status == "In Progress")
+                <span class="badge text-bg-primary">Dalam Proses</span>
+                @endif
+            </td>
             <td>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,6 +38,11 @@
                     </button>
                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                         <li>
+                            @if ($period->status == "In Progress")
+                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-skip-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#skip"/></svg>
+                                Lewati
+                            </a>
+                            @endif
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-delete-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                 Delete
                             </a>

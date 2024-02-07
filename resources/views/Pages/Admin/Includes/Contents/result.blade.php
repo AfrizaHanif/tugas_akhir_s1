@@ -6,7 +6,11 @@
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($periods as $period)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    @if ($period->status == "Finish")
+                    {{ $period->name }} <span class="badge bg-secondary">Selesai</span>
+                    @else
                     {{ $period->name }}
+                    @endif
                 </button>
                 @empty
                 <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
@@ -21,13 +25,21 @@
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($periods as $period)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
+                @if ($period->status == "Finish")
+                <h2>{{ $period->name }} <span class="badge bg-success">Selesai</span></h2>
+                @else
                 <h2>{{ $period->name }}</h2>
+                @endif
                 <p>
                     <div class="row g-3 align-items-center">
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
+                                @if ($period->status == "Finish")
+                                <a class="btn btn-primary disabled">
+                                @else
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-res-get-{{ $period->id_period }}">
-                                    <i class="bi bi-person-plus"></i>
+                                @endif
+                                    <i class="bi bi-database-down"></i>
                                     Ambil data
                                 </a>
                             </div>
@@ -35,12 +47,26 @@
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
-                                    <i class="bi bi-person-plus"></i>
+                                    <i class="bi bi-database"></i>
                                     Cek Data
                                 </a>
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-stt-view-{{ $period->id_period }}">
-                                    <i class="bi bi-person-plus"></i>
+                                    <i class="bi bi-ui-checks-grid"></i>
                                     Cek Status
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                @if ($period->status == "Finish")
+                                <a class="btn btn-success disabled">
+                                @elseif ($results->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
+                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-res-finish-{{ $period->id_period }}">
+                                @else
+                                <a class="btn btn-success disabled">
+                                @endif
+                                <i class="bi bi-clipboard2-check"></i>
+                                    Selesai
                                 </a>
                             </div>
                         </div>
@@ -75,15 +101,21 @@
                             </td>
                             <td>
                                 <div class="dropdown">
+                                    @if ($period->status == 'Finish')
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                        <i class="bi bi-menu-button-fill"></i>
+                                    </button>
+                                    @else
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-menu-button-fill"></i>
                                     </button>
+                                    @endif
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-yes-{{ $period->id_period }}-{{ $result->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-yes-{{ $period->id_period }}-{{ $result->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-no-{{ $period->id_period }}-{{ $result->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-no-{{ $period->id_period }}-{{ $result->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>

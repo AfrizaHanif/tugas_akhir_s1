@@ -3,10 +3,10 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('inputs/beta/presences'))
-    <title>Data Kehadiran (Beta) | Tugas Akhir</title>
-    @elseif (Request::is('inputs/beta/performances'))
-    <title>Data Prestasi Kerja (Beta) | Tugas Akhir</title>
+    @if (Request::is('inputs/presences'))
+    <title>Data Kehadiran | Tugas Akhir</title>
+    @elseif (Request::is('inputs/performances'))
+    <title>Data Prestasi Kerja | Tugas Akhir</title>
     @endif
 @endsection
 

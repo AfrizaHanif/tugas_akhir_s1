@@ -3,12 +3,12 @@
 
 <!--TITLE-->
 @section('title')
-<title>Selamat Datang | Tugas Akhir</title>
+<title>Karyawan Terbaik | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Home.Includes.Contents.index')
+@include('Pages.Home.Includes.Contents.result')
 @endsection
 
 <!--MODALS-->

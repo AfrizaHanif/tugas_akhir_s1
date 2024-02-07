@@ -179,13 +179,13 @@ class DatabaseSeeder extends Seeder
         DB::table('periods')->insert([
             'id_period' => 'PRD-01-24',
             'name' => 'Januari 2024',
-            'status' => 'Scoring',
+            'status' => 'In Progress',
         ]);
 
         DB::table('periods')->insert([
             'id_period' => 'PRD-02-24',
             'name' => 'Februari 2024',
-            'status' => 'Scoring',
+            'status' => 'In Progress',
         ]);
 
         //CRITERIAS: Kriteria

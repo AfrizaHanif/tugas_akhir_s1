@@ -11,11 +11,14 @@ use App\Http\Controllers\Admin\PartController;
 use App\Http\Controllers\Admin\PerformanceController;
 use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\PresenceController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\SubCriteriaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
+use App\Http\Controllers\Home\ResultController as HomeResultController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +36,8 @@ use Illuminate\Support\Facades\Route;
 //HOMEPAGE
 Route::controller(HomeController::class)->group(function() {
     Route::get('/', 'index')->name('index');
+    Route::resource('/officers', HomeOfficerController::class);
+    Route::resource('/results', HomeResultController::class);
 });
 
 //LOGIN AND LOGOUT
@@ -63,6 +68,15 @@ Route::middleware('auth')->group(function () {
         Route::prefix('wp')->name('wp.')->group(function () {
             Route::get('/', [AnalysisController::class, 'index'])->name('index');
             Route::get('/{period}', [AnalysisController::class, 'wp'])->name('wp');
+        });
+    });
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::controller(ReportController::class)->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::get('/officers', 'officers')->name('officers');
+            Route::get('/input/{period}', 'input')->name('input');
+            Route::get('/analysis/{period}', 'analysis')->name('analysis');
+            Route::get('/result/{period}', 'result')->name('result');
         });
     });
 });
@@ -100,6 +114,7 @@ Route::middleware(['auth', 'checkPart:KBPS'])->group(function () {
             Route::post('/get/{period}', 'get')->name('get');
             Route::post('/yes/{id}', 'yes')->name('yes');
             Route::post('/no/{id}', 'no')->name('no');
+            Route::post('/finish/{period}', 'finish')->name('finish');
         });
     });
 });

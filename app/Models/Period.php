@@ -17,6 +17,8 @@ class Period extends Model
     protected $fillable = [
         'id_period',
         'name',
+        'month',
+        'year',
         'status',
     ];
 

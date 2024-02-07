@@ -11,9 +11,21 @@
                 <!--NAVIGATIONS-->
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
-                        <a href="/" class="nav-link text-secondary">
+                        <a href="/" class="nav-link {{ (request()->is('/')) ? 'text-secondary' : 'text-white' }}">
                             <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#home"/></svg>
                             Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/officers" class="nav-link {{ (request()->is('officers')) ? 'text-secondary' : 'text-white' }}">
+                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#officer"/></svg>
+                            Pegawai
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/results" class="nav-link {{ (request()->is('results')) ? 'text-secondary' : 'text-white' }}">
+                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#result"/></svg>
+                            Hasil
                         </a>
                     </li>
                 </ul>
