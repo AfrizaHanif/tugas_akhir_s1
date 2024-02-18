@@ -39,11 +39,11 @@
                             @foreach ($per_years as $per_year)
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-{{ $per_year->year }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-input-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-input-{{ $per_year->year }}">
                                         {{ $per_year->year }}
                                     </button>
                                 </h2>
-                                <div id="collapse-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-input">
+                                <div id="collapse-input-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-input">
                                     <div class="accordion-body">
                                         @forelse ($periods->where('year', $per_year->year) as $period)
                                         <div class="row align-items-center">
@@ -52,10 +52,70 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="#" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.input.all', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @empty
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <div class="alert alert-danger" role="alert">
+                                                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                                    <br/>
+                                                    Tidak Ada Laporan
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-input-single" aria-expanded="false" aria-controls="collapse-input-single">
+                        Laporan Penilaian (Per Pegawai)
+                    </button>
+                </h2>
+                <div id="collapse-input-single" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="accordion" id="accordion-input-single">
+                            @foreach ($officers as $officer)
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-input-{{ $officer->id_officer }}" aria-expanded="true" aria-controls="collapse-input-{{ $officer->id_officer }}">
+                                        {{ $officer->name }}
+                                    </button>
+                                </h2>
+                                <div id="collapse-input-{{ $officer->id_officer }}" class="accordion-collapse collapse" data-bs-parent="#accordion-input-single">
+                                    <div class="accordion-body">
+                                        @forelse ($per_years as $per_year)
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                {{ $period->year }}
+                                            </div>
+                                            <div class="col">
+                                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                    <div class="dropend">
+                                                        <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="bi bi-filetype-pdf"></i>
+                                                            PDF
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            @foreach ($periods->where('year', $period->year) as $period)
+                                                            <li>
+                                                                <a href="{{ route('reports.input.single', ['period'=>$period->id_period,'id'=>$officer->id_officer]) }}" class="dropdown-item" target="_blank" rel="noopener noreferrer">{{ $period->month }}</a>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -90,11 +150,11 @@
                             @foreach ($per_years as $per_year)
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-{{ $per_year->year }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-analysis-{{ $per_year->year }}">
                                         {{ $per_year->year }}
                                     </button>
                                 </h2>
-                                <div id="collapse-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
+                                <div id="collapse-analysis-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
                                     <div class="accordion-body">
                                         @forelse ($periods->where('year', $per_year->year) as $period)
                                         <div class="row align-items-center">
@@ -103,7 +163,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="#" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.analysis', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
@@ -141,11 +201,11 @@
                             @foreach ($per_years as $per_year)
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-{{ $per_year->year }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-result-{{ $per_year->year }}">
                                         {{ $per_year->year }}
                                     </button>
                                 </h2>
-                                <div id="collapse-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-result">
+                                <div id="collapse-result-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-result">
                                     <div class="accordion-body">
                                         @forelse ($periods->where('year', $per_year->year) as $period)
                                         <div class="row align-items-center">
@@ -154,7 +214,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="#" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.result', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>

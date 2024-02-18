@@ -5,10 +5,10 @@
 <table id="table">
     <thead>
         <tr>
-            <th>Kode</th>
-            <th>Nama</th>
-            <th>Jabatan</th>
-            <th>Jenis Kelamin</th>
+            <th scope="col">Kode</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Jabatan</th>
+            <th scope="col">Jenis Kelamin</th>
         </tr>
     </thead>
     <tbody>

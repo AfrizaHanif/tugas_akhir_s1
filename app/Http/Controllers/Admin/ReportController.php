@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Criteria;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Performance;
 use App\Models\Period;
 use App\Models\Presence;
 use App\Models\Result;
+use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -18,8 +21,9 @@ class ReportController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finish')->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
+        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
 
-        return view('Pages.Admin.report', compact('periods','per_years'));
+        return view('Pages.Admin.report', compact('periods','per_years','officers'));
     }
 
     public function officers()
@@ -36,15 +40,71 @@ class ReportController extends Controller
         return $pdf;
     }
 
-    public function input($period)
+    public function inpcompact($period)
     {
+        $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
-        $first_input = Performance::with('subcriteria')->where('id_period', $period);
-        $last_input = Presence::with('subcriteria')->where('id_period', $period)->union($first_input)->get();
-        $inputs = $last_input;
-        $file = 'RPT-Input-'.$year.'.pdf';
+        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
+        $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
+        $subcritprs = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->get();
+        $subcritprf = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->get();
+        $countprs = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->count();
+        $countprf = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->count();
+        $file = 'RPT-Input-Comp-'.$month.'-'.$year.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.input', compact('year','inputs'))
+        loadview('Pages.PDF.inpcomp', compact('month','year','officers','performances','presences','subcritprs','subcritprf','countprs','countprf'))
+        ->setPaper('a4', 'landscape')
+        ->save('PDFs/'.$file)
+        ->stream($file);
+        return $pdf;
+    }
+
+    public function inpall($period)
+    {
+        $month = Period::where('id_period', $period)->first()->month;
+        $year = Period::where('id_period', $period)->first()->year;
+        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
+        $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
+        $subcritprs = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->get();
+        $subcritprf = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->get();
+        $file = 'RPT-Input-All-'.$month.'-'.$year.'.pdf';
+        $pdf = PDF::
+        loadview('Pages.PDF.inpall', compact('month','year','officers','performances','presences','subcritprs','subcritprf'))
+        ->save('PDFs/'.$file)
+        ->stream($file);
+        return $pdf;
+    }
+
+    public function inpsingle($period, $id)
+    {
+        $month = Period::where('id_period', $period)->first()->month;
+        $year = Period::where('id_period', $period)->first()->year;
+        $officers = Officer::with('department')->where('id_officer', $id)->get();
+        $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
+        $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
+        $subcritprs = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->get();
+        $subcritprf = SubCriteria::with('criteria')
+        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->get();
+        $file = 'RPT-Input-All-'.$month.'-'.$year.'.pdf';
+        $pdf = PDF::
+        loadview('Pages.PDF.inpsingle', compact('month','year','officers','performances','presences','subcritprs','subcritprf'))
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
@@ -52,11 +112,130 @@ class ReportController extends Controller
 
     public function analysis($period)
     {
+        $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
+
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $subcriterias = SubCriteria::with('criteria')->get();
+        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+
+        $first_alt = DB::table("performances")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        ->select('id_officer')
+        ->groupBy('id_officer')
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya');
+        $last_alt = DB::table("presences")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->select('id_officer')
+        ->groupBy('id_officer')
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya')
+        ->union($first_alt)
+        ->get();
+        $alternatives = $last_alt;
+
+        $first_cri = DB::table("performances")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        ->select(
+            'performances.id_sub_criteria AS id_sub_criteria',
+            'sub_criterias.weight AS weight',
+            'sub_criterias.attribute AS attribute',
+            )
+        ->groupBy(
+            'id_sub_criteria',
+            'weight',
+            'attribute'
+            )
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya');
+        $last_cri = DB::table("presences")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->select(
+            'presences.id_sub_criteria AS id_sub_criteria',
+            'sub_criterias.weight AS weight',
+            'sub_criterias.attribute AS attribute',
+            )
+        ->groupBy(
+            'id_sub_criteria',
+            'weight',
+            'attribute'
+            )
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya')
+        ->union($first_cri)
+        ->get();
+        $criterias = $last_cri;
+        //$criterias = SubCriteria::get();
+
+        $first_inp = DB::table("performances")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya');
+        $last_inp = DB::table("presences")
+        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->where('id_period', $period)
+        ->where('sub_criterias.need', 'Ya')
+        ->union($first_inp)
+        ->get();
+        $inputs = $last_inp;
+
+        //FIND MIN DAN MAX
+        foreach($criterias as $crit => $value1){
+            foreach($inputs as $input => $value2){
+                if($value1->id_sub_criteria == $value2->id_sub_criteria){
+                    if($value1->attribute == 'Benefit'){
+                        $minmax[$value1->id_sub_criteria][] = $value2->input;
+                    }elseif($value1->attribute == 'Cost'){
+                        $minmax[$value1->id_sub_criteria][] = $value2->input;
+                    }
+                }
+            }
+        }
+        //dd($minmax);
+
+        //NORMALIZATION
+        foreach($inputs as $input => $value1){
+            foreach($criterias as $crit => $value2){
+                if($value2->id_sub_criteria == $value1->id_sub_criteria){
+                    if($value2->attribute == 'Benefit'){
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / max($minmax[$value2->id_sub_criteria]);
+                    }elseif($value2->attribute == 'Cost'){
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = min($minmax[$value2->id_sub_criteria]) / $value1->input;
+                    }
+                }
+            }
+        }
+        //dd($normal);
+
+        //MATRIX
+        foreach($inputs as $input => $value1){
+            foreach($criterias as $crit => $value2){
+                if($value2->id_sub_criteria == $value1->id_sub_criteria){
+                    $mxin[$value1->id_officer][$value2->id_sub_criteria] = $normal[$value1->id_officer][$value2->id_sub_criteria] * $value2->weight;
+                }
+            }
+        }
+        //dd($mxin);
+
+        $mx_hasil = $mxin; //$ranking = $normal;
+        foreach($normal as $n => $value1){
+            $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
+            $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
+            /*
+            DB::table('hasil_saw_desa')->insert([
+                'id_officer'=>$n,
+                'matrix'=>$matrix[$n],
+            ]);
+            */
+        }
+        arsort($matrix);
+        //dd($mx_hasil);
 
         $file = 'RPT-Analysis-'.$year.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.analysis', compact('year'))
+        loadview('Pages.PDF.analysis', compact('month','year','alternatives','criterias','inputs','minmax','normal','mx_hasil','matrix'))
+        ->setPaper('a4', 'landscape')
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
@@ -64,11 +243,12 @@ class ReportController extends Controller
 
     public function result($period)
     {
+        $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
         $results = Result::with('officer')->where('id_period', $period)->orderBy('final_score', 'DESC')->get();
         $file = 'RPT-Result-'.$year.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.input', compact('year','results'))
+        loadview('Pages.PDF.result', compact('month','year','results'))
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;

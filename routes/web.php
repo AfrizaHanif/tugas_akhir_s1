@@ -74,7 +74,11 @@ Route::middleware('auth')->group(function () {
         Route::controller(ReportController::class)->group(function() {
             Route::get('/', 'index')->name('index');
             Route::get('/officers', 'officers')->name('officers');
-            Route::get('/input/{period}', 'input')->name('input');
+            Route::prefix('input')->name('input.')->group(function () {
+                Route::get('/{period}', 'inpall')->name('all');
+                Route::get('/{period}/{id}', 'inpsingle')->name('single');
+            });
+            //Route::get('/input/{period}', 'input')->name('input');
             Route::get('/analysis/{period}', 'analysis')->name('analysis');
             Route::get('/result/{period}', 'result')->name('result');
         });
