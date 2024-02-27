@@ -102,7 +102,7 @@ Route::middleware(['auth', 'checkPart:Admin'])->group(function () {
     });
 });
 //KEPALA BAGIAN UMUM & KOORDINASI TIM TEKNIS
-Route::middleware(['auth', 'checkPart:KBU,KTT'])->group(function () {
+Route::middleware(['auth', 'checkPart:KBU,KTT*'])->group(function () {
     Route::prefix('inputs')->name('inputs.')->group(function () {
         Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::prefix('beta')->name('beta.')->group(function () {

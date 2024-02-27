@@ -20,7 +20,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        //PARTS: Tipe User untuk Login
+        //PARTS: Kategori Bagian
+        DB::table('parts')->insert([
+            'id_part' => 'PRT-000',
+            'name' => 'Developer',
+        ]);
+
         DB::table('parts')->insert([
             'id_part' => 'PRT-001',
             'name' => 'Kepemimpinan',
@@ -39,32 +44,52 @@ class DatabaseSeeder extends Seeder
         //DEPARTMENTS: Jabatan
         DB::table('departments')->insert([
             'id_department' => 'DPT-000',
-            //'id_part' => 'PRT-001',
             'name' => 'Developer',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-001',
-            //'id_part' => 'PRT-001',
-            'name' => 'Pegawaian',
+            'name' => 'Kepala BPS Jawa Timur',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-002',
-            //'id_part' => 'PRT-002',
-            'name' => 'Kepala Badan Umum',
+            'name' => 'Kepegawaian',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-003',
-            //'id_part' => 'PRT-003',
-            'name' => 'Ketua Tim Teknis',
+            'name' => 'Kepala Badan Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-004',
-            //'id_part' => 'PRT-004',
-            'name' => 'Kepala BPS Jawa Timur',
+            'name' => 'Pegawai Badan Umum 1',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-005',
+            'name' => 'Pegawai Badan Umum 2',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-006',
+            'name' => 'Statistisi Ahli Pertama',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-007',
+            'name' => 'Statistisi Ahli Muda',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-008',
+            'name' => 'Statistisi Ahli Madya',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-009',
+            'name' => 'Statistisi Ahli Utama',
         ]);
 
         //OFFICERS: Pegawai
@@ -75,7 +100,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Developer',
             //'org_code' => '00000',
             'id_department' => 'DPT-000',
-            'id_part' => 'PRT-001',
+            'id_part' => 'PRT-000',
             //'status' => 'PNS',
             //'last_group' => 'I/a', //Golongan Akhir
             //'last_education' => 'S1',
@@ -88,33 +113,20 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-001',
-            //'nip_bps' => '123456789',
-            //'nip' => '123456789',
-            'name' => 'Pegawai Kepegawaian',
-            //'org_code' => '00000',
-            'id_department' => 'DPT-001',
+            'name' => 'Kepala BPS Jatim',
+            'id_department' => 'DPT-004',
             'id_part' => 'PRT-001',
-            //'status' => 'PNS',
-            //'last_group' => 'IV/a', //Golongan Akhir
-            //'last_education' => 'S1',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            //'id_user' => '1',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
-            //'nip_bps' => '987654321',
-            //'nip' => '987654321',
-            'name' => 'Kepala Badan Umum',
-            //'org_code' => '00000',
-            'id_department' => 'DPT-002',
+            'name' => 'Pegawai Kepegawaian',
+            'id_department' => 'DPT-001',
             'id_part' => 'PRT-001',
-            //'status' => 'PNS',
-            //'last_group' => 'IV/a', //Golongan Akhir
-            //'last_education' => 'S1',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -123,15 +135,119 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-003',
-            //'nip_bps' => '135798642',
-            //'nip' => '135798642',
-            'name' => 'Kepala BPS Jatim',
-            //'org_code' => '00000',
-            'id_department' => 'DPT-004',
+            'name' => 'Kepala Badan Umum',
+            'id_department' => 'DPT-003',
             'id_part' => 'PRT-001',
-            //'status' => 'PNS',
-            //'last_group' => 'IV/a', //Golongan Akhir
-            //'last_education' => 'S1',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-004',
+            'name' => 'Pegawai Badan Umum 1A',
+            'id_department' => 'DPT-004',
+            'id_part' => 'PRT-002',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-005',
+            'name' => 'Pegawai Badan Umum 1B',
+            'id_department' => 'DPT-004',
+            'id_part' => 'PRT-002',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-006',
+            'name' => 'Pegawai Badan Umum 2A',
+            'id_department' => 'DPT-005',
+            'id_part' => 'PRT-002',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-007',
+            'name' => 'Pegawai Badan Umum 2B',
+            'id_department' => 'DPT-005',
+            'id_part' => 'PRT-002',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-008',
+            'name' => 'Ketua Tim Teknis 1',
+            'id_department' => 'DPT-009',
+            'id_part' => 'PRT-001',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-009',
+            'name' => 'Pegawai Tim Teknis 1A',
+            'id_department' => 'DPT-009',
+            'id_part' => 'PRT-003',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-010',
+            'name' => 'Pegawai Tim Teknis 1B',
+            'id_department' => 'DPT-009',
+            'id_part' => 'PRT-003',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-011',
+            'name' => 'Ketua Tim Teknis 2',
+            'id_department' => 'DPT-008',
+            'id_part' => 'PRT-001',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-012',
+            'name' => 'Pegawai Tim Teknis 2A',
+            'id_department' => 'DPT-008',
+            'id_part' => 'PRT-003',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Laki-Laki',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-013',
+            'name' => 'Pegawai Tim Teknis 2B',
+            'id_department' => 'DPT-008',
+            'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -154,7 +270,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'testadmin@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Admin',
-            'id_officer' => 'OFF-001',
+            'id_officer' => 'OFF-002',
         ]);
 
         DB::table('users')->insert([
@@ -163,16 +279,34 @@ class DatabaseSeeder extends Seeder
             'email' => 'testkabag@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBU',
-            'id_officer' => 'OFF-002',
+            'id_officer' => 'OFF-003',
         ]);
 
         DB::table('users')->insert([
             'id_user' => 'USR-003',
+            'username' => 'testketim1',
+            'email' => 'testketim1@bps.com',
+            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'part' => 'KTM1',
+            'id_officer' => 'OFF-008',
+        ]);
+
+        DB::table('users')->insert([
+            'id_user' => 'USR-004',
+            'username' => 'testketim2',
+            'email' => 'testketim2@bps.com',
+            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'part' => 'KTM2',
+            'id_officer' => 'OFF-011',
+        ]);
+
+        DB::table('users')->insert([
+            'id_user' => 'USR-005',
             'username' => 'testkbps',
             'email' => 'testkbps@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBPS',
-            'id_officer' => 'OFF-003',
+            'id_officer' => 'OFF-001',
         ]);
 
         //PERIOODS: Periode
@@ -233,7 +367,7 @@ class DatabaseSeeder extends Seeder
         DB::table('sub_criterias')->insert([
             'id_sub_criteria' => 'SUB-003',
             'id_criteria' => 'CRT-002',
-            'name' => 'Kecepatan Peneyesaian Tugas',
+            'name' => 'Kecepatan Penyelesaian Tugas',
             'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '9',

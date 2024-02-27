@@ -24,6 +24,7 @@ class PresenceController extends Controller
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $criterias = Criteria::with('subcriteria')->get();
+        $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
         ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->get();
@@ -43,7 +44,7 @@ class PresenceController extends Controller
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
 
-        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'criterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
+        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
     }
 
     /**

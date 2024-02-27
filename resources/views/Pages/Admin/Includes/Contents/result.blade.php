@@ -33,16 +33,19 @@
                 <p>
                     <div class="row g-3 align-items-center">
                         <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Finish")
-                                <a class="btn btn-primary disabled">
-                                @else
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-res-get-{{ $period->id_period }}">
-                                @endif
-                                    <i class="bi bi-database-down"></i>
-                                    Ambil data
-                                </a>
-                            </div>
+                            @if ($period->status == "Finish")
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
+                            <a class="btn btn-primary disabled">
+                                <i class="bi bi-database-down"></i>
+                                Ambil data
+                            </a>
+                            </span>
+                            @else
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-res-get-{{ $period->id_period }}">
+                                <i class="bi bi-database-down"></i>
+                                Ambil data
+                            </a>
+                            @endif
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -59,15 +62,25 @@
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @if ($period->status == "Finish")
-                                <a class="btn btn-success disabled">
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
+                                    <a class="btn btn-success disabled">
+                                        <i class="bi bi-clipboard2-check"></i>
+                                        Selesai
+                                    </a>
+                                </span>
                                 @elseif ($results->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
                                 <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-res-finish-{{ $period->id_period }}">
-                                @else
-                                <a class="btn btn-success disabled">
-                                @endif
-                                <i class="bi bi-clipboard2-check"></i>
+                                    <i class="bi bi-clipboard2-check"></i>
                                     Selesai
                                 </a>
+                                @else
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pastikan seluruh hasil akhir pegawai sudah disetujui.">
+                                    <a class="btn btn-success disabled">
+                                        <i class="bi bi-clipboard2-check"></i>
+                                        Selesai
+                                    </a>
+                                </span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -78,7 +91,7 @@
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Hasil Akhir</th>
-                            <th class="col-3 scope="col">Status</th>
+                            <th class="col-3" scope="col">Status</th>
                             <th class="col-1" scope="col">Setuju?</th>
                         </tr>
                     </thead>

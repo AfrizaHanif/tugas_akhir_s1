@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Criteria;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Result;
@@ -22,6 +23,8 @@ class ResultController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
+        $criterias = Criteria::with('subcriteria')->get();
+        $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcritprs = SubCriteria::with('criteria')
         ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->get();
@@ -34,7 +37,7 @@ class ResultController extends Controller
         $countprf = SubCriteria::with('criteria')
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
-        return view('Pages.Admin.result', compact('periods', 'results', 'officers', 'performances', 'presences', 'status', 'countprs', 'countprf', 'subcritprs', 'subcritprf'));
+        return view('Pages.Admin.result', compact('periods', 'results', 'officers', 'performances', 'presences', 'status', 'criterias', 'allsubcriterias', 'countprs', 'countprf', 'subcritprs', 'subcritprf'));
     }
 
     public function get($period)

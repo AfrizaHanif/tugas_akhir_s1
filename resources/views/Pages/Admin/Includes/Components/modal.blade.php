@@ -562,8 +562,9 @@
         </div>
     </div>
     @endforeach
+@endif
 
-@elseif (Request::is('masters/users'))
+@if (Request::is('masters/users'))
 <div class="modal fade" id="modal-usr-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -587,9 +588,9 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="part" class="form-label">Bagian</label>
+                        <label for="part" class="form-label">Bagian / Jenis Akun</label>
                         <select class="form-select" id="part" name="part" required>
-                            <option selected disabled>---Pilih Bagian---</option>
+                            <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
                             <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                             <option value="KBU" {{ old('part') == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                             <option value="KTT" {{ old('part') == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
@@ -645,9 +646,9 @@
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="part" class="form-label">Bagian</label>
+                            <label for="part" class="form-label">Bagian / Jenis Akun</label>
                             <select class="form-select" id="part" name="part" required>
-                                <option selected disabled>---Pilih Bagian---</option>
+                                <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
                                 <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                                 <option value="KBU" {{ $user->part == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                                 <option value="KTT" {{ $user->part == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
@@ -710,8 +711,9 @@
         </div>
     </div>
     @endforeach
+@endif
 
-@elseif (Request::is('masters/criterias'))
+@if (Request::is('masters/criterias'))
 <div class="modal fade" id="modal-crt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -979,8 +981,9 @@
         </div>
         @endforeach
     @endforeach
+@endif
 
-@elseif (Request::is('masters/periods'))
+@if (Request::is('masters/periods'))
 <div class="modal fade" id="modal-per-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1061,105 +1064,10 @@
         </div>
     </div>
     @endforeach
+@endif
 
-@elseif (Request::is('inputs/presences') || Request::is('inputs/performances'))
+@if (Request::is('inputs/presences') || Request::is('inputs/performances'))
 @foreach ($periods as $period)
-<div class="modal modal-xl fade" id="modal-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $period->name }})</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr class="table-primary">
-                                <th rowspan="3" class="col-1" scope="col">#</th>
-                                <th rowspan="3" scope="col">Nama</th>
-                                <th rowspan="3" scope="col">Jabatan</th>
-                                <th colspan="{{ $countprs + $countprf }}" scope="col">Kriteria</th>
-                                <th colspan="2" rowspan="2" scope="col">Status</th>
-                            </tr>
-                            <tr class="table-primary">
-                                <th colspan="{{ $countprs }}" scope="col">Kehadiran</th>
-                                <th colspan="{{ $countprf }}" scope="col">Prestasi Kerja</th>
-                            </tr>
-                            <tr class="table-primary">
-                                @foreach ($subcritprs as $scprs)
-                                <th>{{ $scprs->name }}</th>
-                                @endforeach
-                                @foreach ($subcritprf as $scprf)
-                                <th>{{ $scprf->name }}</th>
-                                @endforeach
-                                <th scope="col">Kehadiran</th>
-                                <th scope="col">Prestasi Kerja</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($officers as $officer)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
-                                @foreach ($subcritprs as $scprs)
-                                    @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
-                                    <td>{{ $presence->input }}</td>
-                                    @empty
-                                        <td>0</td>
-                                    @endforelse
-                                @endforeach
-                                @foreach ($subcritprf as $scprf)
-                                    @forelse ($performances->where('id_sub_criteria', $scprf->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
-                                    <td>{{ $performance->input }}</td>
-                                    @empty
-                                        <td>0</td>
-                                    @endforelse
-                                @endforeach
-                                <td>
-                                    @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprs)
-                                    <span class="badge text-bg-primary">Terisi Semua</span>
-                                    @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
-                                    <span class="badge text-bg-danger">Tidak Terisi</span>
-                                    @else
-                                    <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprf)
-                                    <span class="badge text-bg-primary">Terisi Semua</span>
-                                    @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
-                                    <span class="badge text-bg-danger">Tidak Terisi</span>
-                                    @else
-                                    <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                        <tfoot class="table-group-divider table-secondary">
-                            <tr>
-                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg"></i>
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal modal-xl fade" id="modal-inp-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1271,7 +1179,11 @@
                 <form action="{{ route('inputs.performances.store') }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
+                        @if (Request::is('inputs/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
+                        @elseif (Request::is('inputs/performances'))
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data PRestasi Kerja ({{ $officer->name }})</h1>
+                        @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -1512,110 +1424,120 @@
     </div>
     @endforeach
 @endforeach
+@endif
 
-@elseif (Request::is('inputs/results'))
-    @foreach ($periods as $period)
-    <div class="modal modal-xl fade" id="modal-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $period->name }})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+@if (Request::is('inputs/presences') || Request::is('inputs/performances') || Request::is('inputs/results'))
+@foreach ($periods as $period)
+<div class="modal modal-xl fade" id="modal-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $period->name }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th rowspan="4" class="col-1" scope="col">#</th>
+                                <th rowspan="4" scope="col">Nama</th>
+                                <th rowspan="4" scope="col">Jabatan</th>
+                                <th colspan="{{ $countprs + $countprf }}" scope="col">Kriteria</th>
+                                <th colspan="2" rowspan="3" scope="col">Status Data</th>
+                            </tr>
+                            <tr class="table-primary">
+                                <th colspan="{{ $countprs }}" scope="col">Data Kehadiran</th>
+                                <th colspan="{{ $countprf }}" scope="col">Data Prestasi Kerja</th>
+                            </tr>
+                            <tr class="table-primary">
+                                @foreach ($criterias as $criteria)
+                                <th colspan="{{ $allsubcriterias->where('id_criteria', $criteria->id_criteria)->count() }}" scope="col">{{ $criteria->name }}</th>
+                                @endforeach
+                            </tr>
+                            <tr class="table-primary">
+                                @foreach ($subcritprs as $scprs)
+                                <th>{{ $scprs->name }}</th>
+                                @endforeach
+                                @foreach ($subcritprf as $scprf)
+                                <th>{{ $scprf->name }}</th>
+                                @endforeach
+                                <th scope="col">Data Kehadiran</th>
+                                <th scope="col">Data Prestasi Kerja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($officers as $officer)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $officer->name }}</td>
+                                <td>{{ $officer->department->name }}</td>
+                                @foreach ($subcritprs as $scprs)
+                                    @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                                    <td>{{ $presence->input }}</td>
+                                    @empty
+                                        <td>0</td>
+                                    @endforelse
+                                @endforeach
+                                @foreach ($subcritprf as $scprf)
+                                    @forelse ($performances->where('id_sub_criteria', $scprf->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                                    <td>{{ $performance->input }}</td>
+                                    @empty
+                                        <td>0</td>
+                                    @endforelse
+                                @endforeach
+                                <td>
+                                    @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprs)
+                                    <span class="badge text-bg-primary">Terisi Semua</span>
+                                    @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                    <span class="badge text-bg-danger">Tidak Terisi</span>
+                                    @else
+                                    <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprf)
+                                    <span class="badge text-bg-primary">Terisi Semua</span>
+                                    @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                    <span class="badge text-bg-danger">Tidak Terisi</span>
+                                    @else
+                                    <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                                <tr class="table-primary">
-                                    <th rowspan="3" class="col-1" scope="col">#</th>
-                                    <th rowspan="3" scope="col">Nama</th>
-                                    <th rowspan="3" scope="col">Jabatan</th>
-                                    <th colspan="{{ $countprs + $countprf }}" scope="col">Kriteria</th>
-                                    <th colspan="2" rowspan="2" scope="col">Status</th>
-                                </tr>
-                                <tr class="table-primary">
-                                    <th colspan="{{ $countprs }}" scope="col">Kehadiran</th>
-                                    <th colspan="{{ $countprf }}" scope="col">Prestasi Kerja</th>
-                                </tr>
-                                <tr class="table-primary">
-                                    @foreach ($subcritprs as $scprs)
-                                    <th>{{ $scprs->name }}</th>
-                                    @endforeach
-                                    @foreach ($subcritprf as $scprf)
-                                    <th>{{ $scprf->name }}</th>
-                                    @endforeach
-                                    <th scope="col">Kehadiran</th>
-                                    <th scope="col">Prestasi Kerja</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($officers as $officer)
-                                <tr>
-                                    <th scope="row">{{ $loop->iteration }}</th>
-                                    <td>{{ $officer->name }}</td>
-                                    <td>{{ $officer->department->name }}</td>
-                                    @foreach ($subcritprs as $scprs)
-                                        @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
-                                        <td>{{ $presence->input }}</td>
-                                        @empty
-                                            <td>0</td>
-                                        @endforelse
-                                    @endforeach
-                                    @foreach ($subcritprf as $scprf)
-                                        @forelse ($performances->where('id_sub_criteria', $scprf->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
-                                        <td>{{ $performance->input }}</td>
-                                        @empty
-                                            <td>0</td>
-                                        @endforelse
-                                    @endforeach
-                                    <td>
-                                        @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprs)
-                                        <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
-                                        <span class="badge text-bg-danger">Tidak Terisi</span>
-                                        @else
-                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprf)
-                                        <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
-                                        <span class="badge text-bg-danger">Tidak Terisi</span>
-                                        @else
-                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                            <tfoot class="table-group-divider table-secondary">
-                                <tr>
-                                    <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tutup
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tutup
+                </button>
             </div>
         </div>
     </div>
+</div>
+@endforeach
+@endif
 
+@if (Request::is('inputs/results'))
+    @foreach ($periods as $period)
     <div class="modal modal-lg fade" id="modal-stt-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $period->name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cek Status ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1626,7 +1548,7 @@
                                     <th class="col-1" scope="col">#</th>
                                     <th scope="col">Nama</th>
                                     <th scope="col">Jabatan</th>
-                                    <th cope="col">Status</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1821,8 +1743,9 @@
         </div>
         @endforeach
     @endforeach
+@endif
 
-@elseif (Request::is('analysis/saw*'))
+@if (Request::is('analysis/saw*'))
 <div class="modal fade" id="modal-saw-view" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1865,8 +1788,9 @@
         </div>
     </div>
 </div>
+@endif
 
-@elseif (Request::is('analysis/wp*'))
+@if (Request::is('analysis/wp*'))
 <div class="modal fade" id="modal-wp-view" tabindex="-1" aria-labelledby="modalwp" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1909,5 +1833,4 @@
         </div>
     </div>
 </div>
-
 @endif

@@ -23,14 +23,22 @@
                         <tr class="table-primary">
                             <th scope="col">Nama Alternatif</th>
                             @foreach ($criterias as $crit)
-                            <th scope="col">{{ $crit->id_sub_criteria }}</th>
+                            <th scope="col">
+                                <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                {{ $crit->id_sub_criteria }}
+                                </span>
+                            </th>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($alternatives as $alt)
                         <tr>
-                            <td>{{ $alt->id_officer }}</td>
+                            <td>
+                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name }}">
+                                    {{ $alt->id_officer }}
+                                </span>
+                            </td>
                             @if (count($inputs) > 0)
                                 @forelse ($inputs->where('id_officer', $alt->id_officer) as $input)
                                     <td>{{ $input->input }}</td>
@@ -66,14 +74,22 @@
                             <tr class="table-primary">
                                 <th scope="col">Alternatif / Kriteria</th>
                                 @foreach ($criterias as $crit)
-                                <th scope="col">{{ $crit->id_sub_criteria }}</th>
+                                <th scope="col">
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                        {{ $crit->id_sub_criteria }}
+                                    </span>
+                                </th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($normal as $n1 => $value1)
                             <tr>
-                                <td>{{ $n1 }}</td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $n1)->first()->name }}">
+                                    {{ $n1 }}
+                                    </span>
+                                </td>
                                 @forelse ($value1 as $n2 => $value2)
                                 <td>
                                     {{ number_format($value2,3) }}
@@ -110,11 +126,15 @@
                             <tr class="table-primary">
                                 <th scope="col"></th>
                                 @foreach ($criterias as $crit)
-                                <th scope="col">{{ $crit->id_sub_criteria }}</th>
+                                <th scope="col">
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                        {{ $crit->id_sub_criteria }}
+                                    </span>
+                                </th>
                                 @endforeach
                                 <th rowspan="2">Matrix</th>
                             </tr>
-                            <tr>
+                            <tr class="table-secondary">
                                 <th scope="col">Bobot (%)</th>
                                 @foreach ($criterias as $crit)
                                 <th>{{ $crit->weight * 100 }}%</th>
@@ -125,7 +145,11 @@
                             @php $no = 1;@endphp
                             @foreach ($mx_hasil as $r1 => $value1)
                             <tr>
-                                <td>{{ $r1 }}</td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $r1)->first()->name }}">
+                                    {{ $r1 }}
+                                    </span>
+                                </td>
                                 @forelse ($value1 as $r2 => $value2)
                                 <td>{{ number_format($value2,3) }}</td>
                                 @empty
@@ -165,7 +189,9 @@
                             @php $no = 1;@endphp
                             @foreach ($matrix as $sqrt1 => $valsqrt1)
                             <tr>
-                                <th scope="row">{{ $sqrt1 }}</th>
+                                <th scope="row">
+                                    {{$officers->where('id_officer', $sqrt1)->first()->name}} ({{ $sqrt1 }})
+                                </th>
                                 <td>{{ number_format($valsqrt1,3) }}</td>
                                 <td>{{ $no++ }}</td>
                             </tr>

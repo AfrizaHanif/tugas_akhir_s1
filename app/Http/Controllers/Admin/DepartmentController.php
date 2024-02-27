@@ -30,7 +30,7 @@ class DepartmentController extends Controller
 
         //STORE DATA
         Department::insert([
-            'id_criteria'=>$id_department,
+            'id_department'=>$id_department,
             'name'=>$request->name,
             'description'=>$request->description,
 		]);
