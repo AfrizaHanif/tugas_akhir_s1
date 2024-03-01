@@ -10,6 +10,7 @@ use App\Models\Officer;
 use App\Models\Period;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PerformanceController extends Controller
 {
@@ -18,7 +19,24 @@ class PerformanceController extends Controller
      */
     public function index()
     {
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        if(Auth::user()->part == 'KBU'){
+            $officers = Officer::with('department', 'part')
+            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Badan Umum%');})
+            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->get();
+        }elseif(Auth::user()->part == 'KTT'){
+            $officers = Officer::with('department', 'part')
+            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%'.Auth::user()->officer->department->name.'%');})
+            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->get();
+        }else{
+            $officers = Officer::with('department', 'part')
+            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->get();
+        }
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();

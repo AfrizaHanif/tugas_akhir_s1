@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 //ADMIN / KEPEGAWAIAN
-Route::middleware(['auth', 'checkPart:Admin'])->group(function () {
+Route::middleware(['auth', 'checkPart1:Admin'])->group(function () {
     Route::prefix('masters')->name('masters.')->group(function () {
         Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
         Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
@@ -102,16 +102,19 @@ Route::middleware(['auth', 'checkPart:Admin'])->group(function () {
     });
 });
 //KEPALA BAGIAN UMUM & KOORDINASI TIM TEKNIS
-Route::middleware(['auth', 'checkPart:KBU,KTT*'])->group(function () {
+//Route::middleware(['auth', 'checkPart:KBU,KTT'])->group(function () {
+Route::middleware(['auth', 'checkPart2:KBU,KTT'])->group(function () {
     Route::prefix('inputs')->name('inputs.')->group(function () {
         Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        /*
         Route::prefix('beta')->name('beta.')->group(function () {
             Route::resource('/performances', BetaPerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
         });
+        */
     });
 });
 //KEPALA BPS JAWA TIMUR
-Route::middleware(['auth', 'checkPart:KBPS'])->group(function () {
+Route::middleware(['auth', 'checkPart1:KBPS'])->group(function () {
     Route::prefix('inputs/results')->name('results.')->group(function () {
         Route::controller(ResultController::class)->group(function() {
             Route::get('/', 'index')->name('index');

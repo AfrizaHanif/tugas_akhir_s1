@@ -33,11 +33,16 @@ class DatabaseSeeder extends Seeder
 
         DB::table('parts')->insert([
             'id_part' => 'PRT-002',
-            'name' => 'Badan Umum',
+            'name' => 'Kepegawaian',
         ]);
 
         DB::table('parts')->insert([
             'id_part' => 'PRT-003',
+            'name' => 'Badan Umum',
+        ]);
+
+        DB::table('parts')->insert([
+            'id_part' => 'PRT-004',
             'name' => 'Tim Teknis Fungsi',
         ]);
 
@@ -126,7 +131,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-002',
             'name' => 'Pegawai Kepegawaian',
             'id_department' => 'DPT-001',
-            'id_part' => 'PRT-001',
+            'id_part' => 'PRT-002',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -146,9 +151,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-004',
-            'name' => 'Pegawai Badan Umum 1A',
+            'name' => 'Pegawai Badan Umum 1',
             'id_department' => 'DPT-004',
-            'id_part' => 'PRT-002',
+            'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -157,9 +162,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-005',
-            'name' => 'Pegawai Badan Umum 1B',
-            'id_department' => 'DPT-004',
-            'id_part' => 'PRT-002',
+            'name' => 'Pegawai Badan Umum 2',
+            'id_department' => 'DPT-005',
+            'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -168,28 +173,6 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-006',
-            'name' => 'Pegawai Badan Umum 2A',
-            'id_department' => 'DPT-005',
-            'id_part' => 'PRT-002',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-007',
-            'name' => 'Pegawai Badan Umum 2B',
-            'id_department' => 'DPT-005',
-            'id_part' => 'PRT-002',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-008',
             'name' => 'Ketua Tim Teknis 1',
             'id_department' => 'DPT-009',
             'id_part' => 'PRT-001',
@@ -200,10 +183,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-009',
-            'name' => 'Pegawai Tim Teknis 1A',
+            'id_officer' => 'OFF-007',
+            'name' => 'Pegawai Tim Teknis 1',
             'id_department' => 'DPT-009',
-            'id_part' => 'PRT-003',
+            'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -211,18 +194,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-010',
-            'name' => 'Pegawai Tim Teknis 1B',
-            'id_department' => 'DPT-009',
-            'id_part' => 'PRT-003',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-011',
+            'id_officer' => 'OFF-008',
             'name' => 'Ketua Tim Teknis 2',
             'id_department' => 'DPT-008',
             'id_part' => 'PRT-001',
@@ -233,21 +205,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-012',
-            'name' => 'Pegawai Tim Teknis 2A',
+            'id_officer' => 'OFF-009',
+            'name' => 'Pegawai Tim Teknis 2',
             'id_department' => 'DPT-008',
-            'id_part' => 'PRT-003',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-013',
-            'name' => 'Pegawai Tim Teknis 2B',
-            'id_department' => 'DPT-008',
-            'id_part' => 'PRT-003',
+            'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -287,8 +248,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'testketim1',
             'email' => 'testketim1@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
-            'part' => 'KTM1',
-            'id_officer' => 'OFF-008',
+            'part' => 'KTT',
+            'id_officer' => 'OFF-006',
         ]);
 
         DB::table('users')->insert([
@@ -296,8 +257,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'testketim2',
             'email' => 'testketim2@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
-            'part' => 'KTM2',
-            'id_officer' => 'OFF-011',
+            'part' => 'KTT',
+            'id_officer' => 'OFF-008',
         ]);
 
         DB::table('users')->insert([
@@ -313,12 +274,16 @@ class DatabaseSeeder extends Seeder
         DB::table('periods')->insert([
             'id_period' => 'PRD-01-24',
             'name' => 'Januari 2024',
+            'month' => 'Januari',
+            'year' => '2024',
             'status' => 'In Progress',
         ]);
 
         DB::table('periods')->insert([
             'id_period' => 'PRD-02-24',
             'name' => 'Februari 2024',
+            'month' => 'Februari',
+            'year' => '2024',
             'status' => 'In Progress',
         ]);
 
@@ -465,6 +430,7 @@ class DatabaseSeeder extends Seeder
             'need' => 'Ya',
         ]);
 
+        /*
         //PRESENCES: Data Kehadiran (Beta)
         DB::table('presences')->insert([
             'id_presence' => 'PRS-01-24-001-001', //Periode-Officer-SubCriteria
@@ -483,5 +449,6 @@ class DatabaseSeeder extends Seeder
             'input' => '31',
             'status' => 'Pending',
         ]);
+        */
     }
 }

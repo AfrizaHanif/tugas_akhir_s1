@@ -1,4 +1,8 @@
+@if (Request::is('inputs/presences'))
 <h1 class="text-center mb-4">Data Kehadiran</h1>
+@elseif (Request::is('inputs/performances'))
+<h1 class="text-center mb-4">Data Prestasi Kerja</h1>
+@endif
 @include('Pages.Admin.Includes.Components.alert')
 <div class="row">
     <div class="col-md-3">

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckPart
+class CheckPart2
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,7 @@ class CheckPart
      */
     public function handle(Request $request, Closure $next, $part1, $part2): Response
     {
-        if ($request->user()->part == $part1) {
-            return $next($request);
-        }else if($request->user()->part == $part2){
+        if ($request->user()->part == $part1 || $request->user()->part == $part2) {
             return $next($request);
         }
 

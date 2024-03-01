@@ -19,7 +19,10 @@ class ResultController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $results = Result::with('officer')->orderBy('final_score', 'DESC')->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
@@ -44,7 +47,10 @@ class ResultController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){

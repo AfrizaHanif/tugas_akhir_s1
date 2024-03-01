@@ -21,7 +21,10 @@ class ReportController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finish')->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
 
         return view('Pages.Admin.report', compact('periods','per_years','officers'));
     }
@@ -29,7 +32,7 @@ class ReportController extends Controller
     public function officers()
     {
         $parts = Part::get();
-        $officers = Officer::with('department')
+        $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
         $file = 'RPT-Pegawai.pdf';
@@ -44,7 +47,10 @@ class ReportController extends Controller
     {
         $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
         $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
         $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
         $subcritprs = SubCriteria::with('criteria')
@@ -72,7 +78,10 @@ class ReportController extends Controller
     {
         $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
         $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
         $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
         $subcritprs = SubCriteria::with('criteria')
@@ -117,7 +126,10 @@ class ReportController extends Controller
 
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('department', 'part')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->get();
 
         $first_alt = DB::table("performances")
         ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')

@@ -99,7 +99,7 @@
                                         @forelse ($per_years as $per_year)
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                {{ $period->year }}
+                                                {{ $per_year->year }}
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -109,11 +109,15 @@
                                                             PDF
                                                         </button>
                                                         <ul class="dropdown-menu">
-                                                            @foreach ($periods->where('year', $period->year) as $period)
+                                                            @forelse ($periods->where('year', $per_year->year) as $period)
                                                             <li>
                                                                 <a href="{{ route('reports.input.single', ['period'=>$period->id_period,'id'=>$officer->id_officer]) }}" class="dropdown-item" target="_blank" rel="noopener noreferrer">{{ $period->month }}</a>
                                                             </li>
-                                                            @endforeach
+                                                            @empty
+                                                            <li>
+                                                                Tidak Ada Laporan
+                                                            </li>
+                                                            @endforelse
                                                         </ul>
                                                     </div>
                                                 </div>
