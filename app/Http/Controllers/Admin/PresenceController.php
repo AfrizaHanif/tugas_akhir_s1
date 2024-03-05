@@ -40,7 +40,7 @@ class PresenceController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')

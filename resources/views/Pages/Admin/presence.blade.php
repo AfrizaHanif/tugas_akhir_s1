@@ -13,10 +13,8 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->
 @push('scripts')
-@include('Pages.Admin.Includes.Scripts.js')
 @endpush

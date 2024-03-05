@@ -1,9 +1,9 @@
 @if (Request::is('inputs/presences'))
 <h1 class="text-center mb-4">Data Kehadiran</h1>
-@elseif (Request::is('inputs/performances'))
+@elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
 <h1 class="text-center mb-4">Data Prestasi Kerja</h1>
 @endif
-@include('Pages.Admin.Includes.Components.alert')
+@include('Templates.Includes.Components.alert')
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
@@ -18,7 +18,7 @@
                         Empty
                     </button>
                     @endforelse
-                @elseif (Request::is('inputs/performances'))
+                @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                     @forelse ($periods as $period)
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                         {{ $period->name }}
@@ -88,7 +88,7 @@
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
                                     @endif
-                                @elseif (Request::is('inputs/performances'))
+                                @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
@@ -120,10 +120,18 @@
                                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="bi bi-menu-button-fill"></i>
                                         </button>
+                                        @elseif ($s->status == 'In Review')
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
                                         @else
-                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            <i class="bi bi-menu-button-fill"></i>
-                                        </button>
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sudah disetujui sebagai hasil akhir dan tidak dapat diubah kembali.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
                                         @endif
                                     @empty
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -132,7 +140,7 @@
                                     @endforelse
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0 && $performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
+                                            @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0 || $performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
                                             <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                                 Lihat Data
                                             </a>

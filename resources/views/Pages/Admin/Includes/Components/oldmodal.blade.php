@@ -1066,7 +1066,7 @@
     @endforeach
 @endif
 
-@if (Request::is('inputs/presences') || Request::is('inputs/performances'))
+@if (Request::is('inputs/presences') || Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
 @foreach ($periods as $period)
 <div class="modal modal-xl fade" id="modal-inp-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1110,7 +1110,7 @@
                                             @empty
                                                 <td>0</td>
                                             @endforelse
-                                        @elseif (Request::is('inputs/performances'))
+                                        @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                                                 <td>{{ $performance->input }}</td>
                                             @empty
@@ -1133,7 +1133,7 @@
                                         @else
                                         <span class="badge text-bg-warning">Terisi Sebagian</span>
                                         @endif
-                                    @elseif (Request::is('inputs/performances'))
+                                    @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                                         @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
                                         @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
@@ -1175,14 +1175,16 @@
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
                 <form action="{{ route('inputs.presences.store') }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/performances'))
-                <form action="{{ route('inputs.performances.store') }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/kbu/performances'))
+                <form action="{{ route('inputs.kbu.performances.store') }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/ktt/performances'))
+                <form action="{{ route('inputs.ktt.performances.store') }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
-                        @elseif (Request::is('inputs/performances'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data PRestasi Kerja ({{ $officer->name }})</h1>
+                        @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Prestasi Kerja ({{ $officer->name }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -1230,13 +1232,15 @@
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
                 <form action="{{ route('inputs.presences.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/performances'))
-                <form action="{{ route('inputs.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/kbu/performances'))
+                <form action="{{ route('inputs.kbu.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/ktt/performances'))
+                <form action="{{ route('inputs.ktt.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
-                        @elseif (Request::is('inputs/performances'))
+                        @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Prestasi Kerja ({{ $officer->id_officer }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1267,7 +1271,7 @@
                                 <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
                             </div>
                             @endforelse
-                            @elseif (Request::is('inputs/performances'))
+                            @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                             <div class="mb-3">
                                 <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
@@ -1335,7 +1339,7 @@
                                 </td>
                             </tr>
                             @endforelse
-                        @elseif (Request::is('inputs/performances'))
+                        @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
@@ -1378,13 +1382,15 @@
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
                 <form action="{{ route('inputs.presences.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/performances'))
-                <form action="{{ route('inputs.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/kbu/performances'))
+                <form action="{{ route('inputs.kbu.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('inputs/ktt/performances'))
+                <form action="{{ route('inputs.ktt.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $officer->id_officer}})</h1>
-                        @elseif (Request::is('inputs/performances'))
+                        @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Prestasi Kerja ({{ $officer->id_officer}})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1426,7 +1432,7 @@
 @endforeach
 @endif
 
-@if (Request::is('inputs/presences') || Request::is('inputs/performances') || Request::is('inputs/results'))
+@if (Request::is('inputs/presences') || Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances') || Request::is('inputs/scores'))
 @foreach ($periods as $period)
 <div class="modal modal-xl fade" id="modal-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1531,7 +1537,7 @@
 @endforeach
 @endif
 
-@if (Request::is('inputs/results'))
+@if (Request::is('inputs/scores'))
     @foreach ($periods as $period)
     <div class="modal modal-lg fade" id="modal-stt-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -1597,10 +1603,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-res-finish-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-scr-finish-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('results.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.scores.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Kunci Data ({{ $period->name }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1615,7 +1621,7 @@
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda telah selesai melakukan validasi dan mengunci data dari periode ini? Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
+                            Apakah anda telah selesai melakukan validasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1633,10 +1639,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-res-get-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-scr-get-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('results.get', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.scores.get', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $period->name}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1669,20 +1675,20 @@
         </div>
     </div>
 
-        @foreach ($results as $result)
-        <div class="modal fade" id="modal-res-yes-{{ $period->id_period }}-{{ $result->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @foreach ($scores as $score)
+        <div class="modal fade" id="modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('results.yes', $result->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('inputs.scores.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $result->id}})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $score->id}})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             @csrf
                             <div class="mb-3">
                                 <div class="col">
-                                    <input type="text" class="form-control" id="id" name="id" value="{{ $result->id }}" hidden>
+                                    <input type="text" class="form-control" id="id" name="id" value="{{ $score->id }}" hidden>
                                 </div>
                             </div>
                             <div class="alert alert-warning" role="alert">
@@ -1706,19 +1712,19 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-res-no-{{ $period->id_period }}-{{ $result->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal-scr-no-{{ $period->id_period }}-{{ $score->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ route('results.no', $result->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('inputs.scores.no', $score->id) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $result->id}})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $score->id}})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             @csrf
                             <div class="mb-3">
                                 <div class="col">
-                                    <input type="text" class="form-control" id="id" name="id" value="{{ $result->id }}" hidden>
+                                    <input type="text" class="form-control" id="id" name="id" value="{{ $score->id }}" hidden>
                                 </div>
                             </div>
                             <div class="alert alert-warning" role="alert">

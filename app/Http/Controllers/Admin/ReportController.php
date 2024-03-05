@@ -19,7 +19,7 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finish')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
         $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -124,7 +124,7 @@ class ReportController extends Controller
         $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
 
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})

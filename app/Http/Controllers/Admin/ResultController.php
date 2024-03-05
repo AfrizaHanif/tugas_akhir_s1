@@ -17,7 +17,7 @@ class ResultController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $results = Result::with('officer')->orderBy('final_score', 'DESC')->get();
         $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -45,7 +45,7 @@ class ResultController extends Controller
 
     public function get($period)
     {
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})

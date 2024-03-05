@@ -11,7 +11,11 @@ class AuthController extends Controller
     public function login()
     {
         if (Auth::check()){
-            return view('Pages.Admin.dashboard');
+            if(Auth::user()->part != "Pegawai"){
+                return view('Pages.Admin.dashboard');
+            }else{
+                return view('Pages.Home.index');
+            }
         }
         else{
             return view('Pages.Auth.login');

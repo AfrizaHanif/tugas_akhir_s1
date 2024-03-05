@@ -1,5 +1,5 @@
 <h1 class="text-center mb-4">Pegawai BPS Jawa Timur</h1>
-@include('Pages.Admin.Includes.Components.alert')
+@include('Templates.Includes.Components.alert')
 @if (Auth::user()->part == "Admin")
 <p>
     <div class="btn-group" role="group" aria-label="Basic example">

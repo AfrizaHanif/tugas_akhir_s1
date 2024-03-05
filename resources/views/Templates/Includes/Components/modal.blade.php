@@ -15,3 +15,103 @@
         </div>
     </div>
 </div>
+
+@if (Request::is('masters/officers*') || Request::is('officers*'))
+    @foreach ($officers as $officer)
+    <div class="modal fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Pegawai ({{ $officer->id_officer }})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <tr>
+                            <th scope="row">Nama Pegawai</th>
+                            <td>{{ $officer->name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Jabatan</th>
+                            <td>{{ $officer->department->name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bagian</th>
+                            <td>{{ $officer->part->name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Tempat Tanggal Lahir</th>
+                            <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Jenis Kelamin</th>
+                            <td>{{ $officer->gender }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Agama</th>
+                            <td>{{ $officer->religion }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+@endif
+
+@if (Request::is('inputs/votes*') || Request::is('votes*'))
+    @foreach ($periods as $period)
+        @foreach ($votes->where('id_period', $period->id_period) as $vote)
+        <div class="modal fade" id="modal-vte-select-{{ $period->id_period }}-{{ $vote->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    @if (Auth::user()->part == "Pegawai")
+                    <form action="{{ route('votes.select', ['period'=>$period->id_period, 'officer'=>$vote->id_officer]) }}" method="POST" enctype="multipart/form-data">
+                    @else
+                    <form action="{{ route('inputs.votes.select', ['period'=>$period->id_period, 'officer'=>$vote->id_officer]) }}" method="POST" enctype="multipart/form-data">
+                    @endif
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Pegawai ({{ $vote->id_officer}})</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <div class="mb-3">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="id" name="id" value="{{ $vote->id_officer }}" hidden>
+                                </div>
+                            </div>
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle-fill"></i> <b>INFO</b>
+                                <br/>
+                                Pegawai yang dipilih: {{$vote->officer->name}}
+                            </div>
+                            <div class="alert alert-warning" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                                <br/>
+                                Apakah anda yakin untuk memilih pegawai tersebut? Harap diperhatikan bahwa setelah melakukan pemilihan, anda tidak dapat mengubah atau membatalkan pilihan anda.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg"></i>
+                                Tidak
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i>
+                                Ya
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    @endforeach
+@endif

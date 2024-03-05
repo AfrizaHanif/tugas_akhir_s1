@@ -22,5 +22,4 @@
 
 <!--SCRIPTS-->
 @push('scripts')
-@include('Pages.Admin.Includes.Scripts.js')
 @endpush

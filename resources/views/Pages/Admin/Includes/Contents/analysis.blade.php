@@ -3,7 +3,7 @@
 @elseif (Request::is('analysis/wp'))
 <h1 class="text-center mb-4">Analisis WP</h1>
 @endif
-@include('Pages.Admin.Includes.Components.alert')
+@include('Templates.Includes.Components.alert')
 <p>
     @if (Request::is('analysis/saw'))
     <div class="btn-group" role="group" aria-label="Basic example">

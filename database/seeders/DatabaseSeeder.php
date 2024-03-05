@@ -270,13 +270,22 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-001',
         ]);
 
+        DB::table('users')->insert([
+            'id_user' => 'USR-006',
+            'username' => 'testpegawai',
+            'email' => 'testpegawai@bps.com',
+            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'part' => 'Pegawai',
+            'id_officer' => 'OFF-009',
+        ]);
+
         //PERIOODS: Periode
         DB::table('periods')->insert([
             'id_period' => 'PRD-01-24',
             'name' => 'Januari 2024',
             'month' => 'Januari',
             'year' => '2024',
-            'status' => 'In Progress',
+            'status' => 'Scoring',
         ]);
 
         DB::table('periods')->insert([
@@ -284,7 +293,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Februari 2024',
             'month' => 'Februari',
             'year' => '2024',
-            'status' => 'In Progress',
+            'status' => 'Pending',
         ]);
 
         //CRITERIAS: Kriteria

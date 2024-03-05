@@ -1,5 +1,5 @@
 <h1 class="text-center mb-4">Data Kehadiran</h1>
-@include('Pages.Admin.Includes.Components.alert')
+@include('Templates.Includes.Components.alert')
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">

@@ -13,12 +13,15 @@ use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\PresenceController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ResultController;
+use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Admin\SubCriteriaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
 use App\Http\Controllers\Home\ResultController as HomeResultController;
+use App\Http\Controllers\Home\ScoreController as HomeScoreController;
+use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,10 +37,17 @@ use Illuminate\Support\Facades\Route;
 
 //FRONT END
 //HOMEPAGE
-Route::controller(HomeController::class)->group(function() {
-    Route::get('/', 'index')->name('index');
-    Route::resource('/officers', HomeOfficerController::class);
-    Route::resource('/results', HomeResultController::class);
+Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::resource('/officers', HomeOfficerController::class);
+Route::resource('/scores', HomeScoreController::class);
+Route::resource('/results', HomeResultController::class);
+Route::middleware(['auth', 'checkPart:Pegawai'])->group(function () {
+    Route::prefix('votes')->name('votes.')->group(function () {
+        Route::controller(VoteController::class)->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::post('/{period}/{officer}', 'select')->name('select');
+        });
+    });
 });
 
 //LOGIN AND LOGOUT
@@ -54,11 +64,55 @@ Route::middleware('auth')->group(function () {
 });
 
 //BACK END
-//ALL
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'checkAdmin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::prefix('masters')->name('masters.')->group(function () {
         Route::resource('/officers', OfficerController::class);
+        Route::middleware('checkPart:Admin')->group(function () {
+            Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
+            Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
+            Route::resource('/users', UserController::class);
+            Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'destroy']]);
+            Route::prefix('periods')->name('periods.')->group(function () {
+                Route::controller(PeriodController::class)->group(function() {
+                    Route::post('/skip/{period}', 'skip')->name('skip');
+                });
+            });
+            Route::resource('/criterias', CriteriaController::class);
+            Route::resource('/subcriterias', SubCriteriaController::class);
+        });
+    });
+    Route::prefix('inputs')->name('inputs.')->group(function () {
+        Route::middleware('checkPart:Admin')->group(function () {
+            Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        });
+        Route::middleware('checkPart:KBU')->group(function () {
+            Route::prefix('kbu')->name('kbu.')->group(function () {
+                Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            });
+        });
+        Route::middleware('checkPart:KTT')->group(function () {
+            Route::prefix('ktt')->name('ktt.')->group(function () {
+                Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            });
+        });
+        Route::middleware('checkPart:KBPS')->group(function () {
+            Route::prefix('scores')->name('scores.')->group(function () {
+                Route::controller(ScoreController::class)->group(function() {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/get/{period}', 'get')->name('get');
+                    Route::post('/yes/{id}', 'yes')->name('yes');
+                    Route::post('/no/{id}', 'no')->name('no');
+                    Route::post('/finish/{period}', 'finish')->name('finish');
+                });
+            });
+        });
+        Route::prefix('votes')->name('votes.')->group(function () {
+            Route::controller(VoteController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/{period}/{officer}', 'select')->name('select');
+            });
+        });
     });
     Route::prefix('analysis')->name('analysis.')->group(function () {
         Route::prefix('saw')->name('saw.')->group(function () {
@@ -78,50 +132,9 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{period}', 'inpall')->name('all');
                 Route::get('/{period}/{id}', 'inpsingle')->name('single');
             });
-            //Route::get('/input/{period}', 'input')->name('input');
             Route::get('/analysis/{period}', 'analysis')->name('analysis');
             Route::get('/result/{period}', 'result')->name('result');
         });
     });
 });
-//ADMIN / KEPEGAWAIAN
-Route::middleware(['auth', 'checkPart1:Admin'])->group(function () {
-    Route::prefix('masters')->name('masters.')->group(function () {
-        Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
-        Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
-        Route::resource('/users', UserController::class);
-        Route::resource('/periods', PeriodController::class);
-        Route::resource('/criterias', CriteriaController::class);
-        Route::resource('/subcriterias', SubCriteriaController::class);
-    });
-    Route::prefix('inputs')->name('inputs.')->group(function () {
-        Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-        Route::prefix('beta')->name('beta.')->group(function () {
-            Route::resource('/presences', BetaPresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-        });
-    });
-});
-//KEPALA BAGIAN UMUM & KOORDINASI TIM TEKNIS
-//Route::middleware(['auth', 'checkPart:KBU,KTT'])->group(function () {
-Route::middleware(['auth', 'checkPart2:KBU,KTT'])->group(function () {
-    Route::prefix('inputs')->name('inputs.')->group(function () {
-        Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-        /*
-        Route::prefix('beta')->name('beta.')->group(function () {
-            Route::resource('/performances', BetaPerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-        });
-        */
-    });
-});
-//KEPALA BPS JAWA TIMUR
-Route::middleware(['auth', 'checkPart1:KBPS'])->group(function () {
-    Route::prefix('inputs/results')->name('results.')->group(function () {
-        Route::controller(ResultController::class)->group(function() {
-            Route::get('/', 'index')->name('index');
-            Route::post('/get/{period}', 'get')->name('get');
-            Route::post('/yes/{id}', 'yes')->name('yes');
-            Route::post('/no/{id}', 'no')->name('no');
-            Route::post('/finish/{period}', 'finish')->name('finish');
-        });
-    });
-});
+

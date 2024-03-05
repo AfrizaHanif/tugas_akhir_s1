@@ -52,6 +52,16 @@ class User extends Authenticatable
     ];
 
     /*
+    public function part($part){
+        if ($this->part == $part) {
+            return true;
+        }
+
+        return false;
+    }
+    */
+
+    /*
     public function officer()
     {
         return $this->hasMany(Officer::class, 'id_user', 'id_user');

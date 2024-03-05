@@ -17,6 +17,8 @@
                 Home (KTT)
                 @elseif (Auth::user()->part == "KBPS")
                 Home (KBPS)
+                @elseif (Auth::user()->part == "Pegawai")
+                Home (Pegawai)
                 @endif
             </a>
         </li>
@@ -82,21 +84,34 @@
                             Data Kehadiran
                         </a>
                     </li>
-                    @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
+                    @elseif (Auth::user()->part == "KBU")
                     <li>
-                        <a href="/inputs/performances" class="{{ (request()->is('inputs/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <a href="/inputs/kbu/performances" class="{{ (request()->is('inputs/kbu/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
+                            Data Prestasi Kerja
+                        </a>
+                    </li>
+                    @elseif (Auth::user()->part == "KTT")
+                    <li>
+                        <a href="/inputs/ktt/performances" class="{{ (request()->is('inputs/ktt/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                             <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
                             Data Prestasi Kerja
                         </a>
                     </li>
                     @elseif (Auth::user()->part == "KBPS")
                     <li>
-                        <a href="/inputs/results" class="{{ (request()->is('inputs/results')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#result"/></svg>
-                            Hasil / Validasi
+                        <a href="/inputs/scores" class="{{ (request()->is('inputs/scores')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
+                            Validasi
                         </a>
                     </li>
                     @endif
+                    <li>
+                        <a href="/inputs/votes" class="{{ (request()->is('inputs/votes')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#vote"/></svg>
+                            Voting
+                        </a>
+                    </li>
                 </ul>
             </div>
         </li>

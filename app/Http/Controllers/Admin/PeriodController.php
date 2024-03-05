@@ -61,11 +61,22 @@ class PeriodController extends Controller
             'name'=>$name_month.' '.$request->year,
             'month'=>$name_month,
             'year'=>$request->year,
-            'status'=>'In Progress',
+            'status'=>'Pending',
 		]);
 
         //RETURN TO VIEW
         return redirect()->route('masters.periods.index')->with('success','Tambah Periode Berhasil');
+    }
+
+    public function skip($period)
+    {
+        //UPDATE DATA
+        Period::where('id_period', $period)->update([
+            'status'=>'Skipped',
+		]);
+
+        //RETURN TO VIEW
+        return redirect()->route('masters.periods.index')->with('success','Proses Lewat Berhasil');
     }
 
     /**

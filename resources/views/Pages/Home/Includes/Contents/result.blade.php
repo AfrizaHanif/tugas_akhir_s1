@@ -26,21 +26,17 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Hasil Akhir</th>
+                            <th scope="col">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($results->where('id_period', $period->id_period) as $result)
+                        @foreach ($results->where('id_period', $period->id_period) as $result)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $result->officer->name }}</td>
-                            <td>{{ $result->final_score }}</td>
+                            <td>{{ $result->votes }}</td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5">Tidak Ada Data.</td>
-                        </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tfoot class="table-group-divider table-secondary">

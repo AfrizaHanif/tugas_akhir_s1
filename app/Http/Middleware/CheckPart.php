@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckPart
@@ -13,14 +14,11 @@ class CheckPart
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $part1, $part2): Response
+    public function handle(Request $request, Closure $next, $part): Response
     {
-        if ($request->user()->part == $part1) {
-            return $next($request);
-        }else if($request->user()->part == $part2){
+        if (Auth::check() && Auth::user()->part == $part){
             return $next($request);
         }
-
         return redirect('/');
     }
 }

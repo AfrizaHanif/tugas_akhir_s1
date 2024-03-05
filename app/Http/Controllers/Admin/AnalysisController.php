@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\DB;
 class AnalysisController extends Controller
 {
     public function index(){
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
 
         return view('Pages.Admin.Analysis.analysis', compact('periods'));
     }
 
     public function saw($period)
     {
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -171,7 +171,7 @@ class AnalysisController extends Controller
 
     public function wp($period)
     {
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})

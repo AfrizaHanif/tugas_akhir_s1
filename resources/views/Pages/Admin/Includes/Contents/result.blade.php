@@ -1,12 +1,12 @@
 <h1 class="text-center mb-4">Hasil Perhitungan</h1>
-@include('Pages.Admin.Includes.Components.alert')
+@include('Templates.Includes.Components.alert')
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($periods as $period)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    @if ($period->status == "Finish")
+                    @if ($period->status == "Finished")
                     {{ $period->name }} <span class="badge bg-secondary">Selesai</span>
                     @else
                     {{ $period->name }}
@@ -25,7 +25,7 @@
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($periods as $period)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
-                @if ($period->status == "Finish")
+                @if ($period->status == "Finished")
                 <h2>{{ $period->name }} <span class="badge bg-success">Selesai</span></h2>
                 @else
                 <h2>{{ $period->name }}</h2>
@@ -33,7 +33,7 @@
                 <p>
                     <div class="row g-3 align-items-center">
                         <div class="col-auto">
-                            @if ($period->status == "Finish")
+                            @if ($period->status == "Finished")
                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
                             <a class="btn btn-primary disabled">
                                 <i class="bi bi-database-down"></i>
@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Finish")
+                                @if ($period->status == "Finished")
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                     <a class="btn btn-success disabled">
                                         <i class="bi bi-clipboard2-check"></i>

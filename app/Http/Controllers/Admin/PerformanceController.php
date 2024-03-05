@@ -40,7 +40,7 @@ class PerformanceController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skip')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
@@ -92,7 +92,8 @@ class PerformanceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.performances.index')->with('success','Tambah Data Prestasi Kerja Berhasil');
+        $lowerpart = strtolower(Auth::user()->part);
+        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->with('success','Tambah Data Prestasi Kerja Berhasil');
     }
 
     /**
@@ -129,7 +130,8 @@ class PerformanceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.performances.index')->with('success','Ubah Data Prestasi Kerja Berhasil');
+        $lowerpart = strtolower(Auth::user()->part);
+        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->with('success','Ubah Data Prestasi Kerja Berhasil');
     }
 
     /**
@@ -145,13 +147,14 @@ class PerformanceController extends Controller
             $str_officer = substr($request->id_officer, 4);
             $str_year = substr($request->id_period, -5);
             $str_sub = substr($subcriteria->id_sub_criteria, 4);
-            $id_performance = "PRS-".$str_year.'-'.$str_officer.'-'.$str_sub;
+            $id_performance = "PRF-".$str_year.'-'.$str_officer.'-'.$str_sub;
 
             //DELETE DATA
             Performance::where('id_performance', $id_performance)->delete();
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.performances.index')->with('success','Hapus Data Prestasi Kerja Berhasil');
+        $lowerpart = strtolower(Auth::user()->part);
+        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->with('success','Hapus Data Prestasi Kerja Berhasil');
     }
 }
