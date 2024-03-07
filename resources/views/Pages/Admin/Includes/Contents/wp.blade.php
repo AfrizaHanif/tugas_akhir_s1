@@ -2,7 +2,7 @@
 @include('Templates.Includes.Components.alert')
 <p>
     <div class="btn-group" role="group" aria-label="Basic example">
-        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wp-view">
+        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wp-periods">
             <i class="bi bi-folder-plus"></i>
             Pilih Periode
         </a>

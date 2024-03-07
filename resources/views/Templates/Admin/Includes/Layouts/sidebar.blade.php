@@ -24,7 +24,7 @@
         </li>
         @if (Auth::user()->part == "KBU" || Auth::user()->part == "KTT" || Auth::user()->part == "KBPS")
         <li class="nav-item">
-            <a href="/masters/officers" class="{{ (request()->is('masters/officers')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+            <a href="/masters/officers" class="{{ (request()->is('masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                 <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
                 Pegawai
             </a>
@@ -41,7 +41,7 @@
             <div class="{{ (request()->is('masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse">
                 <ul class="list-unstyled fw-normal pb-1 small">
                     <li>
-                        <a href="/masters/officers" class="{{ (request()->is('masters/officers')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <a href="/masters/officers" class="{{ (request()->is('masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                             <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
                             Pegawai
                         </a>
@@ -52,11 +52,27 @@
                             Pengguna
                         </a>
                     </li>
-                    <li>
-                        <a href="/masters/criterias" class="{{ (request()->is('masters/criterias')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#criteria"/></svg>
-                            Kriteria
-                        </a>
+                    <li class="nav-item">
+                        <div class="dropend">
+                            <a class="{{ (request()->is('masters/criterias') || request()->is('masters/vote-criterias')) ? 'nav-link active' : 'nav-link text-white' }} dropdown-toggle" aria-current="page" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#criteria"/></svg>
+                                Kriteria
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow mx-0 w-sidebar-menu">
+                                <li>
+                                    <a class="dropdown-item d-flex gap-2 align-items-center" href="/masters/criterias/">
+                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#provinsi"/></svg>
+                                        Untuk Penilaian
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex gap-2 align-items-center" href="/masters/vote-criterias/">
+                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#kabkota"/></svg>
+                                        Untuk Pemilihan
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                     <li>
                         <a href="/masters/periods" class="{{ (request()->is('masters/periods')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -107,7 +123,7 @@
                     </li>
                     @endif
                     <li>
-                        <a href="/inputs/votes" class="{{ (request()->is('inputs/votes')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <a href="/inputs/votes" class="{{ (request()->is('inputs/votes*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                             <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#vote"/></svg>
                             Voting
                         </a>

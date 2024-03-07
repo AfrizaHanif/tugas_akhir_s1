@@ -251,7 +251,7 @@
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                 <br/>
-
+                
             </div>
         </div>
     </div>

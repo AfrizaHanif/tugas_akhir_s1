@@ -7,6 +7,12 @@
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <p>
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                    Bantuan
+                </a>
+            </p>
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @if (Request::is('inputs/presences'))
                     @forelse ($periods as $period)
@@ -45,11 +51,11 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}">
+                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}">
                                     <i class="bi bi-file-spreadsheet"></i>
                                     Hanya Data Ini
                                 </a>
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
+                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
                                     <i class="bi bi-database"></i>
                                     Semua Data
                                 </a>
@@ -140,20 +146,38 @@
                                     @endforelse
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0 || $performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
-                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
-                                                Lihat Data
-                                            </a>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
-                                                Ubah Data
-                                            </a>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
-                                                Hapus Data
-                                            </a>
-                                            @else
-                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
-                                                Tambah Data
-                                            </a>
+                                            @if (Request::is('inputs/presences'))
+                                                @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                                    Lihat Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                                    Ubah Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                                    Hapus Data
+                                                </a>
+                                                @else
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
+                                                    Tambah Data
+                                                </a>
+                                                @endif
+                                            @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                                                @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                                    Lihat Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                                    Ubah Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                                    Hapus Data
+                                                </a>
+                                                @else
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
+                                                    Tambah Data
+                                                </a>
+                                                @endif
                                             @endif
                                         </li>
                                     </ul>

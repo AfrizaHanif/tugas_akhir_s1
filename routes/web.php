@@ -16,11 +16,13 @@ use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Admin\SubCriteriaController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoteCriteriaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
 use App\Http\Controllers\Home\ResultController as HomeResultController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
+use App\Http\Controllers\JSONController;
 use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,16 +40,24 @@ use Illuminate\Support\Facades\Route;
 //FRONT END
 //HOMEPAGE
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::resource('/officers', HomeOfficerController::class);
+Route::resource('/officers', HomeOfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+Route::prefix('officers')->name('officers.')->group(function () {
+    Route::get('/search', [HomeOfficerController::class, 'search'])->name('search');
+    //Route::get('/auto', [HomeOfficerController::class, 'auto'])->name('auto');
+});
 Route::resource('/scores', HomeScoreController::class);
 Route::resource('/results', HomeResultController::class);
 Route::middleware(['auth', 'checkPart:Pegawai'])->group(function () {
     Route::prefix('votes')->name('votes.')->group(function () {
         Route::controller(VoteController::class)->group(function() {
             Route::get('/', 'index')->name('index');
-            Route::post('/{period}/{officer}', 'select')->name('select');
+            Route::get('/{period}', 'vote')->name('vote');
+            Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
         });
     });
+});
+Route::controller(JSONController::class)->group(function() {
+    Route::get('/autocomplete', 'autocomplete')->name('json.autocomplete');
 });
 
 //LOGIN AND LOGOUT
@@ -67,7 +77,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'checkAdmin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::prefix('masters')->name('masters.')->group(function () {
-        Route::resource('/officers', OfficerController::class);
+        Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::prefix('officers')->name('officers.')->group(function () {
+            Route::get('/search', [OfficerController::class, 'search'])->name('search');
+        });
         Route::middleware('checkPart:Admin')->group(function () {
             Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
             Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
@@ -76,10 +89,12 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             Route::prefix('periods')->name('periods.')->group(function () {
                 Route::controller(PeriodController::class)->group(function() {
                     Route::post('/skip/{period}', 'skip')->name('skip');
+                    Route::post('/finish/{period}', 'finish')->name('finish');
                 });
             });
             Route::resource('/criterias', CriteriaController::class);
             Route::resource('/subcriterias', SubCriteriaController::class);
+            Route::resource('/vote-criterias', VoteCriteriaController::class);
         });
     });
     Route::prefix('inputs')->name('inputs.')->group(function () {
@@ -110,7 +125,8 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         Route::prefix('votes')->name('votes.')->group(function () {
             Route::controller(VoteController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
-                Route::post('/{period}/{officer}', 'select')->name('select');
+                Route::get('/{period}', 'vote')->name('vote');
+                Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
             });
         });
     });

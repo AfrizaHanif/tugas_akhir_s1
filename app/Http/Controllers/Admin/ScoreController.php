@@ -11,6 +11,7 @@ use App\Models\Period;
 use App\Models\Score;
 use App\Models\SubCriteria;
 use App\Models\Vote;
+use App\Models\VoteCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -263,16 +264,20 @@ class ScoreController extends Controller
         $scores = Score::with('officer')->where('id_period', $period)->orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
 
         foreach($scores as $score){
+            $criterias = VoteCriteria::get();
             $str_officer = substr($score->id_officer, 4);
             $str_year = substr($score->id_period, -5);
             $id_vote = "VTE-".$str_year.'-'.$str_officer;
 
-            Vote::insert([
-                //'id_vote'=>$id_vote,
-                'id_officer'=>$score->id_officer,
-                'id_period'=>$score->id_period,
-                'votes'=>'0',
-            ]);
+            foreach($criterias as $criteria){
+                Vote::insert([
+                    //'id_vote'=>$id_vote,
+                    'id_officer'=>$score->id_officer,
+                    'id_period'=>$score->id_period,
+                    'id_vote_criteria'=>$criteria->id_vote_criteria,
+                    'votes'=>'0',
+                ]);
+            }
         }
 
         Period::where('id_period', $period)->update([

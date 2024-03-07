@@ -3,16 +3,12 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('analysis/saw*'))
-    <title>Analisis SAW | Tugas Akhir</title>
-    @elseif (Request::is('analysis/wp*'))
-    <title>Analisis WP | Tugas Akhir</title>
-    @endif
+<title>Kriteria untuk Pemilihan | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.analysis')
+@include('Pages.Admin.Includes.Contents.vote-crit')
 @endsection
 
 <!--MODALS-->

@@ -79,6 +79,19 @@ class PeriodController extends Controller
         return redirect()->route('masters.periods.index')->with('success','Proses Lewat Berhasil');
     }
 
+    public function finish($period)
+    {
+        //UPDATE DATA
+        Period::where('id_period', $period)->update([
+            'status'=>'Finished',
+		]);
+
+        //
+
+        //RETURN TO VIEW
+        return redirect()->route('masters.periods.index')->with('success','Pemilihan Karyawan Terbaik selesai.');
+    }
+
     /**
      * Remove the specified resource from storage.
      */

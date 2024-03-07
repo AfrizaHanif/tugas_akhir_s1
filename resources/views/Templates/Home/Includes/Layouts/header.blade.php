@@ -17,7 +17,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/officers" class="nav-link {{ (request()->is('officers')) ? 'text-secondary' : 'text-white' }}">
+                        <a href="/officers" class="nav-link {{ (request()->is('officers*')) ? 'text-secondary' : 'text-white' }}">
                             <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#officer"/></svg>
                             Pegawai
                         </a>

@@ -1,16 +1,49 @@
 <h1 class="text-center mb-4">Voting Karyawan Terbaik</h1>
 @include('Templates.Includes.Components.alert')
+<p>
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-vte-periods">
+                <i class="bi bi-folder-plus"></i>
+                Pilih Periode
+            </a>
+            <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                <i class="bi bi-question-lg"></i>
+                Bantuan
+            </a>
+        </div>
+        @if (Request::is('inputs/votes/*'))
+        <div class="col-auto">
+            <label for="tahun_saw_dl" class="col-form-label">Cek Pegawai:</label>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-view-{{ $prd_select->id_period }}">
+                    <i class="bi bi-database"></i>
+                    Hanya Jabatan Ini
+                </a>
+                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-all-{{ $prd_select->id_period }}">
+                    <i class="bi bi-database"></i>
+                    Semua Jabatan
+                </a>
+            </div>
+        </div>
+        @endif
+    </div>
+</p>
+@if (Request::is('inputs/votes') || Request::is('votes'))
+<div class="alert alert-info" role="alert">
+    Untuk melihat atau memilih pegawai yang akan dijadikan sebagai karyawan terbaik di setiap periode, klik pilih periode untuk memilih periode yang tersedia.
+</div>
+@endif
+@if (Request::is('inputs/votes/*') || Request::is('votes/*'))
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                @forelse ($periods as $period)
-                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    @if ($period->status == "Finished")
-                    {{ $period->name }} <span class="badge bg-secondary">Selesai</span>
-                    @else
-                    {{ $period->name }}
-                    @endif
+                @forelse ($criterias as $criteria)
+                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_vote_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_vote_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    {{ $criteria->name }}
                 </button>
                 @empty
                 <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
@@ -23,33 +56,12 @@
     </div>
     <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
-            @forelse ($periods as $period)
-            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
-                @if ($period->status == "Finished")
-                <h2>{{ $period->name }} <span class="badge bg-success">Selesai</span></h2>
+            @forelse ($criterias as $criteria)
+            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}" role="tabpanel" aria-labelledby="pills-{{ $criteria->id_vote_criteria }}-tab" tabindex="0">
+                @if ($checks->where('id_officer', Auth::user()->officer->id_officer)->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() != 0)
+                <h2>{{ $criteria->name }} <span class="badge text-bg-success">Voted</span></h2>
                 @else
-                <h2>{{ $period->name }}</h2>
-                @endif
-                @if (Auth::user()->part != "Pegawai")
-                <p>
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="tahun_saw_dl" class="col-form-label">Cek Pegawai</label>
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-chk-view-{{ $period->id_period }}">
-                                    <i class="bi bi-database"></i>
-                                    Hanya Jabatan Ini
-                                </a>
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-chk-all-{{ $period->id_period }}">
-                                    <i class="bi bi-database"></i>
-                                    Semua Jabatan
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </p>
+                <h2>{{ $criteria->name }}</h2>
                 @endif
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -60,13 +72,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($votes->where('id_period', $period->id_period) as $vote)
+                        @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $vote->officer->name }}</td>
                             <td>
-                                @if ($checks->where('id_period', $period->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
-                                <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-vte-select-{{ $period->id_period }}-{{ $vote->id_officer }}">
+                                @if ($checks->where('id_period', $prd_select->id_period)->where('id_officer', Auth::user()->id_officer)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() == 0)
+                                <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}">
                                     <i class="bi bi-check-lg"></i>
                                 </a>
                                 @else
@@ -81,7 +93,7 @@
                     <tfoot>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="10">Total Data: <b>{{ $votes->where('id_period', $period->id_period)->count() }}</b> Pegawai</td>
+                                <td colspan="10">Total Data: <b>{{ $votes->where('id_period', $prd_select->id_period)->count() }}</b> Pegawai</td>
                             </tr>
                         </tfoot>
                     </tfoot>
@@ -97,3 +109,4 @@
         </div>
     </div>
 </div>
+@endif

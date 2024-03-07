@@ -45,7 +45,7 @@
                             </a>
                             </span>
                             @else
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-res-get-{{ $period->id_period }}">
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $period->id_period }}">
                                 <i class="bi bi-database-down"></i>
                                 Ambil data
                             </a>
@@ -73,7 +73,7 @@
                                     </a>
                                 </span>
                                 @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
-                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-res-finish-{{ $period->id_period }}">
+                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-scr-finish-{{ $period->id_period }}">
                                     <i class="bi bi-clipboard2-check"></i>
                                     Selesai
                                 </a>
@@ -119,7 +119,7 @@
                             <td>
                                 <div class="dropdown">
                                     @if ($period->status == 'Finish' || $period->status == 'Voting')
-                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                         <i class="bi bi-menu-button-fill"></i>
                                     </button>
                                     @else
@@ -129,10 +129,10 @@
                                     @endif
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-yes-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-res-no-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-no-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>

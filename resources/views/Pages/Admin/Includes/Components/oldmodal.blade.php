@@ -1752,7 +1752,7 @@
 @endif
 
 @if (Request::is('analysis/saw*'))
-<div class="modal fade" id="modal-saw-view" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
+<div class="modal fade" id="modal-saw-periods" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1797,7 +1797,7 @@
 @endif
 
 @if (Request::is('analysis/wp*'))
-<div class="modal fade" id="modal-wp-view" tabindex="-1" aria-labelledby="modalwp" aria-hidden="true">
+<div class="modal fade" id="modal-wp-periods" tabindex="-1" aria-labelledby="modalwp" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\DB;
 
 class AnalysisController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
 
         return view('Pages.Admin.Analysis.analysis', compact('periods'));
@@ -166,7 +167,9 @@ class AnalysisController extends Controller
         arsort($matrix);
         //dd($mx_hasil);
 
-        return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
+        //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
+
+        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
     }
 
     public function wp($period)
@@ -321,6 +324,8 @@ class AnalysisController extends Controller
         arsort($v);
         //dd($v_hasil);
 
-        return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
+        //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
+
+        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
     }
 }

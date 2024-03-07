@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Kriteria | Tugas Akhir</title>
+<title>Kriteria untuk Penilaian | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->

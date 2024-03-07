@@ -1,21 +1,117 @@
 <h1 class="text-center mb-4">Pegawai BPS Jawa Timur</h1>
 @include('Templates.Includes.Components.alert')
 @if (Auth::user()->part == "Admin")
-<p>
-    <div class="btn-group" role="group" aria-label="Basic example">
+    @if (Request::is('masters/officers/search*'))
+    <p>
+        <a class="btn btn-secondary" href="{{ route('masters.officers.index') }}">
+            <i class="bi bi-backspace-fill"></i>
+            Kembali
+        </a>
+    </p>
+    @else
+    <p>
         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-prt-create">
             <i class="bi bi-folder-plus"></i>
             Tambah Bagian
         </a>
-    </div>
-    <div class="btn-group" role="group" aria-label="Basic example">
         <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
             <i class="bi bi-diagram-2"></i>
             Lihat Jabatan
         </a>
-    </div>
-</p>
+        <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapse-search" role="button" aria-expanded="false" aria-controls="collapse-search">
+            <i class="bi bi-search"></i>
+            Cari Pegawai
+        </a>
+        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+            <i class="bi bi-question-lg"></i>
+            Bantuan
+        </a>
+    </p>
+    @endif
 @endif
+@if (Request::is('masters/officers/search*'))
+<p>
+    <form action="{{ route('masters.officers.search') }}" method="GET">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
+            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
+            <button class="btn btn-outline-primary" type="submit" id="officer-search">Cari</button>
+        </div>
+    </form>
+</p>
+@else
+<div class="collapse" id="collapse-search">
+    <p>
+        <form action="{{ route('masters.officers.search') }}" method="GET">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
+                <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
+                <button class="btn btn-outline-primary" type="submit" id="officer-search">Cari</button>
+            </div>
+        </form>
+    </p>
+</div>
+@endif
+@if (Request::is('masters/officers/search*'))
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr class="table-primary">
+            <th class="col-1" scope="col">#</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Jabatan</th>
+            <th scope="col">Jenis Kelamin</th>
+            <th class="col-1" scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($officers as $officer)
+        <tr>
+            <th scope="row">{{ $loop->iteration }}</th>
+            <td>{{ $officer->name }}</td>
+            <td>{{ $officer->department->name }}</td>
+            <td>{{ $officer->gender }}</td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-menu-button-fill"></i>
+                    </button>
+                    <ul class="dropdown-menu mx-0 shadow w-table-menu">
+                        <li>
+                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-view-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                Detail
+                            </a>
+                        </li>
+                        @if (Auth::user()->part == "Admin")
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-update-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                Edit
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-off-delete-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                Delete
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="7">Tidak ada Pegawai yang terdaftar</td>
+        </tr>
+        @endforelse
+    </tbody>
+    <tfoot class="table-group-divider table-secondary">
+        <tr>
+            <td colspan="7">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+        </tr>
+    </tfoot>
+</table>
+{{$officers->withQueryString()->links()}}
+@else
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
@@ -128,3 +224,4 @@
         </div>
     </div>
 </div>
+@endif

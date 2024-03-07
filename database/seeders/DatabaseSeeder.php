@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder
         DB::table('officers')->insert([
             'id_officer' => 'OFF-001',
             'name' => 'Kepala BPS Jatim',
-            'id_department' => 'DPT-004',
+            'id_department' => 'DPT-001',
             'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
@@ -130,7 +130,7 @@ class DatabaseSeeder extends Seeder
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
             'name' => 'Pegawai Kepegawaian',
-            'id_department' => 'DPT-001',
+            'id_department' => 'DPT-002',
             'id_part' => 'PRT-002',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
@@ -151,7 +151,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-004',
-            'name' => 'Pegawai Badan Umum 1',
+            'name' => 'Pegawai Badan Umum',
             'id_department' => 'DPT-004',
             'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
@@ -162,17 +162,6 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-005',
-            'name' => 'Pegawai Badan Umum 2',
-            'id_department' => 'DPT-005',
-            'id_part' => 'PRT-003',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-006',
             'name' => 'Ketua Tim Teknis 1',
             'id_department' => 'DPT-009',
             'id_part' => 'PRT-001',
@@ -183,7 +172,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-007',
+            'id_officer' => 'OFF-006',
             'name' => 'Pegawai Tim Teknis 1',
             'id_department' => 'DPT-009',
             'id_part' => 'PRT-004',
@@ -194,21 +183,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-008',
+            'id_officer' => 'OFF-007',
             'name' => 'Ketua Tim Teknis 2',
             'id_department' => 'DPT-008',
             'id_part' => 'PRT-001',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-009',
-            'name' => 'Pegawai Tim Teknis 2',
-            'id_department' => 'DPT-008',
-            'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -249,7 +227,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'testketim1@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KTT',
-            'id_officer' => 'OFF-006',
+            'id_officer' => 'OFF-005',
         ]);
 
         DB::table('users')->insert([
@@ -258,7 +236,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'testketim2@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KTT',
-            'id_officer' => 'OFF-008',
+            'id_officer' => 'OFF-007',
         ]);
 
         DB::table('users')->insert([
@@ -276,7 +254,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'testpegawai@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Pegawai',
-            'id_officer' => 'OFF-009',
+            'id_officer' => 'OFF-006',
         ]);
 
         //PERIOODS: Periode
@@ -437,6 +415,42 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             'level' => '9',
             'need' => 'Ya',
+        ]);
+
+        //VOTE CRITERIAS: Kriteria untuk Voting
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-001',
+            'name' => 'Berorientasi Pelayanan',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-002',
+            'name' => 'Akuntabel',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-003',
+            'name' => 'Kompeten',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-004',
+            'name' => 'Harmonis',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-005',
+            'name' => 'Loyal',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-006',
+            'name' => 'Adaptif',
+        ]);
+
+        DB::table('vote_criterias')->insert([
+            'id_vote_criteria' => 'VCR-007',
+            'name' => 'Kolaboratif',
         ]);
 
         /*

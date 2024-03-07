@@ -1,12 +1,14 @@
 <h1 class="text-center mb-4">Periode</h1>
 @include('Templates.Includes.Components.alert')
 <p>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-per-create">
-            <i class="bi bi-folder-plus"></i>
-            Tambah Periode
-        </a>
-    </div>
+    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-per-create">
+        <i class="bi bi-folder-plus"></i>
+        Tambah Periode
+    </a>
+    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+        <i class="bi bi-question-lg"></i>
+        Bantuan
+    </a>
 </p>
 <table class="table table-hover table-bordered">
     <thead>
@@ -58,7 +60,7 @@
                     @endif
                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                         <li>
-                            @if ($period->status != "Pending")
+                            @if ($period->status == "Pending")
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-skip-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#skip"/></svg>
                                 Lewati
                             </a>

@@ -66,18 +66,62 @@
 @endif
 
 @if (Request::is('inputs/votes*') || Request::is('votes*'))
-    @foreach ($periods as $period)
-        @foreach ($votes->where('id_period', $period->id_period) as $vote)
-        <div class="modal fade" id="modal-vte-select-{{ $period->id_period }}-{{ $vote->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-vte-periods" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalsaw">Pilih Periode</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="tahun_saw_dl" class="col-form-label">Pilih Tahun</label>
+                    </div>
+                    <div class="col-auto dropend">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-calendar3-event-fill"></i>
+                        </button>
+                        <ul class="dropdown-menu" style="max-height: 180px; overflow-y: auto;">
+                            @forelse ( $periods as $period )
+                            @if (Auth::user()->part == "Pegawai")
+                            <li><a class="dropdown-item" href="/votes/{{ $period->id_period }}">{{ $period->name }}</a></li>
+                            @else
+                            <li><a class="dropdown-item" href="/inputs/votes/{{ $period->id_period }}">{{ $period->name }}</a></li>
+                            @endif
+                            @empty
+                            <li><a class="dropdown-item disabled" href="#" aria-disabled="true">Tidak ada data</a></li>
+                            @endforelse
+                        </ul>
+                    </div>
+                    <div class="col-auto">
+                        <span id="tahun_help_saw_dl" class="form-text">
+                            Antara 2010 sampai sekarang
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@if (Request::is('inputs/votes/*') || Request::is('votes/*'))
+    @foreach ($criterias as $criteria)
+        @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
+        <div class="modal fade" id="modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     @if (Auth::user()->part == "Pegawai")
-                    <form action="{{ route('votes.select', ['period'=>$period->id_period, 'officer'=>$vote->id_officer]) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
                     @else
-                    <form action="{{ route('inputs.votes.select', ['period'=>$period->id_period, 'officer'=>$vote->id_officer]) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('inputs.votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
                     @endif
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Pegawai ({{ $vote->id_officer}})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Pegawai ({{ $vote->id_officer }}) ({{ $criteria->id_vote_criteria }})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

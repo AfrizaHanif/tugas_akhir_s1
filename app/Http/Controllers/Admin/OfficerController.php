@@ -163,4 +163,17 @@ class OfficerController extends Controller
         //RETURN TO VIEW
         return redirect()->route('masters.officers.index')->with('success','Hapus Pegawai Berhasil');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $parts = Part::whereNot('name', 'Developer')->get();
+        $departments = Department::whereNot('name', 'Developer')->get();
+        $officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->where('name','like',"%".$search."%")
+        ->paginate(10);
+
+        return view('Pages.Admin.officer', compact('parts', 'departments', 'officers', 'search'));
+    }
 }

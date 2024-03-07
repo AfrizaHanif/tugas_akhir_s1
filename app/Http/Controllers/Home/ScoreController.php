@@ -15,7 +15,7 @@ class ScoreController extends Controller
      */
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
         return view('Pages.Home.score', compact('periods', 'scores', 'officers'));
