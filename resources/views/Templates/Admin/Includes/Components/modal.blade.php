@@ -8,6 +8,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-prt-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Bagian</label>
@@ -39,6 +42,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-prt-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Bagian</label>
@@ -100,6 +106,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-off-create')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf
                         <div class="mb-3">
                             <label for="nip_bps" class="form-label">NIP BPS</label>
@@ -210,6 +219,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-off-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="nip_bps" class="form-label">NIP BPS</label>
@@ -418,6 +430,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-dep-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Jabatan</label>
@@ -457,6 +472,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-dep-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Jabatan</label>
@@ -529,6 +547,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-usr-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="username" class="form-label">User Name</label>
@@ -587,6 +608,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-usr-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="username" class="form-label">User Name</label>
@@ -678,6 +702,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-crt-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Kriteria</label>
@@ -717,6 +744,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-crt-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Kriteria</label>
@@ -786,6 +816,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-sub-create')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf
                         <div class="mb-3">
                             <label for="id_criteria" class="form-label">Kode Kriteria</label>
@@ -852,6 +885,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            @if (Session::get('modal_redirect') == 'modal-sub-update')
+                            @include('Templates.Includes.Components.alert')
+                            @endif
                             @csrf @method('PUT')
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama Sub Kriteria</label>
@@ -948,6 +984,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-vcr-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Kriteria</label>
@@ -979,6 +1018,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Session::get('modal_redirect') == 'modal-vcr-update')
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Kriteria</label>
@@ -1043,6 +1085,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-per-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="month" class="form-label">Bulan</label>
@@ -1083,6 +1128,37 @@
 </div>
 
     @foreach ($periods as $period)
+    <div class="modal fade" id="modal-per-start-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('masters.periods.start', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Mulai Proses Pemilihan Karyawan Terbaik ({{ $period->id_period}})</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda ingin memulai proses pemilihan karyawan terbaik? Anda tidak dapat melewatkan periode ini setelah proses tersebut dimulai.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                            <i class="bi bi-backspace"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modal-per-skip-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1910,7 +1986,7 @@
                                 <td>
                                     @if ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() == 0)
                                     <span class="badge text-bg-danger">Belum Memilih</span>
-                                    @elseif ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() <= $criterias->count())
+                                    @elseif ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() < $criterias->count())
                                     <span class="badge text-bg-warning">Sebagian Memilih</span>
                                     @else
                                     <span class="badge text-bg-success">Sudah Memilih</span>
@@ -1983,7 +2059,7 @@
                                 <td>
                                     @if ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() == 0)
                                     <span class="badge text-bg-danger">Belum Memilih</span>
-                                    @elseif ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() <= $criterias->count())
+                                    @elseif ($checks->where('id_officer', $officer->id_officer)->where('id_period', $prd_select->id_period)->count() < $criterias->count())
                                     <span class="badge text-bg-warning">Sebagian Memilih</span>
                                     @else
                                     <span class="badge text-bg-success">Sudah Memilih</span>

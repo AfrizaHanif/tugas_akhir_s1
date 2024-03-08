@@ -1,5 +1,7 @@
 <h1 class="text-center mb-4">Kriteria untuk Pemilihan</h1>
+@if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
+@endif
 <p>
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-vcr-create">
         <i class="bi bi-folder-plus"></i>

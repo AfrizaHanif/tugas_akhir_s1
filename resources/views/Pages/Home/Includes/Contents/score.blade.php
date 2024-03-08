@@ -31,7 +31,11 @@
                     </thead>
                     <tbody>
                         @forelse ($scores->where('id_period', $period->id_period) as $score)
+                        @if ($check->where('id_period', $period->id_period)->where('id_officer', $score->id_officer)->count() != 0)
+                        <tr class="table-success">
+                        @else
                         <tr>
+                        @endif
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $score->officer->name }}</td>
                             <td>{{ $score->final_score }}</td>

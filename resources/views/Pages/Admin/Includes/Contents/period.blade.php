@@ -1,8 +1,10 @@
 <h1 class="text-center mb-4">Periode</h1>
+@if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
+@endif
 <p>
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-per-create">
-        <i class="bi bi-folder-plus"></i>
+        <i class="bi bi-calendar4-range"></i>
         Tambah Periode
     </a>
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
@@ -39,11 +41,9 @@
             </td>
             <td>
                 <div class="dropdown">
-                    @if ($period->status != "Pending")
+                    @if ($period->status == "Finished" || $period->status == "Scoring" || $period->status == "Skipped")
                         @if ($period->status == "Finished")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena proses pemilihan karyawan terbaik pada periode ini sudah selesai.">
-                        @elseif ($period->status == "Voting")
-                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam pemilihan karyawan terbaik.">
                         @elseif ($period->status == "Scoring")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam penilaian seluruh pegawai.">
                         @elseif ($period->status == "Skipped")
@@ -53,7 +53,7 @@
                             <i class="bi bi-menu-button-fill"></i>
                         </button>
                     </span>
-                    @else
+                    @elseif ($period->status == "Pending" || $period->status == "Voting")
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-menu-button-fill"></i>
                     </button>
@@ -61,6 +61,9 @@
                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                         <li>
                             @if ($period->status == "Pending")
+                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-start-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#start"/></svg>
+                                Mulai
+                            </a>
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-skip-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#skip"/></svg>
                                 Lewati
                             </a>

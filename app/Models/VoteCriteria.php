@@ -24,4 +24,8 @@ class VoteCriteria extends Model
     {
         return $this->hasMany(VoteCheck::class, 'id_vote_criteria', 'id_vote_criteria');
     }
+    public function voteresult()
+    {
+        return $this->hasMany(VoteResult::class, 'id_vote_criteria', 'id_vote_criteria');
+    }
 }

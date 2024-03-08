@@ -61,13 +61,13 @@
                             <ul class="dropdown-menu dropdown-menu-dark shadow mx-0 w-sidebar-menu">
                                 <li>
                                     <a class="dropdown-item d-flex gap-2 align-items-center" href="/masters/criterias/">
-                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#provinsi"/></svg>
+                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-score"/></svg>
                                         Untuk Penilaian
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex gap-2 align-items-center" href="/masters/vote-criterias/">
-                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#kabkota"/></svg>
+                                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-vote"/></svg>
                                         Untuk Pemilihan
                                     </a>
                                 </li>

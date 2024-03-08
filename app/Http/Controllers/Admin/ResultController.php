@@ -205,7 +205,7 @@ class ResultController extends Controller
             'status'=>'In Review'
         ]);
 
-        return redirect()->route('results.index')->with('success','Ambil Data Berhasil');
+        return redirect()->route('results.index')->with('success','Ambil Data Berhasil')->with('code_alert', 1);
     }
 
     public function yes($id)
@@ -227,7 +227,7 @@ class ResultController extends Controller
             'status'=>'Final'
         ]);
 
-        return redirect()->route('results.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui');
+        return redirect()->route('results.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
     }
 
     public function no($id)
@@ -249,7 +249,7 @@ class ResultController extends Controller
             'status'=>'Need Fix'
         ]);
 
-        return redirect()->route('results.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan');
+        return redirect()->route('results.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)
@@ -258,6 +258,6 @@ class ResultController extends Controller
             'status'=>'Finish',
         ]);
 
-        return redirect()->route('results.index')->with('success','Data berhasil dikunci');
+        return redirect()->route('results.index')->with('success','Data berhasil dikunci')->with('code_alert', 1);
     }
 }

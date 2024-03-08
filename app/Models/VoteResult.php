@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Result extends Model
+class VoteResult extends Model
 {
     use HasFactory;
 
-    protected $table = "results";
+    protected $table = "vote_results";
 
     protected $fillable = [
         'id_officer',
         'id_period',
-        'count',
+        'id_vote_criteria',
+        'final_vote',
     ];
 
     public function officer()
@@ -24,5 +25,9 @@ class Result extends Model
     public function period()
     {
         return $this->belongsTo(Period::class, 'id_period', 'id_period');
+    }
+    public function votecriteria()
+    {
+        return $this->belongsTo(VoteCriteria::class, 'id_vote_criteria', 'id_vote_criteria');
     }
 }

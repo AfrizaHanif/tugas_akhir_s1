@@ -71,6 +71,10 @@ class Officer extends Model
     {
         return $this->hasMany(VoteCheck::class, 'id_officer', 'id_officer');
     }
+    public function voteresult()
+    {
+        return $this->hasMany(VoteResult::class, 'id_officer', 'id_officer');
+    }
     public function user()
     {
         return $this->hasMany(User::class, 'id_officer', 'id_officer',);

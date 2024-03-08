@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('vote_results', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('id_period', 11);
             $table->foreign('id_period')->references('id_period')->on('periods');
             $table->char('id_officer', 11);
             $table->foreign('id_officer')->references('id_officer')->on('officers');
-            $table->unsignedSmallInteger('count');
+            $table->char('id_vote_criteria', 11);
+            $table->foreign('id_vote_criteria')->references('id_vote_criteria')->on('vote_criterias');
+            $table->unsignedSmallInteger('final_vote');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('results');
+        Schema::dropIfExists('vote_results');
     }
 };

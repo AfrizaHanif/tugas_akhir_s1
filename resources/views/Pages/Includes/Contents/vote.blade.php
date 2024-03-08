@@ -73,7 +73,11 @@
                     </thead>
                     <tbody>
                         @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
+                        @if ($checks->where('id_officer', Auth::user()->officer->id_officer)->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria)->where('officer_selected', $vote->id_officer)->count() != 0)
+                        <tr class="table-success">
+                        @else
                         <tr>
+                        @endif
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $vote->officer->name }}</td>
                             <td>

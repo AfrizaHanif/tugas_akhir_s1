@@ -88,6 +88,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'destroy']]);
             Route::prefix('periods')->name('periods.')->group(function () {
                 Route::controller(PeriodController::class)->group(function() {
+                    Route::post('/start/{period}', 'start')->name('start');
                     Route::post('/skip/{period}', 'skip')->name('skip');
                     Route::post('/finish/{period}', 'finish')->name('finish');
                 });

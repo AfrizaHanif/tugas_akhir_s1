@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
+use App\Models\HistoryPerformance;
+use App\Models\HistoryPresence;
+use App\Models\HistoryScore;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Officer;
@@ -212,7 +215,7 @@ class ScoreController extends Controller
             'status'=>'In Review'
         ]);
 
-        return redirect()->route('inputs.scores.index')->with('success','Ambil Data Berhasil');
+        return redirect()->route('inputs.scores.index')->with('success','Ambil Data Berhasil')->with('code_alert', 1);
     }
 
     public function yes($id)
@@ -234,7 +237,7 @@ class ScoreController extends Controller
             'status'=>'Final'
         ]);
 
-        return redirect()->route('inputs.scores.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui');
+        return redirect()->route('inputs.scores.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
     }
 
     public function no($id)
@@ -256,7 +259,7 @@ class ScoreController extends Controller
             'status'=>'Need Fix'
         ]);
 
-        return redirect()->route('inputs.scores.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan');
+        return redirect()->route('inputs.scores.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)
@@ -280,10 +283,47 @@ class ScoreController extends Controller
             }
         }
 
+        $scores1 = Score::where('id_period', $period)->get();
+        foreach($scores1 as $score){
+            $getperiod1 = Period::where('id_period', $score->id_period)->first();
+            $getofficer1 = Officer::where('id_officer', $score->id_officer)->first();
+            HistoryScore::insert([
+                'period_name'=>$getperiod1->name,
+                'officer_name'=>$getofficer1->name,
+                'final_score'=>$score->final_score,
+            ]);
+        }
+
+        $presences = Presence::where('id_period', $period)->get();
+        foreach($presences as $presence){
+            $getperiod2 = Period::where('id_period', $presence->id_period)->first();
+            $getofficer2 = Officer::where('id_officer', $presence->id_officer)->first();
+            $getsubcriteria2 = SubCriteria::where('id_sub_criteria', $presence->id_sub_criteria)->first();
+            HistoryPresence::insert([
+                'period_name'=>$getperiod2->name,
+                'officer_name'=>$getofficer2->name,
+                'sub_criteria_name'=>$getsubcriteria2->name,
+                'input'=>$presence->input,
+            ]);
+        }
+
+        $performances = Performance::where('id_period', $period)->get();
+        foreach($performances as $performance){
+            $getperiod3 = Period::where('id_period', $performance->id_period)->first();
+            $getofficer3 = Officer::where('id_officer', $performance->id_officer)->first();
+            $getsubcriteria3 = SubCriteria::where('id_sub_criteria', $performance->id_sub_criteria)->first();
+            HistoryPerformance::insert([
+                'period_name'=>$getperiod3->name,
+                'officer_name'=>$getofficer3->name,
+                'sub_criteria_name'=>$getsubcriteria3->name,
+                'input'=>$performance->input,
+            ]);
+        }
+
         Period::where('id_period', $period)->update([
             'status'=>'Voting',
         ]);
 
-        return redirect()->route('inputs.scores.index')->with('success','Data berhasil dikunci');
+        return redirect()->route('inputs.scores.index')->with('success','Data berhasil dikunci')->with('code_alert', 1);
     }
 }

@@ -92,7 +92,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.presences.index')->with('success','Tambah Data Kehadiran Berhasil');
+        return redirect()->route('inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -129,7 +129,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.presences.index')->with('success','Ubah Data Kehadiran Berhasil');
+        return redirect()->route('inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -150,6 +150,6 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.presences.index')->with('success','Hapus Data Kehadiran Berhasil');
+        return redirect()->route('inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 }

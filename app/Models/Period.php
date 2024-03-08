@@ -36,15 +36,19 @@ class Period extends Model
     }
     public function score()
     {
-        return $this->hasMany(Score::class, 'id_officer', 'id_officer');
+        return $this->hasMany(Score::class, 'id_period', 'id_period');
     }
     public function vote()
     {
-        return $this->hasMany(Vote::class, 'id_officer', 'id_officer');
+        return $this->hasMany(Vote::class, 'id_period', 'id_period');
     }
     public function votecheck()
     {
-        return $this->hasMany(VoteCheck::class, 'id_officer', 'id_officer');
+        return $this->hasMany(VoteCheck::class, 'id_period', 'id_period');
+    }
+    public function voteresult()
+    {
+        return $this->hasMany(VoteResult::class, 'id_period', 'id_period');
     }
 
     //BETA

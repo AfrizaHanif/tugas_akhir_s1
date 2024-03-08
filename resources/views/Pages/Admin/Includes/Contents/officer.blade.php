@@ -1,5 +1,7 @@
 <h1 class="text-center mb-4">Pegawai BPS Jawa Timur</h1>
+@if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
+@endif
 @if (Auth::user()->part == "Admin")
     @if (Request::is('masters/officers/search*'))
     <p>

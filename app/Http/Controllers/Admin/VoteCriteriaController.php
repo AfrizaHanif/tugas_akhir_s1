@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\VoteCriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class VoteCriteriaController extends Controller
@@ -30,11 +31,22 @@ class VoteCriteriaController extends Controller
         $id_vote_criteria = "VCR-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
-            'name' => 'unique:criterias',
+            'name' => 'unique:vote_criterias',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:vote_criterias',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-create');
+        }
 
         //STORE DATA
         VoteCriteria::insert([
@@ -43,7 +55,7 @@ class VoteCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Tambah Kriteria Berhasil');
+        return redirect()->route('masters.vote-criterias.index')->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -52,11 +64,22 @@ class VoteCriteriaController extends Controller
     public function update(Request $request, VoteCriteria $votecriteria)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
-            'name' => [Rule::unique('vote-criterias')->ignore($votecriteria),],
+            'name' => [Rule::unique('vote_criterias')->ignore($votecriteria),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => [Rule::unique('vote_criterias')->ignore($votecriteria),],
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-update')->with('id_redirect', $votecriteria->id_vote_criteria);
+        }
 
         //STORE DATA
         $votecriteria->update([
@@ -64,7 +87,7 @@ class VoteCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Ubah Kriteria Berhasil');
+        return redirect()->route('masters.vote-criterias.index')->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -76,6 +99,6 @@ class VoteCriteriaController extends Controller
         $votecriteria->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Hapus Kriteria Berhasil');
+        return redirect()->route('masters.vote-criterias.index')->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
     }
 }

@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('history_results', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('id_period', 11);
-            $table->foreign('id_period')->references('id_period')->on('periods');
-            $table->char('id_officer', 11);
-            $table->foreign('id_officer')->references('id_officer')->on('officers');
-            $table->unsignedSmallInteger('count');
+            $table->char('period_name', 20);
+            $table->string('officer_name', 50);
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('results');
+        Schema::dropIfExists('history_results');
     }
 };

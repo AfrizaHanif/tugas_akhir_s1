@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Officer;
 use App\Models\Part;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class PartController extends Controller
@@ -22,11 +23,22 @@ class PartController extends Controller
         $id_part = "PRT-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
-            'name' => 'unique:criterias',
+            'name' => 'unique:parts',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:parts',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
+        }
 
         //STORE DATA
         Part::insert([
@@ -35,7 +47,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Tambah Bagian Berhasil');
+        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$id_part])->with('success','Tambah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -44,11 +56,22 @@ class PartController extends Controller
     public function update(Request $request, Part $part)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
             'name' => [Rule::unique('parts')->ignore($part),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => [Rule::unique('parts')->ignore($part),],
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
+        }
 
         //UPDATE DATA
         $part->update([
@@ -56,7 +79,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Ubah Bagian Berhasil');
+        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$part->id_part])->with('success','Ubah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -75,6 +98,6 @@ class PartController extends Controller
         $part->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Hapus Bagian Berhasil');
+        return redirect()->route('masters.officers.index')->with('success','Hapus Bagian Berhasil')->with('code_alert', 1);
     }
 }

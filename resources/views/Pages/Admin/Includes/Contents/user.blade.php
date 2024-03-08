@@ -1,8 +1,10 @@
 <h1 class="text-center mb-4">Data Pengguna</h1>
+@if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
+@endif
 <p>
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-usr-create">
-        <i class="bi bi-folder-plus"></i>
+        <i class="bi bi-person-add"></i>
         Tambah Pengguna
     </a>
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">

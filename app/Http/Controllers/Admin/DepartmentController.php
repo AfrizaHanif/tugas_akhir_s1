@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Officer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class DepartmentController extends Controller
@@ -22,11 +23,22 @@ class DepartmentController extends Controller
         $id_department = "DPT-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
             'name' => 'unique:departments',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:departments',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create');
+        }
 
         //STORE DATA
         Department::insert([
@@ -36,7 +48,7 @@ class DepartmentController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Tambah Jabatan Berhasil');
+        return redirect()->route('masters.officers.index')->with('success','Tambah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
     }
 
     /**
@@ -45,11 +57,22 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
             'name' => [Rule::unique('departments')->ignore($department),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => [Rule::unique('departments')->ignore($department),],
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $department->id_department);
+        }
 
         //UPDATE DATA
         $department->update([
@@ -58,7 +81,7 @@ class DepartmentController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Ubah Jabatan Berhasil');
+        return redirect()->route('masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
     }
 
     /**
@@ -68,7 +91,7 @@ class DepartmentController extends Controller
     {
         //CHECK DATA
         if(Officer::where('id_department', $department->id_department)->exists()) {
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)');
+            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view');
         }else{
             //CLEAR
         }
@@ -77,6 +100,6 @@ class DepartmentController extends Controller
         $department->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Hapus Jabatan Berhasil');
+        return redirect()->route('masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
     }
 }

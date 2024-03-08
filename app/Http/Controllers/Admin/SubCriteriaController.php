@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SubCriteriaController extends Controller
@@ -21,11 +22,22 @@ class SubCriteriaController extends Controller
         $id_sub_criteria = "SUB-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
             'name' => 'unique:sub_criterias',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:sub_criterias',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_criteria])->with('modal_redirect', 'modal-sub-create');
+        }
 
         //STORE DATA
         SubCriteria::insert([
@@ -39,7 +51,7 @@ class SubCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->with('success','Tambah Sub Kriteria Berhasil');
+        return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_criteria])->with('success','Tambah Sub Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -48,11 +60,22 @@ class SubCriteriaController extends Controller
     public function update(Request $request, SubCriteria $subcriteria)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
             'name' => [Rule::unique('sub_criterias')->ignore($subcriteria),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'name' => [Rule::unique('sub_criterias')->ignore($subcriteria),],
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$subcriteria->id_criteria])->with('modal_redirect', 'modal-sub-update')->with('id_redirect', $subcriteria->id_sub_criteria);
+        }
 
         //STORE DATA
         $subcriteria->update([
@@ -64,7 +87,7 @@ class SubCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->with('success','Ubah Sub Kriteria Berhasil');
+        return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$subcriteria->id_criteria])->with('success','Ubah Sub Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -76,6 +99,6 @@ class SubCriteriaController extends Controller
         $subcriteria->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->with('success','Hapus Sub Kriteria Berhasil');
+        return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$subcriteria->id_criteria])->with('success','Hapus Sub Kriteria Berhasil')->with('code_alert', 1);
     }
 }

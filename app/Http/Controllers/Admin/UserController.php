@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Officer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -32,6 +33,7 @@ class UserController extends Controller
         $id_user = "USR-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
             'id_officer' => 'unique:users',
             'username' => 'unique:users',
@@ -41,6 +43,20 @@ class UserController extends Controller
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'id_officer' => 'unique:users',
+            'username' => 'unique:users',
+            'email' => 'unique:users',
+        ], [
+            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
+            'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
+        }
 
         //STORE DATA
         User::insert([
@@ -53,7 +69,7 @@ class UserController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Tambah Pengguna Berhasil');
+        return redirect()->route('masters.users.index')->with('success','Tambah Pengguna Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -62,6 +78,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
             'id_officer' => [Rule::unique('users')->ignore($user),],
             'username' => [Rule::unique('users')->ignore($user),],
@@ -71,6 +88,20 @@ class UserController extends Controller
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            'id_officer' => [Rule::unique('users')->ignore($user),],
+            'username' => [Rule::unique('users')->ignore($user),],
+            'email' => [Rule::unique('users')->ignore($user),],
+        ], [
+            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
+            'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);
+        }
 
         //UPDATE DATA
         $user->update([
@@ -82,7 +113,7 @@ class UserController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Ubah Pengguna Berhasil');
+        return redirect()->route('masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -94,6 +125,6 @@ class UserController extends Controller
         $user->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Hapus Pengguna Berhasil');
+        return redirect()->route('masters.users.index')->with('success','Hapus Pengguna Berhasil')->with('code_alert', 1);
     }
 }

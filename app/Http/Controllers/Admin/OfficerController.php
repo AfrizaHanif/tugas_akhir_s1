@@ -11,6 +11,7 @@ use App\Models\Presence;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class OfficerController extends Controller
@@ -42,6 +43,7 @@ class OfficerController extends Controller
         $id_officer = "OFF-".$str_id;
 
         //VALIDATE DATA
+        /*
         $request->validate([
             //'nip_bps' => 'unique:officers',
             //'nip' => 'unique:officers',
@@ -51,6 +53,20 @@ class OfficerController extends Controller
             //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            //'nip_bps' => 'unique:officers',
+            //'nip' => 'unique:officers',
+            'name' => 'unique:officers',
+        ], [
+            //'nip_bps.unique' => 'NIP BPS tidak boleh sama dengan yang terdaftar',
+            //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
+            'name.unique' => 'Nama telah terdaftar',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+        }
 
         //UPLOAD PHOTO
         $photo = '';
@@ -81,7 +97,7 @@ class OfficerController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Tambah Pegawai Berhasil');
+        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('success','Tambah Pegawai Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -90,6 +106,7 @@ class OfficerController extends Controller
     public function update(Request $request, Officer $officer)
     {
         //VALIDATE DATA
+        /*
         $request->validate([
             //'nip_bps' => [Rule::unique('officers')->ignore($officer),],
             //'nip' => [Rule::unique('officers')->ignore($officer),],
@@ -99,6 +116,20 @@ class OfficerController extends Controller
             //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
         ]);
+        */
+        $validator = Validator::make($request->all(), [
+            //'nip_bps' => [Rule::unique('officers')->ignore($officer),],
+            //'nip' => [Rule::unique('officers')->ignore($officer),],
+            'name' => [Rule::unique('officers')->ignore($officer),]
+        ], [
+            //'nip_bps.unique' => 'NIP BPS tidak boleh sama dengan yang terdaftar',
+            //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
+            'name.unique' => 'Nama telah terdaftar',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-update')->with('id_redirect', $officer->id_officer);
+        }
 
         //UPDATE DATA
         $officer->update([
@@ -131,7 +162,7 @@ class OfficerController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Ubah Pegawai Berhasil');
+        return redirect()->route('masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('tab_redirect', $officer->id_part)->with('code_alert', 1);
     }
 
     /**
@@ -161,7 +192,7 @@ class OfficerController extends Controller
         $officer->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Hapus Pegawai Berhasil');
+        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
     }
 
     public function search(Request $request)
