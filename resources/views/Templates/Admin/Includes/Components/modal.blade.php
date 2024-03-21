@@ -106,90 +106,117 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if (Session::get('modal_redirect') == 'modal-off-create')
-                        @include('Templates.Includes.Components.alert')
-                        @endif
                         @csrf
-                        <div class="mb-3">
-                            <label for="nip_bps" class="form-label">NIP BPS</label>
-                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ old('nip_bps') }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="nip" class="form-label">NIP</label>
-                            <input type="number" class="form-control" id="nip" name="nip" value="{{ old('nip') }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Pegawai</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="org_code" class="form-label">Kode Organisasi</label>
-                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ old('org_code') }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_department" class="form-label">Jabatan</label>
-                            <select class="form-select" id="id_department" name="id_department" required>
-                                <option selected disabled>---Pilih Jabatan---</option>
-                                @foreach ($departments as $department)
-                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" hidden>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" value="{{ old('status') }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="last_group" class="form-label">Golongan Akhir</label>
-                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ old('last_group') }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="last_education" class="form-label">Pendidikan Terakhir</label>
-                            <select class="form-select" id="last_education" name="last_education" disabled>
-                                <option selected disabled>---Pilih Status Kerja---</option>
-                                <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : null }}>SD</option>
-                                <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : null }}>SMP</option>
-                                <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : null }}>SMA</option>
-                                <option value="D1/D2/D3" {{ old('last_education') == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
-                                <option value="D4" {{ old('last_education') == 'D4' ? 'selected' : null }}>D4</option>
-                                <option value="S1" {{ old('last_education') == 'S1' ? 'selected' : null }}>S1</option>
-                                <option value="S2" {{ old('last_education') == 'S2' ? 'selected' : null }}>S2</option>
-                                <option value="S3" {{ old('last_education') == 'S3' ? 'selected' : null }}>S3</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="place_birth" class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                            <select class="form-select" id="gender" name="gender" required>
-                                <option selected disabled>---Pilih Jenis Kelamin---</option>
-                                <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="religion" class="form-label">Agama</label>
-                            <select class="form-select" id="religion" name="religion" required>
-                                <option selected disabled>---Pilih Agama---</option>
-                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
-                                <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
-                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="photo" class="form-label">Foto (Pas Foto)</label>
-                            <div class="input-group">
-                                <input type="file" class="form-control" name="photo" id="photo">
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                @if (Session::get('modal_redirect') == 'modal-off-create')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="diri-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#diri-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="didi-{{ $part->id_part }}-tab-pane" aria-selected="true">Data Diri</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pegawai-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#pegawai-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="pegawai-{{ $part->id_part }}-tab-pane" aria-selected="false">Info Pegawai</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="diri-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="diri-{{ $part->id_part }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Nama Pegawai</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="last_education" class="form-label">Pendidikan Terakhir</label>
+                                            <select class="form-select" id="last_education" name="last_education" disabled>
+                                                <option selected disabled>---Pilih Status Kerja---</option>
+                                                <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : null }}>SD</option>
+                                                <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : null }}>SMP</option>
+                                                <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : null }}>SMA</option>
+                                                <option value="D1/D2/D3" {{ old('last_education') == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
+                                                <option value="D4" {{ old('last_education') == 'D4' ? 'selected' : null }}>D4</option>
+                                                <option value="S1" {{ old('last_education') == 'S1' ? 'selected' : null }}>S1</option>
+                                                <option value="S2" {{ old('last_education') == 'S2' ? 'selected' : null }}>S2</option>
+                                                <option value="S3" {{ old('last_education') == 'S3' ? 'selected' : null }}>S3</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
+                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
+                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                                            <select class="form-select" id="gender" name="gender" required>
+                                                <option selected disabled>---Pilih Jenis Kelamin---</option>
+                                                <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="religion" class="form-label">Agama</label>
+                                            <select class="form-select" id="religion" name="religion" required>
+                                                <option selected disabled>---Pilih Agama---</option>
+                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
+                                                <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                                <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
+                                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="photo" class="form-label">Foto (Pas Foto)</label>
+                                            <div class="input-group">
+                                                <input type="file" class="form-control" name="photo" id="photo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="pegawai-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $part->id_part }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="nip_bps" class="form-label">NIP BPS</label>
+                                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ old('nip_bps') }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nip" class="form-label">NIP</label>
+                                            <input type="number" class="form-control" id="nip" name="nip" value="{{ old('nip') }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="org_code" class="form-label">Kode Organisasi</label>
+                                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ old('org_code') }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_department" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_department" name="id_department" required>
+                                                <option selected disabled>---Pilih Jabatan---</option>
+                                                @foreach ($departments as $department)
+                                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" hidden>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label">Status</label>
+                                            <input type="text" class="form-control" id="status" name="status" value="{{ old('status') }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="last_group" class="form-label">Golongan Akhir</label>
+                                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ old('last_group') }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -219,92 +246,120 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if (Session::get('modal_redirect') == 'modal-off-update')
-                        @include('Templates.Includes.Components.alert')
-                        @endif
                         @csrf @method('PUT')
-                        <div class="mb-3">
-                            <label for="nip_bps" class="form-label">NIP BPS</label>
-                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ $officer->nip_bps }}" disabled>
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                @if (Session::get('modal_redirect') == 'modal-off-update')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="diri-{{ $officer->id_officer }}-tab" data-bs-toggle="tab" data-bs-target="#diri-{{ $officer->id_officer }}-tab-pane" type="button" role="tab" aria-controls="didi-{{ $officer->id_officer }}-tab-pane" aria-selected="true">Data Diri</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pegawai-{{ $officer->id_officer }}-tab" data-bs-toggle="tab" data-bs-target="#pegawai-{{ $officer->id_officer }}-tab-pane" type="button" role="tab" aria-controls="pegawai-{{ $officer->id_officer }}-tab-pane" aria-selected="false">Info Pegawai</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="diri-{{ $officer->id_officer }}-tab-pane" role="tabpanel" aria-labelledby="diri-{{ $officer->id_officer }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Nama Pegawai</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="{{ $officer->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="last_education" class="form-label">Pendidikan Terakhir</label>
+                                            <select class="form-select" id="last_education" name="last_education" disabled>
+                                                <option selected disabled>---Pilih Status Kerja---</option>
+                                                <option value="SD" {{ $officer->last_education == 'SD' ? 'selected' : null }}>SD</option>
+                                                <option value="SMP" {{ $officer->last_education == 'SMP' ? 'selected' : null }}>SMP</option>
+                                                <option value="SMA" {{ $officer->last_education == 'SMA' ? 'selected' : null }}>SMA</option>
+                                                <option value="D1/D2/D3" {{ $officer->last_education == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
+                                                <option value="D4" {{ $officer->last_education == 'D4' ? 'selected' : null }}>D4</option>
+                                                <option value="S1" {{ $officer->last_education == 'S1' ? 'selected' : null }}>S1</option>
+                                                <option value="S2" {{ $officer->last_education == 'S2' ? 'selected' : null }}>S2</option>
+                                                <option value="S3" {{ $officer->last_education == 'S3' ? 'selected' : null }}>S3</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
+                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
+                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $officer->date_birth }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                                            <select class="form-select" id="gender" name="gender" required>
+                                                <option selected disabled>---Pilih Jenis Kelamin---</option>
+                                                <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                                <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="religion" class="form-label">Agama</label>
+                                            <select class="form-select" id="religion" name="religion" required>
+                                                <option selected disabled>---Pilih Agama---</option>
+                                                <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
+                                                <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                                <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
+                                                <option value="Hindu" {{ $officer->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="pegawai-{{ $officer->id_officer }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $officer->id_officer }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="nip_bps" class="form-label">NIP BPS</label>
+                                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ $officer->nip_bps }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nip" class="form-label">NIP</label>
+                                            <input type="number" class="form-control" id="nip" name="nip" value="{{ $officer->nip }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="org_code" class="form-label">Kode Organisasi</label>
+                                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_department" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_department" name="id_department" required>
+                                                <option selected disabled>---Pilih Jabatan---</option>
+                                                @foreach ($departments as $department)
+                                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_part" class="form-label">Bagian</label>
+                                            <select class="form-select" id="id_part" name="id_part" required>
+                                                <option selected disabled>---Pilih Bagian---</option>
+                                                @foreach ($parts as $part)
+                                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label">Status</label>
+                                            <input type="text" class="form-control" id="status" name="status" value="{{ $officer->status }}" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="last_group" class="form-label">Golongan Akhir</label>
+                                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ $officer->last_group }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="nip" class="form-label">NIP</label>
-                            <input type="number" class="form-control" id="nip" name="nip" value="{{ $officer->nip }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Pegawai</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $officer->name }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="org_code" class="form-label">Kode Organisasi</label>
-                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_department" class="form-label">Jabatan</label>
-                            <select class="form-select" id="id_department" name="id_department" required>
-                                <option selected disabled>---Pilih Jabatan---</option>
-                                @foreach ($departments as $department)
-                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_part" class="form-label">Bagian</label>
-                            <select class="form-select" id="id_part" name="id_part" required>
-                                <option selected disabled>---Pilih Bagian---</option>
-                                @foreach ($parts as $part)
-                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" value="{{ $officer->status }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="last_group" class="form-label">Golongan Akhir</label>
-                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ $officer->last_group }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="last_education" class="form-label">Pendidikan Terakhir</label>
-                            <select class="form-select" id="last_education" name="last_education" disabled>
-                                <option selected disabled>---Pilih Status Kerja---</option>
-                                <option value="SD" {{ $officer->last_education == 'SD' ? 'selected' : null }}>SD</option>
-                                <option value="SMP" {{ $officer->last_education == 'SMP' ? 'selected' : null }}>SMP</option>
-                                <option value="SMA" {{ $officer->last_education == 'SMA' ? 'selected' : null }}>SMA</option>
-                                <option value="D1/D2/D3" {{ $officer->last_education == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
-                                <option value="D4" {{ $officer->last_education == 'D4' ? 'selected' : null }}>D4</option>
-                                <option value="S1" {{ $officer->last_education == 'S1' ? 'selected' : null }}>S1</option>
-                                <option value="S2" {{ $officer->last_education == 'S2' ? 'selected' : null }}>S2</option>
-                                <option value="S3" {{ $officer->last_education == 'S3' ? 'selected' : null }}>S3</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="place_birth" class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $officer->date_birth }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                            <select class="form-select" id="gender" name="gender" required>
-                                <option selected disabled>---Pilih Jenis Kelamin---</option>
-                                <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="religion" class="form-label">Agama</label>
-                            <select class="form-select" id="religion" name="religion" required>
-                                <option selected disabled>---Pilih Agama---</option>
-                                <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
-                                <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
-                                <option value="Hindu" {{ $officer->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
-                            </select>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -538,7 +593,7 @@
 @endif
 
 @if (Request::is('masters/users'))
-<div class="modal fade" id="modal-usr-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="modal-usr-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ route('masters.users.store') }}" method="POST" enctype="multipart/form-data">
@@ -547,40 +602,51 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @if (Session::get('modal_redirect') == 'modal-usr-create')
-                    @include('Templates.Includes.Components.alert')
-                    @endif
                     @csrf
-                    <div class="mb-3">
-                        <label for="username" class="form-label">User Name</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-Mail</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="part" class="form-label">Bagian / Jenis Akun</label>
-                        <select class="form-select" id="part" name="part" required>
-                            <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
-                            <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
-                            <option value="KBU" {{ old('part') == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
-                            <option value="KTT" {{ old('part') == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
-                            <option value="KBPS" {{ old('part') == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                        <select class="form-select" id="id_officer" name="id_officer" required>
-                            <option selected disabled>---Pilih Pegawai---</option>
-                            @foreach ($officers as $officer)
-                            <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
-                            @endforeach
-                        </select>
+                    <div class="row justify-content-center g-5">
+                        <div class="col-md-7">
+                            @if (Session::get('modal_redirect') == 'modal-usr-create')
+                            @include('Templates.Includes.Components.alert')
+                            @endif
+                            <div class="mb-3">
+                                <label for="username" class="form-label">User Name</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-Mail</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="part" class="form-label">Bagian / Jenis Akun</label>
+                                <select class="form-select" id="part" name="part" required>
+                                    <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
+                                    <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
+                                    <option value="KBU" {{ old('part') == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
+                                    <option value="KTT" {{ old('part') == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
+                                    <option value="KBPS" {{ old('part') == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
+                                <select class="form-select" id="id_officer" name="id_officer" required>
+                                    <option selected disabled>---Pilih Pegawai---</option>
+                                    @foreach ($officers as $officer)
+                                    <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="position-sticky" style="top: 2rem;">
+                                <div class="alert alert-info" role="alert">
+                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -599,7 +665,7 @@
 </div>
 
     @foreach ($users as $user)
-    <div class="modal fade" id="modal-usr-update-{{ $user->id_user }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-usr-update-{{ $user->id_user }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('masters.users.update', $user->id_user) }}" method="POST" enctype="multipart/form-data">
@@ -608,41 +674,54 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if (Session::get('modal_redirect') == 'modal-usr-update')
-                        @include('Templates.Includes.Components.alert')
-                        @endif
                         @csrf @method('PUT')
-                        <div class="mb-3">
-                            <label for="username" class="form-label">User Name</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" required>
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                @if (Session::get('modal_redirect') == 'modal-usr-update')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">User Name</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">E-Mail</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="part" class="form-label">Bagian / Jenis Akun</label>
+                                    <select class="form-select" id="part" name="part" required>
+                                        <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
+                                        <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
+                                        <option value="KBU" {{ $user->part == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
+                                        <option value="KTT" {{ $user->part == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
+                                        <option value="KBPS" {{ $user->part == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
+                                    <select class="form-select" id="id_officer" name="id_officer" required>
+                                        <option selected disabled>---Pilih Pegawai---</option>
+                                        @foreach ($officers as $officer)
+                                        <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">E-Mail</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="part" class="form-label">Bagian / Jenis Akun</label>
-                            <select class="form-select" id="part" name="part" required>
-                                <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
-                                <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
-                                <option value="KBU" {{ $user->part == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
-                                <option value="KTT" {{ $user->part == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
-                                <option value="KBPS" {{ $user->part == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                            <select class="form-select" id="id_officer" name="id_officer" required>
-                                <option selected disabled>---Pilih Pegawai---</option>
-                                @foreach ($officers as $officer)
-                                <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -807,7 +886,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-sub-create-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-sub-create-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('masters.subcriterias.store') }}" method="POST" enctype="multipart/form-data">
@@ -816,48 +895,59 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        @if (Session::get('modal_redirect') == 'modal-sub-create')
-                        @include('Templates.Includes.Components.alert')
-                        @endif
                         @csrf
-                        <div class="mb-3">
-                            <label for="id_criteria" class="form-label">Kode Kriteria</label>
-                            <input type="text" class="form-control" id="id_criteria" name="id_criteria" value="{{ $criteria->id_criteria }}" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Sub Kriteria</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="weight" class="form-label">Bobot</label>
-                            <input type="text" class="form-control" id="weight" name="weight" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="attribute" class="form-label">Atribut</label>
-                            <select class="form-select" id="attribute" name="attribute" required>
-                                <option selected disabled>---Pilih Atribut---</option>
-                                <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
-                                <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="level" class="form-label">Tingkat Kepentingan</label>
-                            <select class="form-select" id="level" name="level" required>
-                                <option selected disabled>---Pilih Atribut---</option>
-                                <option value="1" {{ old('level') == '1' ? 'selected' : null }}>1. Sama Penting</option>
-                                <option value="3" {{ old('level') == '3' ? 'selected' : null }}>3. Cukup Penting</option>
-                                <option value="5" {{ old('level') == '5' ? 'selected' : null }}>5. Lebih Penting</option>
-                                <option value="7" {{ old('level') == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
-                                <option value="9" {{ old('level') == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
-                            <select class="form-select" id="need" name="need" required>
-                                <option selected disabled>---Pilih---</option>
-                                <option value="Ya" {{ old('attribute') == 'Ya' ? 'selected' : null }}>Ya</option>
-                                <option value="Tidak" {{ old('attribute') == 'Tidak' ? 'selected' : null }}>Tidak</option>
-                            </select>
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                @if (Session::get('modal_redirect') == 'modal-sub-create')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <div class="mb-3">
+                                    <label for="id_criteria" class="form-label">Kode Kriteria</label>
+                                    <input type="text" class="form-control" id="id_criteria" name="id_criteria" value="{{ $criteria->id_criteria }}" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nama Sub Kriteria</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="weight" class="form-label">Bobot</label>
+                                    <input type="text" class="form-control" id="weight" name="weight" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="attribute" class="form-label">Atribut</label>
+                                    <select class="form-select" id="attribute" name="attribute" required>
+                                        <option selected disabled>---Pilih Atribut---</option>
+                                        <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
+                                        <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="level" class="form-label">Tingkat Kepentingan</label>
+                                    <select class="form-select" id="level" name="level" required>
+                                        <option selected disabled>---Pilih Atribut---</option>
+                                        <option value="1" {{ old('level') == '1' ? 'selected' : null }}>1. Sama Penting</option>
+                                        <option value="3" {{ old('level') == '3' ? 'selected' : null }}>3. Cukup Penting</option>
+                                        <option value="5" {{ old('level') == '5' ? 'selected' : null }}>5. Lebih Penting</option>
+                                        <option value="7" {{ old('level') == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
+                                        <option value="9" {{ old('level') == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
+                                    <select class="form-select" id="need" name="need" required>
+                                        <option selected disabled>---Pilih---</option>
+                                        <option value="Ya" {{ old('attribute') == 'Ya' ? 'selected' : null }}>Ya</option>
+                                        <option value="Tidak" {{ old('attribute') == 'Tidak' ? 'selected' : null }}>Tidak</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -876,7 +966,7 @@
     </div>
 
         @foreach ($subcriterias->where('id_criteria', $criteria->id_criteria) as $subcriteria)
-        <div class="modal fade" id="modal-sub-update-{{ $subcriteria->id_sub_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal modal-lg fade" id="modal-sub-update-{{ $subcriteria->id_sub_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="{{ route('masters.subcriterias.update', $subcriteria->id_sub_criteria) }}" method="POST" enctype="multipart/form-data">
@@ -885,44 +975,55 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            @if (Session::get('modal_redirect') == 'modal-sub-update')
-                            @include('Templates.Includes.Components.alert')
-                            @endif
                             @csrf @method('PUT')
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nama Sub Kriteria</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ $subcriteria->name }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="weight" class="form-label">Bobot</label>
-                                <input type="text" class="form-control" id="weight" name="weight" value="{{ $subcriteria->weight }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="attribute" class="form-label">Atribut</label>
-                                <select class="form-select" id="attribute" name="attribute" required>
-                                    <option selected disabled>---Pilih Atribut---</option>
-                                    <option value="Benefit" {{ $subcriteria->attribute == 'Benefit' ? 'selected' : null }}>Benefit</option>
-                                    <option value="Cost" {{ $subcriteria->attribute == 'Cost' ? 'selected' : null }}>Cost</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="level" class="form-label">Tingkat Kepentingan</label>
-                                <select class="form-select" id="level" name="level" required>
-                                    <option selected disabled>---Pilih Atribut---</option>
-                                    <option value="1" {{ $subcriteria->level == '1' ? 'selected' : null }}>1. Sama Penting</option>
-                                    <option value="3" {{ $subcriteria->level == '3' ? 'selected' : null }}>3. Cukup Penting</option>
-                                    <option value="5" {{ $subcriteria->level == '5' ? 'selected' : null }}>5. Lebih Penting</option>
-                                    <option value="7" {{ $subcriteria->level == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
-                                    <option value="9" {{ $subcriteria->level == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
-                                <select class="form-select" id="need" name="need" required>
-                                    <option selected disabled>---Pilih---</option>
-                                    <option value="Ya" {{ $subcriteria->need == 'Ya' ? 'selected' : null }}>Ya</option>
-                                    <option value="Tidak" {{ $subcriteria->need == 'Tidak' ? 'selected' : null }}>Tidak</option>
-                                </select>
+                            <div class="row justify-content-center g-5">
+                                <div class="col-md-7">
+                                    @if (Session::get('modal_redirect') == 'modal-sub-update')
+                                    @include('Templates.Includes.Components.alert')
+                                    @endif
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Nama Sub Kriteria</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ $subcriteria->name }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="weight" class="form-label">Bobot</label>
+                                        <input type="text" class="form-control" id="weight" name="weight" value="{{ $subcriteria->weight }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="attribute" class="form-label">Atribut</label>
+                                        <select class="form-select" id="attribute" name="attribute" required>
+                                            <option selected disabled>---Pilih Atribut---</option>
+                                            <option value="Benefit" {{ $subcriteria->attribute == 'Benefit' ? 'selected' : null }}>Benefit</option>
+                                            <option value="Cost" {{ $subcriteria->attribute == 'Cost' ? 'selected' : null }}>Cost</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="level" class="form-label">Tingkat Kepentingan</label>
+                                        <select class="form-select" id="level" name="level" required>
+                                            <option selected disabled>---Pilih Atribut---</option>
+                                            <option value="1" {{ $subcriteria->level == '1' ? 'selected' : null }}>1. Sama Penting</option>
+                                            <option value="3" {{ $subcriteria->level == '3' ? 'selected' : null }}>3. Cukup Penting</option>
+                                            <option value="5" {{ $subcriteria->level == '5' ? 'selected' : null }}>5. Lebih Penting</option>
+                                            <option value="7" {{ $subcriteria->level == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
+                                            <option value="9" {{ $subcriteria->level == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
+                                        <select class="form-select" id="need" name="need" required>
+                                            <option selected disabled>---Pilih---</option>
+                                            <option value="Ya" {{ $subcriteria->need == 'Ya' ? 'selected' : null }}>Ya</option>
+                                            <option value="Tidak" {{ $subcriteria->need == 'Tidak' ? 'selected' : null }}>Tidak</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="position-sticky" style="top: 2rem;">
+                                        <div class="alert alert-info" role="alert">
+                                            <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -1358,7 +1459,7 @@
 </div>
 
     @foreach ($officers as $officer)
-    <div class="modal fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Auth::user()->part == "Admin") <!--(Request::is('inputs/presences'))-->
@@ -1378,31 +1479,42 @@
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="id_officer" class="form-label">Kode Pegawai</label>
+                                        <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                                    </div>
+                                    <div class="col">
+                                        <label for="id_period" class="form-label">Kode Periode</label>
+                                        <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" readonly>
+                                    </div>
+                                </div>
+                                <hr/>
+                                @forelse ($subcriterias as $subcriteria)
+                                <div class="mb-3">
+                                    <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
+                                    @if (Request::is('inputs/presences'))
+                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
+                                    @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
+                                    @endif
+                                </div>
+                                @empty
+                                <div class="alert alert-danger" role="alert">
+                                    Tidak ada data sub kriteria untuk Data Kehadiran
+                                </div>
+                                @endforelse
                             </div>
-                            <div class="col">
-                                <label for="id_period" class="form-label">Kode Periode</label>
-                                <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" readonly>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <hr/>
-                        @forelse ($subcriterias as $subcriteria)
-                        <div class="mb-3">
-                            <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                            @if (Request::is('inputs/presences'))
-                            <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
-                            @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                            <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
-                            @endif
-                        </div>
-                        @empty
-                        <div class="alert alert-danger" role="alert">
-                            Tidak ada data sub kriteria untuk Data Kehadiran
-                        </div>
-                        @endforelse
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -1419,7 +1531,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Auth::user()->part == "Admin") <!--(Request::is('inputs/presences'))-->
@@ -1439,48 +1551,59 @@
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                        <div class="row justify-content-center g-5">
+                            <div class="col-md-7">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="id_officer" class="form-label">Kode Pegawai</label>
+                                        <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                                    </div>
+                                    <div class="col">
+                                        <label for="id_period" class="form-label">Kode Periode</label>
+                                        <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" readonly>
+                                    </div>
+                                </div>
+                                <hr/>
+                                @forelse ($subcriterias as $subcriteria)
+                                    @if (Request::is('inputs/presences'))
+                                    @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                                    <div class="mb-3">
+                                        <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $presence->input }}" min="0" max="31" required>
+                                    </div>
+                                    @empty
+                                    <div class="mb-3">
+                                        <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
+                                    </div>
+                                    @endforelse
+                                    @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                                    @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                                    <div class="mb-3">
+                                        <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="100" required>
+                                    </div>
+                                    @empty
+                                    <div class="mb-3">
+                                        <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
+                                    </div>
+                                    @endforelse
+                                    @endif
+                                @empty
+                                <div class="alert alert-danger" role="alert">
+                                    Tidak ada data sub kriteria untuk Data Kehadiran
+                                </div>
+                                @endforelse
                             </div>
-                            <div class="col">
-                                <label for="id_period" class="form-label">Kode Periode</label>
-                                <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" readonly>
+                            <div class="col-md-5">
+                                <div class="position-sticky" style="top: 2rem;">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <hr/>
-                        @forelse ($subcriterias as $subcriteria)
-                            @if (Request::is('inputs/presences'))
-                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
-                            <div class="mb-3">
-                                <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $presence->input }}" min="0" max="31" required>
-                            </div>
-                            @empty
-                            <div class="mb-3">
-                                <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
-                            </div>
-                            @endforelse
-                            @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
-                            <div class="mb-3">
-                                <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="100" required>
-                            </div>
-                            @empty
-                            <div class="mb-3">
-                                <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
-                            </div>
-                            @endforelse
-                            @endif
-                        @empty
-                        <div class="alert alert-danger" role="alert">
-                            Tidak ada data sub kriteria untuk Data Kehadiran
-                        </div>
-                        @endforelse
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">

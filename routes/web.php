@@ -24,6 +24,7 @@ use App\Http\Controllers\Home\ResultController as HomeResultController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,6 +77,17 @@ Route::middleware('auth')->group(function () {
 //BACK END
 Route::middleware(['auth', 'checkAdmin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    //In case jika butuh tambahan url (Tambahkan .admin. di setiap route)
+    /*
+    Route::get('/admin', [DashboardController::class, 'admin'])->name('admin');
+    Route::prefix('admin')->name('admin.')->group(function () {
+
+    });
+    Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
+    Route::prefix('officer')->name('officer.')->group(function () {
+
+    });
+    */
     Route::prefix('masters')->name('masters.')->group(function () {
         Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::prefix('officers')->name('officers.')->group(function () {

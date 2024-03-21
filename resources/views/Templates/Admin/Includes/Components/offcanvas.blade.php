@@ -390,7 +390,7 @@
 </div>
 @endif
 
-@if (Request::is('inputs/votes/*'))
+@if (Request::is('inputs/votes*'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Pemilihan)</h5>
