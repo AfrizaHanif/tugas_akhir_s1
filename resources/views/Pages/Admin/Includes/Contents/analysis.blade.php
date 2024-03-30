@@ -1,16 +1,16 @@
-@if (Request::is('analysis/saw*'))
+@if (Request::is('admin/analysis/saw*'))
 <h1 class="text-center mb-4">Analisis SAW</h1>
-@elseif (Request::is('analysis/wp*'))
+@elseif (Request::is('admin/analysis/wp*'))
 <h1 class="text-center mb-4">Analisis WP</h1>
 @endif
 @include('Templates.Includes.Components.alert')
 <p>
-    @if (Request::is('analysis/saw*'))
+    @if (Request::is('admin/analysis/saw*'))
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-saw-periods">
         <i class="bi bi-folder-plus"></i>
         Pilih Periode
     </a>
-    @elseif (Request::is('analysis/wp*'))
+    @elseif (Request::is('admin/analysis/wp*'))
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wp-periods">
         <i class="bi bi-folder-plus"></i>
         Pilih Periode
@@ -21,7 +21,7 @@
         Bantuan
     </a>
 </p>
-@if (Request::is('analysis/saw') || Request::is('analysis/wp'))
+@if (Request::is('admin/analysis/saw') || Request::is('admin/analysis/wp'))
 <div class="alert alert-info" role="alert">
     Untuk melihat hasil analisis di setiap periode, klik pilih periode untuk melihat hasil analisis.
 </div>
@@ -29,7 +29,7 @@
     <strong>PERHATIAN:</strong> Pastikan seluruh data input di setiap pegawai telah terisi. Cek status di halaman input apakah pegawai tersebut telah terinput atau belum.
 </div>
 @endif
-@if (Request::is('analysis/saw/*'))
+@if (Request::is('admin/analysis/saw/*'))
 <div class="accordion" id="accordion">
     <div class="accordion-item">
         <h2 class="accordion-header">
@@ -229,7 +229,7 @@
         </div>
     </div>
 </div>
-@elseif (Request::is('analysis/wp/*'))
+@elseif (Request::is('admin/analysis/wp/*'))
 <div class="accordion" id="accordion">
     <div class="accordion-item">
         <h2 class="accordion-header">

@@ -1,22 +1,4 @@
-<div class="modal fade modal-sheet p-4 py-md-5" tabindex="-1" role="dialog" id="modallogout">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content rounded-3 shadow">
-            <form action="{{ route('logout') }}" method="post">
-                <div class="modal-body p-4 text-center">
-                    <h5 class="mb-0">Keluar?</h5>
-                    <p class="mb-0">Semua hasil proses akan terhapus setelah keluar dari sesi ini.</p>
-                </div>
-                <div class="modal-footer flex-nowrap p-0">
-                    @csrf
-                    <input type="submit" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" value="Ya">
-                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">Tidak</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@if (Request::is('admin/masters/officers*') || Request::is('officers*'))
+@if (Request::is('officer/officers*'))
     @foreach ($officers as $officer)
     <div class="modal fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -65,7 +47,7 @@
     @endforeach
 @endif
 
-@if (Request::is('admin/inputs/votes*') || Request::is('officer/votes*'))
+@if (Request::is('officer/votes*'))
 <div class="modal fade" id="modal-vte-periods" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -84,11 +66,7 @@
                         </button>
                         <ul class="dropdown-menu" style="max-height: 180px; overflow-y: auto;">
                             @forelse ( $periods as $period )
-                            @if (Auth::user()->part == "Pegawai")
                             <li><a class="dropdown-item" href="/officer/votes/{{ $period->id_period }}">{{ $period->name }}</a></li>
-                            @else
-                            <li><a class="dropdown-item" href="/admin/inputs/votes/{{ $period->id_period }}">{{ $period->name }}</a></li>
-                            @endif
                             @empty
                             <li><a class="dropdown-item disabled" href="#" aria-disabled="true">Tidak ada data</a></li>
                             @endforelse
@@ -109,17 +87,13 @@
 </div>
 @endif
 
-@if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+@if (Request::is('officer/votes/*'))
     @foreach ($criterias as $criteria)
         @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
         <div class="modal fade" id="modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    @if (Auth::user()->part == "Pegawai")
-                    <form action="{{ route('votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
-                    @else
-                    <form action="{{ route('admin.inputs.votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
-                    @endif
+                    <form action="{{ route('officer.votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Pegawai ({{ $vote->id_officer }}) ({{ $criteria->id_vote_criteria }})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

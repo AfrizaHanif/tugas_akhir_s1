@@ -33,19 +33,19 @@ class AnalysisController extends Controller
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
-            return redirect()->route('analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
+            return redirect()->route('admin.analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             foreach ($officers as $officer) {
                 if(Presence::where('id_officer', $officer->id_officer)->count() == 0 && Performance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Presence::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Performance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }else{
                     foreach ($subcriterias as $subcriteria) {
                         if(Presence::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0 && Performance::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0) {
-                            return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
+                            return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
                         }else{
                             //CLEAR
                         }
@@ -183,19 +183,19 @@ class AnalysisController extends Controller
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
-            return redirect()->route('analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
+            return redirect()->route('admin.analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             foreach ($officers as $officer) {
                 if(Presence::where('id_officer', $officer->id_officer)->count() == 0 && Performance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Presence::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Performance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }else{
                     foreach ($subcriterias as $subcriteria) {
                         if(Presence::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0 && Performance::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0) {
-                            return redirect()->route('analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
+                            return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
                         }else{
                             //CLEAR
                         }

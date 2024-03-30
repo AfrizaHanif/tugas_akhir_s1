@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home;
+namespace App\Http\Controllers\Officer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Officer;
@@ -17,6 +17,6 @@ class ScoreController extends Controller
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
         $check = Score::orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
 
-        return view('Pages.Home.score', compact('periods', 'scores', 'officers', 'check'));
+        return view('Pages.Officer.score', compact('periods', 'scores', 'officers', 'check'));
     }
 }

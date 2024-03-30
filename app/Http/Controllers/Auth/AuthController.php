@@ -14,7 +14,7 @@ class AuthController extends Controller
             if(Auth::user()->part != "Pegawai"){
                 return view('Pages.Admin.dashboard');
             }else{
-                return view('Pages.Home.index');
+                return view('Pages.Officer.dashboard');
             }
         }
         else{
@@ -34,9 +34,9 @@ class AuthController extends Controller
             //dd(auth()->user()->part);
             $request->session()->regenerate();
             if(auth()->user()->part == "Pegawai"){
-                return redirect()->route('index')->withSuccess('Selamat Datang!');
+                return redirect()->route('officer')->withSuccess('Selamat Datang!');
             }else{
-                return redirect()->route('dashboard')->withSuccess('Selamat Datang!');
+                return redirect()->route('admin')->withSuccess('Selamat Datang!');
             }
         }
         return redirect()->route('login')->withErrors([

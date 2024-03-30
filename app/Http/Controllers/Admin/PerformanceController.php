@@ -93,7 +93,7 @@ class PerformanceController extends Controller
 
         //RETURN TO VIEW
         $lowerpart = strtolower(Auth::user()->part);
-        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Prestasi Kerja Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Prestasi Kerja Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -131,7 +131,7 @@ class PerformanceController extends Controller
 
         //RETURN TO VIEW
         $lowerpart = strtolower(Auth::user()->part);
-        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Prestasi Kerja Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Prestasi Kerja Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -155,6 +155,6 @@ class PerformanceController extends Controller
 
         //RETURN TO VIEW
         $lowerpart = strtolower(Auth::user()->part);
-        return redirect()->route('inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Prestasi Kerja Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.'.$lowerpart.'.performances.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Prestasi Kerja Berhasil')->with('code_alert', 1);
     }
 }

@@ -45,19 +45,19 @@ class ResultController extends Controller
 
         //VERIFICATION
         if(BetaPresence::where('id_period', $period)->count() == 0 || BetaPerformance::where('id_period', $period)->count() == 0){
-            return redirect()->route('results.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
+            return redirect()->route('admin.results.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             foreach ($officers as $officer) {
                 if(BetaPresence::where('id_officer', $officer->id_officer)->count() == 0 && BetaPerformance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('results.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.results.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(BetaPresence::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('results.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.results.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(BetaPerformance::where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('results.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.results.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }else{
                     foreach ($subcriterias as $subcriteria) {
                         if(BetaPresence::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0 && BetaPerformance::where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0) {
-                            return redirect()->route('results.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
+                            return redirect()->route('admin.results.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
                         }else{
                             //CLEAR
                         }
@@ -196,7 +196,7 @@ class ResultController extends Controller
             'status'=>'In Review'
         ]);
 
-        return redirect()->route('results.index')->with('success','Ambil Data Berhasil');
+        return redirect()->route('admin.results.index')->with('success','Ambil Data Berhasil');
     }
 
     public function yes($id)
@@ -218,7 +218,7 @@ class ResultController extends Controller
             'status'=>'Final'
         ]);
 
-        return redirect()->route('results.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui');
+        return redirect()->route('admin.results.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui');
     }
 
     public function no($id)
@@ -240,6 +240,6 @@ class ResultController extends Controller
             'status'=>'Need Fix'
         ]);
 
-        return redirect()->route('results.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan');
+        return redirect()->route('admin.results.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan');
     }
 }

@@ -47,7 +47,7 @@ class CriteriaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-crt-create');
+            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-crt-create');
         }
 
         //STORE DATA
@@ -58,7 +58,7 @@ class CriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$id_criteria])->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$id_criteria])->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -81,7 +81,7 @@ class CriteriaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('modal_redirect', 'modal-crt-update')->with('id_redirect', $criteria->id_criteria);
+            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('modal_redirect', 'modal-crt-update')->with('id_redirect', $criteria->id_criteria);
         }
 
         //STORE DATA
@@ -91,7 +91,7 @@ class CriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -101,7 +101,7 @@ class CriteriaController extends Controller
     {
         //CHECK DATA
         if(SubCriteria::where('id_criteria', $criteria->id_criteria)->exists()) {
-            return redirect()->route('masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('fail', 'Hapus Kriteria Tidak Berhasil (Terhubung dengan tabel Sub Kriteria)');
+            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_criteria])->with('fail', 'Hapus Kriteria Tidak Berhasil (Terhubung dengan tabel Sub Kriteria)');
         }else{
             //CLEAR
         }
@@ -110,6 +110,6 @@ class CriteriaController extends Controller
         $criteria->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.criterias.index')->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.criterias.index')->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
     }
 }

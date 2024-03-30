@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Hasil Perhitungan | Tugas Akhir</title>
+<title>Karyawan Terbaik | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
@@ -13,6 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Admin.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

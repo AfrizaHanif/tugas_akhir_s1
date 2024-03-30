@@ -45,7 +45,7 @@ class VoteCriteriaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-create');
+            return redirect()->route('admin.masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-create');
         }
 
         //STORE DATA
@@ -55,7 +55,7 @@ class VoteCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.vote-criterias.index')->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -78,7 +78,7 @@ class VoteCriteriaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-update')->with('id_redirect', $votecriteria->id_vote_criteria);
+            return redirect()->route('admin.masters.vote-criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-vcr-update')->with('id_redirect', $votecriteria->id_vote_criteria);
         }
 
         //STORE DATA
@@ -87,7 +87,7 @@ class VoteCriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.vote-criterias.index')->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -99,6 +99,6 @@ class VoteCriteriaController extends Controller
         $votecriteria->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.vote-criterias.index')->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.vote-criterias.index')->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
     }
 }

@@ -65,7 +65,7 @@ class OfficerController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
         }
 
         //UPLOAD PHOTO
@@ -97,7 +97,7 @@ class OfficerController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('success','Tambah Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('success','Tambah Pegawai Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -128,7 +128,7 @@ class OfficerController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-update')->with('id_redirect', $officer->id_officer);
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-update')->with('id_redirect', $officer->id_officer);
         }
 
         //UPDATE DATA
@@ -162,7 +162,7 @@ class OfficerController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('tab_redirect', $officer->id_part)->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('tab_redirect', $officer->id_part)->with('code_alert', 1);
     }
 
     /**
@@ -172,11 +172,11 @@ class OfficerController extends Controller
     {
         //CHECK DATA
         if(Presence::where('id_officer', $officer->id_officer)->exists()) {
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Kehadiran)');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Kehadiran)');
         }elseif(Performance::where('id_officer', $officer->id_officer)->exists()){
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Prestasi Kerja)');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Prestasi Kerja)');
         }elseif(User::where('id_officer', $officer->id_officer)->exists()){
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Pengguna / Akun)');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Pengguna / Akun)');
         }else{
             //CLEAR
         }
@@ -192,7 +192,7 @@ class OfficerController extends Controller
         $officer->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
     }
 
     public function search(Request $request)

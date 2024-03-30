@@ -3,9 +3,9 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('inputs/presences'))
+    @if (Request::is('admin/inputs/presences'))
     <title>Data Kehadiran | Tugas Akhir</title>
-    @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
     <title>Data Prestasi Kerja | Tugas Akhir</title>
     @endif
 @endsection
@@ -17,6 +17,7 @@
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Admin.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

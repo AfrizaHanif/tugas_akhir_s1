@@ -3,9 +3,9 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('analysis/saw*'))
+    @if (Request::is('admin/analysis/saw*'))
     <title>Analisis SAW | Tugas Akhir</title>
-    @elseif (Request::is('analysis/wp*'))
+    @elseif (Request::is('admin/analysis/wp*'))
     <title>Analisis WP | Tugas Akhir</title>
     @endif
 @endsection

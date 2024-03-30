@@ -1,19 +1,19 @@
 <!--TEMPLATE-->
-@extends('Templates.Admin.template')
+@extends('Templates.Officer.template')
 
 <!--TITLE-->
 @section('title')
-<title>Laporan | Tugas Akhir</title>
+<title>Top 3 Pegawai | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.report')
+@include('Pages.Officer.Includes.Contents.score')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Officer.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

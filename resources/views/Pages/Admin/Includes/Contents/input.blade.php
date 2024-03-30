@@ -1,6 +1,6 @@
-@if (Request::is('inputs/presences'))
+@if (Request::is('admin/inputs/presences'))
 <h1 class="text-center mb-4">Data Kehadiran</h1>
-@elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+@elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
 <h1 class="text-center mb-4">Data Prestasi Kerja</h1>
 @endif
 @include('Templates.Includes.Components.alert')
@@ -14,7 +14,7 @@
                 </a>
             </p>
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                @if (Request::is('inputs/presences'))
+                @if (Request::is('admin/inputs/presences'))
                     @forelse ($periods as $period)
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                         {{ $period->name }}
@@ -24,7 +24,7 @@
                         Empty
                     </button>
                     @endforelse
-                @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
                     @forelse ($periods as $period)
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                         {{ $period->name }}
@@ -84,7 +84,7 @@
                             <td>{{ $officer->name }}</td>
                             <td>{{ $officer->department->name }}</td>
                             <td>
-                                @if (Request::is('inputs/presences'))
+                                @if (Request::is('admin/inputs/presences'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
@@ -94,7 +94,7 @@
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
                                     @endif
-                                @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                                @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
@@ -146,7 +146,7 @@
                                     @endforelse
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            @if (Request::is('inputs/presences'))
+                                            @if (Request::is('admin/inputs/presences'))
                                                 @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
                                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                                     Lihat Data
@@ -162,7 +162,7 @@
                                                     Tambah Data
                                                 </a>
                                                 @endif
-                                            @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+                                            @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
                                                 @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() != 0)
                                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                                     Lihat Data

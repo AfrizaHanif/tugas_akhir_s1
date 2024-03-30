@@ -82,7 +82,7 @@ class PeriodController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create');
+            return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create');
         }
 
         //STORE DATA
@@ -95,7 +95,7 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.periods.index')->with('success','Tambah Periode Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.periods.index')->with('success','Tambah Periode Berhasil')->with('code_alert', 1);
     }
 
     public function start($period)
@@ -106,7 +106,7 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.periods.index')->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
+        return redirect()->route('admin.masters.periods.index')->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
     }
 
     public function skip($period)
@@ -117,7 +117,7 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.periods.index')->with('success','Proses Lewat Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.periods.index')->with('success','Proses Lewat Berhasil')->with('code_alert', 1);
     }
 
     public function finish($period)
@@ -201,7 +201,7 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.periods.index')->with('success','Pemilihan Karyawan Terbaik selesai.')->with('code_alert', 1);
+        return redirect()->route('admin.masters.periods.index')->with('success','Pemilihan Karyawan Terbaik selesai.')->with('code_alert', 1);
     }
 
     /**
@@ -213,6 +213,6 @@ class PeriodController extends Controller
         $period->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.periods.index')->with('success','Hapus Periode Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.periods.index')->with('success','Hapus Periode Berhasil')->with('code_alert', 1);
     }
 }

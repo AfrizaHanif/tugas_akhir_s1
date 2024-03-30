@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Voting Karyawan Terbaik</h1>
+<h1 class="text-center mb-4">Pemilihan Karyawan Terbaik</h1>
 @include('Templates.Includes.Components.alert')
 <p>
     <div class="row g-3 align-items-center">
@@ -31,12 +31,12 @@
         @endif
     </div>
 </p>
-@if (Request::is('admin/inputs/votes') || Request::is('officer/votes'))
+@if (Request::is('admin/inputs/votes'))
 <div class="alert alert-info" role="alert">
     Untuk melihat atau memilih pegawai yang akan dijadikan sebagai karyawan terbaik di setiap periode, klik pilih periode untuk memilih periode yang tersedia.
 </div>
 @endif
-@if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+@if (Request::is('admin/inputs/votes/*'))
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">

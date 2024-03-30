@@ -17,7 +17,7 @@
                             </div>
                             <div class="col">
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="{{ route('reports.officers') }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                    <a href="{{ route('admin.reports.officers') }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                         <i class="bi bi-filetype-pdf"></i>
                                         PDF
                                     </a>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="{{ route('reports.input.all', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('admin.reports.input.all', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
@@ -111,7 +111,7 @@
                                                         <ul class="dropdown-menu">
                                                             @forelse ($periods->where('year', $per_year->year) as $period)
                                                             <li>
-                                                                <a href="{{ route('reports.input.single', ['period'=>$period->id_period,'id'=>$officer->id_officer]) }}" class="dropdown-item" target="_blank" rel="noopener noreferrer">{{ $period->month }}</a>
+                                                                <a href="{{ route('admin.reports.input.single', ['period'=>$period->id_period,'id'=>$officer->id_officer]) }}" class="dropdown-item" target="_blank" rel="noopener noreferrer">{{ $period->month }}</a>
                                                             </li>
                                                             @empty
                                                             <li>
@@ -167,7 +167,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="{{ route('reports.analysis', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('admin.reports.analysis', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
@@ -218,7 +218,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="{{ route('reports.result', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('admin.reports.result', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
@@ -251,7 +251,7 @@
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                 <br/>
-                
+
             </div>
         </div>
     </div>

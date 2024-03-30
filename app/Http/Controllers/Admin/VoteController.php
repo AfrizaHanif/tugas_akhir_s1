@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -17,11 +18,7 @@ class VoteController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
 
-        if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods'));
-        }else{
-            return view('Pages.Home.vote', compact('periods'));
-        }
+        return view('Pages.Admin.vote', compact('periods'));
     }
 
     public function vote($period)
@@ -62,11 +59,7 @@ class VoteController extends Controller
             ->get();
         }
 
-        if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select'));
-        }else{
-            return view('Pages.Home.vote', compact('periods', 'votes', 'officers', 'checks', 'criterias', 'prd_select'));
-        }
+        return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select'));
     }
 
     public function select($period, $officer, $criteria)
@@ -88,10 +81,6 @@ class VoteController extends Controller
         ]);
 
         //RETURN TO VIEW
-        if(Auth::user()->part != "Pegawai"){
-            return redirect()->route('admin.inputs.votes.vote', $period)->with('success','Voting Berhasil');
-        }else{
-            return redirect()->route('officer.votes.vote', $period)->with('success','Voting Berhasil');
-        }
+        return redirect()->route('admin.inputs.votes.vote', $period)->with('success','Voting Berhasil');
     }
 }

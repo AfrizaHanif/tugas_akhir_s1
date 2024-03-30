@@ -1,4 +1,4 @@
-@if (Request::is('masters/officers'))
+@if (Request::is('admin/masters/officers'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Pegawai)</h5>
@@ -47,7 +47,7 @@
 </div>
 @endif
 
-@if (Request::is('masters/users'))
+@if (Request::is('admin/masters/users'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Pengguna)</h5>
@@ -96,7 +96,7 @@
 </div>
 @endif
 
-@if (Request::is('masters/criterias'))
+@if (Request::is('admin/masters/criterias'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Kriteria untuk Penilaian)</h5>
@@ -145,7 +145,7 @@
 </div>
 @endif
 
-@if (Request::is('masters/vote-criterias'))
+@if (Request::is('admin/masters/vote-criterias'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Kriteria untuk Pemilihan)</h5>
@@ -194,7 +194,7 @@
 </div>
 @endif
 
-@if (Request::is('masters/periods'))
+@if (Request::is('admin/masters/periods'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Periode)</h5>
@@ -243,7 +243,7 @@
 </div>
 @endif
 
-@if (Request::is('inputs/presences'))
+@if (Request::is('admin/inputs/presences'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Data Kehadiran)</h5>
@@ -292,7 +292,7 @@
 </div>
 @endif
 
-@if (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
+@if (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Data Prestasi Kerja)</h5>
@@ -341,7 +341,7 @@
 </div>
 @endif
 
-@if (Request::is('inputs/scores'))
+@if (Request::is('admin/inputs/scores'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Penilaian)</h5>
@@ -390,7 +390,7 @@
 </div>
 @endif
 
-@if (Request::is('inputs/votes*'))
+@if (Request::is('admin/inputs/votes*'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Pemilihan)</h5>
@@ -439,7 +439,7 @@
 </div>
 @endif
 
-@if (Request::is('analysis/saw*'))
+@if (Request::is('admin/analysis/saw*'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Analisis (SAW))</h5>
@@ -488,7 +488,7 @@
 </div>
 @endif
 
-@if (Request::is('analysis/wp*'))
+@if (Request::is('admin/analysis/wp*'))
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-help" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Bantuan (Analisis (WP))</h5>

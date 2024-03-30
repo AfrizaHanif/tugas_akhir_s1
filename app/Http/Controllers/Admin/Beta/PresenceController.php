@@ -73,7 +73,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.presences.index')->with('success','Tambah Data Kehadiran Berhasil');
+        return redirect()->route('admin.inputs.beta.presences.index')->with('success','Tambah Data Kehadiran Berhasil');
     }
 
     /**
@@ -110,7 +110,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.presences.index')->with('success','Ubah Data Kehadiran Berhasil');
+        return redirect()->route('admin.inputs.beta.presences.index')->with('success','Ubah Data Kehadiran Berhasil');
     }
 
     /**
@@ -131,6 +131,6 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.presences.index')->with('success','Hapus Data Kehadiran Berhasil');
+        return redirect()->route('admin.inputs.beta.presences.index')->with('success','Hapus Data Kehadiran Berhasil');
     }
 }

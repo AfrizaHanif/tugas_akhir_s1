@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Voting Karyawan Terbaik</h1>
+<h1 class="text-center mb-4">Pemilihan Karyawan Terbaik</h1>
 @include('Templates.Includes.Components.alert')
 <p>
     <div class="row g-3 align-items-center">
@@ -12,31 +12,14 @@
                 Bantuan
             </a>
         </div>
-        @if (Request::is('admin/inputs/votes/*'))
-        <div class="col-auto">
-            <label for="tahun_saw_dl" class="col-form-label">Cek Pegawai:</label>
-        </div>
-        <div class="col-auto">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-view-{{ $prd_select->id_period }}">
-                    <i class="bi bi-database"></i>
-                    Hanya Jabatan Ini
-                </a>
-                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-all-{{ $prd_select->id_period }}">
-                    <i class="bi bi-database"></i>
-                    Semua Jabatan
-                </a>
-            </div>
-        </div>
-        @endif
     </div>
 </p>
-@if (Request::is('admin/inputs/votes') || Request::is('officer/votes'))
+@if (Request::is('officer/votes'))
 <div class="alert alert-info" role="alert">
     Untuk melihat atau memilih pegawai yang akan dijadikan sebagai karyawan terbaik di setiap periode, klik pilih periode untuk memilih periode yang tersedia.
 </div>
 @endif
-@if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+@if (Request::is('officer/votes/*'))
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">

@@ -4,7 +4,7 @@
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                @if (Request::is('inputs/beta/presences'))
+                @if (Request::is('admin/inputs/beta/presences'))
                     @forelse ($periods as $period)
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                         {{ $period->name }}
@@ -14,7 +14,7 @@
                         Empty
                     </button>
                     @endforelse
-                @elseif (Request::is('inputs/beta/performances'))
+                @elseif (Request::is('admin/inputs/beta/performances'))
                     @forelse ($periods as $period)
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                         {{ $period->name }}
@@ -74,7 +74,7 @@
                             <td>{{ $officer->name }}</td>
                             <td>{{ $officer->department->name }}</td>
                             <td>
-                                @if (Request::is('inputs/beta/presences'))
+                                @if (Request::is('admin/inputs/beta/presences'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
@@ -84,7 +84,7 @@
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
                                     @endif
-                                @elseif (Request::is('inputs/beta/performances'))
+                                @elseif (Request::is('admin/inputs/beta/performances'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)

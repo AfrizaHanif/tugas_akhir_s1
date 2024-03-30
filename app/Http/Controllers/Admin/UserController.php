@@ -55,7 +55,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
+            return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
         }
 
         //STORE DATA
@@ -69,7 +69,7 @@ class UserController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Tambah Pengguna Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.users.index')->with('success','Tambah Pengguna Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -100,7 +100,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);
+            return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);
         }
 
         //UPDATE DATA
@@ -113,7 +113,7 @@ class UserController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -125,6 +125,6 @@ class UserController extends Controller
         $user->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.users.index')->with('success','Hapus Pengguna Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.users.index')->with('success','Hapus Pengguna Berhasil')->with('code_alert', 1);
     }
 }

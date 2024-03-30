@@ -8,11 +8,12 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Includes.Contents.vote')
+@include('Pages.Admin.Includes.Contents.vote')
 @endsection
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Admin.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

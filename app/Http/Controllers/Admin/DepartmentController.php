@@ -37,7 +37,7 @@ class DepartmentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create');
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create');
         }
 
         //STORE DATA
@@ -48,7 +48,7 @@ class DepartmentController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Tambah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Tambah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
     }
 
     /**
@@ -71,7 +71,7 @@ class DepartmentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $department->id_department);
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $department->id_department);
         }
 
         //UPDATE DATA
@@ -81,7 +81,7 @@ class DepartmentController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
     }
 
     /**
@@ -91,7 +91,7 @@ class DepartmentController extends Controller
     {
         //CHECK DATA
         if(Officer::where('id_department', $department->id_department)->exists()) {
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view');
         }else{
             //CLEAR
         }
@@ -100,6 +100,6 @@ class DepartmentController extends Controller
         $department->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
     }
 }

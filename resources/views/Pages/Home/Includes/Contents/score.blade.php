@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Data Nilai Akhir</h1>
+<h1 class="text-center mb-4">3 Pegawai Terbaik</h1>
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">

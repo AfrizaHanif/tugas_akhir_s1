@@ -1,4 +1,4 @@
-@if (Request::is('inputs/beta/presences') || Request::is('inputs/beta/performances'))
+@if (Request::is('admin/inputs/beta/presences') || Request::is('admin/inputs/beta/performances'))
 @foreach ($periods as $period)
 <div class="modal modal-xl fade" id="modal-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -132,13 +132,13 @@
                                 <td>{{ $officer->department->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($subcriterias as $subcriteria)
-                                        @if (Request::is('inputs/beta/presences'))
+                                        @if (Request::is('admin/inputs/beta/presences'))
                                             @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                                                 <td>{{ $presence->input }}</td>
                                             @empty
                                                 <td>0</td>
                                             @endforelse
-                                        @elseif (Request::is('inputs/beta/performances'))
+                                        @elseif (Request::is('admin/inputs/beta/performances'))
                                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                                                 <td>{{ $performance->input }}</td>
                                             @empty
@@ -153,7 +153,7 @@
                                 @endif
                                 @if ($countsub != 0)
                                 <td>
-                                    @if (Request::is('inputs/beta/presences'))
+                                    @if (Request::is('admin/inputs/beta/presences'))
                                         @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
                                         @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
@@ -161,7 +161,7 @@
                                         @else
                                         <span class="badge text-bg-warning">Terisi Sebagian</span>
                                         @endif
-                                    @elseif (Request::is('inputs/beta/performances'))
+                                    @elseif (Request::is('admin/inputs/beta/performances'))
                                         @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
                                         @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
@@ -201,10 +201,10 @@
     <div class="modal fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                @if (Request::is('inputs/beta/presences'))
-                <form action="{{ route('inputs.beta.presences.store') }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/beta/performances'))
-                <form action="{{ route('inputs.beta.performances.store') }}" method="POST" enctype="multipart/form-data">
+                @if (Request::is('admin/inputs/beta/presences'))
+                <form action="{{ route('admin.inputs.beta.presences.store') }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('admin/inputs/beta/performances'))
+                <form action="{{ route('admin.inputs.beta.performances.store') }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
@@ -252,15 +252,15 @@
     <div class="modal fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                @if (Request::is('inputs/beta/presences'))
-                <form action="{{ route('inputs.beta.presences.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/beta/performances'))
-                <form action="{{ route('inputs.beta.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @if (Request::is('admin/inputs/beta/presences'))
+                <form action="{{ route('admin.inputs.beta.presences.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('admin/inputs/beta/performances'))
+                <form action="{{ route('admin.inputs.beta.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
-                        @if (Request::is('inputs/beta/presences'))
+                        @if (Request::is('admin/inputs/beta/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
-                        @elseif (Request::is('inputs/beta/performances'))
+                        @elseif (Request::is('admin/inputs/beta/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Prestasi Kerja ({{ $officer->id_officer }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -279,7 +279,7 @@
                         </div>
                         <hr/>
                         @forelse ($subcriterias as $subcriteria)
-                            @if (Request::is('inputs/beta/presences'))
+                            @if (Request::is('admin/inputs/beta/presences'))
                             @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                             <div class="mb-3">
                                 <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
@@ -291,7 +291,7 @@
                                 <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
                             </div>
                             @endforelse
-                            @elseif (Request::is('inputs/beta/performances'))
+                            @elseif (Request::is('admin/inputs/beta/performances'))
                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                             <div class="mb-3">
                                 <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
@@ -335,7 +335,7 @@
                 <div class="modal-body">
                     <table class="table">
                     @foreach ($subcriterias as $subcriteria)
-                        @if (Request::is('inputs/beta/presences'))
+                        @if (Request::is('admin/inputs/beta/presences'))
                             @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
@@ -359,7 +359,7 @@
                                 </td>
                             </tr>
                             @endforelse
-                        @elseif (Request::is('inputs/beta/performances'))
+                        @elseif (Request::is('admin/inputs/beta/performances'))
                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
@@ -400,15 +400,15 @@
     <div class="modal fade" id="modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                @if (Request::is('inputs/beta/presences'))
-                <form action="{{ route('inputs.beta.presences.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                @elseif (Request::is('inputs/beta/performances'))
-                <form action="{{ route('inputs.beta.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @if (Request::is('admin/inputs/beta/presences'))
+                <form action="{{ route('admin.inputs.beta.presences.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @elseif (Request::is('admin/inputs/beta/performances'))
+                <form action="{{ route('admin.inputs.beta.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
-                        @if (Request::is('inputs/beta/presences'))
+                        @if (Request::is('admin/inputs/beta/presences'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $officer->id_officer}})</h1>
-                        @elseif (Request::is('inputs/beta/performances'))
+                        @elseif (Request::is('admin/inputs/beta/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Prestasi Kerja ({{ $officer->id_officer}})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

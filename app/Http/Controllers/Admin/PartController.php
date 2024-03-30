@@ -37,7 +37,7 @@ class PartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
         }
 
         //STORE DATA
@@ -47,7 +47,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$id_part])->with('success','Tambah Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$id_part])->with('success','Tambah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -70,7 +70,7 @@ class PartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
         }
 
         //UPDATE DATA
@@ -79,7 +79,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$part->id_part])->with('success','Ubah Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$part->id_part])->with('success','Ubah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -89,7 +89,7 @@ class PartController extends Controller
     {
         //CHECK DATA
         if(Officer::where('id_part', $part->id_part)->exists()) {
-            return redirect()->route('masters.officers.index')->with('fail', 'Hapus Bagian Tidak Berhasil (Terhubung dengan tabel Pegawai)');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Bagian Tidak Berhasil (Terhubung dengan tabel Pegawai)');
         }else{
             //CLEAR
         }
@@ -98,6 +98,6 @@ class PartController extends Controller
         $part->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('masters.officers.index')->with('success','Hapus Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Bagian Berhasil')->with('code_alert', 1);
     }
 }

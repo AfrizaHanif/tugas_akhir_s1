@@ -3,9 +3,9 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('inputs/beta/presences'))
+    @if (Request::is('admin/inputs/beta/presences'))
     <title>Data Kehadiran (Beta) | Tugas Akhir</title>
-    @elseif (Request::is('inputs/beta/performances'))
+    @elseif (Request::is('admin/inputs/beta/performances'))
     <title>Data Prestasi Kerja (Beta) | Tugas Akhir</title>
     @endif
 @endsection

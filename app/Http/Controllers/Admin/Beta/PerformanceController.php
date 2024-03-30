@@ -73,7 +73,7 @@ class PerformanceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.performances.index')->with('success','Tambah Data Prestasi Kerja Berhasil');
+        return redirect()->route('admin.inputs.beta.performances.index')->with('success','Tambah Data Prestasi Kerja Berhasil');
     }
 
     /**
@@ -110,7 +110,7 @@ class PerformanceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.performances.index')->with('success','Ubah Data Prestasi Kerja Berhasil');
+        return redirect()->route('admin.inputs.beta.performances.index')->with('success','Ubah Data Prestasi Kerja Berhasil');
     }
 
     /**
@@ -133,6 +133,6 @@ class PerformanceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('inputs.beta.performances.index')->with('success','Hapus Data Prestasi Kerja Berhasil');
+        return redirect()->route('admin.inputs.beta.performances.index')->with('success','Hapus Data Prestasi Kerja Berhasil');
     }
 }

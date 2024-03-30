@@ -3,9 +3,9 @@
 @include('Templates.Includes.Components.alert')
 @endif
 @if (Auth::user()->part == "Admin")
-    @if (Request::is('masters/officers/search*'))
+    @if (Request::is('admin/masters/officers/search*'))
     <p>
-        <a class="btn btn-secondary" href="{{ route('masters.officers.index') }}">
+        <a class="btn btn-secondary" href="{{ route('admin.masters.officers.index') }}">
             <i class="bi bi-backspace-fill"></i>
             Kembali
         </a>
@@ -31,9 +31,9 @@
     </p>
     @endif
 @endif
-@if (Request::is('masters/officers/search*'))
+@if (Request::is('admin/masters/officers/search*'))
 <p>
-    <form action="{{ route('masters.officers.search') }}" method="GET">
+    <form action="{{ route('admin.masters.officers.search') }}" method="GET">
         <div class="input-group mb-3">
             <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
             <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
@@ -44,7 +44,7 @@
 @else
 <div class="collapse" id="collapse-search">
     <p>
-        <form action="{{ route('masters.officers.search') }}" method="GET">
+        <form action="{{ route('admin.masters.officers.search') }}" method="GET">
             <div class="input-group mb-3">
                 <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
                 <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
@@ -54,7 +54,7 @@
     </p>
 </div>
 @endif
-@if (Request::is('masters/officers/search*'))
+@if (Request::is('admin/masters/officers/search*'))
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">
