@@ -17,6 +17,7 @@
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Admin.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

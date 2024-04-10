@@ -18,4 +18,12 @@
 
 <!--SCRIPTS-->
 @push('scripts')
+<!--
+<script>
+    document.getElementById("close-vcr-create").addEventListener("click", function()
+    {
+        document.getElementById("form-vcr-create").reset();
+    });
+</script>
+-->
 @endpush

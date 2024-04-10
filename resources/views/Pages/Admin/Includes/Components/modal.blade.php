@@ -1,11 +1,11 @@
 @if (Request::is('admin/masters/officers'))
-<div class="modal fade" id="modal-prt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-backdrop="static" id="modal-prt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.parts.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.parts.store') }}" method="POST" enctype="multipart/form-data" id="form-prt-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Bagian</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-prt-create"></button>
                 </div>
                 <div class="modal-body">
                     @if (Session::get('modal_redirect') == 'modal-prt-create')
@@ -33,7 +33,7 @@
 </div>
 
     @foreach ($parts as $part)
-    <div class="modal fade" id="modal-prt-update-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-prt-update-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.parts.update', $part->id_part) }}" method="POST" enctype="multipart/form-data">
@@ -97,13 +97,13 @@
         </div>
     </div>
 
-    <div class="modal modal-xl fade" id="modal-off-create-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-xl fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
                     </div>
                     <div class="modal-body">
                         @csrf
@@ -282,7 +282,7 @@
         </div>
     </div>
 
-    <div class="modal modal-xl fade" id="modal-off-update-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-xl fade" id="modal-off-update-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
@@ -521,13 +521,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-dep-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-dep-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.departments.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.departments.store') }}" method="POST" enctype="multipart/form-data" id="form-dep-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Jabatan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-dep-create"></button>
                 </div>
                 <div class="modal-body">
                     @if (Session::get('modal_redirect') == 'modal-dep-create')
@@ -563,7 +563,7 @@
 </div>
 
     @foreach ($departments as $department)
-    <div class="modal fade" id="modal-dep-update-{{ $department->id_department }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-dep-update-{{ $department->id_department }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.departments.update', $department->id_department) }}" method="POST" enctype="multipart/form-data">
@@ -638,13 +638,13 @@
 @endif
 
 @if (Request::is('admin/masters/users'))
-<div class="modal modal-lg fade" id="modal-usr-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="modal-usr-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.users.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.users.store') }}" method="POST" enctype="multipart/form-data" id="form-usr-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Pengguna</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-usr-create"></button>
                 </div>
                 <div class="modal-body">
                     @csrf
@@ -673,6 +673,7 @@
                                     <option value="KBU" {{ old('part') == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                                     <option value="KTT" {{ old('part') == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
                                     <option value="KBPS" {{ old('part') == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
+                                    <option value="Pegawai" {{ old('part') == 'Pegawai' ? 'selected' : null }}>Pegawai</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -710,7 +711,7 @@
 </div>
 
     @foreach ($users as $user)
-    <div class="modal modal-lg fade" id="modal-usr-update-{{ $user->id_user }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-usr-update-{{ $user->id_user }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.users.update', $user->id_user) }}" method="POST" enctype="multipart/form-data">
@@ -745,6 +746,7 @@
                                         <option value="KBU" {{ $user->part == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                                         <option value="KTT" {{ $user->part == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
                                         <option value="KBPS" {{ $user->part == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
+                                        <option value="Pegawai" {{ $user->part == 'Pegawai' ? 'selected' : null }}>Pegawai</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -817,13 +819,13 @@
 @endif
 
 @if (Request::is('admin/masters/criterias'))
-<div class="modal fade" id="modal-crt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-crt-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.criterias.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.criterias.store') }}" method="POST" enctype="multipart/form-data" id="form-crt-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-crt-create"></button>
                 </div>
                 <div class="modal-body">
                     @if (Session::get('modal_redirect') == 'modal-crt-create')
@@ -859,7 +861,7 @@
 </div>
 
     @foreach ($criterias as $criteria)
-    <div class="modal fade" id="modal-crt-update-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-crt-update-{{ $criteria->id_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.criterias.update', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
@@ -931,13 +933,13 @@
         </div>
     </div>
 
-    <div class="modal modal-lg fade" id="modal-sub-create-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-sub-create-{{ $criteria->id_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('admin.masters.subcriterias.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.masters.subcriterias.store') }}" method="POST" enctype="multipart/form-data" id="form-sub-create-{{ $criteria->id_criteria }}">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sub Kriteria</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-sub-create-{{ $criteria->id_criteria }}"></button>
                     </div>
                     <div class="modal-body">
                         @csrf
@@ -1011,7 +1013,7 @@
     </div>
 
         @foreach ($subcriterias->where('id_criteria', $criteria->id_criteria) as $subcriteria)
-        <div class="modal modal-lg fade" id="modal-sub-update-{{ $subcriteria->id_sub_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal modal-lg fade" id="modal-sub-update-{{ $subcriteria->id_sub_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="{{ route('admin.masters.subcriterias.update', $subcriteria->id_sub_criteria) }}" method="POST" enctype="multipart/form-data">
@@ -1121,13 +1123,13 @@
 @endif
 
 @if (Request::is('admin/masters/vote-criterias'))
-<div class="modal fade" id="modal-vcr-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-vcr-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.vote-criterias.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.vote-criterias.store') }}" method="POST" enctype="multipart/form-data" id="form-vcr-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-vcr-create"></button>
                 </div>
                 <div class="modal-body">
                     @if (Session::get('modal_redirect') == 'modal-vcr-create')
@@ -1155,7 +1157,7 @@
 </div>
 
     @foreach ($criterias as $criteria)
-    <div class="modal fade" id="modal-vcr-update-{{ $criteria->id_vote_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-vcr-update-{{ $criteria->id_vote_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.vote-criterias.update', $criteria->id_vote_criteria) }}" method="POST" enctype="multipart/form-data">
@@ -1222,13 +1224,13 @@
 @endif
 
 @if (Request::is('admin/masters/periods'))
-<div class="modal fade" id="modal-per-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-per-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.periods.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.periods.store') }}" method="POST" enctype="multipart/form-data" id="form-per-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Periode</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-per-create"></button>
                 </div>
                 <div class="modal-body">
                     @if (Session::get('modal_redirect') == 'modal-per-create')
@@ -1504,15 +1506,15 @@
 </div>
 
     @foreach ($officers as $officer)
-    <div class="modal modal-lg fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
-                <form action="{{ route('admin.inputs.presences.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.inputs.presences.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
                 @elseif (Auth::user()->part == "KBU") <!--(Request::is('admin/inputs/kbu/performances'))-->
-                <form action="{{ route('admin.inputs.kbu.performances.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.inputs.kbu.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
                 @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
-                <form action="{{ route('admin.inputs.ktt.performances.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.inputs.ktt.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
                 @endif
                     <div class="modal-header">
                         @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
@@ -1520,7 +1522,7 @@
                         @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Prestasi Kerja ({{ $officer->name }})</h1>
                         @endif
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}"></button>
                     </div>
                     <div class="modal-body">
                         @csrf
@@ -1576,7 +1578,7 @@
         </div>
     </div>
 
-    <div class="modal modal-lg fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->

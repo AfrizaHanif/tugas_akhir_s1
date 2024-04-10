@@ -23,4 +23,12 @@
         $('#v-pills-tab button[data-bs-target="#{{ old('tab_redirect') }}"]').trigger("click")
     });
 </script>
+<!--
+<script>
+    document.getElementById("close-crt-create").addEventListener("click", function()
+    {
+        document.getElementById("form-crt-create").reset();
+    });
+</script>
+-->
 @endpush

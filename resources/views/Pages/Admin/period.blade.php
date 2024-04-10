@@ -18,4 +18,12 @@
 
 <!--SCRIPTS-->
 @push('scripts')
+<!--
+<script>
+    document.getElementById("close-per-create").addEventListener("click", function()
+    {
+        document.getElementById("form-per-create").reset();
+    });
+</script>
+-->
 @endpush
