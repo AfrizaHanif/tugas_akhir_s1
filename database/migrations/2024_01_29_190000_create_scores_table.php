@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_period')->references('id_period')->on('periods');
             $table->char('id_officer', 11);
             $table->foreign('id_officer')->references('id_officer')->on('officers');
-            $table->float('final_score');
+            $table->decimal('final_score', 8, 3);
             $table->char('status', 15);
             $table->timestamps();
         });

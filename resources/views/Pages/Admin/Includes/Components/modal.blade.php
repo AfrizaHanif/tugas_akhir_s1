@@ -1543,9 +1543,9 @@
                                 <div class="mb-3">
                                     <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
                                     @if (Request::is('admin/inputs/presences'))
-                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
+                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                     @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
-                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
+                                    <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
                                     @endif
                                 </div>
                                 @empty
@@ -1616,24 +1616,24 @@
                                     @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $presence->input }}" min="0" max="31" required>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $presence->input }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                     </div>
                                     @empty
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" required>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                     </div>
                                     @endforelse
                                     @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
                                     @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="100" required>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="100" placeholder="Range: 0 - 100" required>
                                     </div>
                                     @empty
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" required>
+                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
                                     </div>
                                     @endforelse
                                     @endif
@@ -2037,13 +2037,85 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-scr-yesall-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('admin.inputs.scores.yesall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penyetujuan Hasil Akhir ({{ $period->id_period}})</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="id" name="id" value="{{ $period->id_period }}" hidden>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda ingin menyetujui seluruh hasil penilaian ini? Jika ya, data tersebut akan disimpan sebagai hasil akhir.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-scr-noall-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('admin.inputs.scores.noall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Hasil Akhir ({{ $period->id_period}})</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="id" name="id" value="{{ $period->id_period }}" hidden>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda ingin tidak menyetujui seluruh hasil penilaian ini? Jika ya, data tersebut akan dikembalikan oleh penilai.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
         @foreach ($scores as $score)
         <div class="modal fade" id="modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="{{ route('admin.inputs.scores.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $score->id}})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Penyetujuan Hasil Akhir ({{ $score->id}})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -2079,7 +2151,7 @@
                 <div class="modal-content">
                     <form action="{{ route('admin.inputs.scores.no', $score->id) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $score->id}})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Hasil Akhir ({{ $score->id}})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

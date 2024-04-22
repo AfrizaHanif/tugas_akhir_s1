@@ -6,7 +6,7 @@
 @if (Auth::user()->part == "Admin")
 <title>Kepegawaian Dashboard | Tugas Akhir</title>
 @elseif (Auth::user()->part == "KBU")
-<title>Ketua Badan Umum Dashboard | Tugas Akhir</title>
+<title>Ketua Bagian Umum Dashboard | Tugas Akhir</title>
 @elseif (Auth::user()->part == "KTT")
 <title>Koordinasi Tim Teknis Dashboard | Tugas Akhir</title>
 @elseif (Auth::user()->part == "KBPS")

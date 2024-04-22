@@ -116,7 +116,9 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                         Route::get('/', 'index')->name('index');
                         Route::post('/get/{period}', 'get')->name('get');
                         Route::post('/yes/{id}', 'yes')->name('yes');
+                        Route::post('/yesall/{id}', 'yesall')->name('yesall');
                         Route::post('/no/{id}', 'no')->name('no');
+                        Route::post('/noall/{id}', 'noall')->name('noall');
                         Route::post('/finish/{period}', 'finish')->name('finish');
                     });
                 });

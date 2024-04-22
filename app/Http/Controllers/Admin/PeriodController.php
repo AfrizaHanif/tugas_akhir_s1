@@ -9,6 +9,7 @@ use App\Models\HistoryVoteResult;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Result;
+use App\Models\Score;
 use App\Models\SubCriteria;
 use App\Models\Vote;
 use App\Models\VoteCheck;
@@ -134,6 +135,7 @@ class PeriodController extends Controller
                     'id_period'=>$vote->id_period,
                     'id_vote_criteria'=>$vote->id_vote_criteria,
                     'final_vote'=>$vote->votes,
+                    //'final_score'=>$vote->final_score,
                 ]);
             }
         }
@@ -141,18 +143,20 @@ class PeriodController extends Controller
         $voteresults = VoteResult::where('id_period', $period)->select('id_officer')->groupby('id_officer')->get();
         foreach($voteresults as $result){
             $count = VoteResult::where('id_period', $period)->where('id_officer', $result->id_officer)->count();
+            $score = Score::with('officer')->where('id_period', $period)->where('id_officer', $result->id_officer)->first();
 
             Result::insert([
                 //'id_result'=>$id_result,
                 'id_officer'=>$result->id_officer,
                 'id_period'=>$period,
                 'count'=>$count,
+                'final_score'=>$score->final_score,
             ]);
         }
 
         //BACKUP TO HISTORY
-        $votes1 = Vote::where('id_period', $period)->get();
-        foreach($votes1 as $vote){
+        $votes2 = Vote::where('id_period', $period)->get();
+        foreach($votes2 as $vote){
             $getperiod1 = Period::where('id_period', $vote->id_period)->first();
             $getofficer1 = Officer::where('id_officer', $vote->id_officer)->first();
             HistoryVote::insert([

@@ -2,58 +2,20 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
-@if (Auth::user()->part == "Admin")
-    @if (Request::is('admin/masters/officers/search*'))
-    <p>
-        <a class="btn btn-secondary" href="{{ route('admin.masters.officers.index') }}">
-            <i class="bi bi-backspace-fill"></i>
-            Kembali
-        </a>
-    </p>
-    @else
-    <p>
-        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-prt-create">
-            <i class="bi bi-folder-plus"></i>
-            Tambah Bagian
-        </a>
-        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-            <i class="bi bi-diagram-2"></i>
-            Lihat Jabatan
-        </a>
-        <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapse-search" role="button" aria-expanded="false" aria-controls="collapse-search">
-            <i class="bi bi-search"></i>
-            Cari Pegawai
-        </a>
-        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-            <i class="bi bi-question-lg"></i>
-            Bantuan
-        </a>
-    </p>
-    @endif
-@endif
-@if (Request::is('admin/masters/officers/search*'))
 <p>
     <form action="{{ route('admin.masters.officers.search') }}" method="GET">
         <div class="input-group mb-3">
             <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
+            @if (Request::is('admin/masters/officers/search*'))
             <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
+            <a class="btn btn-outline-secondary" type="button" href="{{ route('admin.masters.officers.index') }}">Kembali</a>
+            @else
+            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
+            @endif
             <button class="btn btn-outline-primary" type="submit" id="officer-search">Cari</button>
         </div>
     </form>
 </p>
-@else
-<div class="collapse" id="collapse-search">
-    <p>
-        <form action="{{ route('admin.masters.officers.search') }}" method="GET">
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
-                <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
-                <button class="btn btn-outline-primary" type="submit" id="officer-search">Cari</button>
-            </div>
-        </form>
-    </p>
-</div>
-@endif
 @if (Request::is('admin/masters/officers/search*'))
 <table class="table table-hover table-bordered">
     <thead>
@@ -117,6 +79,31 @@
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <div class="dropdown pb-3">
+                @if (Auth::user()->part == "Admin")
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-menu-button-fill"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-prt-create">
+                            <i class="bi bi-folder-plus"></i>
+                            Tambah Bagian
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                            <i class="bi bi-diagram-2"></i>
+                            Lihat Jabatan
+                        </a>
+                    </li>
+                </ul>
+                @endif
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                    Bantuan
+                </a>
+            </div>
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($parts as $part)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $part->id_part }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $part->id_part }}" type="button" role="tab" aria-controls="pills-{{ $part->id_part }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">

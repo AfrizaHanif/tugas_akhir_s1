@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_department', 10)->primary();
             //$table->char('id_part', 10);
             //$table->foreign('id_part')->references('id_part')->on('parts');
-            $table->string('name', 30);
+            $table->string('name', 50);
             //$table->char('id_part', 10);
             //$table->foreign('id_part')->references('id_part')->on('parts');
             $table->string('description', 100)->nullable();

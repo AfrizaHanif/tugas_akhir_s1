@@ -3,6 +3,12 @@
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <p>
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                    Bantuan
+                </a>
+            </p>
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($periods as $period)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">

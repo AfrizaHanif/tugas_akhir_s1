@@ -39,7 +39,7 @@ class VoteController extends Controller
         ->get();
         if(Auth::user()->part == 'KBU'){
             $fil_offs = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Badan Umum%');})
+            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->get();

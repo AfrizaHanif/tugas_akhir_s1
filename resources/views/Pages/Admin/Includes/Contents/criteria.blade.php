@@ -2,19 +2,18 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
-<p>
-    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create">
-        <i class="bi bi-folder-plus"></i>
-        Tambah Kriteria
-    </a>
-    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-        <i class="bi bi-question-lg"></i>
-        Bantuan
-    </a>
-</p>
 <div class="row">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <p>
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create">
+                    <i class="bi bi-folder-plus"></i>
+                    Tambah Kriteria
+                </a>
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                </a>
+            </p>
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($criterias as $criteria)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">

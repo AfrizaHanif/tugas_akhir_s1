@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('period_name', 20);
             $table->string('officer_name', 50);
-            $table->float('final_score');
+            $table->decimal('final_score', 8, 3);
             $table->timestamps();
         });
     }

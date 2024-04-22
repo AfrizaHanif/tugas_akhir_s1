@@ -20,6 +20,7 @@ return new class extends Migration
             $table->char('id_vote_criteria', 11);
             $table->foreign('id_vote_criteria')->references('id_vote_criteria')->on('vote_criterias');
             $table->unsignedSmallInteger('final_vote');
+            //$table->decimal('final_score', 8, 3);
             $table->timestamps();
         });
     }

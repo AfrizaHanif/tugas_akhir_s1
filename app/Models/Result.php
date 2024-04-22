@@ -15,6 +15,7 @@ class Result extends Model
         'id_officer',
         'id_period',
         'count',
+        'final_score',
     ];
 
     public function officer()

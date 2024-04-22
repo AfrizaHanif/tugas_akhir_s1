@@ -66,6 +66,83 @@
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @if ($period->status == "Voting" || $period->status == "Finished")
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Setuju Semua?
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                                Ya
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                                Tidak
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Setuju Semua?
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                                Ya
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                                Tidak
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() != $officers->count())
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Setuju Semua?
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                                Ya
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                                Tidak
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @else
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Setuju Semua?
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                                Ya
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                                Tidak
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                @if ($period->status == "Voting" || $period->status == "Finished")
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                     <a class="btn btn-success disabled">
                                         <i class="bi bi-clipboard2-check"></i>

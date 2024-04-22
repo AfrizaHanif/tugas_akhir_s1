@@ -134,9 +134,9 @@ class AnalysisController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_sub_criteria == $value1->id_sub_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / max($minmax[$value2->id_sub_criteria]);
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / (max($minmax[$value2->id_sub_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = min($minmax[$value2->id_sub_criteria]) / $value1->input;
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }

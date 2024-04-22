@@ -1,5 +1,11 @@
 <h1 class="text-center mb-4">Data Laporan</h1>
 @include('Templates.Includes.Components.alert')
+<p>
+    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+        <i class="bi bi-question-lg"></i>
+        Bantuan
+    </a>
+</p>
 <div class="row">
     <div class="col-md-7">
         <div class="accordion" id="accordionExample">

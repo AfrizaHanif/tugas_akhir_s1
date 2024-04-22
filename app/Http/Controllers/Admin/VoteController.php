@@ -36,7 +36,7 @@ class VoteController extends Controller
         ->get();
         if(Auth::user()->part == 'KBU'){
             $fil_offs = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Badan Umum%');})
+            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->get();
@@ -62,7 +62,7 @@ class VoteController extends Controller
         return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select'));
     }
 
-    public function select($period, $officer, $criteria)
+    public function select(Request $request, $period, $officer, $criteria)
     {
         //INCREMENT DATA
         Vote::where('id_period', $period)->where('id_officer', $officer)->where('id_vote_criteria', $criteria)->increment('votes');
@@ -81,6 +81,6 @@ class VoteController extends Controller
         ]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.votes.vote', $period)->with('success','Voting Berhasil');
+        return redirect()->route('admin.inputs.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$criteria])->with('success','Voting Berhasil');
     }
 }

@@ -165,9 +165,9 @@ class ScoreController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_sub_criteria == $value1->id_sub_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / max($minmax[$value2->id_sub_criteria]);
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / (max($minmax[$value2->id_sub_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = min($minmax[$value2->id_sub_criteria]) / $value1->input;
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -185,6 +185,7 @@ class ScoreController extends Controller
         //dd($mxin);
 
         $mx_hasil = $mxin; //$ranking = $normal;
+
         foreach($normal as $n => $value1){
             $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
             $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
@@ -240,6 +241,23 @@ class ScoreController extends Controller
         return redirect()->route('admin.inputs.scores.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
     }
 
+    public function yesall($id)
+    {
+        Score::where('id_period', $id)->update([
+            'status'=>'Accepted'
+        ]);
+
+        Presence::where('id_period', $id)->update([
+            'status'=>'Final'
+        ]);
+
+        Performance::where('id_period', $id)->update([
+            'status'=>'Final'
+        ]);
+
+        return redirect()->route('admin.inputs.scores.index')->with('success','Persetujuan Berhasil. Data dari seluruh pegawai telah disetujui')->with('code_alert', 1);
+    }
+
     public function no($id)
     {
         $result = Score::where('id', $id)->first();
@@ -260,6 +278,23 @@ class ScoreController extends Controller
         ]);
 
         return redirect()->route('admin.inputs.scores.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
+    }
+
+    public function noall($id)
+    {
+        Score::where('id_period', $id)->update([
+            'status'=>'Rejected'
+        ]);
+
+        Presence::where('id_period', $id)->update([
+            'status'=>'Need Fix'
+        ]);
+
+        Performance::where('id_period', $id)->update([
+            'status'=>'Need Fix'
+        ]);
+
+        return redirect()->route('admin.inputs.scores.index')->with('success','Penolakan Berhasil. Data dari seluruh pegawai telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)

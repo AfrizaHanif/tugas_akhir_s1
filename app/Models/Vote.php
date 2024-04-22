@@ -16,6 +16,7 @@ class Vote extends Model
         'id_period',
         'id_vote_criteria',
         'votes',
+        //'final_score',
     ];
 
     public function officer()
