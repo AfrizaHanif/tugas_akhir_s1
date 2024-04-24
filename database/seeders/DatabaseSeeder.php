@@ -59,41 +59,36 @@ class DatabaseSeeder extends Seeder
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-002',
-            'name' => 'Kepegawaian',
-        ]);
-
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-003',
             'name' => 'Kepala Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-004',
-            'name' => 'Pranata Keuangan APBN Penyelia Bagian Umum',
+            'id_department' => 'DPT-003',
+            'name' => 'Pranata Keuangan APBN Penyelia',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-005',
+            'id_department' => 'DPT-004',
             'name' => 'Staf Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-006',
+            'id_department' => 'DPT-005',
             'name' => 'Statistisi Ahli Pertama',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-007',
+            'id_department' => 'DPT-006',
             'name' => 'Statistisi Ahli Muda',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-008',
+            'id_department' => 'DPT-007',
             'name' => 'Statistisi Ahli Madya',
         ]);
 
         DB::table('departments')->insert([
-            'id_department' => 'DPT-009',
+            'id_department' => 'DPT-008',
             'name' => 'Statistisi Ahli Utama',
         ]);
 
@@ -102,7 +97,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-000',
             //'nip_bps' => '000000000',
             //'nip' => '000000000',
-            'name' => 'Developer',
+            'name' => 'Muhammad Afriza Hanif',
             //'org_code' => '00000',
             'id_department' => 'DPT-000',
             'id_part' => 'PRT-000',
@@ -118,7 +113,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-001',
-            'name' => 'Kepala BPS Jatim',
+            'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_department' => 'DPT-001',
             'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
@@ -129,8 +124,8 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
-            'name' => 'Pegawai Kepegawaian',
-            'id_department' => 'DPT-002',
+            'name' => 'Wikan Nastiti, SST',
+            'id_department' => 'DPT-004',
             'id_part' => 'PRT-002',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
@@ -140,8 +135,8 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-003',
-            'name' => 'Kepala Bagian Umum',
-            'id_department' => 'DPT-003',
+            'name' => 'Satriyo Wibowo, SP, M.M',
+            'id_department' => 'DPT-002',
             'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
@@ -152,6 +147,17 @@ class DatabaseSeeder extends Seeder
         DB::table('officers')->insert([
             'id_officer' => 'OFF-004',
             'name' => 'Ika Widiati Nugraheny, A.Md',
+            'id_department' => 'DPT-003',
+            'id_part' => 'PRT-003',
+            'place_birth' => 'Surabaya',
+            'date_birth' => '2000/01/01',
+            'gender' => 'Perempuan',
+            'religion' => 'Islam',
+        ]);
+
+        DB::table('officers')->insert([
+            'id_officer' => 'OFF-005',
+            'name' => 'Agusta Briliantono Yusuf, S.ST., M.AP.',
             'id_department' => 'DPT-004',
             'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
@@ -161,31 +167,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-005',
-            'name' => 'Agusta Briliantono Yusuf, S.ST., M.AP.',
-            'id_department' => 'DPT-005',
-            'id_part' => 'PRT-003',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-        ]);
-
-        DB::table('officers')->insert([
             'id_officer' => 'OFF-006',
-            'name' => 'Ketua Tim Teknis 1',
-            'id_department' => 'DPT-007',
+            'name' => 'Riena Widianingtyas, S.Si, M.T',
+            'id_department' => 'DPT-006',
             'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
+            'gender' => 'Perempuan',
             'religion' => 'Islam',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-007',
-            'name' => 'Ketua Tim Teknis 2',
-            'id_department' => 'DPT-008',
+            'name' => 'Dr. Agus Budhi Santosa, S.Si, M.T',
+            'id_department' => 'DPT-007',
             'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
@@ -196,29 +191,29 @@ class DatabaseSeeder extends Seeder
         DB::table('officers')->insert([
             'id_officer' => 'OFF-008',
             'name' => 'Peni Meivita, S.Si., M.M.',
-            'id_department' => 'DPT-007',
+            'id_department' => 'DPT-006',
             'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
+            'gender' => 'Perempuan',
             'religion' => 'Islam',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-009',
             'name' => 'Daizy Pangeswari, SE, MM',
-            'id_department' => 'DPT-007',
+            'id_department' => 'DPT-006',
             'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
+            'gender' => 'Perempuan',
             'religion' => 'Islam',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-010',
             'name' => 'Boby Eko Heru Mulyadi, SST, M.Si',
-            'id_department' => 'DPT-008',
+            'id_department' => 'DPT-007',
             'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',

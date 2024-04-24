@@ -131,6 +131,7 @@
                             Tambah Pegawai
                         </a>
                     </div>
+                    @if ($part->name != "Kepemimpinan")
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-prt-update-{{ $part->id_part }}">
                             <i class="bi bi-pencil"></i>
@@ -143,6 +144,8 @@
                             Hapus Bagian
                         </a>
                     </div>
+                    @endif
+
                 </p>
                 @endif
                 <table class="table table-hover table-bordered">

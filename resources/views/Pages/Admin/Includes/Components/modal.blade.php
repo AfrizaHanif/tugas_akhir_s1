@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <div class="modal modal-xl fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
@@ -129,8 +129,8 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="last_education" class="form-label">Pendidikan Terakhir</label>
-                                            <select class="form-select" id="last_education" name="last_education" disabled>
-                                                <option selected disabled>---Pilih Status Kerja---</option>
+                                            <select class="form-select" id="last_education" name="last_education" required disabled>
+                                                <option selected disabled value="">---Pilih Status Kerja---</option>
                                                 <option value="SD" {{ old('last_education') == 'SD' ? 'selected' : null }}>SD</option>
                                                 <option value="SMP" {{ old('last_education') == 'SMP' ? 'selected' : null }}>SMP</option>
                                                 <option value="SMA" {{ old('last_education') == 'SMA' ? 'selected' : null }}>SMA</option>
@@ -152,7 +152,7 @@
                                         <div class="mb-3">
                                             <label for="gender" class="form-label">Jenis Kelamin</label>
                                             <select class="form-select" id="gender" name="gender" required>
-                                                <option selected disabled>---Pilih Jenis Kelamin---</option>
+                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
                                                 <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
                                                 <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
                                             </select>
@@ -160,7 +160,7 @@
                                         <div class="mb-3">
                                             <label for="religion" class="form-label">Agama</label>
                                             <select class="form-select" id="religion" name="religion" required>
-                                                <option selected disabled>---Pilih Agama---</option>
+                                                <option selected disabled value="">---Pilih Agama---</option>
                                                 <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
                                                 <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
                                                 <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
@@ -189,16 +189,16 @@
                                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ old('org_code') }}" disabled>
                                         </div>
                                         <div class="mb-3">
+                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" hidden>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="id_department" class="form-label">Jabatan</label>
                                             <select class="form-select" id="id_department" name="id_department" required>
-                                                <option selected disabled>---Pilih Jabatan---</option>
+                                                <option selected disabled value="">---Pilih Jabatan---</option>
                                                 @foreach ($departments as $department)
                                                 <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
                                                 @endforeach
                                             </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" hidden>
                                         </div>
                                         <div class="mb-3">
                                             <label for="status" class="form-label">Status</label>
@@ -282,7 +282,7 @@
         </div>
     </div>
 
-    <div class="modal modal-xl fade" id="modal-off-update-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-off-update-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
@@ -315,7 +315,7 @@
                                         <div class="mb-3">
                                             <label for="last_education" class="form-label">Pendidikan Terakhir</label>
                                             <select class="form-select" id="last_education" name="last_education" disabled>
-                                                <option selected disabled>---Pilih Status Kerja---</option>
+                                                <option selected disabled value="">---Pilih Status Kerja---</option>
                                                 <option value="SD" {{ $officer->last_education == 'SD' ? 'selected' : null }}>SD</option>
                                                 <option value="SMP" {{ $officer->last_education == 'SMP' ? 'selected' : null }}>SMP</option>
                                                 <option value="SMA" {{ $officer->last_education == 'SMA' ? 'selected' : null }}>SMA</option>
@@ -337,7 +337,7 @@
                                         <div class="mb-3">
                                             <label for="gender" class="form-label">Jenis Kelamin</label>
                                             <select class="form-select" id="gender" name="gender" required>
-                                                <option selected disabled>---Pilih Jenis Kelamin---</option>
+                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
                                                 <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
                                                 <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
                                             </select>
@@ -345,7 +345,7 @@
                                         <div class="mb-3">
                                             <label for="religion" class="form-label">Agama</label>
                                             <select class="form-select" id="religion" name="religion" required>
-                                                <option selected disabled>---Pilih Agama---</option>
+                                                <option selected disabled value="">---Pilih Agama---</option>
                                                 <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
                                                 <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
                                                 <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
@@ -368,20 +368,20 @@
                                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="id_department" class="form-label">Jabatan</label>
-                                            <select class="form-select" id="id_department" name="id_department" required>
-                                                <option selected disabled>---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
-                                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                            <label for="id_part" class="form-label">Bagian</label>
+                                            <select class="form-select" id="id_part" name="id_part" required>
+                                                <option selected disabled value="">---Pilih Bagian---</option>
+                                                @foreach ($parts as $part)
+                                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="id_part" class="form-label">Bagian</label>
-                                            <select class="form-select" id="id_part" name="id_part" required>
-                                                <option selected disabled>---Pilih Bagian---</option>
-                                                @foreach ($parts as $part)
-                                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
+                                            <label for="id_department" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_department" name="id_department" required>
+                                                <option selected disabled value="">---Pilih Jabatan---</option>
+                                                @foreach ($departments as $department)
+                                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -668,7 +668,7 @@
                             <div class="mb-3">
                                 <label for="part" class="form-label">Bagian / Jenis Akun</label>
                                 <select class="form-select" id="part" name="part" required>
-                                    <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
+                                    <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
                                     <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                                     <option value="KBU" {{ old('part') == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                                     <option value="KTT" {{ old('part') == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
@@ -679,9 +679,12 @@
                             <div class="mb-3">
                                 <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
                                 <select class="form-select" id="id_officer" name="id_officer" required>
-                                    <option selected disabled>---Pilih Pegawai---</option>
-                                    @foreach ($officers as $officer)
-                                    <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                    <option selected disabled value="">---Pilih Pegawai---</option>
+                                    @foreach ($parts as $part)
+                                    <option disabled value="">///{{$part->name}}///</option>
+                                        @foreach ($officers->where('id_part', $part->id_part) as $officer)
+                                        <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                        @endforeach
                                     @endforeach
                                 </select>
                             </div>
@@ -741,7 +744,7 @@
                                 <div class="mb-3">
                                     <label for="part" class="form-label">Bagian / Jenis Akun</label>
                                     <select class="form-select" id="part" name="part" required>
-                                        <option selected disabled>---Pilih Bagian / Jenis Akun---</option>
+                                        <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
                                         <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                                         <option value="KBU" {{ $user->part == 'KBU' ? 'selected' : null }}>Kepala Bagian Umum</option>
                                         <option value="KTT" {{ $user->part == 'KTT' ? 'selected' : null }}>Ketua Tim Teknis</option>
@@ -752,9 +755,12 @@
                                 <div class="mb-3">
                                     <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
                                     <select class="form-select" id="id_officer" name="id_officer" required>
-                                        <option selected disabled>---Pilih Pegawai---</option>
-                                        @foreach ($officers as $officer)
-                                        <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                        <option selected disabled value="">---Pilih Pegawai---</option>
+                                        @foreach ($parts as $part)
+                                        <option disabled value="">///{{$part->name}}///</option>
+                                            @foreach ($officers->where('id_part', $part->id_part) as $officer)
+                                            <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                                            @endforeach
                                         @endforeach
                                     </select>
                                 </div>
@@ -839,7 +845,7 @@
                     <div class="mb-3">
                         <label for="type" class="form-label">Jenis Kriteria (Untuk Dimasukkan ke Tabel)</label>
                         <select class="form-select" id="type" name="type" required>
-                            <option selected disabled>---Pilih Jenis Kriteria---</option>
+                            <option selected disabled value="">---Pilih Jenis Kriteria---</option>
                             <option value="Kehadiran" {{ old('type') == 'Kehadiran' ? 'selected' : null }}>Kehadiran</option>
                             <option value="Prestasi Kerja" {{ old('type') == 'Prestasi Kerja' ? 'selected' : null }}>Prestasi Kerja</option>
                         </select>
@@ -881,7 +887,7 @@
                         <div class="mb-3">
                             <label for="type" class="form-label">Jenis Kriteria (Untuk Dimasukkan ke Tabel)</label>
                             <select class="form-select" id="type" name="type" required>
-                                <option selected disabled>---Pilih Jenis Kriteria---</option>
+                                <option selected disabled value="">---Pilih Jenis Kriteria---</option>
                                 <option value="Kehadiran" {{ $criteria->type == 'Kehadiran' ? 'selected' : null }}>Kehadiran</option>
                                 <option value="Prestasi Kerja" {{ $criteria->type == 'Prestasi Kerja' ? 'selected' : null }}>Prestasi Kerja</option>
                             </select>
@@ -963,7 +969,7 @@
                                 <div class="mb-3">
                                     <label for="attribute" class="form-label">Atribut</label>
                                     <select class="form-select" id="attribute" name="attribute" required>
-                                        <option selected disabled>---Pilih Atribut---</option>
+                                        <option selected disabled value="">---Pilih Atribut---</option>
                                         <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
                                         <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
                                     </select>
@@ -971,7 +977,7 @@
                                 <div class="mb-3">
                                     <label for="level" class="form-label">Tingkat Kepentingan</label>
                                     <select class="form-select" id="level" name="level" required>
-                                        <option selected disabled>---Pilih Atribut---</option>
+                                        <option selected disabled value="">---Pilih Atribut---</option>
                                         <option value="1" {{ old('level') == '1' ? 'selected' : null }}>1. Sama Penting</option>
                                         <option value="3" {{ old('level') == '3' ? 'selected' : null }}>3. Cukup Penting</option>
                                         <option value="5" {{ old('level') == '5' ? 'selected' : null }}>5. Lebih Penting</option>
@@ -982,7 +988,7 @@
                                 <div class="mb-3">
                                     <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
                                     <select class="form-select" id="need" name="need" required>
-                                        <option selected disabled>---Pilih---</option>
+                                        <option selected disabled value="">---Pilih---</option>
                                         <option value="Ya" {{ old('attribute') == 'Ya' ? 'selected' : null }}>Ya</option>
                                         <option value="Tidak" {{ old('attribute') == 'Tidak' ? 'selected' : null }}>Tidak</option>
                                     </select>
@@ -1039,7 +1045,7 @@
                                     <div class="mb-3">
                                         <label for="attribute" class="form-label">Atribut</label>
                                         <select class="form-select" id="attribute" name="attribute" required>
-                                            <option selected disabled>---Pilih Atribut---</option>
+                                            <option selected disabled value="">---Pilih Atribut---</option>
                                             <option value="Benefit" {{ $subcriteria->attribute == 'Benefit' ? 'selected' : null }}>Benefit</option>
                                             <option value="Cost" {{ $subcriteria->attribute == 'Cost' ? 'selected' : null }}>Cost</option>
                                         </select>
@@ -1047,7 +1053,7 @@
                                     <div class="mb-3">
                                         <label for="level" class="form-label">Tingkat Kepentingan</label>
                                         <select class="form-select" id="level" name="level" required>
-                                            <option selected disabled>---Pilih Atribut---</option>
+                                            <option selected disabled value="">---Pilih Atribut---</option>
                                             <option value="1" {{ $subcriteria->level == '1' ? 'selected' : null }}>1. Sama Penting</option>
                                             <option value="3" {{ $subcriteria->level == '3' ? 'selected' : null }}>3. Cukup Penting</option>
                                             <option value="5" {{ $subcriteria->level == '5' ? 'selected' : null }}>5. Lebih Penting</option>
@@ -1058,7 +1064,7 @@
                                     <div class="mb-3">
                                         <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
                                         <select class="form-select" id="need" name="need" required>
-                                            <option selected disabled>---Pilih---</option>
+                                            <option selected disabled value="">---Pilih---</option>
                                             <option value="Ya" {{ $subcriteria->need == 'Ya' ? 'selected' : null }}>Ya</option>
                                             <option value="Tidak" {{ $subcriteria->need == 'Tidak' ? 'selected' : null }}>Tidak</option>
                                         </select>
@@ -1240,7 +1246,7 @@
                     <div class="mb-3">
                         <label for="month" class="form-label">Bulan</label>
                         <select class="form-select" id="month" name="month" required>
-                            <option selected disabled>---Pilih Bulan---</option>
+                            <option selected disabled value="">---Pilih Bulan---</option>
                             <option value="01" {{ old('month') == '01' ? 'selected' : null }}>Januari</option>
                             <option value="02" {{ old('month') == '02' ? 'selected' : null }}>Februari</option>
                             <option value="03" {{ old('month') == '03' ? 'selected' : null }}>Maret</option>

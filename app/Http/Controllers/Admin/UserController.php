@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Officer;
+use App\Models\Part;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,8 +18,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::whereNot('id_user', 'USR-000')->get();
+        $parts = Part::whereNot('name', 'Developer')->get();
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
-        return view('Pages.Admin.user', compact('users', 'officers'));
+        return view('Pages.Admin.user', compact('users', 'officers', 'parts'));
     }
 
     /**
