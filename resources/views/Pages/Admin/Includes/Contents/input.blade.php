@@ -4,7 +4,7 @@
 <h1 class="text-center mb-4">Data Prestasi Kerja</h1>
 @endif
 @include('Templates.Includes.Components.alert')
-<div class="row">
+<div class="row g-2">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <p>

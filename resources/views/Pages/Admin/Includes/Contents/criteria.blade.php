@@ -2,7 +2,7 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
-<div class="row">
+<div class="row g-2">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <p>

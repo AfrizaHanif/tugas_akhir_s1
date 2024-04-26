@@ -107,7 +107,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 @if (Session::get('modal_redirect') == 'modal-off-create')
                                 @include('Templates.Includes.Components.alert')
@@ -237,51 +237,6 @@
     @endforeach
 
     @foreach ($officers as $officer)
-    <div class="modal fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Pegawai ({{ $officer->id_officer }})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <tr>
-                            <th scope="row">Nama Pegawai</th>
-                            <td>{{ $officer->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Jabatan</th>
-                            <td>{{ $officer->department->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Bagian</th>
-                            <td>{{ $officer->part->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Tempat Tanggal Lahir</th>
-                            <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Jenis Kelamin</th>
-                            <td>{{ $officer->gender }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Agama</th>
-                            <td>{{ $officer->religion }}</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tutup
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal modal-lg fade" id="modal-off-update-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -292,7 +247,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 @if (Session::get('modal_redirect') == 'modal-off-update')
                                 @include('Templates.Includes.Components.alert')
@@ -544,11 +499,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-                        <i class="bi bi-backspace"></i>
-                        Kembali
-                    </button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
                         <i class="bi bi-x-lg"></i>
                         Batal
                     </button>
@@ -586,11 +537,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-                            <i class="bi bi-backspace"></i>
-                            Kembali
-                        </button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
                             <i class="bi bi-x-lg"></i>
                             Batal
                         </button>
@@ -648,7 +595,7 @@
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="row justify-content-center g-5">
+                    <div class="row justify-content-center g-4">
                         <div class="col-md-7">
                             @if (Session::get('modal_redirect') == 'modal-usr-create')
                             @include('Templates.Includes.Components.alert')
@@ -724,7 +671,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 @if (Session::get('modal_redirect') == 'modal-usr-update')
                                 @include('Templates.Includes.Components.alert')
@@ -949,7 +896,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 @if (Session::get('modal_redirect') == 'modal-sub-create')
                                 @include('Templates.Includes.Components.alert')
@@ -1029,7 +976,7 @@
                         </div>
                         <div class="modal-body">
                             @csrf @method('PUT')
-                            <div class="row justify-content-center g-5">
+                            <div class="row justify-content-center g-4">
                                 <div class="col-md-7">
                                     @if (Session::get('modal_redirect') == 'modal-sub-update')
                                     @include('Templates.Includes.Components.alert')
@@ -1532,7 +1479,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 <div class="row mb-3">
                                     <div class="col">
@@ -1604,7 +1551,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
-                        <div class="row justify-content-center g-5">
+                        <div class="row justify-content-center g-4">
                             <div class="col-md-7">
                                 <div class="row mb-3">
                                     <div class="col">

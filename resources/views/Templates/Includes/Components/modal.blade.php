@@ -16,9 +16,9 @@
     </div>
 </div>
 
-@if (Request::is('admin/masters/officers*') || Request::is('officers*'))
+@if (Request::is('admin/masters/officers*') || Request::is('officers*') || Request::is('officer/officers*'))
     @foreach ($officers as $officer)
-    <div class="modal fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -26,32 +26,39 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
-                        <tr>
-                            <th scope="row">Nama Pegawai</th>
-                            <td>{{ $officer->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Jabatan</th>
-                            <td>{{ $officer->department->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Bagian</th>
-                            <td>{{ $officer->part->name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Tempat Tanggal Lahir</th>
-                            <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Jenis Kelamin</th>
-                            <td>{{ $officer->gender }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Agama</th>
-                            <td>{{ $officer->religion }}</td>
-                        </tr>
-                    </table>
+                    <div class="row justify-content-center g-3">
+                        <div class="col-md-4">
+                            <img src="{{ url('Images/Portrait/'.$officer->photo) }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" class="img-thumbnail rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table">
+                                <tr>
+                                    <th scope="row">Nama Pegawai</th>
+                                    <td>{{ $officer->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Jabatan</th>
+                                    <td>{{ $officer->department->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Bagian</th>
+                                    <td>{{ $officer->part->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Tempat Tanggal Lahir</th>
+                                    <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Jenis Kelamin</th>
+                                    <td>{{ $officer->gender }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Agama</th>
+                                    <td>{{ $officer->religion }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

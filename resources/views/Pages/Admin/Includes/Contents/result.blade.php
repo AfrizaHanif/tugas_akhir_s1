@@ -1,6 +1,6 @@
 <h1 class="text-center mb-4">Karyawan Terbaik</h1>
 @include('Templates.Includes.Components.alert')
-<div class="row">
+<div class="row g-2">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <p>

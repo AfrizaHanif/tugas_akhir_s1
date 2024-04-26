@@ -76,13 +76,13 @@
 </table>
 {{$officers->withQueryString()->links()}}
 @else
-<div class="row">
+<div class="row g-2">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="dropdown pb-3">
                 @if (Auth::user()->part == "Admin")
                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-menu-button-fill"></i>
+                    <i class="bi bi-menu-app-fill"></i>
                 </button>
                 <ul class="dropdown-menu">
                     <li>

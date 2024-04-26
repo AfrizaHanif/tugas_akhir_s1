@@ -300,7 +300,7 @@ class AnalysisController extends Controller
         foreach($inputs as $input => $value1){
             foreach($criterias as $crit => $value2){
                 if($value1->id_sub_criteria == $value2->id_sub_criteria){
-                    $square[$value1->id_officer][$value2->id_sub_criteria] = pow($value1->input , $pangkat[$value1->id_sub_criteria]);
+                    $square[$value1->id_officer][$value2->id_sub_criteria] = (pow($value1->input , $pangkat[$value1->id_sub_criteria]) ?: 1);
                 }
             }
         }

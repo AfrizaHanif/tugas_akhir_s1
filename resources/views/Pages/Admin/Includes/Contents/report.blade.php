@@ -6,7 +6,7 @@
         Bantuan
     </a>
 </p>
-<div class="row">
+<div class="row g-2">
     <div class="col-md-7">
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
