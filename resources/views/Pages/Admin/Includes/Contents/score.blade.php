@@ -108,7 +108,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
                                                 Ya
                                             </a>
                                         </li>
@@ -131,7 +131,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
                                                 Tidak
                                             </a>
                                         </li>

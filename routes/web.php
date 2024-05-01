@@ -141,7 +141,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::get('/{period}', [AnalysisController::class, 'wp'])->name('wp');
             });
         });
-        Route::get('/results', [ResultController::class, 'index'])->name('index');
+        Route::get('/results', [ResultController::class, 'index'])->name('results');
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::controller(ReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');

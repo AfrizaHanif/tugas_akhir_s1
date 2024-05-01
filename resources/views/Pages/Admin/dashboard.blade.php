@@ -16,7 +16,7 @@
 
 <!--CONTENTS-->
 @section('contents')
-<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
+@include('Pages.Admin.Includes.Contents.dashboard')
 @endsection
 
 <!--MODALS-->
