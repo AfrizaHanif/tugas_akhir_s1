@@ -146,12 +146,6 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="/admin/results" class="{{ (request()->is('admin/results*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#result"/></svg>
-                    Pegawai Terbaik
-                </a>
-            </li>
-            <li class="nav-item">
                 <a href="/admin/reports" class="{{ (request()->is('admin/reports')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#report"/></svg>
                     Laporan

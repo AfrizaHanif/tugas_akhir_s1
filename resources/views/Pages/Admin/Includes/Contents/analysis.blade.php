@@ -11,23 +11,39 @@
             Pilih Periode
         </button>
         <ul class="dropdown-menu">
-            @if (Request::is('admin/analysis/saw*'))
-            <li>
-                <a class="dropdown-item" href="{{ route('admin.analysis.saw.saw', $latest->id_period) }}">
-                    Sekarang
-                </a>
-            </li>
+            @if (Request::is('admin/analysis/saw') || Request::is('admin/analysis/saw/*'))
+                @if (!empty($latest_per->id_period))
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.analysis.saw.saw', $latest_per->id_period) }}">
+                        Sekarang
+                    </a>
+                </li>
+                @else
+                <li>
+                    <button class="dropdown-item" disabled>
+                        Sekarang
+                    </button>
+                </li>
+                @endif
             <li>
                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-saw-periods">
                     Sebelumnya
                 </a>
             </li>
-            @elseif (Request::is('admin/analysis/wp*'))
-            <li>
-                <a class="dropdown-item" href="{{ route('admin.analysis.wp.wp', $latest->id_period) }}">
-                    Sekarang
-                </a>
-            </li>
+            @elseif (Request::is('admin/analysis/wp') || Request::is('admin/analysis/wp/*'))
+                @if (!empty($latest_per->id_period))
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.analysis.wp.wp', $latest_per->id_period) }}">
+                        Sekarang
+                    </a>
+                </li>
+                @else
+                <li>
+                    <button class="dropdown-item" disabled>
+                        Sekarang
+                    </button>
+                </li>
+                @endif
             <li>
                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-wp-periods">
                     Sebelumnya

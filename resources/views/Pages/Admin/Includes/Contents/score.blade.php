@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Voting" || $period->status == "Finished" || $scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1)
+                                @if ($period->status == "Voting" || $period->status == "Finished" || $scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $period->id_period)->count() == 0)
                                 <div class="dropdown">
                                     @if ($period->status == "Voting" || $period->status == "Finished")
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
@@ -80,8 +80,14 @@
                                             Setuju Semua?
                                         </button>
                                     </span>
-                                    @elseif ($scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1)
+                                    @elseif ($scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0)
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak / direvisi.">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                            Setuju Semua?
+                                        </button>
+                                    </span>
+                                    @elseif ($scores->where('id_period', $period->id_period)->count() == 0)
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Data belum diambil. Silahkan ambil terlebih dahulu.">
                                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                             Setuju Semua?
                                         </button>

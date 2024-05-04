@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HistoryResult;
 use App\Models\HistoryVote;
+use App\Models\HistoryVoteCheck;
 use App\Models\HistoryVoteResult;
 use App\Models\Officer;
 use App\Models\Period;
@@ -129,10 +130,22 @@ class PeriodController extends Controller
 
     public function finish($period)
     {
+        //VERIFICATTION
+        /*
+        $off_count = Officer::with('department')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->count();
+        $votecheck0 = VoteCheck::where('id_period', $period)->select('id_officer')->groupby('id_officer')->count();
+        if($votecheck0 != $off_count){
+            return redirect()->route('admin.masters.periods.index')->with('fail','Ada beberapa pegawai yang belum melakukan voting. Mohon cek di Dashboard.')->with('code_alert', 1);
+        }
+        */
+
         //GET MOST COUNT
         $votecriterias = VoteCriteria::get();
         foreach($votecriterias as $criteria){
-            $votes = Vote::with('officer')->where('id_period', $period)->orderBy('votes', 'DESC')->where('id_vote_criteria', $criteria->id_vote_criteria)->offset(0)->limit(1)->get();
+            $votes = Vote::with('officer')->where('id_period', $period)->orderBy('votes', 'DESC')->orderBy('final_score', 'DESC')->where('id_vote_criteria', $criteria->id_vote_criteria)->offset(0)->limit(1)->get();
+            //dd($votes);
 
             foreach($votes as $vote){
                 VoteResult::insert([
@@ -177,7 +190,7 @@ class PeriodController extends Controller
             $getperiod2 = Period::where('id_period', $check->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $check->id_officer)->first();
             $getoffselect2 = Officer::where('id_officer', $check->officer_selected)->first();
-            HistoryVoteResult::insert([
+            HistoryVoteCheck::insert([
                 'period_name'=>$getperiod2->name,
                 'officer_name'=>$getofficer2->name,
                 'officer_selected'=>$getoffselect2->name,
@@ -188,7 +201,7 @@ class PeriodController extends Controller
         foreach($voteresults1 as $result){
             $getperiod3 = Period::where('id_period', $result->id_period)->first();
             $getofficer3 = Officer::where('id_officer', $result->id_officer)->first();
-            $getsubcriteria3 = SubCriteria::where('id_sub_criteria', $result->id_sub_criteria)->first();
+            $getsubcriteria3 = VoteCriteria::where('id_vote_criteria', $result->id_vote_criteria)->first();
             HistoryVoteResult::insert([
                 'period_name'=>$getperiod3->name,
                 'officer_name'=>$getofficer3->name,
@@ -197,7 +210,7 @@ class PeriodController extends Controller
             ]);
         }
 
-        $result1 = Result::where('id_period', $period)->orderBy('count', 'DESC')->offset(0)->limit(1)->get();
+        $result1 = Result::where('id_period', $period)->orderBy('count', 'DESC')->offset(0)->limit(1)->first();
         $getperiod4 = Period::where('id_period', $result1->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $result1->id_officer)->first();
         HistoryResult::insert([

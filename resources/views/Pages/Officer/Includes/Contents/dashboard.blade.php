@@ -1,20 +1,20 @@
 <h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
-@if ($latest_period->status == 'Scoring')
+@if ($latest_per->status == 'Scoring')
 
-@elseif ($latest_period->status == 'Voting')
-    @if ($vote_check->where('id_period', $latest_period->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
+@elseif ($latest_per->status == 'Voting')
+    @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         Anda belum melakukan voting pemilihan karyawan terbaik. Silahkan buka halaman <strong>Voting</strong> untuk memilih karyawan.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    @elseif ($vote_check->where('id_period', $latest_period->id_period)->where('id_officer', Auth::user()->id_officer)->count() == count($vote_criterias))
+    @elseif ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == count($vote_criterias))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         Terima kasih anda telah melakukan voting pemilihan karyawan terbaik. Mohon menunggu pengumuman hasil pemilihan karyawan terbaik.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @else
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Anda melakukan voting sebagian. Silahkan melanjutkan voting pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
+        Anda telah melakukan voting sebagian. Silahkan melanjutkan voting pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
@@ -39,7 +39,7 @@
                         Periode: {{ $latest_best->period->month ?? 'Not Available' }} {{ $latest_best->period->year ?? '' }}
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ route('officer.results') }}" type="button" class="btn btn-primary btn-sm">Lihat</a>
+
                     </div>
                 </div>
             </div>

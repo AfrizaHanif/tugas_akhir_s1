@@ -141,7 +141,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::get('/{period}', [AnalysisController::class, 'wp'])->name('wp');
             });
         });
-        Route::get('/results', [ResultController::class, 'index'])->name('results');
+        //Route::get('/results', [ResultController::class, 'index'])->name('results');
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::controller(ReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
@@ -160,11 +160,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
 Route::middleware(['auth', 'checkOfficer'])->group(function () {
     Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
     Route::prefix('officer')->name('officer.')->group(function () {
-        Route::get('/officers', [OfficerOfficerController::class, 'index'])->name('index');
+        //Route::get('/officers', [OfficerOfficerController::class, 'index'])->name('index');
+        /*
         Route::prefix('officers')->name('officers.')->group(function () {
             Route::get('/search', [OfficerOfficerController::class, 'search'])->name('search');
         });
-        Route::get('/scores', [OfficerScoreController::class, 'index'])->name('index');
+        */
+        //Route::get('/scores', [OfficerScoreController::class, 'index'])->name('index');
         Route::prefix('votes')->name('votes.')->group(function () {
             Route::controller(OfficerVoteController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
@@ -172,6 +174,6 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
                 Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
             });
         });
-        Route::get('/results', [OfficerResultController::class, 'index'])->name('results');
+        //Route::get('/results', [OfficerResultController::class, 'index'])->name('results');
     });
 });

@@ -18,9 +18,10 @@ class AnalysisController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
+        //$latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Admin.Analysis.analysis', compact('periods', 'latest'));
+        return view('Pages.Admin.Analysis.analysis', compact('periods', 'latest_per'));
     }
 
     public function saw($period)
@@ -31,7 +32,7 @@ class AnalysisController extends Controller
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
         ->get();
-        $latest = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
@@ -171,7 +172,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
-        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest'));
+        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
     public function wp($period)
@@ -182,7 +183,7 @@ class AnalysisController extends Controller
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
         ->get();
-        $latest = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
@@ -329,6 +330,6 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
-        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest'));
+        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per'));
     }
 }

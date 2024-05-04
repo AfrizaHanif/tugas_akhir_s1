@@ -17,8 +17,9 @@ class VoteController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Officer.vote', compact('periods'));
+        return view('Pages.Officer.vote', compact('periods', 'latest_per'));
     }
 
     public function vote($period)
@@ -38,8 +39,9 @@ class VoteController extends Controller
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
         ->get();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Officer.vote', compact('periods', 'votes', 'officers', 'checks', 'criterias', 'prd_select'));
+        return view('Pages.Officer.vote', compact('periods', 'votes', 'officers', 'checks', 'criterias', 'prd_select', 'fil_offs', 'latest_per'));
     }
 
     public function select($period, $officer, $criteria)
@@ -61,6 +63,6 @@ class VoteController extends Controller
         ]);
 
         //RETURN TO VIEW
-        return redirect()->route('officer.votes.vote', $period)->with('success','Voting Berhasil');
+        return redirect()->route('officer.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$criteria])->with('success','Voting Berhasil');
     }
 }

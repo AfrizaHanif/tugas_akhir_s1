@@ -10,23 +10,8 @@
             </a>
         </li>
         <li>
-            <a href="/officer/officers" class="{{ (request()->is('officer/officers')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" title="Pegawai" data-bs-toggle="tooltip" data-bs-placement="right">
-                <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Pegawai"><use xlink:href="#officer"/></svg>
-            </a>
-        </li>
-        <li>
-            <a href="/officer/scores" class="{{ (request()->is('officer/scores')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" title="Top 3" data-bs-toggle="tooltip" data-bs-placement="right">
-                <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Top 3"><use xlink:href="#score"/></svg>
-            </a>
-        </li>
-        <li>
             <a href="/officer/votes" class="{{ (request()->is('officer/votes*')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" title="Voting" data-bs-toggle="tooltip" data-bs-placement="right">
                 <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Voting"><use xlink:href="#vote"/></svg>
-            </a>
-        </li>
-        <li>
-            <a href="/officer/results" class="{{ (request()->is('officer/results')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" title="Karyawan Terbaik" data-bs-toggle="tooltip" data-bs-placement="right">
-                <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Karyawan Terbaik"><use xlink:href="#result"/></svg>
             </a>
         </li>
     </ul>

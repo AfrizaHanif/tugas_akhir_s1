@@ -6,6 +6,7 @@ use App\Models\Officer;
 use App\Models\Performance;
 use App\Models\Period;
 use App\Models\Presence;
+use App\Models\Result;
 use App\Models\Score;
 use App\Models\SubCriteria;
 use App\Models\VoteCheck;
@@ -158,23 +159,24 @@ class DashboardController extends Controller
         ->get();
         $scores = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
-        //$periods = Period::get();
-        $period = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $periods = Period::get();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
         $vote_criterias = VoteCriteria::get();
         $check = VoteCheck::select('id_period', 'id_officer')->groupBy('id_period', 'id_officer')->get();
         $vote_check = VoteCheck::get();
         //dd($check);
         $latest_best = VoteResult::with('officer', 'period')->latest()->first();
+        $voteresults = Result::with('officer', 'period')->orderBy('count', 'DESC')->orderBy('final_score', 'DESC')->offset(0)->limit(1)->get();
 
-        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'vote_officer', 'count_per', 'count_pre', 'performances', 'presences', 'scores', 'check_score', 'period', 'vote_criterias', 'check', 'vote_check', 'latest_best', 'countsub', 'subcriterias'));
+        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'vote_officer', 'count_per', 'count_pre', 'performances', 'presences', 'scores', 'check_score', 'latest_per', 'vote_criterias', 'check', 'vote_check', 'latest_best', 'countsub', 'subcriterias', 'periods', 'voteresults'));
     }
 
     public function officer(){
         $latest_best = VoteResult::with('officer', 'period')->latest()->first();
         $vote_criterias = VoteCriteria::get();
         $vote_check = VoteCheck::get();
-        $latest_period = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Officer.dashboard', compact('latest_best', 'vote_criterias', 'vote_check', 'latest_period'));
+        return view('Pages.Officer.dashboard', compact('latest_best', 'vote_criterias', 'vote_check', 'latest_per'));
     }
 }

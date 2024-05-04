@@ -17,9 +17,9 @@ class VoteController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
-        $latest = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Admin.vote', compact('periods', 'latest'));
+        return view('Pages.Admin.vote', compact('periods', 'latest_per'));
     }
 
     public function vote($period)
@@ -35,7 +35,7 @@ class VoteController extends Controller
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
-        $latest = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
         if(Auth::user()->part == 'KBU'){
             $fil_offs = Officer::with('department', 'part')
@@ -62,7 +62,7 @@ class VoteController extends Controller
             ->get();
         }
 
-        return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest'));
+        return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest_per'));
     }
 
     public function select(Request $request, $period, $officer, $criteria)

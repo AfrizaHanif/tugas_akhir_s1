@@ -1,33 +1,61 @@
-<h1 class="text-center mb-4">Voting Karyawan Terbaik</h1>
+<h1 class="text-center mb-4">Pemilihan Karyawan Terbaik</h1>
 @include('Templates.Includes.Components.alert')
 <p>
     <div class="row g-3 align-items-center">
         <div class="col-auto">
-            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-vte-periods">
-                <i class="bi bi-folder-plus"></i>
-                Pilih Periode
-            </a>
-            <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-                <i class="bi bi-question-lg"></i>
-                Bantuan
-            </a>
-        </div>
-        @if (Request::is('admin/inputs/votes/*'))
-        <div class="col-auto">
-            <label for="tahun_saw_dl" class="col-form-label">Cek Pegawai:</label>
-        </div>
-        <div class="col-auto">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-view-{{ $prd_select->id_period }}">
-                    <i class="bi bi-database"></i>
-                    Hanya Jabatan Ini
-                </a>
-                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-all-{{ $prd_select->id_period }}">
-                    <i class="bi bi-database"></i>
-                    Semua Jabatan
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-folder-plus"></i>
+                    Pilih Periode
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        @if (!empty($latest_per->id_period))
+                            @if (Auth::check() && Auth::user()->part != 'Pegawai')
+                            <a class="dropdown-item" href="{{ route('admin.inputs.votes.vote', $latest_per->id_period) }}">
+                                Sekarang
+                            </a>
+                            @else
+                            <a class="dropdown-item" href="{{ route('officer.votes.vote', $latest_per->id_period) }}">
+                                Sekarang
+                            </a>
+                            @endif
+                        @else
+                        <button class="dropdown-item" disabled>
+                            Sekarang
+                        </button>
+                        @endif
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-vte-periods">
+                            Sebelumnya
+                        </a>
+                    </li>
+                </ul>
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                    Bantuan
                 </a>
             </div>
         </div>
+        @if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+            @if (Auth::check() && Auth::user()->part != 'Pegawai')
+            <div class="col-auto">
+                <label for="tahun_saw_dl" class="col-form-label">Cek Pegawai:</label>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-view-{{ $prd_select->id_period }}">
+                        <i class="bi bi-database"></i>
+                        Hanya Jabatan Ini
+                    </a>
+                    <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-chk-all-{{ $prd_select->id_period }}">
+                        <i class="bi bi-database"></i>
+                        Semua Jabatan
+                    </a>
+                </div>
+            </div>
+            @endif
         @endif
     </div>
 </p>
@@ -37,13 +65,17 @@
 </div>
 @endif
 @if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
-<div class="row">
+<div class="row g-2">
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($criterias as $criteria)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_vote_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_vote_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    @if ($checks->where('id_officer', Auth::user()->officer->id_officer)->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() != 0)
+                    <i class="bi bi-check-lg"></i> {{ $criteria->name }}
+                    @else
                     {{ $criteria->name }}
+                    @endif
                 </button>
                 @empty
                 <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
