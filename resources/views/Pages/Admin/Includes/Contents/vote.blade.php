@@ -3,14 +3,28 @@
 <p>
     <div class="row g-3 align-items-center">
         <div class="col-auto">
-            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-vte-periods">
-                <i class="bi bi-folder-plus"></i>
-                Pilih Periode
-            </a>
-            <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-                <i class="bi bi-question-lg"></i>
-                Bantuan
-            </a>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-folder-plus"></i>
+                    Pilih Periode
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('admin.inputs.votes.vote', $latest->id_period) }}">
+                            Sekarang
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-vte-periods">
+                            Sebelumnya
+                        </a>
+                    </li>
+                </ul>
+                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                    <i class="bi bi-question-lg"></i>
+                    Bantuan
+                </a>
+            </div>
         </div>
         @if (Request::is('admin/inputs/votes/*'))
         <div class="col-auto">
@@ -43,7 +57,11 @@
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($criterias as $criteria)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_vote_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_vote_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    @if ($checks->where('id_officer', Auth::user()->officer->id_officer)->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() != 0)
+                    <i class="bi bi-check-lg"></i> {{ $criteria->name }}
+                    @else
                     {{ $criteria->name }}
+                    @endif
                 </button>
                 @empty
                 <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">

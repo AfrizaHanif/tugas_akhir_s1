@@ -1,3 +1,166 @@
+@if (Request::is('admin'))
+<div class="modal modal-xl fade" id="modal-inp-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Kehadiran ({{ $period->name }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th rowspan="2" class="col-1" scope="col">#</th>
+                                <th rowspan="2" scope="col">Nama</th>
+                                <th rowspan="2" scope="col">Jabatan</th>
+                                @if ($countsub != 0)
+                                <th colspan="{{ $countsub }}" scope="col">Kriteria</th>
+                                @else
+                                <th rowspan="2" scope="col">Kriteria</th>
+                                @endif
+                                <th rowspan="2" scope="col">Status</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                @foreach ($subcriterias as $subcriteria)
+                                <th>{{ $subcriteria->name }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($officers as $officer)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $officer->name }}</td>
+                                <td>{{ $officer->department->name }}</td>
+                                @if ($countsub != 0)
+                                    @foreach ($subcriterias as $subcriteria)
+                                        @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
+                                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                                                <td>{{ $presence->input }}</td>
+                                            @empty
+                                                <td>0</td>
+                                            @endforelse
+                                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                                                <td>{{ $performance->input }}</td>
+                                            @empty
+                                                <td>0</td>
+                                            @endforelse
+                                        @endif
+                                    @endforeach
+                                @else
+                                <td colspan="3">
+                                    <span class="badge text-bg-secondary">Kriteria Kosong</span>
+                                </td>
+                                @endif
+                                @if ($countsub != 0)
+                                <td>
+                                    @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
+                                        @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
+                                        <span class="badge text-bg-primary">Terisi Semua</span>
+                                        @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                        <span class="badge text-bg-danger">Tidak Terisi</span>
+                                        @else
+                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                        @endif
+                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                                        @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
+                                        <span class="badge text-bg-primary">Terisi Semua</span>
+                                        @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                        <span class="badge text-bg-danger">Tidak Terisi</span>
+                                        @else
+                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                        @endif
+                                    @endif
+                                </td>
+                                @endif
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-lg fade" id="modal-inp-reject-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Nilai Ditolak ({{ $period->name }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th class="col-1" scope="col">#</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Jabatan</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($reject_offs as $officer)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $officer->name }}</td>
+                                <td>{{ $officer->department->name }}</td>
+                                <td>
+                                    @foreach ($scores->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $score)
+                                    @if ($score->status == 'Rejected')
+                                    <span class="badge text-bg-danger">Ditolak</span>
+                                    @elseif ($score->status == 'Revised')
+                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                    @else
+                                    <span class="badge text-bg-secondary">Blank</span>
+                                    @endif
+                                    @endforeach
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="10">Tidak ada Pegawai yang memiliki nilai yang ditolak atau nilai yang ditolak telah direvisi</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="20">Total Data: <b>{{ $reject_offs->count() }}</b> Pegawai</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 @if (Request::is('admin/masters/officers'))
 <div class="modal fade" data-bs-backdrop="static" id="modal-prt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -2136,46 +2299,6 @@
         </div>
         @endforeach
     @endforeach
-@endif
-
-@if (Request::is('admin/inputs/votes*'))
-<div class="modal fade" id="modal-vte-periods" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalsaw">Pilih Periode</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="tahun_saw_dl" class="col-form-label">Pilih Tahun</label>
-                    </div>
-                    <div class="col-auto dropend">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-calendar3-event-fill"></i>
-                        </button>
-                        <ul class="dropdown-menu" style="max-height: 180px; overflow-y: auto;">
-                            @forelse ( $periods as $period )
-                            <li><a class="dropdown-item" href="/admin/inputs/votes/{{ $period->id_period }}">{{ $period->name }}</a></li>
-                            @empty
-                            <li><a class="dropdown-item disabled" href="#" aria-disabled="true">Tidak ada data</a></li>
-                            @endforelse
-                        </ul>
-                    </div>
-                    <div class="col-auto">
-                        <span id="tahun_help_saw_dl" class="form-text">
-                            Antara 2010 sampai sekarang
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endif
 
 @if (Request::is('admin/inputs/votes/*'))

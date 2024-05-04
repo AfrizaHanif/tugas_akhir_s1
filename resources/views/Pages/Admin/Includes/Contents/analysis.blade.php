@@ -5,21 +5,41 @@
 @endif
 @include('Templates.Includes.Components.alert')
 <p>
-    @if (Request::is('admin/analysis/saw*'))
-    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-saw-periods">
-        <i class="bi bi-folder-plus"></i>
-        Pilih Periode
-    </a>
-    @elseif (Request::is('admin/analysis/wp*'))
-    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-wp-periods">
-        <i class="bi bi-folder-plus"></i>
-        Pilih Periode
-    </a>
-    @endif
-    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-        <i class="bi bi-question-lg"></i>
-        Bantuan
-    </a>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-folder-plus"></i>
+            Pilih Periode
+        </button>
+        <ul class="dropdown-menu">
+            @if (Request::is('admin/analysis/saw*'))
+            <li>
+                <a class="dropdown-item" href="{{ route('admin.analysis.saw.saw', $latest->id_period) }}">
+                    Sekarang
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-saw-periods">
+                    Sebelumnya
+                </a>
+            </li>
+            @elseif (Request::is('admin/analysis/wp*'))
+            <li>
+                <a class="dropdown-item" href="{{ route('admin.analysis.wp.wp', $latest->id_period) }}">
+                    Sekarang
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-wp-periods">
+                    Sebelumnya
+                </a>
+            </li>
+            @endif
+        </ul>
+        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+            <i class="bi bi-question-lg"></i>
+            Bantuan
+        </a>
+    </div>
 </p>
 @if (Request::is('admin/analysis/saw') || Request::is('admin/analysis/wp'))
 <div class="alert alert-info" role="alert">

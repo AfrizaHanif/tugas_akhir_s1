@@ -44,6 +44,13 @@
                                 Ambil data
                             </a>
                             </span>
+                            @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Rejected')->count() >= 1)
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak. Pastikan nilai tersebut telah direvisi sebelum melakukan update data.">
+                                <a class="btn btn-primary disabled">
+                                    <i class="bi bi-database-down"></i>
+                                    Ambil data
+                                </a>
+                                </span>
                             @else
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $period->id_period }}">
                                 <i class="bi bi-database-down"></i>
@@ -65,19 +72,29 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Voting" || $period->status == "Finished")
+                                @if ($period->status == "Voting" || $period->status == "Finished" || $scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1)
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Setuju Semua?
-                                    </button>
+                                    @if ($period->status == "Voting" || $period->status == "Finished")
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                            Setuju Semua?
+                                        </button>
+                                    </span>
+                                    @elseif ($scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1)
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak / direvisi.">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                            Setuju Semua?
+                                        </button>
+                                    </span>
+                                    @endif
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>
@@ -90,12 +107,12 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>
@@ -108,12 +125,12 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>
@@ -126,12 +143,12 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}">
+                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>
                                         </li>
@@ -189,16 +206,34 @@
                                 <span class="badge text-bg-success">Disetujui</span>
                                 @elseif ($score->status == 'Rejected')
                                 <span class="badge text-bg-danger">Ditolak</span>
+                                @elseif ($score->status == 'Revised')
+                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
                                 @else
                                 <span class="badge text-bg-secondary">Blank</span>
                                 @endif
                             </td>
                             <td>
                                 <div class="dropdown">
-                                    @if ($period->status == 'Finish' || $period->status == 'Voting')
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                        <i class="bi bi-menu-button-fill"></i>
-                                    </button>
+                                    @if ($period->status == 'Finish' || $period->status == 'Voting' || $score->status == 'Revised' || $score->status == 'Rejected')
+                                        @if ($period->status == 'Finish' || $period->status == 'Voting')
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
+                                        @elseif ($score->status == 'Rejected')
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Persetujuan telah ditutup karena nilai tersebut telah ditolak.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
+                                        @elseif ($score->status == 'Revised')
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Klik Ambil Data agar dapat melakukan persetujuan nilai.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
+                                        @endif
                                     @else
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-menu-button-fill"></i>
@@ -206,9 +241,15 @@
                                     @endif
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
+                                            @if ($score->status == 'Accepted')
+                                            <a href="#" class="dropdown-item d-flex gap-2 align-items-center disabled"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
+                                                Ya
+                                            </a>
+                                            @else
                                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Ya
                                             </a>
+                                            @endif
                                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-no-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tidak
                                             </a>

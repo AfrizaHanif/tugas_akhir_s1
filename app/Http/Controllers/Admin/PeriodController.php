@@ -101,6 +101,12 @@ class PeriodController extends Controller
 
     public function start($period)
     {
+        //CHECK RUNNING
+        $count = Period::whereIn('status', ['Scoring', 'Voting'])->count();
+        if($count != 0){
+            return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Pemilihan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
+        }
+
         //UPDATE DATA
         Period::where('id_period', $period)->update([
             'status'=>'Scoring',

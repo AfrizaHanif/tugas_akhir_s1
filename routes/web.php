@@ -172,6 +172,6 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
                 Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
             });
         });
-        Route::get('/results', [OfficerResultController::class, 'index'])->name('index');
+        Route::get('/results', [OfficerResultController::class, 'index'])->name('results');
     });
 });

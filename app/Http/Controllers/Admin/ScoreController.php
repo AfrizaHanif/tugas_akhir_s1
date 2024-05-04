@@ -80,7 +80,9 @@ class ScoreController extends Controller
             }
         }
 
-        $check = DB::table('scores')->where('id_period', $period)->where('status', 'Pending')->orWhere('status', 'Rejected');
+        //DELETE EXISTING DATA
+        //$check = DB::table('scores')->where('id_period', $period)->where('status', 'Pending')->orWhere('status', 'Rejected')->orWhere('status', 'Revised');
+        $check = DB::table('scores')->where('id_period', $period)->where('status', 'Pending')->orWhere('status', 'Revised');
         if($check->exists()){
             $check->delete();
         }

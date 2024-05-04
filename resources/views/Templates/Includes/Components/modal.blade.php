@@ -123,7 +123,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     @if (Auth::user()->part == "Pegawai")
-                    <form action="{{ route('votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('officer.votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
                     @else
                     <form action="{{ route('admin.inputs.votes.select', ['period'=>$prd_select->id_period, 'officer'=>$vote->id_officer, 'criteria'=>$criteria->id_vote_criteria]) }}" method="POST" enctype="multipart/form-data">
                     @endif

@@ -8,6 +8,7 @@ use App\Models\Presence;
 use App\Models\Criteria;
 use App\Models\Officer;
 use App\Models\Period;
+use App\Models\Score;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,9 @@ class PerformanceController extends Controller
                 Performance::where('id_performance', $id_performance)->update([
                     'input'=>$request->input($subcriteria->id_sub_criteria),
                     'status'=>'Pending',
+                ]);
+                Score::where('id_period', $request->id_period)->where('id_officer', $request->id_officer)->update([
+                    'status'=>'Revised',
                 ]);
             }else{
                 Performance::insert([
