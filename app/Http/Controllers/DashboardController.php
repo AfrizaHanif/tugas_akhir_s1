@@ -166,7 +166,15 @@ class DashboardController extends Controller
         $vote_check = VoteCheck::get();
         //dd($check);
         $latest_best = VoteResult::with('officer', 'period')->latest()->first();
-        $voteresults = Result::with('officer', 'period')->orderBy('count', 'DESC')->orderBy('final_score', 'DESC')->offset(0)->limit(1)->get();
+        $voteresults = Result::with('officer', 'period')
+        ->orderBy('count', 'DESC')
+        ->whereHas('officer', function ($query) {
+            $query->with('score')
+            ->whereHas('score', function ($query) {
+                $query->orderBy('final_score', 'DESC');
+            });
+        })
+        ->offset(0)->limit(1)->get();
 
         return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'vote_officer', 'count_per', 'count_pre', 'performances', 'presences', 'scores', 'check_score', 'latest_per', 'vote_criterias', 'check', 'vote_check', 'latest_best', 'countsub', 'subcriterias', 'periods', 'voteresults'));
     }

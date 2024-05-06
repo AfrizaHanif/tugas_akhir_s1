@@ -17,7 +17,7 @@ class VoteController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Voting')->latest()->first();
 
         return view('Pages.Admin.vote', compact('periods', 'latest_per'));
     }

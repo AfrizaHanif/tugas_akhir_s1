@@ -18,6 +18,7 @@ use App\Models\VoteCriteria;
 use App\Models\VoteResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 
 class PeriodController extends Controller
@@ -144,7 +145,17 @@ class PeriodController extends Controller
         //GET MOST COUNT
         $votecriterias = VoteCriteria::get();
         foreach($votecriterias as $criteria){
-            $votes = Vote::with('officer')->where('id_period', $period)->orderBy('votes', 'DESC')->orderBy('final_score', 'DESC')->where('id_vote_criteria', $criteria->id_vote_criteria)->offset(0)->limit(1)->get();
+            $votes = Vote::with('officer')
+            ->whereHas('officer', function ($query) {
+                $query->with('score')
+                ->whereHas('score', function ($query) {
+                    $query->orderBy('final_score', 'DESC');
+                });
+            })
+            ->where('id_period', $period)
+            ->where('id_vote_criteria', $criteria->id_vote_criteria)
+            ->orderBy('votes', 'DESC')
+            ->offset(0)->limit(1)->get();
             //dd($votes);
 
             foreach($votes as $vote){

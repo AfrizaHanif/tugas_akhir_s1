@@ -316,7 +316,7 @@ class ScoreController extends Controller
                     'id_period'=>$score->id_period,
                     'id_vote_criteria'=>$criteria->id_vote_criteria,
                     'votes'=>'0',
-                    'final_score'=>$score->final_score,
+                    //'final_score'=>$score->final_score,
                 ]);
             }
         }

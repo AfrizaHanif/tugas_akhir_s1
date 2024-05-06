@@ -19,7 +19,15 @@ class ResultController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
-        $results = Result::with('officer')->orderBy('count', 'DESC')->orderBy('final_score')->offset(0)->limit(1)->get();
+        $results = Result::with('officer')
+        ->whereHas('officer', function ($query) {
+            $query->with('score')
+            ->whereHas('score', function ($query) {
+                $query->orderBy('final_score', 'DESC');
+            });
+        })
+        ->orderBy('count', 'DESC')
+        ->offset(0)->limit(1)->get();
         $votes = Vote::get();
         $votecriterias = VoteCriteria::get();
         $voteresults = VoteResult::with('officer')->get();
