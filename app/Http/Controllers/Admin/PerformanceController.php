@@ -44,12 +44,13 @@ class PerformanceController extends Controller
             ->whereHas('part', function($query){$query->where('name', 'Kepemimpinan');})
             ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
             ->get();
-        }else{
+        }/*else{ //KEPEGAWAIAN
             $officers = Officer::with('department', 'part')
-            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereHas('part', function($query){$query->where('name', 'Kepemimpinan');})
+            ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
+            //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->get();
-        }
+        }*/
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
