@@ -1,6 +1,7 @@
 <!--BOOTSTRAP STYLE-->
 <!--SIDEBAR-->
 <link rel="stylesheet" href="{{asset('Sources/CSS/Admin/sidebar.css')}}">
+<link rel="stylesheet" href="{{asset('Sources/CSS/carousel-arrow-hide.css')}}">
 
 <!--FOOTER-->
 <style type="text/css">

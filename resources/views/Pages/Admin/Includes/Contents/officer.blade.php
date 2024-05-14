@@ -145,7 +145,6 @@
                         </a>
                     </div>
                     @endif
-
                 </p>
                 @endif
                 <table class="table table-hover table-bordered">

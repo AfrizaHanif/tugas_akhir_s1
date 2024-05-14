@@ -16,11 +16,12 @@ class VoteController extends Controller
     public function index()
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
+        $latest_per = Period::where('status', 'Voting')->latest()->first();
 
         if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods'));
+            return view('Pages.Admin.vote', compact('periods', 'latest_per'));
         }else{
-            return view('Pages.Home.vote', compact('periods'));
+            return view('Pages.Officer.vote', compact('periods', 'latest_per'));
         }
     }
 
@@ -37,6 +38,8 @@ class VoteController extends Controller
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
+        $latest_per = Period::Where('status', 'Voting')->latest()->first();
+
         if(Auth::user()->part == 'KBU'){
             $fil_offs = Officer::with('department', 'part')
             ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
@@ -63,9 +66,9 @@ class VoteController extends Controller
         }
 
         if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select'));
+            return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest_per'));
         }else{
-            return view('Pages.Home.vote', compact('periods', 'votes', 'officers', 'checks', 'criterias', 'prd_select'));
+            return view('Pages.Officer.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest_per'));
         }
     }
 

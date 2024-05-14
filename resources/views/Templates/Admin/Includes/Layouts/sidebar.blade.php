@@ -106,6 +106,12 @@
                         </li>
                         @elseif (Auth::user()->part == "KBPS")
                         <li>
+                            <a href="/admin/inputs/kbps/performances" class="{{ (request()->is('admin/inputs/kbps/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
+                                Data Prestasi Kerja
+                            </a>
+                        </li>
+                        <li>
                             <a href="/admin/inputs/scores" class="{{ (request()->is('admin/inputs/scores')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                 <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
                                 Validasi

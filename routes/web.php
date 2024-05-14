@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VoteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\Beta\PerformanceController as BetaPerformanceController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Admin\SubCriteriaController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\VoteController;
+//use App\Http\Controllers\Admin\VoteController;
 use App\Http\Controllers\Admin\VoteCriteriaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Home\HomeController;
@@ -28,7 +29,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Officer\OfficerController as OfficerOfficerController;
 use App\Http\Controllers\Officer\ResultController as OfficerResultController;
 use App\Http\Controllers\Officer\ScoreController as OfficerScoreController;
-use App\Http\Controllers\Officer\VoteController as OfficerVoteController;
+//use App\Http\Controllers\Officer\VoteController as OfficerVoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,6 +87,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'destroy']]);
                 Route::prefix('periods')->name('periods.')->group(function () {
                     Route::controller(PeriodController::class)->group(function() {
+                        Route::post('/refresh', 'refresh')->name('refresh');
                         Route::post('/start/{period}', 'start')->name('start');
                         Route::post('/skip/{period}', 'skip')->name('skip');
                         Route::post('/finish/{period}', 'finish')->name('finish');
@@ -111,6 +113,9 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 });
             });
             Route::middleware('checkPart:KBPS')->group(function () {
+                Route::prefix('kbps')->name('kbps.')->group(function () {
+                    Route::resource('/performances', PerformanceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                });
                 Route::prefix('scores')->name('scores.')->group(function () {
                     Route::controller(ScoreController::class)->group(function() {
                         Route::get('/', 'index')->name('index');
@@ -168,7 +173,7 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
         */
         //Route::get('/scores', [OfficerScoreController::class, 'index'])->name('index');
         Route::prefix('votes')->name('votes.')->group(function () {
-            Route::controller(OfficerVoteController::class)->group(function() {
+            Route::controller(VoteController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::get('/{period}', 'vote')->name('vote');
                 Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');

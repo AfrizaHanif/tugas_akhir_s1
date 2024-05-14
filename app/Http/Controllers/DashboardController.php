@@ -13,32 +13,62 @@ use App\Models\VoteCheck;
 use App\Models\VoteCriteria;
 use App\Models\VoteResult;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 class DashboardController extends Controller
 {
     public function admin(){
+        //Artisan::call('app:create-period');
+
         if(Auth::user()->part == 'KBU'){
             $officers = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
+            ->whereHas('department', function($query)
+            {
+                $query->where('name', 'LIKE', '%Bagian Umum%')
+                ->orWhere('name', 'LIKE', '%Anggaran%')
+                ->orWhere('name', 'LIKE', '%Keuangan%')
+                ->orWhere('name', 'LIKE', '%Arsip%')
+                ->orWhere('name', 'LIKE', '%Pengadaan%');
+            })
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->get();
             $reject_offs = Officer::with('department', 'part', 'score')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
+            ->whereHas('department', function($query)
+            {
+                $query->where('name', 'LIKE', '%Bagian Umum%')
+                ->orWhere('name', 'LIKE', '%Anggaran%')
+                ->orWhere('name', 'LIKE', '%Keuangan%')
+                ->orWhere('name', 'LIKE', '%Arsip%')
+                ->orWhere('name', 'LIKE', '%Pengadaan%');
+            })
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
             ->get();
             $input_off = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
+            ->whereHas('department', function($query)
+            {
+                $query->where('name', 'LIKE', '%Bagian Umum%')
+                ->orWhere('name', 'LIKE', '%Anggaran%')
+                ->orWhere('name', 'LIKE', '%Keuangan%')
+                ->orWhere('name', 'LIKE', '%Arsip%')
+                ->orWhere('name', 'LIKE', '%Pengadaan%');
+            })
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
             ->get();
             $count_per = Performance::with('officer')
             ->whereHas('officer', function($query){
-                $query->with('department')->whereHas('department', function($query){
-                    $query->where('name', 'LIKE', '%Bagian Umum%');
+                $query->with('department')->whereHas('department', function($query)
+                {
+                    $query->where('name', 'LIKE', '%Bagian Umum%')
+                    ->orWhere('name', 'LIKE', '%Anggaran%')
+                    ->orWhere('name', 'LIKE', '%Keuangan%')
+                    ->orWhere('name', 'LIKE', '%Arsip%')
+                    ->orWhere('name', 'LIKE', '%Pengadaan%');
                 });
             })
             ->select('id_period', 'id_officer', 'status')
@@ -46,8 +76,13 @@ class DashboardController extends Controller
             ->get();
             $count_pre = Presence::with('officer')
             ->whereHas('officer', function($query){
-                $query->with('department')->whereHas('department', function($query){
-                    $query->where('name', 'LIKE', '%Bagian Umum%');
+                $query->with('department')->whereHas('department', function($query)
+                {
+                    $query->where('name', 'LIKE', '%Bagian Umum%')
+                    ->orWhere('name', 'LIKE', '%Anggaran%')
+                    ->orWhere('name', 'LIKE', '%Keuangan%')
+                    ->orWhere('name', 'LIKE', '%Arsip%')
+                    ->orWhere('name', 'LIKE', '%Pengadaan%');
                 });
             })
             ->select('id_period', 'id_officer', 'status')
@@ -55,15 +90,25 @@ class DashboardController extends Controller
             ->get();
             $performances = Performance::with('officer')
             ->whereHas('officer', function($query){
-                $query->with('department')->whereHas('department', function($query){
-                    $query->where('name', 'LIKE', '%Bagian Umum%');
+                $query->with('department')->whereHas('department', function($query)
+                {
+                    $query->where('name', 'LIKE', '%Bagian Umum%')
+                    ->orWhere('name', 'LIKE', '%Anggaran%')
+                    ->orWhere('name', 'LIKE', '%Keuangan%')
+                    ->orWhere('name', 'LIKE', '%Arsip%')
+                    ->orWhere('name', 'LIKE', '%Pengadaan%');
                 });
             })
             ->get();
             $presences = Presence::with('officer')
             ->whereHas('officer', function($query){
-                $query->with('department')->whereHas('department', function($query){
-                    $query->where('name', 'LIKE', '%Bagian Umum%');
+                $query->with('department')->whereHas('department', function($query)
+                {
+                    $query->where('name', 'LIKE', '%Bagian Umum%')
+                    ->orWhere('name', 'LIKE', '%Anggaran%')
+                    ->orWhere('name', 'LIKE', '%Keuangan%')
+                    ->orWhere('name', 'LIKE', '%Arsip%')
+                    ->orWhere('name', 'LIKE', '%Pengadaan%');
                 });
             })
             ->get();
@@ -166,6 +211,28 @@ class DashboardController extends Controller
         $vote_check = VoteCheck::get();
         //dd($check);
         $latest_best = VoteResult::with('officer', 'period')->latest()->first();
+        $latest_top3 = Score::with('officer', 'period')->offset(0)->limit(3)->get();
+        $voteresults = Result::with('officer', 'period')
+        ->orderBy('count', 'DESC')
+        ->whereHas('officer', function ($query) {
+            $query->with('score')
+            ->whereHas('score', function ($query) {
+                $query->orderBy('final_score', 'DESC');
+            });
+        })
+        ->offset(0)->limit(1)->get();
+        $scoreresults = Score::with('officer', 'period')->orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
+        //dd($scoreresults);
+
+        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'vote_officer', 'count_per', 'count_pre', 'performances', 'presences', 'scores', 'check_score', 'latest_per', 'vote_criterias', 'check', 'vote_check', 'latest_best', 'latest_top3', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults'));
+    }
+
+    public function officer(){
+        $latest_best = VoteResult::with('officer', 'period')->latest()->first();
+        $vote_criterias = VoteCriteria::get();
+        $vote_check = VoteCheck::get();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $periods = Period::get();
         $voteresults = Result::with('officer', 'period')
         ->orderBy('count', 'DESC')
         ->whereHas('officer', function ($query) {
@@ -176,15 +243,6 @@ class DashboardController extends Controller
         })
         ->offset(0)->limit(1)->get();
 
-        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'vote_officer', 'count_per', 'count_pre', 'performances', 'presences', 'scores', 'check_score', 'latest_per', 'vote_criterias', 'check', 'vote_check', 'latest_best', 'countsub', 'subcriterias', 'periods', 'voteresults'));
-    }
-
-    public function officer(){
-        $latest_best = VoteResult::with('officer', 'period')->latest()->first();
-        $vote_criterias = VoteCriteria::get();
-        $vote_check = VoteCheck::get();
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
-
-        return view('Pages.Officer.dashboard', compact('latest_best', 'vote_criterias', 'vote_check', 'latest_per'));
+        return view('Pages.Officer.dashboard', compact('latest_best', 'vote_criterias', 'vote_check', 'latest_per', 'periods', 'voteresults'));
     }
 }

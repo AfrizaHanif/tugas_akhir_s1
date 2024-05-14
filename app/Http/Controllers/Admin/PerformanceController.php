@@ -22,15 +22,27 @@ class PerformanceController extends Controller
     {
         if(Auth::user()->part == 'KBU'){
             $officers = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
+            ->whereHas('department', function($query)
+            {
+                $query->where('name', 'LIKE', '%Bagian Umum%')
+                ->orWhere('name', 'LIKE', '%Anggaran%')
+                ->orWhere('name', 'LIKE', '%Keuangan%')
+                ->orWhere('name', 'LIKE', '%Arsip%')
+                ->orWhere('name', 'LIKE', '%Pengadaan%');
+            })
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan');})
             ->get();
         }elseif(Auth::user()->part == 'KTT'){
             $officers = Officer::with('department', 'part')
             ->whereHas('department', function($query){$query->where('name', 'LIKE', '%'.Auth::user()->officer->department->name.'%');})
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
             ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->get();
+        }elseif(Auth::user()->part == 'KBPS'){
+            $officers = Officer::with('department', 'part')
+            ->whereHas('part', function($query){$query->where('name', 'Kepemimpinan');})
+            ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
             ->get();
         }else{
             $officers = Officer::with('department', 'part')
@@ -42,6 +54,8 @@ class PerformanceController extends Controller
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->whereNot('status', 'Finished')->latest()->first();
+        $history_per = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
@@ -63,7 +77,7 @@ class PerformanceController extends Controller
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
 
-        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
+        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
     }
 
     /**

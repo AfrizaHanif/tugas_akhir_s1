@@ -3,14 +3,25 @@
 @include('Templates.Includes.Components.alert')
 @endif
 <p>
-    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-per-create">
-        <i class="bi bi-calendar4-range"></i>
-        Tambah Periode
-    </a>
-    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-        <i class="bi bi-question-lg"></i>
-        Bantuan
-    </a>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-calendar4-range"></i>
+            Tambah Periode
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <form action="{{ route('admin.masters.periods.refresh') }}" method="post">
+                    @csrf
+                    <button class="dropdown-item" type="submit">Refresh</button>
+                </form>
+            </li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-create">Manual</a></li>
+        </ul>
+        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+            <i class="bi bi-question-lg"></i>
+            Bantuan
+        </a>
+    </div>
 </p>
 <table class="table table-hover table-bordered">
     <thead>

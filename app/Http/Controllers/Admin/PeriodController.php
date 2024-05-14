@@ -19,6 +19,7 @@ use App\Models\VoteResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\Rule;
 
 class PeriodController extends Controller
@@ -99,6 +100,12 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.periods.index')->with('success','Tambah Periode Berhasil')->with('code_alert', 1);
+    }
+
+    public function refresh()
+    {
+        Artisan::call('app:create-period');
+        return redirect()->route('admin.masters.periods.index')->with('success', 'Refresh Periode Berhasil. Jika tidak ada perubahan, maka hal ini normal. Baca Bantuan untuk mengetahui mengenai Refresh Periode.')->with('code_alert', 1);
     }
 
     public function start($period)

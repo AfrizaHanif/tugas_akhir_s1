@@ -16,12 +16,12 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.dashboard')
+@include('Pages.Includes.Contents.dashboard')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

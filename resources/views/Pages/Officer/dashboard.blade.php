@@ -8,11 +8,12 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Officer.Includes.Contents.dashboard')
+@include('Pages.Includes.Contents.dashboard')
 @endsection
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Includes.Components.modal')
 @endsection
 
 <!--SCRIPTS-->

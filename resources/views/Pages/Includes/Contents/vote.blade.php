@@ -1,4 +1,8 @@
+@if (Request::is('admin/inputs/votes') || Request::is('officer/votes'))
 <h1 class="text-center mb-4">Pemilihan Karyawan Terbaik</h1>
+@elseif (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+<h1 class="text-center mb-4">Pemilihan Karyawan Terbaik ({{ $prd_select->month }} {{ $prd_select->year }})</h1>
+@endif
 @include('Templates.Includes.Components.alert')
 <p>
     <div class="row g-3 align-items-center">
@@ -70,15 +74,15 @@
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($criterias as $criteria)
-                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_vote_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_vote_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                <button class="nav-link {{ $loop->first ? 'active' : '' }} text-start" id="pills-{{ $criteria->id_vote_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_vote_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_vote_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
                     @if ($checks->where('id_officer', Auth::user()->officer->id_officer)->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() != 0)
                     <i class="bi bi-check-lg"></i> {{ $criteria->name }}
                     @else
-                    {{ $criteria->name }}
+                    <i class="bi bi-x-lg"></i> {{ $criteria->name }}
                     @endif
                 </button>
                 @empty
-                <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
+                <button class="nav-link active text-start" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
                     Empty
                 </button>
                 @endforelse
@@ -87,6 +91,11 @@
         </div>
     </div>
     <div class="col-md-9">
+        @if ($prd_select->status == "Finished")
+        <div class="alert alert-warning" role="alert">
+            Pemilihan Karyawan Terbaik pada periode ini telah selesai dilaksanakan.
+        </div>
+        @endif
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($criterias as $criteria)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $criteria->id_vote_criteria }}" role="tabpanel" aria-labelledby="pills-{{ $criteria->id_vote_criteria }}-tab" tabindex="0">
@@ -113,14 +122,22 @@
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $vote->officer->name }}</td>
                             <td>
-                                @if ($checks->where('id_period', $prd_select->id_period)->where('id_officer', Auth::user()->id_officer)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() == 0)
-                                <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}">
-                                    <i class="bi bi-check-lg"></i>
-                                </a>
+                                @if ($prd_select->status == "Finished")
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
+                                    <button class="btn btn-secondary" href="#" role="button" disabled>
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                </span>
                                 @else
-                                <a class="btn btn-secondary disabled" href="#" role="button"">
-                                    <i class="bi bi-check-lg"></i>
-                                </a>
+                                    @if ($checks->where('id_period', $prd_select->id_period)->where('id_officer', Auth::user()->id_officer)->where('id_vote_criteria', $criteria->id_vote_criteria)->count() == 0)
+                                    <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                    @else
+                                    <a class="btn btn-secondary disabled" href="#" role="button">
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                    @endif
                                 @endif
                             </td>
                         </tr>

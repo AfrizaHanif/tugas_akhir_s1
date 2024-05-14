@@ -5,7 +5,7 @@
 @section('title')
     @if (Request::is('admin/inputs/presences'))
     <title>Data Kehadiran | Tugas Akhir</title>
-    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
     <title>Data Prestasi Kerja | Tugas Akhir</title>
     @endif
 @endsection
