@@ -19,8 +19,8 @@ return new class extends Migration
             //$table->smallInteger('org_code');
             $table->char('id_department', 10);
             $table->foreign('id_department')->references('id_department')->on('departments');
-            $table->char('id_part', 10);
-            $table->foreign('id_part')->references('id_part')->on('parts');
+            //$table->char('id_part', 10);
+            //$table->foreign('id_part')->references('id_part')->on('parts');
             //$table->string('status', 10);
             //$table->string('last_group', 7);
             //$table->string('last_education', 20);
@@ -31,6 +31,7 @@ return new class extends Migration
             //$table->unsignedBigInteger('id_user')->nullable();
             //$table->foreign('id_user')->references('id')->on('users');
             $table->string('photo', 300)->nullable();
+            //$table->char('leader', 10);
             $table->timestamps();
         });
     }

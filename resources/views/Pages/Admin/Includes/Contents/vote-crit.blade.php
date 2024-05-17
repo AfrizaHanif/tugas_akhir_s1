@@ -2,6 +2,7 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
+<!--MENU-->
 <p>
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-vcr-create">
         <i class="bi bi-folder-plus"></i>
@@ -12,6 +13,7 @@
         Bantuan
     </a>
 </p>
+<!--TABLE-->
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">

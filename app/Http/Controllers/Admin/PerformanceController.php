@@ -21,36 +21,34 @@ class PerformanceController extends Controller
     public function index()
     {
         if(Auth::user()->part == 'KBU'){
-            $officers = Officer::with('department', 'part')
+            $officers = Officer::with('department')
             ->whereHas('department', function($query)
             {
-                $query->where('name', 'LIKE', '%Bagian Umum%')
-                ->orWhere('name', 'LIKE', '%Anggaran%')
-                ->orWhere('name', 'LIKE', '%Keuangan%')
-                ->orWhere('name', 'LIKE', '%Arsip%')
-                ->orWhere('name', 'LIKE', '%Pengadaan%');
+                $query->with('part')->whereHas('part', function($query)
+                {
+                    $query->where('name', 'Bagian Umum');
+                });
             })
-            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan');})
+            ->whereDoesntHave('department', function($query)
+            {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala%');})
             ->get();
         }elseif(Auth::user()->part == 'KTT'){
-            $officers = Officer::with('department', 'part')
+            $officers = Officer::with('department')
             ->whereHas('department', function($query){$query->where('name', 'LIKE', '%'.Auth::user()->officer->department->name.'%');})
-            ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereDoesntHave('department', function($query)
+            {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala%');})
+            ->whereNot('name', Auth::user()->officer->name)
             ->get();
         }elseif(Auth::user()->part == 'KBPS'){
-            $officers = Officer::with('department', 'part')
-            ->whereHas('part', function($query){$query->where('name', 'Kepemimpinan');})
-            ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
+            $officers = Officer::with('department', 'user')
+            ->whereHas('user', function($query)
+            {
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            })
+            ->whereDoesntHave('department', function($query)
+            {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
             ->get();
-        }/*else{ //KEPEGAWAIAN
-            $officers = Officer::with('department', 'part')
-            ->whereHas('part', function($query){$query->where('name', 'Kepemimpinan');})
-            ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-            //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
-            ->get();
-        }*/
+        }
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();

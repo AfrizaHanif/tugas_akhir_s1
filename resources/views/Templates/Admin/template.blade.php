@@ -23,6 +23,7 @@
         <div class="container-fluid overflow-hidden">
             <div class="row vh-100 overflow-auto">
                 <!--SIDEBAR--> <!--KHUSUS BOOTSTRAP EXAMPLE: TAG <MAIN> DIHAPUS DAN GUNAKAN SETELAHNYA-->
+                @include('Templates.Admin.Includes.Layouts.navbar')
                 @include('Templates.Admin.Includes.Layouts.sidebar')
                 <div class="col d-flex flex-column h-sm-100">
                     <!--CONTENTS-->

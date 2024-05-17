@@ -19,8 +19,14 @@ class Part extends Model
         'name',
     ];
 
+    /*
     public function officer()
     {
         return $this->hasMany(Officer::class, 'id_part', 'id_part');
+    }
+    */
+    public function department()
+    {
+        return $this->hasMany(Department::class, 'id_part', 'id_part');
     }
 }

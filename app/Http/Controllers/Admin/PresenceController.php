@@ -20,9 +20,9 @@ class PresenceController extends Controller
      */
     public function index()
     {
-        $officers = Officer::with('department', 'part')
-        ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-        //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        $officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query)
+        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
         ->get();
         $performances = Performance::get();
         $presences = Presence::get();

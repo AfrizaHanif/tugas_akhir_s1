@@ -1,5 +1,6 @@
 <h1 class="text-center mb-4">Data Laporan</h1>
 @include('Templates.Includes.Components.alert')
+<!--MENU-->
 <p>
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
         <i class="bi bi-question-lg"></i>
@@ -7,8 +8,10 @@
     </a>
 </p>
 <div class="row g-2">
+    <!--MAIN CONTENT-->
     <div class="col-md-7">
         <div class="accordion" id="accordionExample">
+            <!--OFFICERS RECORD-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-officer" aria-expanded="false" aria-controls="collapse-officer">
@@ -33,6 +36,7 @@
                     </div>
                 </div>
             </div>
+            <!--INPUT REPORT-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-input" aria-expanded="false" aria-controls="collapse-input">
@@ -84,6 +88,7 @@
                     </div>
                 </div>
             </div>
+            <!--INPUT REPORT IN ONE OFFICER-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-input-single" aria-expanded="false" aria-controls="collapse-input-single">
@@ -148,6 +153,7 @@
                     </div>
                 </div>
             </div>
+            <!--ANALYSIS REPORT-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis" aria-expanded="false" aria-controls="collapse-analysis">
@@ -199,6 +205,7 @@
                     </div>
                 </div>
             </div>
+            <!--EOTM REPORT-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result" aria-expanded="false" aria-controls="collapse-result">
@@ -252,6 +259,7 @@
             </div>
         </div>
     </div>
+    <!--INFO-->
     <div class="col-md-5">
         <div class="position-sticky" style="top: 2rem;">
             <div class="alert alert-info" role="alert">

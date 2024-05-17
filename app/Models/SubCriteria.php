@@ -28,7 +28,15 @@ class SubCriteria extends Model
     {
         return $this->belongsTo(Criteria::class, 'id_criteria', 'id_criteria');
     }
-    
+    public function presence()
+    {
+        return $this->hasMany(Presence::class, 'id_sub_criteria', 'id_sub_criteria');
+    }
+    public function performance()
+    {
+        return $this->hasMany(Performance::class, 'id_sub_criteria', 'id_sub_criteria');
+    }
+
     //BETA
     public function betapresence()
     {

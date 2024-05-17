@@ -21,7 +21,7 @@ class AnalysisController extends Controller
         //$latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
-        return view('Pages.Admin.Analysis.analysis', compact('periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('periods', 'latest_per'));
     }
 
     public function saw($period)
@@ -30,7 +30,7 @@ class AnalysisController extends Controller
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-        //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
@@ -57,20 +57,32 @@ class AnalysisController extends Controller
             }
         }
 
-        $first_alt = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_alt = Performance::with('subcriteria', 'officer')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_alt = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_alt = Presence::with('subcriteria')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_alt)
-        ->get();
+        ->getQuery()->get();
         $alternatives = $last_alt;
 
         $first_cri = DB::table("performances")
@@ -106,16 +118,28 @@ class AnalysisController extends Controller
         $criterias = $last_cri;
         //$criterias = SubCriteria::get();
 
-        $first_inp = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_inp = Performance::with('subcriteria', 'officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_inp = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_inp = Presence::with('subcriteria')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_inp)
-        ->get();
+        ->getQuery()->get();
         $inputs = $last_inp;
 
         //FIND MIN DAN MAX
@@ -172,7 +196,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
-        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
     public function wp($period)
@@ -181,25 +205,25 @@ class AnalysisController extends Controller
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-        //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
         //VERIFICATION
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
-            return redirect()->route('admin.analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
+            return redirect()->route('admin.analysis.wp.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             foreach ($officers as $officer) {
                 if(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0 && Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }elseif(Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
-                    return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
+                    return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
                 }else{
                     foreach ($subcriterias as $subcriteria) {
                         if(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0 && Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0) {
-                            return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
+                            return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');
                         }else{
                             //CLEAR
                         }
@@ -208,20 +232,32 @@ class AnalysisController extends Controller
             }
         }
 
-        $first_alt = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_alt = Performance::with('subcriteria', 'officer')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_alt = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_alt = Presence::with('subcriteria')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_alt)
-        ->get();
+        ->getQuery()->get();
         $alternatives = $last_alt;
 
         $first_cri = DB::table("performances")
@@ -257,18 +293,28 @@ class AnalysisController extends Controller
         $criterias = $last_cri;
         //$criterias = SubCriteria::get();
 
-        $critcount = SubCriteria::select('level')->sum('level');
-
-        $first_inp = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_inp = Performance::with('subcriteria', 'officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_inp = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_inp = Presence::with('subcriteria')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_inp)
-        ->get();
+        ->getQuery()->get();
         $inputs = $last_inp;
 
         //PERSENTASE BOBOT
@@ -330,6 +376,6 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
-        return view('Pages.Admin.Analysis.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per'));
     }
 }

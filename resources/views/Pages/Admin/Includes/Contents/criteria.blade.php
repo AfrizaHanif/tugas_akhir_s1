@@ -3,8 +3,10 @@
 @include('Templates.Includes.Components.alert')
 @endif
 <div class="row g-2">
+    <!--SIDEBAR-->
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <!--MENU-->
             <p>
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create">
                     <i class="bi bi-folder-plus"></i>
@@ -14,6 +16,7 @@
                     <i class="bi bi-question-lg"></i>
                 </a>
             </p>
+            <!--LIST OF CRITERIA-->
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($criterias as $criteria)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
@@ -28,32 +31,50 @@
             <br/>
         </div>
     </div>
+    <!--LIST OF SUB CRITERIA-->
     <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($criterias as $criteria)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $criteria->id_criteria }}" role="tabpanel" aria-labelledby="pills-{{ $criteria->id_criteria }}-tab" tabindex="0">
-                <h2>{{ $criteria->name }}</h2>
-                <h4>{{ $criteria->type }}</h4>
-                <p>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-sub-create-{{ $criteria->id_criteria }}">
-                            <i class="bi bi-person-plus"></i>
-                            Tambah Sub Kriteria
-                        </a>
+                <div class="row align-items-center">
+                    <div class="col-7">
+                        <h2>{{ $criteria->name }}</h2>
                     </div>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-crt-update-{{ $criteria->id_criteria }}">
-                            <i class="bi bi-pencil"></i>
-                            Ubah Kriteria
-                        </a>
+                    <div class="col-5 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <!--SUB MENU-->
+                        <div class="row g-3 align-items-center">
+                            <div class="col-auto pe-0">
+                                <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-sub-create-{{ $criteria->id_criteria }}">
+                                    <i class="bi bi-person-plus"></i>
+                                    Tambah Sub Kriteria
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-gear"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-crt-update-{{ $criteria->id_criteria }}">
+                                                <i class="bi bi-pencil"></i>
+                                                Ubah Kriteria
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-crt-delete-{{ $criteria->id_criteria }}">
+                                                <i class="bi bi-folder-minus"></i>
+                                                Hapus Kriteria
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-crt-delete-{{ $criteria->id_criteria }}">
-                            <i class="bi bi-folder-minus"></i>
-                            Hapus Kriteria
-                        </a>
-                    </div>
-                </p>
+                </div>
+                <h4 class="pb-2">{{ $criteria->type }}</h4>
+                <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">

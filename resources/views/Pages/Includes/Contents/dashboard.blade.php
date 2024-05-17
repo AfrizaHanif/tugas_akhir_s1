@@ -1,4 +1,5 @@
 <h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
+<!--SCORE ANT VOTE ALERT-->
 @if (!empty($latest_per->status))
     @if ($latest_per->status == 'Scoring')
     @elseif ($latest_per->status == 'Voting')
@@ -23,6 +24,7 @@
 
 @if (Auth::user()->part != "Pegawai")
 <div class="row align-items-md-stretch">
+    <!--DATA INPUT COUNTER CARD-->
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
@@ -71,6 +73,7 @@
             </div>
         </div>
     </div>
+    <!--REJECTED INPUT COUNTER CARD-->
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
@@ -109,6 +112,7 @@
             </div>
         </div>
     </div>
+    <!--VOTE COUNTER CARD-->
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
@@ -149,6 +153,7 @@
 <br/>
 @endif
 <div class="row align-items-md-stretch">
+    <!--RESULT CARD-->
     <div class="col-md-6">
         <div id="carousel-results" class="carousel slide">
             <div class="carousel-indicators" style="bottom: -20px; filter: invert(100%)">
@@ -156,6 +161,7 @@
                 <button type="button" data-bs-target="#carousel-results" data-bs-slide-to="1" aria-label="Slide 2"></button>
             </div>
             <div class="carousel-inner">
+                <!--VOTE RESULT CARD-->
                 <div class="carousel-item active">
                     <div class="card">
                         <div class="row g-0">
@@ -189,6 +195,7 @@
                         </div>
                     </div>
                 </div>
+                <!--SCORE RESULT CARD-->
                 <div class="carousel-item">
                     <div class="card">
                         <div class="row g-0">
@@ -240,6 +247,7 @@
             </button>
         </div>
     </div>
+    <!--INFO CARD-->
     <div class="col-md-6">
         <div id="carouselExampleIndicators" class="carousel slide carousel-fade">
             <div class="carousel-indicators" style="bottom: -20px;">

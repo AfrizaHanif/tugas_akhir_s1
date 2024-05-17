@@ -2,6 +2,7 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
+<!--MENU-->
 <p>
     <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,6 +24,7 @@
         </a>
     </div>
 </p>
+<!--TABLE-->
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">

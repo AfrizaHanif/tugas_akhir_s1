@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
+use App\Models\Department;
 use App\Models\HistoryPerformance;
 use App\Models\HistoryPresence;
 use App\Models\HistoryScore;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Officer;
+use App\Models\Part;
 use App\Models\Period;
 use App\Models\Score;
 use App\Models\SubCriteria;
@@ -26,9 +28,9 @@ class ScoreController extends Controller
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->whereNot('status', 'Finished')->latest()->first();
         $history_per = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
-        $officers = Officer::with('department', 'part')
-        ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-        //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        $officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         $performances = Performance::get();
         $presences = Presence::get();
@@ -36,16 +38,16 @@ class ScoreController extends Controller
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcritprs = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->whereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->get();
         $subcritprf = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->whereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
         $countprs = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        ->whereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->count();
         $countprf = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        ->whereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
         return view('Pages.Admin.score', compact('periods', 'latest_per', 'history_per', 'scores', 'officers', 'performances', 'presences', 'status', 'criterias', 'allsubcriterias', 'countprs', 'countprf', 'subcritprs', 'subcritprf'));
     }
@@ -54,9 +56,9 @@ class ScoreController extends Controller
     {
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){$query->whereIn('name', ['Developer', 'Kepala BPS Jawa Timur']);})
-        //->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        $officers = Officer::with('department', 'user')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
 
         //VERIFICATION
@@ -88,22 +90,6 @@ class ScoreController extends Controller
         if($check->exists()){
             $check->delete();
         }
-
-        $first_alt = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
-        ->select('id_officer')
-        ->groupBy('id_officer')
-        ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_alt = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
-        ->select('id_officer')
-        ->groupBy('id_officer')
-        ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
-        ->union($first_alt)
-        ->get();
-        $alternatives = $last_alt;
 
         $first_cri = DB::table("performances")
         ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
@@ -138,16 +124,28 @@ class ScoreController extends Controller
         $criterias = $last_cri;
         //$criterias = SubCriteria::get();
 
-        $first_inp = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_inp = Performance::with('subcriteria', 'officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_inp = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_inp = Presence::with('subcriteria')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_inp)
-        ->get();
+        ->getQuery()->get();
         $inputs = $last_inp;
 
         //FIND MIN DAN MAX
@@ -206,6 +204,37 @@ class ScoreController extends Controller
                     'final_score'=>$matrix[$n],
                     'status'=>'Pending'
                 ]);
+
+
+                $score_bag = Score::with('officer')->whereHas('officer', function($query)
+                {
+                    $query->with('department')->whereHas('department', function($query)
+                    {
+                        $query->with('part')->whereHas('part', function($query)
+                        {
+                            $query->where('name', 'Bagian Umum');
+                        });
+                    });
+                });
+                if($score_bag->count() > 4){
+                    $score_bag->orderBy('final_score', 'DESC')->take($score_bag->count())->skip(4)->get()->each(function($row){ $row->delete();});
+                }
+
+                $dep_teknis = Department::with('part')->whereHas('part', function($query)
+                {
+                    $query->where('name', 'Tim Teknis');
+                })->get();
+                foreach($dep_teknis as $dep){
+                    $score_tek = Score::with('officer')->whereHas('officer', function($query) use($dep)
+                    {
+                        $query->with('department')->whereHas('department', function($query) use($dep){
+                            $query->where('id_department', $dep->id_department);
+                        });
+                    });
+                    if($score_tek->count() > 2){
+                        $score_tek->orderBy('final_score', 'DESC')->take($score_tek->count())->skip(2)->get()->each(function($row){ $row->delete();});
+                    }
+                }
             }else{
                 //SKIP
             }

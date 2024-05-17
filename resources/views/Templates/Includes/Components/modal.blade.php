@@ -40,10 +40,12 @@
                                     <th scope="row">Jabatan</th>
                                     <td>{{ $officer->department->name }}</td>
                                 </tr>
+                                <!--
                                 <tr>
                                     <th scope="row">Bagian</th>
-                                    <td>{{ $officer->part->name }}</td>
+                                    <td></td>
                                 </tr>
+                                -->
                                 <tr>
                                     <th scope="row">Tempat Tanggal Lahir</th>
                                     <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>

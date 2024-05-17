@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
+use App\Models\SubCriteria;
 use App\Models\Vote;
 use App\Models\VoteCheck;
 use App\Models\VoteCriteria;
@@ -41,27 +42,34 @@ class VoteController extends Controller
         $latest_per = Period::Where('status', 'Voting')->latest()->first();
 
         if(Auth::user()->part == 'KBU'){
-            $fil_offs = Officer::with('department', 'part')
-            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Bagian Umum%');})
+            $fil_offs = Officer::with('department')
+            ->whereHas('department', function($query)
+            {
+                $query->with('part')->whereHas('part', function($query)
+                {
+                    $query->where('name', 'Bagian Umum');
+                });
+            })
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereNot('name', Auth::user()->officer->name)
             ->get();
         }elseif(Auth::user()->part == 'KTT'){
-            $fil_offs = Officer::with('department', 'part')
+            $fil_offs = Officer::with('department')
             ->whereHas('department', function($query){$query->where('name', 'LIKE', '%'.Auth::user()->officer->department->name.'%');})
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereNot('name', Auth::user()->officer->name)
             ->get();
         }elseif(Auth::user()->part == 'Admin'){
-            $fil_offs = Officer::with('department', 'part')
-            ->whereHas('part', function($query){$query->where('name', 'LIKE', 'Kepegawaian');})
+            $fil_offs = Officer::with('department')
+            //->whereHas('part', function($query){$query->where('name', 'LIKE', 'Kepegawaian');})
+            ->whereHas('department', function($query){$query->where('name', 'LIKE', '%Kepegawaian%');})
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan');})
+            ->whereNot('name', Auth::user()->officer->name)
             ->get();
         }else{
-            $fil_offs = Officer::with('department', 'part')
+            $fil_offs = Officer::with('department')
             ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-            ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+            ->whereNot('name', Auth::user()->officer->name)
             ->get();
         }
 
@@ -74,6 +82,18 @@ class VoteController extends Controller
 
     public function select($period, $officer, $criteria)
     {
+        //GET DATA FOR REDIRECT
+        $redirect = '';
+        $latest = VoteCriteria::latest()->first();
+        //dd($criteria != $latest->id_vote_criteria);
+        if($criteria != $latest->id_vote_criteria){
+            $redirect = VoteCriteria::where('id_vote_criteria', '>', $criteria)->min('id_vote_criteria');
+            //dd($redirect);
+        }else{
+            $redirect = $criteria;
+            //dd($redirect);
+        }
+
         //INCREMENT DATA
         Vote::where('id_period', $period)->where('id_officer', $officer)->where('id_vote_criteria', $criteria)->increment('votes');
 
@@ -92,9 +112,9 @@ class VoteController extends Controller
 
         //RETURN TO VIEW
         if(Auth::user()->part != "Pegawai"){
-            return redirect()->route('admin.inputs.votes.vote', $period)->with('success','Voting Berhasil');
+            return redirect()->route('admin.inputs.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
         }else{
-            return redirect()->route('officer.votes.vote', $period)->with('success','Voting Berhasil');
+            return redirect()->route('officer.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
         }
     }
 }

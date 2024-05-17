@@ -85,7 +85,7 @@ class OfficerController extends Controller
             'name'=>$request->name,
             //'org_code'=>$request->org_code,
             'id_department'=>$request->id_department,
-            'id_part'=>$request->id_part,
+            //'id_part'=>$request->id_part,
             //'status'=>$request->status,
             //'last_group'=>$request->last_group,
             //'last_education'=>$request->last_education,
@@ -105,6 +105,13 @@ class OfficerController extends Controller
      */
     public function update(Request $request, Officer $officer)
     {
+        //GET FOR REDIRECT
+        $redirect = Part::with('department')
+        ->whereHas('department', function($query) use($request){
+            $query->where('id_department', $request->id_department);
+        })->first();
+        //dd($redirect);
+
         //VALIDATE DATA
         /*
         $request->validate([
@@ -138,7 +145,7 @@ class OfficerController extends Controller
             'name'=>$request->name,
             //'org_code'=>$request->org_code,
             'id_department'=>$request->id_department,
-            'id_part'=>$request->id_part,
+            //'id_part'=>$request->id_part,
             //'status'=>$request->status,
             //'last_group'=>$request->last_group,
             //'last_education'=>$request->last_education,
@@ -162,7 +169,7 @@ class OfficerController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('tab_redirect', $officer->id_part)->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$redirect->id_part])->with('tab_redirect', $officer->id_part)->with('code_alert', 1);
     }
 
     /**
@@ -170,6 +177,12 @@ class OfficerController extends Controller
      */
     public function destroy(Officer $officer)
     {
+        //GET FOR REDIRECT
+        $redirect = Part::with('department')
+        ->whereHas('department', function($query) use($officer){
+            $query->where('id_department', $officer->id_department);
+        })->first();
+
         //CHECK DATA
         if(Presence::where('id_officer', $officer->id_officer)->exists()) {
             return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Kehadiran)')->with('code_alert', 1);
@@ -192,7 +205,7 @@ class OfficerController extends Controller
         $officer->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$redirect->id_part])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
     }
 
     public function search(Request $request)

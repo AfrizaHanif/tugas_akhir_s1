@@ -33,63 +33,104 @@ class DatabaseSeeder extends Seeder
 
         DB::table('parts')->insert([
             'id_part' => 'PRT-002',
-            'name' => 'Kepegawaian',
-        ]);
-
-        DB::table('parts')->insert([
-            'id_part' => 'PRT-003',
             'name' => 'Bagian Umum',
         ]);
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-004',
-            'name' => 'Tim Teknis Fungsi',
+            'id_part' => 'PRT-003',
+            'name' => 'Tim Teknis',
         ]);
 
         //DEPARTMENTS: Jabatan
         DB::table('departments')->insert([
             'id_department' => 'DPT-000',
+            'id_part' => 'PRT-000',
             'name' => 'Developer',
+            //'part' => 'Developer',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-001',
+            'id_part' => 'PRT-001',
             'name' => 'Kepala BPS Jawa Timur',
+            //'part' => 'Kepala BPS',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-002',
+            'id_part' => 'PRT-002',
             'name' => 'Kepala Bagian Umum',
+            //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-003',
+            'id_part' => 'PRT-002',
             'name' => 'Pranata Keuangan APBN Penyelia',
+            //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-004',
-            'name' => 'Staf Bagian Umum',
+            'id_part' => 'PRT-002',
+            'name' => 'Analis Kepegawaian Ahli Muda ',
+            //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-005',
+            'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Pertama',
+            //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-006',
+            'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Muda',
+            //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-007',
+            'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Madya',
+            //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-008',
+            'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Utama',
+            //'part' => 'Tim Teknis',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-009',
+            'id_part' => 'PRT-003',
+            'name' => 'Pranata Komputer Ahli Pertama',
+            //'part' => 'Tim Teknis',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-010',
+            'id_part' => 'PRT-003',
+            'name' => 'Pranata Komputer Ahli Muda',
+            //'part' => 'Tim Teknis',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-011',
+            'id_part' => 'PRT-003',
+            'name' => 'Pranata Komputer Ahli Madya',
+            //'part' => 'Tim Teknis',
+        ]);
+
+        DB::table('departments')->insert([
+            'id_department' => 'DPT-012',
+            'id_part' => 'PRT-003',
+            'name' => 'Pranata Komputer Ahli Utama',
+            //'part' => 'Tim Teknis',
         ]);
 
         //OFFICERS: Pegawai
@@ -100,7 +141,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Muhammad Afriza Hanif',
             //'org_code' => '00000',
             'id_department' => 'DPT-000',
-            'id_part' => 'PRT-000',
+            //'id_part' => 'PRT-000',
             //'status' => 'PNS',
             //'last_group' => 'I/a', //Golongan Akhir
             //'last_education' => 'S1',
@@ -115,7 +156,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-001',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_department' => 'DPT-001',
-            'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -124,9 +165,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
-            'name' => 'Wikan Nastiti, SST',
+            'name' => 'Nurhayati, SE',
             'id_department' => 'DPT-004',
-            'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-002',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -137,7 +178,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-003',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_department' => 'DPT-002',
-            'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -148,7 +189,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-004',
             'name' => 'Ika Widiati Nugraheny, A.Md',
             'id_department' => 'DPT-003',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -159,7 +200,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-005',
             'name' => 'Agusta Briliantono Yusuf, S.ST., M.AP.',
             'id_department' => 'DPT-004',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -170,7 +211,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-006',
             'name' => 'Riena Widianingtyas, S.Si, M.T',
             'id_department' => 'DPT-006',
-            'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -181,7 +222,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-007',
             'name' => 'Dr. Agus Budhi Santosa, S.Si, M.T',
             'id_department' => 'DPT-007',
-            'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -192,7 +233,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-008',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_department' => 'DPT-006',
-            'id_part' => 'PRT-004',
+            //'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -203,7 +244,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-009',
             'name' => 'Daizy Pangeswari, SE, MM',
             'id_department' => 'DPT-006',
-            'id_part' => 'PRT-004',
+            //'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -214,7 +255,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-010',
             'name' => 'Boby Eko Heru Mulyadi, SST, M.Si',
             'id_department' => 'DPT-007',
-            'id_part' => 'PRT-004',
+            //'id_part' => 'PRT-004',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',

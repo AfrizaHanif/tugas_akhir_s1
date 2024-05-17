@@ -24,15 +24,21 @@ class AuthController extends Controller
 
     public function auth(Request $request)
     {
+        //GET AND VALIDATE LOGIN INFO
         $credentials = $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
-        //$remember_me = $request->has('remember_me') ? true : false;
         //dd($credentials); //Check Bug
-        if (Auth::attempt($credentials)) {
+
+        //REMEMBER ME
+        $remember = $request->has('remember_me') ? true : false;
+
+        if (Auth::attempt($credentials, $remember)) {
             //dd(auth()->user()->part);
             $request->session()->regenerate();
+
+            //RETURN TO VIEW
             if(auth()->user()->part == "Pegawai"){
                 return redirect()->route('officer')->withSuccess('Selamat Datang!');
             }else{
@@ -46,8 +52,8 @@ class AuthController extends Controller
     }
 
     public function logout(){
-        auth()->logout();
-        //Auth::logout();
+        //auth()->logout();
+        Auth::logout();
         //request()->session()->flush();
         request()->session()->invalidate();
         request()->session()->regenerateToken();

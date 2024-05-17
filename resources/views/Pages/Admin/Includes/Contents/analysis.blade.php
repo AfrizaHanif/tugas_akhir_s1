@@ -4,8 +4,10 @@
 <h1 class="text-center mb-4">Analisis WP</h1>
 @endif
 @include('Templates.Includes.Components.alert')
+<!--MENU-->
 <p>
     <div class="dropdown">
+        <!--PERIOD PICKER-->
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-folder-plus"></i>
             Pilih Periode
@@ -51,12 +53,14 @@
             </li>
             @endif
         </ul>
+        <!--HELP-->
         <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
             <i class="bi bi-question-lg"></i>
             Bantuan
         </a>
     </div>
 </p>
+<!--NOTICE-->
 @if (Request::is('admin/analysis/saw') || Request::is('admin/analysis/wp'))
 <div class="alert alert-info" role="alert">
     Untuk melihat hasil analisis di setiap periode, klik pilih periode untuk melihat hasil analisis.
@@ -65,8 +69,10 @@
     <strong>PERHATIAN:</strong> Pastikan seluruh data input di setiap pegawai telah terisi. Cek status di halaman input apakah pegawai tersebut telah terinput atau belum.
 </div>
 @endif
+<!--SAW-->
 @if (Request::is('admin/analysis/saw/*'))
 <div class="accordion" id="accordion">
+    <!--LIST OF INPUTS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="true" aria-controls="collapse-hasil">
@@ -92,7 +98,7 @@
                         @forelse ($alternatives as $alt)
                         <tr>
                             <td>
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name }}">
+                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name ?? '' }}">
                                     {{ $alt->id_officer }}
                                 </span>
                             </td>
@@ -117,6 +123,7 @@
             </div>
         </div>
     </div>
+    <!--NORMALIZATION-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-normal" aria-expanded="false" aria-controls="collapse-normal">
@@ -169,6 +176,7 @@
             </div>
         </div>
     </div>
+    <!--MATRIX-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-matrix" aria-expanded="false" aria-controls="collapse-matrix">
@@ -225,6 +233,7 @@
             </div>
         </div>
     </div>
+    <!--RANKS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-ranking" aria-expanded="false" aria-controls="collapse-ranking">
@@ -247,7 +256,7 @@
                             @foreach ($matrix as $sqrt1 => $valsqrt1)
                             <tr>
                                 <th scope="row">
-                                    {{$officers->where('id_officer', $sqrt1)->first()->name}} ({{ $sqrt1 }})
+                                    {{$officers->where('id_officer', $sqrt1)->first()->name ?? ''}} ({{ $sqrt1 }})
                                 </th>
                                 <td>{{ number_format($valsqrt1,3) }}</td>
                                 <td>{{ $no++ }}</td>
@@ -265,8 +274,10 @@
         </div>
     </div>
 </div>
+<!--WP-->
 @elseif (Request::is('admin/analysis/wp/*'))
 <div class="accordion" id="accordion">
+    <!--LIST OF INPUTS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="true" aria-controls="collapse-hasil">
@@ -317,6 +328,7 @@
             </div>
         </div>
     </div>
+    <!--SQUARE, S, AND V-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hitung" aria-expanded="false" aria-controls="collapse-hitung">
@@ -369,6 +381,7 @@
             </div>
         </div>
     </div>
+    <!--RANKS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-rank" aria-expanded="false" aria-controls="collapse-rank">

@@ -11,3 +11,18 @@
         }
     }
 </style>
+
+<style type="text/css">
+    @media (max-width: 768.5px)
+    {
+        #sidebar {
+            display: none !important;
+        }
+    }
+    @media (min-width: 768.5px)
+    {
+        #navbar {
+            display: none !important;
+        }
+    }
+</style>

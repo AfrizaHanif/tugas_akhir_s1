@@ -16,11 +16,16 @@ class Department extends Model
 
     protected $fillable = [
         'id_department',
-        //'id_part',
+        'id_part',
         'name',
+        //'part',
         'description',
     ];
 
+    public function part()
+    {
+        return $this->belongsTo(Part::class, 'id_part', 'id_part');
+    }
     public function officer()
     {
         return $this->hasMany(Officer::class, 'id_department', 'id_department');

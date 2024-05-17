@@ -1,102 +1,5 @@
 @if (Request::is('admin/masters/officers'))
-<div class="modal fade" data-bs-backdrop="static" id="modal-prt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.masters.parts.store') }}" method="POST" enctype="multipart/form-data" id="form-prt-create">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Bagian</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-prt-create"></button>
-                </div>
-                <div class="modal-body">
-                    @if (Session::get('modal_redirect') == 'modal-prt-create')
-                    @include('Templates.Includes.Components.alert')
-                    @endif
-                    @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nama Bagian</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
-                        Tambah
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
     @foreach ($parts as $part)
-    <div class="modal fade" id="modal-prt-update-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('admin.masters.parts.update', $part->id_part) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Bagian ({{ $part->id_part }})</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        @if (Session::get('modal_redirect') == 'modal-prt-update')
-                        @include('Templates.Includes.Components.alert')
-                        @endif
-                        @csrf @method('PUT')
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Bagian</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $part->name }}" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                            <i class="bi bi-x-lg"></i>
-                            Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-plus-lg"></i>
-                            Ubah
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal-prt-delete-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('admin.masters.parts.destroy', $part->id_part) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Bagian ({{ $part->id_part}})</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-warning" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
-                            <br/>
-                            Apakah anda ingin menghapus Bagian?
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-lg"></i>
-                            Tidak
-                        </button>
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-check-lg"></i>
-                            Ya
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="modal modal-lg fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -189,13 +92,14 @@
                                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ old('org_code') }}" disabled>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" hidden>
+                                            <label for="id_part" class="form-label" hidden>Bagian</label>
+                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
                                         </div>
                                         <div class="mb-3">
                                             <label for="id_department" class="form-label">Jabatan</label>
                                             <select class="form-select" id="id_department" name="id_department" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
+                                                @foreach ($departments->where('id_part', $part->id_part) as $department)
                                                 <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
                                                 @endforeach
                                             </select>
@@ -242,7 +146,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->id_officer }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->id_officer }}) ({{ $officer->department->part->id_part }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -323,20 +227,18 @@
                                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="id_part" class="form-label">Bagian</label>
-                                            <select class="form-select" id="id_part" name="id_part" required>
-                                                <option selected disabled value="">---Pilih Bagian---</option>
-                                                @foreach ($parts as $part)
-                                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <label for="id_part" class="form-label" hidden>Bagian</label>
+                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->department->part->id_part }}" readonly hidden>
                                         </div>
                                         <div class="mb-3">
                                             <label for="id_department" class="form-label">Jabatan</label>
                                             <select class="form-select" id="id_department" name="id_department" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
-                                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @foreach ($parts as $part)
+                                                <option disabled value="">---{{ $part->name }}---</option>
+                                                    @foreach ($departments->where('id_part', $part->id_part) as $department)
+                                                    <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                    @endforeach
                                                 @endforeach
                                             </select>
                                         </div>
@@ -385,6 +287,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="id_part" class="form-label" hidden>Bagian</label>
+                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->department->part->id_part }}" readonly hidden>
+                        </div>
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
@@ -408,7 +314,7 @@
     </div>
     @endforeach
 
-<div class="modal fade" id="modal-dep-view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="modal-dep-view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -421,6 +327,7 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama Jabatan</th>
+                            <th scope="col">Bagian</th>
                             <th class="col-1" scope="col">Action</th>
                         </tr>
                     </thead>
@@ -429,6 +336,7 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $department->name }}</td>
+                            <td>{{ $department->part->name }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -494,6 +402,15 @@
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
+                        <label for="id_part" class="form-label">Bagian</label>
+                        <select class="form-select" id="id_part" name="id_part" required>
+                            <option selected disabled value="">---Pilih Bagian---</option>
+                            @foreach ($parts as $part)
+                            <option value="{{ $part->id_part }}" {{ old('id_part') ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="description">Deskripsi</label>
                         <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                     </div>
@@ -530,6 +447,15 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Jabatan</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $department->name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_part" class="form-label">Bagian</label>
+                            <select class="form-select" id="id_part" name="id_part" required>
+                                <option selected disabled value="">---Pilih Bagian---</option>
+                                @foreach ($parts as $part)
+                                <option value="{{ $part->id_part }}" {{ $department->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="description">Deskripsi</label>
@@ -1472,7 +1398,7 @@
                     <div class="modal-header">
                         @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
-                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Prestasi Kerja ({{ $officer->name }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}"></button>
@@ -1495,9 +1421,9 @@
                                 @forelse ($subcriterias as $subcriteria)
                                 <div class="mb-3">
                                     <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                    @if (Request::is('admin/inputs/presences'))
+                                    @if (Request::is('admin/inputs/presences') || Request::is('admin/inputs/kbps/performances'))
                                     <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
-                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                                     <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
                                     @endif
                                 </div>
@@ -1544,7 +1470,7 @@
                     <div class="modal-header">
                         @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
-                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Prestasi Kerja ({{ $officer->id_officer }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1577,7 +1503,7 @@
                                         <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                     </div>
                                     @endforelse
-                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                                     @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
@@ -1654,7 +1580,7 @@
                                 </td>
                             </tr>
                             @endforelse
-                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                             @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
@@ -1705,7 +1631,7 @@
                     <div class="modal-header">
                         @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences'))-->
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $officer->id_officer}})</h1>
-                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances'))
+                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Prestasi Kerja ({{ $officer->id_officer}})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

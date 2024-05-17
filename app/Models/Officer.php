@@ -21,7 +21,7 @@ class Officer extends Model
         'name',
         'org_code',
         'id_department',
-        'id_part',
+        //'id_part',
         'status',
         'last_group',
         'last_education',
@@ -31,6 +31,7 @@ class Officer extends Model
         'religion',
         //'id_user',
         'photo',
+        //'leader',
     ];
 
     public function department()
@@ -43,10 +44,12 @@ class Officer extends Model
         return $this->belongsTo(User::class, 'id_user', 'id_user',);
     }
     */
+    /*
     public function part()
     {
         return $this->belongsTo(Part::class, 'id_part', 'id_part');
     }
+    */
     public function presence()
     {
         return $this->hasMany(Presence::class, 'id_officer', 'id_officer');

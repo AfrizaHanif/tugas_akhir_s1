@@ -2,6 +2,7 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
+<!--SEARCH BOX-->
 <p>
     <form action="{{ route('admin.masters.officers.search') }}" method="GET">
         <div class="input-group mb-3">
@@ -16,6 +17,7 @@
         </div>
     </form>
 </p>
+<!--SEARCH PAGE-->
 @if (Request::is('admin/masters/officers/search*'))
 <table class="table table-hover table-bordered">
     <thead>
@@ -76,34 +78,24 @@
 </table>
 {{$officers->withQueryString()->links()}}
 @else
+<!--MAIN PAGE-->
 <div class="row g-2">
+    <!--SIDEBAR-->
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
+            <!--MENU-->
             <div class="dropdown pb-3">
                 @if (Auth::user()->part == "Admin")
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-menu-app-fill"></i>
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <i class="bi bi-diagram-2"></i>
+                    Lihat Jabatan
                 </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-prt-create">
-                            <i class="bi bi-folder-plus"></i>
-                            Tambah Bagian
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-                            <i class="bi bi-diagram-2"></i>
-                            Lihat Jabatan
-                        </a>
-                    </li>
-                </ul>
                 @endif
                 <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                     <i class="bi bi-question-lg"></i>
-                    Bantuan
                 </a>
             </div>
+            <!--PART NAV-->
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 @forelse ($parts as $part)
                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $part->id_part }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $part->id_part }}" type="button" role="tab" aria-controls="pills-{{ $part->id_part }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
@@ -118,35 +110,33 @@
             <br/>
         </div>
     </div>
+    <!--MAIN CONTENT-->
     <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($parts as $part)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $part->id_part }}" role="tabpanel" aria-labelledby="pills-{{ $part->id_part }}-tab" tabindex="0">
-                <h2>{{ $part->name }}</h2>
-                @if (Auth::user()->part == "Admin")
-                <p>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-create-{{ $part->id_part }}">
-                            <i class="bi bi-person-plus"></i>
-                            Tambah Pegawai
-                        </a>
+                <!--HEADING WITH MENU-->
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h2>{{ $part->name }}</h2>
                     </div>
-                    @if ($part->name != "Kepemimpinan")
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-prt-update-{{ $part->id_part }}">
-                            <i class="bi bi-pencil"></i>
-                            Ubah Bagian
-                        </a>
+                    <div class="col-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <!--MENU-->
+                        @if (Auth::user()->part == "Admin")
+                        <div class="dropdown">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-create-{{ $part->id_part }}">
+                                    <i class="bi bi-person-plus"></i>
+                                    Tambah Pegawai
+                                </a>
+                            </div>
+                        </div>
+                        @endif
                     </div>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-prt-delete-{{ $part->id_part }}">
-                            <i class="bi bi-folder-minus"></i>
-                            Hapus Bagian
-                        </a>
-                    </div>
-                    @endif
-                </p>
-                @endif
+                </div>
+                @forelse ($departments->where('id_part', $part->id_part) as $department)
+                <h4 class="pb-2">{{ $department->name }}</h4>
+                <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -158,7 +148,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($officers->where('id_part', $part->id_part) as $officer)
+                        @forelse ($officers->where('id_department', $department->id_department) as $officer)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->name }}</td>
@@ -204,6 +194,8 @@
                         </tr>
                     </tfoot>
                 </table>
+                @empty
+                @endforelse
             </div>
             @empty
             <div class="tab-pane fade show active" id="pills-empty" role="tabpanel" aria-labelledby="pills-empty-tab" tabindex="0">
