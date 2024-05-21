@@ -138,7 +138,7 @@ class PeriodController extends Controller
 
     public function finish($period)
     {
-        //VERIFICATTION
+        //VERIFICATION (DISABLE TEMPORARY)
         /*
         $off_count = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})

@@ -21,11 +21,13 @@ class OfficerController extends Controller
      */
     public function index()
     {
+        //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
         $departments = Department::whereNot('name', 'Developer')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
+
         return view('Pages.Admin.officer', compact('parts', 'departments', 'officers'));
     }
 

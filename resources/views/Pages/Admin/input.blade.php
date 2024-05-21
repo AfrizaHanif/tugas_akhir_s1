@@ -3,8 +3,10 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('admin/inputs/presences'))
-    <title>Data Kehadiran | Tugas Akhir</title>
+    @if (Request::is('admin/inputs/presences/officers'))
+    <title>Data Kehadiran Pegawai | Tugas Akhir</title>
+    @elseif (Request::is('admin/inputs/presences/leaders'))
+    <title>Data Kehadiran Kepemimpinan | Tugas Akhir</title>
     @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
     <title>Data Prestasi Kerja | Tugas Akhir</title>
     @endif

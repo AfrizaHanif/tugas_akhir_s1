@@ -26,3 +26,12 @@
         }
     }
 </style>
+
+<style>
+    @media (min-width: 768.5px)
+    {
+        #offcanvas-menu {
+            
+        }
+    }
+</style>

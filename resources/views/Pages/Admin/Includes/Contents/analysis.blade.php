@@ -6,6 +6,7 @@
 @include('Templates.Includes.Components.alert')
 <!--MENU-->
 <p>
+    <!--MENU-->
     <div class="dropdown">
         <!--PERIOD PICKER-->
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

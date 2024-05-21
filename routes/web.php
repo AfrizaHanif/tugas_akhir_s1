@@ -75,6 +75,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
     //Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin', [DashboardController::class, 'admin'])->name('admin');
     Route::prefix('admin')->name('admin.')->group(function () {
+        //MASTERS
         Route::prefix('masters')->name('masters.')->group(function () {
             Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
             Route::prefix('officers')->name('officers.')->group(function () {
@@ -98,9 +99,14 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::resource('/vote-criterias', VoteCriteriaController::class);
             });
         });
+        //INPUTS
         Route::prefix('inputs')->name('inputs.')->group(function () {
             Route::middleware('checkPart:Admin')->group(function () {
-                Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                //Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                Route::prefix('presences')->name('presences.')->group(function () {
+                    Route::resource('/officers', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                    Route::resource('/leaders', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                });
             });
             Route::middleware('checkPart:KBU')->group(function () {
                 Route::prefix('kbu')->name('kbu.')->group(function () {
@@ -136,6 +142,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 });
             });
         });
+        //ANALYSIS
         Route::prefix('analysis')->name('analysis.')->group(function () {
             Route::prefix('saw')->name('saw.')->group(function () {
                 Route::get('/', [AnalysisController::class, 'index'])->name('index');
@@ -147,6 +154,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
         //Route::get('/results', [ResultController::class, 'index'])->name('results');
+        //REPORTS
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::controller(ReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
@@ -160,8 +168,9 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
     });
-
 });
+
+//OFFICER'S DASHBOARD
 Route::middleware(['auth', 'checkOfficer'])->group(function () {
     Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
     Route::prefix('officer')->name('officer.')->group(function () {

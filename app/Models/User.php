@@ -67,6 +67,7 @@ class User extends Authenticatable
         return $this->hasMany(Officer::class, 'id_user', 'id_user');
     }
     */
+    //CONNECT TO ANOTHER TABLE
     public function officer()
     {
         return $this->belongsTo(Officer::class, 'id_officer', 'id_officer');

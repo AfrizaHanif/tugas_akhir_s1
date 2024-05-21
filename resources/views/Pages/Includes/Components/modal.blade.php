@@ -1,5 +1,6 @@
 @if (Request::is('admin') || Request::is('officer'))
     @if (Auth::user()->part != "Pegawai")
+    <!--INPUT CHECKER PER PERIOD-->
     <div class="modal modal-lg fade" id="modal-inp-view-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -62,7 +63,7 @@
                 </div>
                 <div class="modal-footer">
                     @if (Auth::user()->part == "Admin")
-                    <a type="button" href="{{ route('admin.inputs.presences.index') }}" class="btn btn-primary">
+                    <a type="button" href="{{ route('admin.inputs.presences.officers.index') }}" class="btn btn-primary">
                     @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
                     <a type="button" href="{{ route('admin.inputs.kbu.performances.index') }}" class="btn btn-primary">
                     @else
@@ -79,7 +80,7 @@
             </div>
         </div>
     </div>
-
+    <!--REJECTED INPUT CHECKER PER PERIOD-->
     <div class="modal modal-lg fade" id="modal-inp-reject-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -95,6 +96,7 @@
                                     <th class="col-1" scope="col">#</th>
                                     <th scope="col">Nama</th>
                                     <th scope="col">Jabatan</th>
+                                    <th scope="col">Bagian</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
@@ -104,6 +106,7 @@
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $officer->name }}</td>
                                     <td>{{ $officer->department->name }}</td>
+                                    <td>{{ $officer->department->part->name }}</td>
                                     <td>
                                         @foreach ($scores->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $score)
                                         @if ($score->status == 'Rejected')
@@ -132,11 +135,11 @@
                 </div>
                 <div class="modal-footer">
                     @if (Auth::user()->part == "Admin")
-                    <a type="button" href="{{ route('admin.inputs.presences.index') }}" class="btn btn-primary">
+                    <a type="button" href="{{ route('admin.inputs.presences.officers.index') }}" class="btn btn-primary">
                     @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
                     <a type="button" href="{{ route('admin.inputs.kbu.performances.index') }}" class="btn btn-primary">
                     @else
-                    <a type="button" href="{{ route('admin.inputs.kbu.performances.index') }}" class="btn btn-primary">
+                    <a type="button" href="{{ route('admin.inputs.scores.index') }}" class="btn btn-primary">
                     @endif
                         <i class="bi bi-box-arrow-in-right"></i>
                         Ke Halaman
@@ -150,7 +153,7 @@
         </div>
     </div>
     @endif
-
+<!--PREVIOUS EMPLOYEE OF THE MONTH-->
 <div class="modal modal-lg fade" id="modal-best" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -204,12 +207,12 @@
         </div>
     </div>
 </div>
-
+<!--TOP 3 EMPLOYEES-->
 <div class="modal modal-lg fade" id="modal-score-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Calon Karyawan Terbaik ({{ $latest_per->id_period ?? '' }})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Calon Karyawan Terbaik ({{ $latest_per->month }} {{ $latest_per->year }})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -258,8 +261,8 @@
     </div>
 </div>
 @endif
-
 @if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
+<!--VOTE CHECKER PER PART-->
 <div class="modal modal-xl fade" id="modal-chk-view-{{ $prd_select->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -332,7 +335,7 @@
         </div>
     </div>
 </div>
-
+<!--VOTE CHECKER (ALL)-->
 <div class="modal modal-xl fade" id="modal-chk-all-{{ $prd_select->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -408,6 +411,7 @@
 
     @foreach ($criterias as $criteria)
         @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
+        <!--SELECT VOTE-->
         <div class="modal fade" id="modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

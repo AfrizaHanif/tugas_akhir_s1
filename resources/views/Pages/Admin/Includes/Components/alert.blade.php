@@ -1,3 +1,4 @@
+<!--POSITIVE OUTCOME-->
 @if ($message = Session::get('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-square-fill"></i> <strong>SUKSES</strong>
@@ -7,6 +8,7 @@
     </div>
 @endif
 
+<!--NEGATIVE OUTCOME-->
 @if ($message = Session::get('fail'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
@@ -16,6 +18,7 @@
     </div>
 @endif
 
+<!--INVALID ERROR-->
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>

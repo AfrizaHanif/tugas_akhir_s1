@@ -22,6 +22,7 @@ class Period extends Model
         'status',
     ];
 
+    //CONNECT FROM ANOTHER TABLE
     public function presence()
     {
         return $this->hasMany(Presence::class, 'id_period', 'id_period');

@@ -19,6 +19,7 @@ class VoteResult extends Model
         //'final_score',
     ];
 
+    //CONNECT TO ANOTHER TABLE
     public function officer()
     {
         return $this->belongsTo(Officer::class, 'id_officer', 'id_officer',);

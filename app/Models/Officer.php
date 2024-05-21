@@ -34,6 +34,7 @@ class Officer extends Model
         //'leader',
     ];
 
+    //CONNECT TO ANOTHER TABLE
     public function department()
     {
         return $this->belongsTo(Department::class, 'id_department', 'id_department',);
@@ -50,6 +51,8 @@ class Officer extends Model
         return $this->belongsTo(Part::class, 'id_part', 'id_part');
     }
     */
+
+    //CONNECT FROM ANOTHER TABLE
     public function presence()
     {
         return $this->hasMany(Presence::class, 'id_officer', 'id_officer');

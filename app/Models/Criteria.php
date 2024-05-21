@@ -20,6 +20,7 @@ class Criteria extends Model
         'type',
     ];
 
+    //CONNECT FROM ANOTHER TABLE
     public function subcriteria()
     {
         return $this->hasMany(SubCriteria::class, 'id_criteria', 'id_criteria');

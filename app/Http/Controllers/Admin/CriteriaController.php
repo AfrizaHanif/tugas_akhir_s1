@@ -16,8 +16,10 @@ class CriteriaController extends Controller
      */
     public function index()
     {
+        //GET DATA
         $criterias = Criteria::get();
         $subcriterias = SubCriteria::get();
+        
         return view('Pages.Admin.criteria', compact('criterias', 'subcriterias'));
     }
 

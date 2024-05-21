@@ -53,6 +53,38 @@
                     </div>
                 </div>
             </div>
+            @if (!empty($latest_per->id_period))
+                @if (Auth::user()->part == "Admin")
+                <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix']))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" ></div>
+                    </div>
+                </div>
+                @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_per->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="border-radius: 0px; height: 5px">
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{ (count($count_per->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix']))*100)/count($input_off) }}%"></div>
+                </div>
+                @elseif (Auth::user()->part == "KBPS")
+                <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Final')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Final'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised'))*100)/count($input_off) }}%">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                </div>
+                @endif
+            @else
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 0px; height: 5px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+            </div>
+            @endif
             <div class="card-footer text-body-secondary">
                 <div class="row align-items-center">
                     <div class="col-9">
@@ -61,12 +93,12 @@
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
                             @if (Auth::user()->part == "KBPS")
-                            <a href="{{ route('admin.inputs.scores.index') }}" type="button" class="btn btn-primary btn-sm">Lihat</a>
+                            <a href="{{ route('admin.inputs.scores.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                             @else
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Lihat</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Cek</button>
                             @endif
                         @else
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                         @endif
                     </div>
                 </div>
@@ -96,6 +128,58 @@
                     </div>
                 </div>
             </div>
+            @if (!empty($latest_per->id_period))
+                @if (Auth::user()->part == "Admin")
+                <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised'))*100)/count($input_off) }}%">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Need Fix'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'In Review')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'In Review'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Final')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Final'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                </div>
+                @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
+                <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised'))*100)/count($input_off) }}%">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_per->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_per->where('id_period', $latest_per->id_period)->where('status', 'Need Fix'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_per->where('id_period', $latest_per->id_period)->where('status', 'In Review')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_per->where('id_period', $latest_per->id_period)->where('status', 'In Review'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_per->where('id_period', $latest_per->id_period)->where('status', 'Final')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_per->where('id_period', $latest_per->id_period)->where('status', 'Final'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                </div>
+                @elseif (Auth::user()->part == "KBPS")
+                <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised'))*100)/count($input_off) }}%">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected'))*100)/count($input_off) }}%">
+                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Final')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Final'))*100)/count($input_off) }}%;">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                </div>
+                @endif
+            @else
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 0px; height: 5px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+            </div>
+            @endif
             <div class="card-footer text-body-secondary">
                 <div class="row align-items-center">
                     <div class="col-9">
@@ -103,9 +187,9 @@
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-reject-{{ $latest_per->id_period }}">Lihat</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-reject-{{ $latest_per->id_period }}">Cek</button>
                         @else
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                         @endif
                     </div>
                 </div>
@@ -118,17 +202,26 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-10">
-                        <h4 class="card-title">Pegawai Memilih</h4>
+                        <h4 class="card-title">Selesai Memilih</h4>
                     </div>
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
-                        <h4>{{ count($check->where('id_period', $latest_per->id_period)) ?? '-' }}/{{ count($vote_officer) }}</h4>
+                        <h4>{{ floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias)) }}/{{ count($vote_officer) }}</h4>
                         @else
                         <h4>-/{{ count($vote_officer) }}</h4>
                         @endif
                     </div>
                 </div>
             </div>
+            @if (!empty($latest_per->id_period))
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias)) }}" aria-valuemin="0" aria-valuemax="{{ count($vote_officer) }}" style="border-radius: 0px; height: 5px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ (floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias))*100)/count($vote_officer) }}%"></div>
+            </div>
+            @else
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 0px; height: 5px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+            </div>
+            @endif
             <div class="card-footer text-body-secondary">
                 <div class="row align-items-center">
                     <div class="col-9">
@@ -137,12 +230,12 @@
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
                             @if ($latest_per->status == 'Voting')
-                            <a href="{{ route('admin.inputs.votes.vote', $latest_per->id_period) }}" type="button" class="btn btn-primary btn-sm">Lihat</a>
+                            <a href="{{ route('admin.inputs.votes.vote', $latest_per->id_period) }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                             @else
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                             @endif
                         @else
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                         @endif
                     </div>
                 </div>
@@ -155,7 +248,7 @@
 <div class="row align-items-md-stretch">
     <!--RESULT CARD-->
     <div class="col-md-6">
-        <div id="carousel-results" class="carousel slide">
+        <div id="carousel-results" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators" style="bottom: -20px; filter: invert(100%)">
                 <button type="button" data-bs-target="#carousel-results" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carousel-results" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -224,12 +317,12 @@
                                 <div class="col-3 px-4 d-grid gap-2 d-md-flex justify-content-md-end">
                                     @if (!empty($latest_per->id_period))
                                         @if ($latest_per->status == 'Voting')
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-score-{{ $latest_per->id_period }}">Lihat</button>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-score-{{ $latest_per->id_period }}">Details</button>
                                         @else
-                                        <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" disabled>Details</button>
                                         @endif
                                     @else
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>Lihat</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" disabled>Details</button>
                                     @endif
                                 </div>
                             </div>
@@ -259,7 +352,7 @@
                 <div class="carousel-item active" style="position: relative !important;">
                     <img src="{{ asset('Images/Test.webp') }}" class="d-block object-fit-cover rounded-3" style="display:block; height:185px; width:100%;" alt="...">
                     <div class="carousel-overlay rounded-3"></div>
-                    <div class="carousel-caption d-none d-md-block" style="top:0; bottom:auto; left:6%; right:6%; text-align:left;">
+                    <div class="carousel-caption d-md-block" style="top:0; bottom:auto; left:6%; right:6%; text-align:left;">
                         <h5 class="card-title">Panduan Penggunaan</h5>
                         <p class="card-text">Apakah anda baru pertama kali memakai aplikasi ini? Klik tombol ini untuk melihat panduan penggunaan.</p>
                         <button type="button" class="btn btn-primary btn-sm">Buka Panduan</button>

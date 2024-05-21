@@ -24,6 +24,7 @@ class ScoreController extends Controller
 {
     public function index()
     {
+        //GET DATA
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->whereNot('status', 'Finished')->latest()->first();
         $history_per = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
@@ -54,6 +55,7 @@ class ScoreController extends Controller
 
     public function get($period)
     {
+        //GET DATA
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
         $officers = Officer::with('department', 'user')
@@ -62,17 +64,41 @@ class ScoreController extends Controller
         ->get();
 
         //VERIFICATION
+        //CHECK IF LEADER HAS EMPTY DATA
+        $check_lead_pre = Presence::with('officer')
+        ->where('id_period', $period)
+        ->whereHas('officer', function($query)
+        {
+            $query->with('user')->whereHas('user', function($query)
+            {
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $check_lead_per = Performance::with('officer')
+        ->where('id_period', $period)
+        ->whereHas('officer', function($query)
+        {
+            $query->with('user')->whereHas('user', function($query)
+            {
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        if($check_lead_per->count() == 0 || $check_lead_pre->count() == 0){
+            return redirect()->route('admin.inputs.scores.index')->with('fail','Mohon untuk mengisi nilai untuk kepemimpinan (Kepala Bagian Umum dan Kepala Tim Teknis) untuk kebutuhan rekap.');
+        }
+
+        //CHECK AVAILABILITY DATA
         if(Presence::where('id_period', $period)->count() == 0 || Performance::where('id_period', $period)->count() == 0){
             return redirect()->route('admin.inputs.scores.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             foreach ($officers as $officer) {
-                if(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0 && Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
+                if(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0 && Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
                     return redirect()->route('admin.inputs.scores.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan lihat di halaman input pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
-                }elseif(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
+                }elseif(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN PRESENCES TABLE
                     return redirect()->route('admin.inputs.scores.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Kehadiran. Silahkan lihat di halaman input Data Kehadiran pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
-                }elseif(Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){
+                }elseif(Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN PERFORMANCES TABLE
                     return redirect()->route('admin.inputs.scores.index')->with('fail','Terdapat pegawai yang belum dinilai di Data Prestasi Kerja. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang datanya belum terisi. ('.$officer->id_officer.')');
-                }else{
+                }else{ //IF OFFICER HAS A FEW DATA IN BOTH TABLE
                     foreach ($subcriterias as $subcriteria) {
                         if(Presence::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0 && Performance::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_sub_criteria', $subcriteria->id_sub_criteria)->count() == 0) {
                             return redirect()->route('admin.inputs.scores.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan lihat di halaman input Data Prestasi Kerja pegawai mana yang hanya dinilai sebagian. ('.$officer->id_officer.') ('.$subcriteria->id_sub_criteria.')');

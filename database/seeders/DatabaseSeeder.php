@@ -546,6 +546,24 @@ class DatabaseSeeder extends Seeder
 
         //PRESENCES: Data Kehadiran
         DB::table('presences')->insert([
+            'id_presence' => 'PRS-01-24-002-001', //Periode-Officer-SubCriteria
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-001',
+            'input' => '25',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('presences')->insert([
+            'id_presence' => 'PRS-01-24-002-002',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-002',
+            'input' => '25',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('presences')->insert([
             'id_presence' => 'PRS-01-24-004-001', //Periode-Officer-SubCriteria
             'id_period' => 'PRD-01-24',
             'id_officer' => 'OFF-004',
@@ -636,6 +654,33 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //PERFORMANCE: Data Prestasi Kerja (Keterampilan Teknis)
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-003', //Periode-Officer-SubCriteria
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-003',
+            'input' => '95',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-004',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-004',
+            'input' => '89',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-005',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-005',
+            'input' => '79',
+            'status' => 'Pending',
+        ]);
+
         DB::table('performances')->insert([
             'id_performance' => 'PRS-01-24-004-003', //Periode-Officer-SubCriteria
             'id_period' => 'PRD-01-24',
@@ -772,6 +817,69 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //BerAkhlak
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-006', //Periode-Officer-SubCriteria
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-006',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-007',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-007',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-008',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-008',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-009',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-009',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-010',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-010',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-011',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-011',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
+        DB::table('performances')->insert([
+            'id_performance' => 'PRS-01-24-002-012',
+            'id_period' => 'PRD-01-24',
+            'id_officer' => 'OFF-002',
+            'id_sub_criteria' => 'SUB-012',
+            'input' => '0',
+            'status' => 'Pending',
+        ]);
+
         DB::table('performances')->insert([
             'id_performance' => 'PRS-01-24-004-006', //Periode-Officer-SubCriteria
             'id_period' => 'PRD-01-24',

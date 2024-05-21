@@ -16,6 +16,7 @@ class VoteCriteria extends Model
         'name',
     ];
 
+    //CONNECT FROM ANOTHER TABLE
     public function vote()
     {
         return $this->hasMany(Vote::class, 'id_vote_criteria', 'id_vote_criteria');

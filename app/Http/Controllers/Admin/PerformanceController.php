@@ -20,6 +20,7 @@ class PerformanceController extends Controller
      */
     public function index()
     {
+        //GET DATA
         if(Auth::user()->part == 'KBU'){
             $officers = Officer::with('department')
             ->whereHas('department', function($query)

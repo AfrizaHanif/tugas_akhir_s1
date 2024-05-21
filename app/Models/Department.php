@@ -22,10 +22,13 @@ class Department extends Model
         'description',
     ];
 
+    //CONNECT TO ANOTHER TABLE
     public function part()
     {
         return $this->belongsTo(Part::class, 'id_part', 'id_part');
     }
+
+    //CONNECT FROM ANOTHER TABLE
     public function officer()
     {
         return $this->hasMany(Officer::class, 'id_department', 'id_department');

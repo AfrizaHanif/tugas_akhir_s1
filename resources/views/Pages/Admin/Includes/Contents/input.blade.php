@@ -1,5 +1,7 @@
-@if (Request::is('admin/inputs/presences'))
-<h1 class="text-center mb-4">Data Kehadiran</h1>
+@if (Request::is('admin/inputs/presences/officers'))
+<h1 class="text-center mb-4">Data Kehadiran Pegawai</h1>
+@elseif (Request::is('admin/inputs/presences/leaders'))
+<h1 class="text-center mb-4">Data Kehadiran Kepemimpinan</h1>
 @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
 <h1 class="text-center mb-4">Data Prestasi Kerja</h1>
 @endif
@@ -17,7 +19,7 @@
             </p>
             <!--NAVIGATION-->
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <!--PERIOD-->
+                <!--PERIODS-->
                 @if (!empty($latest_per))
                 <button class="nav-link active text-start" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="true">
                     <i class="bi bi-hourglass-split"></i> {{ $latest_per->name }}
@@ -35,7 +37,7 @@
                 </button>
                 @empty
                 <div class="alert alert-danger" role="alert">
-                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong></br>
                     Hasil Rekap belum tersedia. Silahkan selesaikan proses Karyawan Terbaik terlebih dahulu untuk melihat rekap.
                 </div>
                 @endforelse
@@ -53,6 +55,7 @@
                 <!--MENU-->
                 <p>
                     <div class="row g-3 align-items-center pb-0">
+                        <!--DATA CHECKER-->
                         <div class="col-auto">
                             <label for="tahun_saw_dl" class="col-form-label">Lihat Data</label>
                         </div>
@@ -70,6 +73,25 @@
                         </div>
                     </div>
                 </p>
+                <!--NOTICE-->
+                @if (Request::is('admin/inputs/kbps/performances'))
+                <div class="alert alert-info" role="alert">
+                    Pengisian nilai untuk kepemimpinan (Kepala Bagian Umum dan Ketua Tim Teknis) hanya ditujukan untuk kebutuhan rekap dan tidak diikutkan dalam nominasi pemilihan karyawan terbaik.
+                </div>
+                @endif
+                @if (count($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) != 0)
+                <div class="alert alert-danger" role="alert">
+                    Terdapat nilai yang ditolak oleh Kepala BPS Jawa Timur. Mohon untuk segera melakukan revisi agar dapat diverifikasi ulang.
+                </div>
+                @else
+                    @foreach ($periods->where('id_period', $latest_per->id_period) as $period)
+                        @if ($period->status == 'Voting')
+                        <div class="alert alert-success" role="alert">
+                            Proses Penilaian pada periode ini telah selesai. Silahkan melakukan pemilihan karyawan terbaik di halaman Voting
+                        </div>
+                        @endif
+                    @endforeach
+                @endif
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -86,13 +108,96 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @if (Request::is('admin/inputs/presences/leaders'))
+                        @forelse ($leaders as $officer)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $officer->name }}</td>
+                            <td>{{ $officer->department->name }}</td>
+                            <td>
+                                @if ($countsub == 0)
+                                <span class="badge text-bg-secondary">Kriteria Kosong</span>
+                                @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
+                                <span class="badge text-bg-primary">Terisi Semua</span>
+                                @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == 0)
+                                <span class="badge text-bg-danger">Tidak Terisi</span>
+                                @else
+                                <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                @endif
+                            </td>
+                            @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                @if ($s->status == 'Pending')
+                                <td><span class="badge text-bg-primary">Belum Diperiksa</span></td>
+                                @elseif ($s->status == 'In Review')
+                                <td><span class="badge text-bg-warning">Dalam Pemeriksaan</span></td>
+                                @elseif ($s->status == 'Final')
+                                <td><span class="badge text-bg-success">Hasil Akhir</span></td>
+                                @elseif ($s->status == 'Need Fix')
+                                <td><span class="badge text-bg-danger">Perlu Perbaikan</span></td>
+                                @endif
+                            @empty
+                            <td><span class="badge text-bg-secondary">Blank</span></td>
+                            @endforelse
+                            <td>
+                                <div class="dropdown">
+                                    @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                        @if ($s->status == 'Pending' || $s->status == 'Need Fix')
+                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-menu-button-fill"></i>
+                                        </button>
+                                        @elseif ($s->status == 'In Review')
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
+                                        @else
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sudah disetujui sebagai hasil akhir dan tidak dapat diubah kembali.">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                        </span>
+                                        @endif
+                                    @empty
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-menu-button-fill"></i>
+                                    </button>
+                                    @endforelse
+                                    <ul class="dropdown-menu mx-0 shadow w-table-menu">
+                                        <li>
+                                            @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
+                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                                Lihat Data
+                                            </a>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                                Ubah Data
+                                            </a>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                                Hapus Data
+                                            </a>
+                                            @else
+                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
+                                                Tambah Data
+                                            </a>
+                                            @endif
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                        </tr>
+                        @endforelse
+                        @else
                         @forelse ($officers as $officer)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->name }}</td>
                             <td>{{ $officer->department->name }}</td>
                             <td>
-                                @if (Request::is('admin/inputs/presences'))
+                                @if (Request::is('admin/inputs/presences/officers'))
                                     @if ($countsub == 0)
                                     <span class="badge text-bg-secondary">Kriteria Kosong</span>
                                     @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
@@ -154,7 +259,7 @@
                                     @endforelse
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            @if (Request::is('admin/inputs/presences'))
+                                            @if (Request::is('admin/inputs/presences/officers'))
                                                 @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
                                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                                     Lihat Data
@@ -197,10 +302,15 @@
                             <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
                         </tr>
                         @endforelse
+                        @endif
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
+                            @if (Request::is('admin/inputs/presences/leaders'))
+                            <td colspan="10">Total Data: <b>{{ $leaders->count() }}</b> Pegawai</td>
+                            @else
                             <td colspan="10">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                            @endif
                         </tr>
                     </tfoot>
                 </table>
@@ -213,12 +323,14 @@
                 </div>
             </div>
             @endif
-            <!--OLD PERIOD-->
+            <!--OLD PERIODS-->
             @foreach ($history_per as $period)
             <div class="tab-pane fade" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
+                <!--HEADING WITH MENU-->
                 <h2>{{ $period->name }}</h2>
                 <p>
                     <div class="row g-3 align-items-center">
+                        <!--DATA CHECKER-->
                         <div class="col-auto">
                             <label for="tahun_saw_dl" class="col-form-label">Lihat Data</label>
                         </div>
@@ -236,6 +348,7 @@
                         </div>
                     </div>
                 </p>
+                <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">

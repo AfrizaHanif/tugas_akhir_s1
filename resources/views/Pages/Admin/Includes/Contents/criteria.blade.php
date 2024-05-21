@@ -43,12 +43,14 @@
                     <div class="col-5 d-grid gap-2 d-md-flex justify-content-md-end">
                         <!--SUB MENU-->
                         <div class="row g-3 align-items-center">
+                            <!--ADD SUB CRITERIA-->
                             <div class="col-auto pe-0">
                                 <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-sub-create-{{ $criteria->id_criteria }}">
                                     <i class="bi bi-person-plus"></i>
                                     Tambah Sub Kriteria
                                 </a>
                             </div>
+                            <!--MANAGE CRITERIA-->
                             <div class="col-auto">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

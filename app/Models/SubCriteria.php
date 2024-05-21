@@ -24,10 +24,13 @@ class SubCriteria extends Model
         'need',
     ];
 
+    //CONNECT TO ANOTHER TABLE
     public function criteria()
     {
         return $this->belongsTo(Criteria::class, 'id_criteria', 'id_criteria');
     }
+
+    //CONNECT FROM ANOTHER TABLE
     public function presence()
     {
         return $this->hasMany(Presence::class, 'id_sub_criteria', 'id_sub_criteria');

@@ -1,9 +1,11 @@
 <nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
+        <!--OFFCANVAS MENU-->
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" href="#offcanvas-menu" role="button" aria-controls="offcanvas-menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="#">Dashboard</a>
+        <!--USER MENU-->
         <div class="dropstart">
             <button class="navbar-toggler" type="button" style="border: none" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="navbar-toggler-icon" style="background-image: url('https://github.com/mdo.png'); border-radius: 50%;"></span>

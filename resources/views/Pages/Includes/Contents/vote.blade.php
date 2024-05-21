@@ -44,7 +44,7 @@
                 </a>
             </div>
         </div>
-        <!--OFFICER CHECKER-->
+        <!--DATA CHECKER-->
         @if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
             @if (Auth::check() && Auth::user()->part != 'Pegawai')
             <div class="col-auto">
@@ -112,6 +112,7 @@
                 @else
                 <h2>{{ $criteria->name }}</h2>
                 @endif
+                <!--VOTE AREA-->
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
                     <div class="col">

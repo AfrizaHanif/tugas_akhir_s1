@@ -1,3 +1,4 @@
+<!--LOGOUT CONFIRMATION-->
 <div class="modal fade modal-sheet p-4 py-md-5" tabindex="-1" role="dialog" id="modallogout">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-3 shadow">
@@ -18,6 +19,7 @@
 
 @if (Request::is('admin/masters/officers*') || Request::is('officers*') || Request::is('officer/officers*'))
     @foreach ($officers as $officer)
+    <!--VIEW DETAILS PER OFFICER-->
     <div class="modal modal-lg fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -75,6 +77,7 @@
 @endif
 
 @if (Request::is('admin/inputs/votes*') || Request::is('officer/votes*'))
+<!--PERIOD PICKER-->
 <div class="modal fade" id="modal-vte-periods" tabindex="-1" aria-labelledby="modalsaw" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -121,6 +124,7 @@
 @if (Request::is('admin/inputs/votes/*') || Request::is('officer/votes/*'))
     @foreach ($criterias as $criteria)
         @foreach ($votes->where('id_period', $prd_select->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $vote)
+        <!--SELECT EMPLOYEE-->
         <div class="modal fade" id="modal-vte-select-{{ $prd_select->id_period }}-{{ $vote->id_officer }}-{{ $criteria->id_vote_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

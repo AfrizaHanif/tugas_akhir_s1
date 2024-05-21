@@ -10,6 +10,7 @@ use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
 use App\Models\SubCriteria;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,9 +21,22 @@ class PresenceController extends Controller
      */
     public function index()
     {
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query)
-        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
+        //GET DATA
+        $officers = Officer::with('department', 'user')
+        ->whereDoesntHave('department', function($query){
+            $query->where('name', 'Developer');
+        })
+        ->whereDoesntHave('user', function($query){
+            $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+        })
+        ->get();
+        $leaders = Officer::with('department', 'user')
+        ->whereDoesntHave('department', function($query){
+            $query->where('name', 'Developer');
+        })
+        ->whereHas('user', function($query){
+            $query->whereIn('part', ['KBU', 'KTT']);
+        })
         ->get();
         $performances = Performance::get();
         $presences = Presence::get();
@@ -51,7 +65,7 @@ class PresenceController extends Controller
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
 
-        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
+        return view('Pages.Admin.input', compact('officers', 'leaders', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
     }
 
     /**
@@ -81,7 +95,12 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
+        $test = User::where('id_officer', $request->id_officer)->first();
+        if(!empty($test) && $test->part != 'Pegawai'){
+            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
+        }else{
+            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
+        }
     }
 
     /**
@@ -121,7 +140,12 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
+        $test = User::where('id_officer', $request->id_officer)->first();
+        if(!empty($test) && $test->part != 'Pegawai'){
+            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
+        }else{
+            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
+        }
     }
 
     /**
@@ -142,6 +166,11 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
+        $test = User::where('id_officer', $request->id_officer)->first();
+        if(!empty($test) && $test->part != 'Pegawai'){
+            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
+        }else{
+            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
+        }
     }
 }

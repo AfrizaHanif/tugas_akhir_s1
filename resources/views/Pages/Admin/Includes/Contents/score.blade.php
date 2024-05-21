@@ -42,6 +42,7 @@
                 </button>
                 @empty
                 <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong></br>
                     Hasil Rekap belum tersedia. Silahkan selesaikan proses Karyawan Terbaik terlebih dahulu untuk melihat rekap.
                 </div>
                 @endforelse
@@ -61,6 +62,7 @@
                     <!--MENU-->
                     <div class="col-7 d-grid gap-2 d-md-flex justify-content-md-end">
                         <div class="row g-3 align-items-center">
+                            <!--GET DATA-->
                             <div class="col-auto pe-0">
                                 @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
@@ -83,6 +85,7 @@
                                 </a>
                                 @endif
                             </div>
+                            <!--FINISH-->
                             <div class="col-auto pe-0">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
@@ -107,6 +110,7 @@
                                     @endif
                                 </div>
                             </div>
+                            <!--QUICK VERIFY & DATA CHECKER-->
                             <div class="col-auto">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -287,6 +291,7 @@
                 </div>
             </div>
             @endif
+            <!--OLD PERIOD-->
             @foreach ($history_per as $period)
             <div class="tab-pane fade" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
                 @if ($period->status == "Voting")
@@ -296,161 +301,6 @@
                 @else
                 <h2>{{ $period->name }}</h2>
                 @endif
-                <p>
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            @if ($period->status == "Voting" || $period->status == "Finished")
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
-                            <a class="btn btn-primary disabled">
-                                <i class="bi bi-database-down"></i>
-                                Ambil data
-                            </a>
-                            </span>
-                            @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Rejected')->count() >= 1)
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak. Pastikan nilai tersebut telah direvisi sebelum melakukan update data.">
-                                <a class="btn btn-primary disabled">
-                                    <i class="bi bi-database-down"></i>
-                                    Ambil data
-                                </a>
-                                </span>
-                            @else
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $period->id_period }}">
-                                <i class="bi bi-database-down"></i>
-                                Ambil data
-                            </a>
-                            @endif
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
-                                    <i class="bi bi-database"></i>
-                                    Cek Data
-                                </a>
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-stt-view-{{ $period->id_period }}">
-                                    <i class="bi bi-ui-checks-grid"></i>
-                                    Cek Status
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Voting" || $period->status == "Finished" || $scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $period->id_period)->count() == 0)
-                                <div class="dropdown">
-                                    @if ($period->status == "Voting" || $period->status == "Finished")
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            Setuju Semua?
-                                        </button>
-                                    </span>
-                                    @elseif ($scores->where('id_period', $period->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0)
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak / direvisi.">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            Setuju Semua?
-                                        </button>
-                                    </span>
-                                    @elseif ($scores->where('id_period', $period->id_period)->count() == 0)
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Data belum diambil. Silahkan ambil terlebih dahulu.">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            Setuju Semua?
-                                        </button>
-                                    </span>
-                                    @endif
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                Tidak
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Setuju Semua?
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                Tidak
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() != $officers->count())
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Setuju Semua?
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item disabled" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                Tidak
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @else
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Setuju Semua?
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                Tidak
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                @if ($period->status == "Voting" || $period->status == "Finished")
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
-                                    <a class="btn btn-success disabled">
-                                        <i class="bi bi-clipboard2-check"></i>
-                                        Selesai
-                                    </a>
-                                </span>
-                                @elseif ($scores->where('id_period', $period->id_period)->where('status', 'Accepted')->count() == $officers->count())
-                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-scr-finish-{{ $period->id_period }}">
-                                    <i class="bi bi-clipboard2-check"></i>
-                                    Selesai
-                                </a>
-                                @else
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pastikan seluruh hasil akhir pegawai sudah disetujui.">
-                                    <a class="btn btn-success disabled">
-                                        <i class="bi bi-clipboard2-check"></i>
-                                        Selesai
-                                    </a>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </p>
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">

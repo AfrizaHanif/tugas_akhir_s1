@@ -19,6 +19,7 @@ class Part extends Model
         'name',
     ];
 
+    //CONNECT FROM ANOTHER TABLE
     /*
     public function officer()
     {
