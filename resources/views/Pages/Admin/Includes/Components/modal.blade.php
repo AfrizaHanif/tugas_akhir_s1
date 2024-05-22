@@ -1600,6 +1600,8 @@
                     <form action="{{ route('admin.inputs.kbu.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
                     @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
                     <form action="{{ route('admin.inputs.ktt.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
+                    @elseif (Auth::user()->part == "KBPS") <!--(Request::is('admin/inputs/ktt/performances'))-->
+                    <form action="{{ route('admin.inputs.kbps.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
                     @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
@@ -1627,7 +1629,7 @@
                                     @forelse ($subcriterias as $subcriteria)
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        @if (Request::is('admin/inputs/presences/*') || Request::is('admin/inputs/kbps/performances'))
+                                        @if (Request::is('admin/inputs/presences/*'))
                                         <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                         @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
                                         <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
@@ -1672,6 +1674,8 @@
                     <form action="{{ route('admin.inputs.kbu.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
                     <form action="{{ route('admin.inputs.ktt.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                    @elseif (Auth::user()->part == "KBPS") <!--(Request::is('admin/inputs/ktt/performances'))-->
+                    <form action="{{ route('admin.inputs.kbps.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
@@ -1833,6 +1837,8 @@
                     <form action="{{ route('admin.inputs.kbu.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
                     <form action="{{ route('admin.inputs.ktt.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                    @elseif (Auth::user()->part == "KBPS") <!--(Request::is('admin/inputs/ktt/performances'))-->
+                    <form action="{{ route('admin.inputs.kbps.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
@@ -1878,20 +1884,14 @@
         @endforeach
         @endif
 
-        <!--INPUT (LEADER ONLY)-->
+        <!--INPUT (LEADER ONLY) (PRESENCES)-->
         @if (Request::is('admin/inputs/presences/leaders'))
         @foreach ($leaders as $officer)
         <!--INSERT INPUT-->
         <div class="modal modal-lg fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                     <form action="{{ route('admin.inputs.presences.leaders.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
-                    @elseif (Auth::user()->part == "KBU") <!--(Request::is('admin/inputs/kbu/performances'))-->
-                    <form action="{{ route('admin.inputs.kbu.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
-                    @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
-                    <form action="{{ route('admin.inputs.ktt.performances.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}">
-                    @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
@@ -1918,11 +1918,7 @@
                                     @forelse ($subcriterias as $subcriteria)
                                     <div class="mb-3">
                                         <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                        @if (Request::is('admin/inputs/presences/*') || Request::is('admin/inputs/kbps/performances'))
                                         <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
-                                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
-                                        <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
-                                        @endif
                                     </div>
                                     @empty
                                     <div class="alert alert-danger" role="alert">
@@ -1957,13 +1953,7 @@
         <div class="modal modal-lg fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                     <form action="{{ route('admin.inputs.presences.leaders.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @elseif (Auth::user()->part == "KBU") <!--(Request::is('admin/inputs/kbu/performances'))-->
-                    <form action="{{ route('admin.inputs.kbu.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
-                    <form action="{{ route('admin.inputs.ktt.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
@@ -1988,7 +1978,6 @@
                                     </div>
                                     <hr/>
                                     @forelse ($subcriterias as $subcriteria)
-                                        @if (Request::is('admin/inputs/presences/*'))
                                         @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                                         <div class="mb-3">
                                             <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
@@ -2000,19 +1989,6 @@
                                             <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="31" placeholder="Range: 0 - Tanggal terakhir pada setiap bulan" required>
                                         </div>
                                         @endforelse
-                                        @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
-                                        @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
-                                        <div class="mb-3">
-                                            <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                            <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="100" placeholder="Range: 0 - 100" required>
-                                        </div>
-                                        @empty
-                                        <div class="mb-3">
-                                            <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
-                                            <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" min="0" max="100" placeholder="Range: 0 - 100" required>
-                                        </div>
-                                        @endforelse
-                                        @endif
                                     @empty
                                     <div class="alert alert-danger" role="alert">
                                         Tidak ada data sub kriteria untuk Data Kehadiran
@@ -2118,13 +2094,7 @@
         <div class="modal fade" id="modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                     <form action="{{ route('admin.inputs.presences.leaders.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @elseif (Auth::user()->part == "KBU") <!--(Request::is('admin/inputs/kbu/performances'))-->
-                    <form action="{{ route('admin.inputs.kbu.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @elseif (Auth::user()->part == "KTT") <!--(Request::is('admin/inputs/ktt/performances'))-->
-                    <form action="{{ route('admin.inputs.ktt.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                    @endif
                         <div class="modal-header">
                             @if (Auth::user()->part == "Admin") <!--(Request::is('admin/inputs/presences/*'))-->
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $officer->id_officer}})</h1>

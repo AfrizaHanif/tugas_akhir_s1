@@ -1,6 +1,28 @@
 <h1 style="text-align:center;">Laporan Analisis SAW</h1>
 <p>Periode: {{ $month }} {{ $year }}</p>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
+<h2>Pegawai</h2>
+<table id="table">
+    <thead>
+        <tr>
+            <th>Kode</th>
+            <th>Nama Pegawai</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($officers as $officer)
+        <tr>
+            <td>{{ $officer->id_officer }}</td>
+            <td>{{ $officer->name }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2">Total Data: <b>{{ count($officers) }}</b> Pegawai</td>
+        </tr>
+    </tfoot>
+</table>
 <h2>Hasil Kuesioner</h2>
 <table id="table">
     <thead>
@@ -110,7 +132,7 @@
         @php $no = 1;@endphp
         @foreach ($matrix as $sqrt1 => $valsqrt1)
         <tr>
-            <th scope="row">{{ $sqrt1 }}</th>
+            <th scope="row">{{$officers->where('id_officer', $sqrt1)->first()->name ?? ''}} ({{ $sqrt1 }})</th>
             <td>{{ number_format($valsqrt1,3) }}</td>
             <td>{{ $no++ }}</td>
         </tr>

@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('history_results', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->char('id_period', 11);
             $table->char('period_name', 20);
+            $table->char('id_officer', 11);
             $table->string('officer_name', 50);
             $table->timestamps();
         });

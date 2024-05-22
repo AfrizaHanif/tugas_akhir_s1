@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('history_votes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->char('id_period', 11);
             $table->char('period_name', 20);
+            $table->char('id_officer', 11);
             $table->string('officer_name', 50);
+            $table->char('id_vote_criteria', 11);
+            $table->string('vote_criteria_name', 50);
             $table->unsignedSmallInteger('votes');
             $table->timestamps();
         });

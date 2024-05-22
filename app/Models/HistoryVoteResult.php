@@ -12,8 +12,11 @@ class HistoryVoteResult extends Model
     protected $table = "history_vote_results";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
+        'id_vote_criteria',
         'vote_criteria_name',
         'final_vote',
     ];

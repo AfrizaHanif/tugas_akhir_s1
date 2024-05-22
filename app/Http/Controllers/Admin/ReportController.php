@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
+use App\Models\Department;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Performance;
@@ -21,9 +22,9 @@ class ReportController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
-        $officers = Officer::with('department', 'part')
+        $officers = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
 
         return view('Pages.Admin.report', compact('periods','per_years','officers'));
@@ -31,13 +32,14 @@ class ReportController extends Controller
 
     public function officers()
     {
-        $parts = Part::get();
-        $officers = Officer::with('department', 'part')
+        $parts = Part::whereNot('name', 'Developer')->get();
+        $departments = Department::whereNot('name', 'Developer')->get();
+        $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
         $file = 'RPT-Pegawai.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.officer', compact('parts','officers'))
+        loadview('Pages.PDF.officer', compact('parts', 'departments', 'officers'))
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
@@ -47,9 +49,9 @@ class ReportController extends Controller
     {
         $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
-        $officers = Officer::with('department', 'part')
+        $officers = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
         $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
@@ -78,9 +80,9 @@ class ReportController extends Controller
     {
         $month = Period::where('id_period', $period)->first()->month;
         $year = Period::where('id_period', $period)->first()->year;
-        $officers = Officer::with('department', 'part')
+        $officers = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         $performances = Performance::with('subcriteria')->where('id_period', $period)->get();
         $presences = Presence::with('subcriteria')->where('id_period', $period)->get();
@@ -126,25 +128,37 @@ class ReportController extends Controller
 
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
-        $officers = Officer::with('department', 'part')
+        $officers = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
+        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
 
-        $first_alt = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_alt = Performance::with('subcriteria', 'officer')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_alt = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_alt = Presence::with('subcriteria')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_alt)
-        ->get();
+        ->getQuery()->get();
         $alternatives = $last_alt;
 
         $first_cri = DB::table("performances")
@@ -180,16 +194,28 @@ class ReportController extends Controller
         $criterias = $last_cri;
         //$criterias = SubCriteria::get();
 
-        $first_inp = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_inp = Performance::with('subcriteria', 'officer')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_inp = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        });
+        $last_inp = Presence::with('subcriteria')
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
+        ->whereHas('subcriteria', function($query){
+            $query->where('need', 'Ya');
+        })
+        ->whereDoesntHave('officer', function($query){
+            $query->with('user')->whereHas('user', function($query){
+                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            });
+        })
         ->union($first_inp)
-        ->get();
+        ->getQuery()->get();
         $inputs = $last_inp;
 
         //FIND MIN DAN MAX
@@ -211,9 +237,9 @@ class ReportController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_sub_criteria == $value1->id_sub_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / max($minmax[$value2->id_sub_criteria]);
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / (max($minmax[$value2->id_sub_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = min($minmax[$value2->id_sub_criteria]) / $value1->input;
+                        $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -246,7 +272,7 @@ class ReportController extends Controller
 
         $file = 'RPT-Analysis-'.$year.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.analysis', compact('month','year','alternatives','criterias','inputs','minmax','normal','mx_hasil','matrix'))
+        loadview('Pages.PDF.analysis', compact('month', 'year', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix'))
         ->setPaper('a4', 'landscape')
         ->save('PDFs/'.$file)
         ->stream($file);

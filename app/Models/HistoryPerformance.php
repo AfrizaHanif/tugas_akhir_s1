@@ -12,8 +12,11 @@ class HistoryPerformance extends Model
     protected $table = "history_performances";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
+        'id_sub_criteria',
         'sub_criteria_name',
         'input',
     ];

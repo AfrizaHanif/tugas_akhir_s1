@@ -138,7 +138,7 @@ class PeriodController extends Controller
 
     public function finish($period)
     {
-        //VERIFICATION (DISABLE TEMPORARY)
+        //VERIFICATION (DISABLE ONLY FOR TESTING PURPOSE)
         /*
         $off_count = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -196,9 +196,14 @@ class PeriodController extends Controller
         foreach($votes2 as $vote){
             $getperiod1 = Period::where('id_period', $vote->id_period)->first();
             $getofficer1 = Officer::where('id_officer', $vote->id_officer)->first();
+            $getvotecrit1 = VoteCriteria::where('id_vote_criteria', $vote->id_vote_criteria)->first();
             HistoryVote::insert([
+                'id_period'=>$getperiod1->id_period,
                 'period_name'=>$getperiod1->name,
+                'id_officer'=>$getofficer1->id_officer,
                 'officer_name'=>$getofficer1->name,
+                'id_vote_criteria'=>$getvotecrit1->id_vote_criteria,
+                'vote_criteria_name'=>$getvotecrit1->name,
                 'votes'=>$vote->votes,
             ]);
         }
@@ -208,10 +213,16 @@ class PeriodController extends Controller
             $getperiod2 = Period::where('id_period', $check->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $check->id_officer)->first();
             $getoffselect2 = Officer::where('id_officer', $check->officer_selected)->first();
+            $getvotecrit2 = VoteCriteria::where('id_vote_criteria', $check->id_vote_criteria)->first();
             HistoryVoteCheck::insert([
+                'id_period'=>$getperiod2->id_period,
                 'period_name'=>$getperiod2->name,
+                'id_officer'=>$getofficer2->id_officer,
                 'officer_name'=>$getofficer2->name,
-                'officer_selected'=>$getoffselect2->name,
+                'id_vote_criteria'=>$getvotecrit2->id_vote_criteria,
+                'vote_criteria_name'=>$getvotecrit2->name,
+                'officer_selected'=>$getoffselect2->id_officer,
+                'officer_selected_name'=>$getoffselect2->name,
             ]);
         }
 
@@ -221,8 +232,11 @@ class PeriodController extends Controller
             $getofficer3 = Officer::where('id_officer', $result->id_officer)->first();
             $getsubcriteria3 = VoteCriteria::where('id_vote_criteria', $result->id_vote_criteria)->first();
             HistoryVoteResult::insert([
+                'id_period'=>$getperiod3->id_period,
                 'period_name'=>$getperiod3->name,
+                'id_officer'=>$getofficer3->id_officer,
                 'officer_name'=>$getofficer3->name,
+                'id_vote_criteria'=>$getsubcriteria3->id_vote_criteria,
                 'vote_criteria_name'=>$getsubcriteria3->name,
                 'final_vote'=>$result->final_vote,
             ]);
@@ -232,7 +246,9 @@ class PeriodController extends Controller
         $getperiod4 = Period::where('id_period', $result1->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $result1->id_officer)->first();
         HistoryResult::insert([
+            'id_period'=>$getperiod4->id_period,
             'period_name'=>$getperiod4->name,
+            'id_officer'=>$getofficer4->id_officer,
             'officer_name'=>$getofficer4->name,
         ]);
 

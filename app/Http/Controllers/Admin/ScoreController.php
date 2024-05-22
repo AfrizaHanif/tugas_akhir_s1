@@ -25,9 +25,9 @@ class ScoreController extends Controller
     public function index()
     {
         //GET DATA
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->whereNot('status', 'Finished')->latest()->first();
-        $history_per = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $history_per = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -64,7 +64,7 @@ class ScoreController extends Controller
         ->get();
 
         //VERIFICATION
-        //CHECK IF LEADER HAS EMPTY DATA
+        //CHECK IF LEADER HAS EMPTY DATA (DISABLE ONLY FOR TESTING PURPOSE)
         $check_lead_pre = Presence::with('officer')
         ->where('id_period', $period)
         ->whereHas('officer', function($query)
@@ -383,7 +383,9 @@ class ScoreController extends Controller
             $getperiod1 = Period::where('id_period', $score->id_period)->first();
             $getofficer1 = Officer::where('id_officer', $score->id_officer)->first();
             HistoryScore::insert([
+                'id_period'=>$getperiod1->id_period,
                 'period_name'=>$getperiod1->name,
+                'id_officer'=>$getofficer1->id_officer,
                 'officer_name'=>$getofficer1->name,
                 'final_score'=>$score->final_score,
             ]);
@@ -395,8 +397,11 @@ class ScoreController extends Controller
             $getofficer2 = Officer::where('id_officer', $presence->id_officer)->first();
             $getsubcriteria2 = SubCriteria::where('id_sub_criteria', $presence->id_sub_criteria)->first();
             HistoryPresence::insert([
+                'id_period'=>$getperiod2->id_period,
                 'period_name'=>$getperiod2->name,
+                'id_officer'=>$getofficer2->id_officer,
                 'officer_name'=>$getofficer2->name,
+                'id_sub_criteria'=>$getsubcriteria2->id_sub_criteria,
                 'sub_criteria_name'=>$getsubcriteria2->name,
                 'input'=>$presence->input,
             ]);
@@ -408,8 +413,11 @@ class ScoreController extends Controller
             $getofficer3 = Officer::where('id_officer', $performance->id_officer)->first();
             $getsubcriteria3 = SubCriteria::where('id_sub_criteria', $performance->id_sub_criteria)->first();
             HistoryPerformance::insert([
+                'id_period'=>$getperiod3->id_period,
                 'period_name'=>$getperiod3->name,
+                'id_officer'=>$getofficer3->id_officer,
                 'officer_name'=>$getofficer3->name,
+                'id_sub_criteria'=>$getsubcriteria3->id_sub_criteria,
                 'sub_criteria_name'=>$getsubcriteria3->name,
                 'input'=>$performance->input,
             ]);

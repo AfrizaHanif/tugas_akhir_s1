@@ -307,8 +307,6 @@
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Hasil Akhir</th>
-                            <th class="col-3" scope="col">Status</th>
-                            <th class="col-1" scope="col">Setuju?</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -317,64 +315,6 @@
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $score->officer->name }}</td>
                             <td>{{ $score->final_score }}</td>
-                            <td>
-                                @if ($score->status == 'Pending')
-                                <span class="badge text-bg-warning">Menunggu Persetujuan</span>
-                                @elseif ($score->status == 'Accepted')
-                                <span class="badge text-bg-success">Disetujui</span>
-                                @elseif ($score->status == 'Rejected')
-                                <span class="badge text-bg-danger">Ditolak</span>
-                                @elseif ($score->status == 'Revised')
-                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
-                                @else
-                                <span class="badge text-bg-secondary">Blank</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    @if ($period->status == 'Finish' || $period->status == 'Voting' || $score->status == 'Revised' || $score->status == 'Rejected')
-                                        @if ($period->status == 'Finish' || $period->status == 'Voting')
-                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                <i class="bi bi-menu-button-fill"></i>
-                                            </button>
-                                        </span>
-                                        @elseif ($score->status == 'Rejected')
-                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Persetujuan telah ditutup karena nilai tersebut telah ditolak.">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                <i class="bi bi-menu-button-fill"></i>
-                                            </button>
-                                        </span>
-                                        @elseif ($score->status == 'Revised')
-                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Klik Ambil Data agar dapat melakukan persetujuan nilai.">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                <i class="bi bi-menu-button-fill"></i>
-                                            </button>
-                                        </span>
-                                        @endif
-                                    @else
-                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-menu-button-fill"></i>
-                                    </button>
-                                    @endif
-                                    <ul class="dropdown-menu mx-0 shadow w-table-menu">
-                                        <li>
-                                            @if ($score->status == 'Accepted')
-                                            <a href="#" class="dropdown-item d-flex gap-2 align-items-center disabled"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                            @else
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                Ya
-                                            </a>
-                                            @endif
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-no-{{ $period->id_period }}-{{ $score->id }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                Tidak
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
                         </tr>
                         @empty
                         <tr>

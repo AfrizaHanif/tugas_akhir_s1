@@ -12,7 +12,9 @@ class HistoryScore extends Model
     protected $table = "history_scores";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
         'final_score',
     ];

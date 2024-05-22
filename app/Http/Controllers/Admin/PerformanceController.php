@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Criteria;
+use App\Models\HistoryPerformance;
+use App\Models\HistoryPresence;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -53,9 +55,9 @@ class PerformanceController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->whereNot('status', 'Finished')->latest()->first();
-        $history_per = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $history_per = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
@@ -76,8 +78,10 @@ class PerformanceController extends Controller
         $countprf = SubCriteria::with('criteria')
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
+        $historyprs = HistoryPresence::get();
+        $historyprf = HistoryPerformance::get();
 
-        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status'));
+        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf'));
     }
 
     /**

@@ -12,8 +12,11 @@ class HistoryPresence extends Model
     protected $table = "history_presences";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
+        'id_sub_criteria',
         'sub_criteria_name',
         'input',
     ];

@@ -12,7 +12,9 @@ class HistoryResult extends Model
     protected $table = "history_results";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
     ];
 }

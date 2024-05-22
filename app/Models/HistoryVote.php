@@ -12,8 +12,12 @@ class HistoryVote extends Model
     protected $table = "history_votes";
 
     protected $fillable = [
+        'id_period',
         'period_name',
+        'id_officer',
         'officer_name',
+        'id_vote_criteria',
+        'vote_criteria_name',
         'votes',
     ];
 }

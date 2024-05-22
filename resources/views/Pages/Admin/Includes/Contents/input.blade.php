@@ -336,11 +336,11 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}">
+                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}">
                                     <i class="bi bi-file-spreadsheet"></i>
                                     Hanya Data Ini
                                 </a>
-                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $period->id_period }}">
+                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $period->id_period }}">
                                     <i class="bi bi-database"></i>
                                     Semua Data
                                 </a>
@@ -365,7 +365,7 @@
                             <td>{{ $officer->name }}</td>
                             <td>{{ $officer->department->name }}</td>
                             <td>
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}">
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </td>
