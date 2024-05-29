@@ -17,8 +17,14 @@ return new class extends Migration
             $table->char('period_name', 20);
             $table->char('id_officer', 11);
             $table->string('officer_name', 50);
+            $table->string('officer_department', 50);
+            $table->char('id_criteria', 11);
+            $table->string('criteria_name', 20);
             $table->char('id_sub_criteria', 11);
             $table->string('sub_criteria_name', 50);
+            $table->double('weight');
+            $table->char('attribute', 11);
+            $table->char('is_lead', 10);
             $table->smallInteger('input');
             $table->timestamps();
         });

@@ -126,7 +126,7 @@
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="7">Total Data: <b>{{ $subcriterias->where('id_criteria', $criteria->id_criteria)->count() }}</b> Sub Kriteria</td>
+                            <td colspan="7">Jumlah Data: <b>{{ $subcriterias->where('id_criteria', $criteria->id_criteria)->count() }}</b> Sub Kriteria dengan total bobot <b>{{ $subcriterias->where('id_criteria', $criteria->id_criteria)->sum('weight')*100 }}%</b> (Total seluruh bobot: <b>{{ $subcriterias->sum('weight')*100 }}%</b>)</td>
                         </tr>
                     </tfoot>
                 </table>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('id_period')->references('id_period')->on('periods');
             $table->char('id_officer', 11);
             $table->foreign('id_officer')->references('id_officer')->on('officers');
+            //$table->string('officer_photo', 300)->nullable();
             $table->char('id_vote_criteria', 11);
             $table->foreign('id_vote_criteria')->references('id_vote_criteria')->on('vote_criterias');
             $table->unsignedSmallInteger('final_vote');

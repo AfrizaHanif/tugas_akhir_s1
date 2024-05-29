@@ -22,7 +22,7 @@ class VoteResult extends Model
     //CONNECT TO ANOTHER TABLE
     public function officer()
     {
-        return $this->belongsTo(Officer::class, 'id_officer', 'id_officer',);
+        return $this->belongsTo(Officer::class, 'id_officer', 'id_officer');
     }
     public function period()
     {

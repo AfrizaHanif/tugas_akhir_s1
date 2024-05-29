@@ -171,7 +171,16 @@ class AnalysisController extends Controller
                     if($value2->attribute == 'Benefit'){
                         $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / (max($minmax[$value2->id_sub_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
+                        if(min($minmax[$value2->id_sub_criteria]) == 0){
+                            if($value1->input == 0){
+                                $normal[$value1->id_officer][$value2->id_sub_criteria] = 0.5 / 0.5;
+                            }else{
+                                $normal[$value1->id_officer][$value2->id_sub_criteria] = 0.5 / ($value1->input ?: 1);
+                            }
+                        }else{
+                            $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / ($value1->input ?: 1);
+                        }
+                        //$normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -358,7 +367,12 @@ class AnalysisController extends Controller
         foreach($inputs as $input => $value1){
             foreach($criterias as $crit => $value2){
                 if($value1->id_sub_criteria == $value2->id_sub_criteria){
-                    $square[$value1->id_officer][$value2->id_sub_criteria] = (pow($value1->input , $pangkat[$value1->id_sub_criteria]) ?: 1);
+                    if($value1->input == 0){
+                        $square[$value1->id_officer][$value2->id_sub_criteria] = (pow(0.5 , $pangkat[$value1->id_sub_criteria]) ?: 1);
+                    }else{
+                        $square[$value1->id_officer][$value2->id_sub_criteria] = (pow($value1->input , $pangkat[$value1->id_sub_criteria]) ?: 1);
+                    }
+                    //$square[$value1->id_officer][$value2->id_sub_criteria] = (pow($value1->input , $pangkat[$value1->id_sub_criteria]) ?: 1);
                 }
             }
         }

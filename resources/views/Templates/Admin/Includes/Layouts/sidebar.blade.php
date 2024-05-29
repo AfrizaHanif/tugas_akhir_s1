@@ -83,27 +83,11 @@
                 <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector">
                     <ul class="list-unstyled fw-normal pb-1 small">
                         @if (Auth::user()->part == "Admin")
-                        <li class="nav-item">
-                            <div class="dropend">
-                                <a class="{{ (request()->is('admin/inputs/presences/*')) ? 'nav-link active' : 'nav-link text-white' }} dropdown-toggle" aria-current="page" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
-                                    Data Kehadiran
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark shadow mx-0 w-sidebar-menu">
-                                    <li>
-                                        <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/inputs/presences/officers/">
-                                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-score"/></svg>
-                                            Pegawai
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/inputs/presences/leaders/">
-                                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-vote"/></svg>
-                                            Kepemimpinan
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                        <li>
+                            <a href="/admin/inputs/presences" class="{{ (request()->is('admin/inputs/presences*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
+                                Data Kehadiran
+                            </a>
                         </li>
                         @elseif (Auth::user()->part == "KBU")
                         <li>

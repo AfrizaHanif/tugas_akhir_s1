@@ -102,11 +102,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         //INPUTS
         Route::prefix('inputs')->name('inputs.')->group(function () {
             Route::middleware('checkPart:Admin')->group(function () {
-                //Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                Route::resource('/presences', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+                /*
                 Route::prefix('presences')->name('presences.')->group(function () {
                     Route::resource('/officers', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
                     Route::resource('/leaders', PresenceController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
                 });
+                */
             });
             Route::middleware('checkPart:KBU')->group(function () {
                 Route::prefix('kbu')->name('kbu.')->group(function () {
@@ -137,7 +139,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             Route::prefix('votes')->name('votes.')->group(function () {
                 Route::controller(VoteController::class)->group(function() {
                     Route::get('/', 'index')->name('index');
-                    Route::get('/{period}', 'vote')->name('vote');
+                    Route::get('/{period}', 'history')->name('history');
                     Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
                 });
             });
@@ -184,7 +186,7 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
         Route::prefix('votes')->name('votes.')->group(function () {
             Route::controller(VoteController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
-                Route::get('/{period}', 'vote')->name('vote');
+                Route::get('/{period}', 'history')->name('history');
                 Route::post('/{period}/{officer}/{criteria}', 'select')->name('select');
             });
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HistoryResult;
 use App\Models\Officer;
 use App\Models\Performance;
 use App\Models\Period;
@@ -58,10 +59,7 @@ class DashboardController extends Controller
                     $query->where('name', 'Bagian Umum');
                 });
             })
-            ->whereDoesntHave('user', function($query)
-            {
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            })
+            ->where('is_lead', 'No')
             ->whereDoesntHave('department', function($query)
             {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala%');})
             ->get();
@@ -138,10 +136,7 @@ class DashboardController extends Controller
             ->whereHas('department', function($query){$query->where('name', 'LIKE', '%'.Auth::user()->officer->department->name.'%');})
             ->whereDoesntHave('department', function($query)
             {$query->where('name', 'Developer');})
-            ->whereDoesntHave('user', function($query)
-            {
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            })
+            ->where('is_lead', 'No')
             ->whereNot('name', Auth::user()->officer->name)
             ->get();
             //COUNT OFFICER FROM PERFORMANCE (INPUT)
@@ -192,37 +187,31 @@ class DashboardController extends Controller
             {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
             ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
             ->get();
-            //LIST OF OFFICERS FOR INPUT
             if(Auth::user()->part == 'Admin'){
+                //LIST OF OFFICERS FOR INPUT
                 $input_off = Officer::with('department', 'user')
                 ->whereDoesntHave('department', function($query)
-                {$query->where('name', 'Developer');})
-                ->whereDoesntHave('user', function($query)
-                {$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
+                {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
                 ->get();
             }elseif(Auth::user()->part == 'KBPS'){
+                //LIST OF OFFICERS FOR INPUT
                 $input_off = Officer::with('department', 'user')
                 ->whereDoesntHave('department', function($query)
                 {$query->where('name', 'Developer');})
-                ->whereDoesntHave('user', function($query)
-                {$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
+                ->where('is_lead', 'No')
                 ->get();
             }
-            //COUNT OFFICER FROM PERFORMANCE (INPUT)
-            $count_per = Performance::select('id_period', 'id_officer', 'status')
-            ->groupBy('id_period', 'id_officer', 'status')
-            ->get();
             //COUNT OFFICER FROM PRESENCE (INPUT)
-            $count_pre = Presence::with('officer')->select('id_period', 'id_officer', 'status')
+            $count_pre = Presence::with('officer')
+            ->select('id_period', 'id_officer', 'status')
             ->groupBy('id_period', 'id_officer', 'status')
-            ->whereDoesntHave('officer', function($query)
-            {
-                $query->with('user')->whereHas('user', function($query)
-                {
-                    $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-                });
-            })
             ->get();
+            //COUNT OFFICER FROM PERFORMANCE (INPUT)
+            $count_per = Performance::with('officer')
+            ->select('id_period', 'id_officer', 'status')
+            ->groupBy('id_period', 'id_officer', 'status')
+            ->get();
+
             //PERFORMANCE DATA
             $performances = Performance::get();
             //PRESENCE DATA
@@ -251,26 +240,22 @@ class DashboardController extends Controller
         ->whereDoesntHave('department', function($query)
             {$query->where('name', 'Developer');})
         ->get();
-        $scores = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
+        $scores = Score::with('officer')
+        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
+        {$query->where('is_lead', 'No');})->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
         $periods = Period::get();
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
         $vote_criterias = VoteCriteria::get();
         $check = VoteCheck::select('id_period', 'id_officer')->groupBy('id_period', 'id_officer')->get();
         $vote_check = VoteCheck::get();
-        $latest_best = VoteResult::with('officer', 'period')->latest()->first();
+        $latest_best = HistoryResult::latest()->first();
         $latest_top3 = Score::with('officer', 'period')
         ->whereDoesntHave('period', function($query)
             {$query->where('status', 'Scoring');})
         ->orderBy('final_score', 'DESC')
         ->offset(0)->limit(3)->get();
-        $voteresults = Result::with('officer', 'period')
-        ->orderBy('count', 'DESC')
-        ->whereHas('officer', function ($query) {
-            $query->with('score')
-            ->whereHas('score', function ($query) {$query->orderBy('final_score', 'DESC');});
-        })
-        ->offset(0)->limit(1)->get();
+        $voteresults = HistoryResult::orderBy('final_score', 'DESC')->offset(0)->limit(1)->get();
         $scoreresults = Score::with('officer', 'period')->orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
         //dd($scoreresults);
 

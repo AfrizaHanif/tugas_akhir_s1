@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char('period_name', 20);
             $table->char('id_officer', 11);
             $table->string('officer_name', 50);
+            $table->string('officer_department', 50);
             $table->decimal('final_score', 8, 3);
             $table->timestamps();
         });
