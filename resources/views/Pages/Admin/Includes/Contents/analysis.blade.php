@@ -72,55 +72,135 @@
 @endif
 <!--SAW-->
 @if (Request::is('admin/analysis/saw/*'))
-<div class="accordion" id="accordion">
-    <!--LIST OF INPUTS-->
+@if ($matrix != array_unique($matrix))
+<div class="alert alert-warning" role="alert">
+    Terdapat Hasil Matrix yang memiliki angka duplikat (Dua atau lebih).
+</div>
+@endif
+<!--DETAILS-->
+<div class="accordion" id="accordion-details">
+    <!--OFFICERS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="true" aria-controls="collapse-hasil">
-                Hasil Kuesioner
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-officer" aria-expanded="false" aria-controls="collapse-officer">
+                Pegawai Yang Terlibat untuk Analisis
             </button>
         </h2>
-        <div id="collapse-hasil" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+        <div id="collapse-officer" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
             <div class="accordion-body">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
-                            <th scope="col">Nama Alternatif</th>
-                            @foreach ($criterias as $crit)
-                            <th scope="col">
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
-                                {{ $crit->id_sub_criteria }}
-                                </span>
-                            </th>
-                            @endforeach
+                            <th>Kode</th>
+                            <th>Nama Pegawai</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($alternatives as $alt)
+                        @foreach ($officers as $officer)
                         <tr>
-                            <td>
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name ?? '' }}">
-                                    {{ $alt->id_officer }}
-                                </span>
-                            </td>
-                            @if (count($inputs) > 0)
-                                @forelse ($inputs->where('id_officer', $alt->id_officer) as $input)
-                                    <td>{{ $input->input }}</td>
-                                @empty
-                                    <td>0</td>
-                                @endforelse
-                            @endif
+                            <td>{{ $officer->id_officer }}</td>
+                            <td>{{ $officer->name }}</td>
                         </tr>
-                        @empty
-
-                        @endforelse
+                        @endforeach
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="{{count($criterias)+1}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
+                            <td colspan="2">Total Data: <b>{{ count($officers) }}</b> Pegawai</td>
                         </tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+    <!--CRITERIAS-->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-criteria" aria-expanded="false" aria-controls="collapse-criteria">
+                Kriteria Yang Terlibat untuk Analisis
+            </button>
+        </h2>
+        <div id="collapse-criteria" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
+            <div class="accordion-body">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>Kode</th>
+                            <th>Nama Kriteria</th>
+                            <th>Nama Sub Kriteria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($subcriterias as $subcriteria)
+                        <tr>
+                            <td>{{ $subcriteria->id_sub_criteria }}</td>
+                            <td>{{ $subcriteria->criteria->name }}</td>
+                            <td>{{ $subcriteria->name }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="table-group-divider table-secondary">
+                        <tr>
+                            <td colspan="3">Total Data: <b>{{ count($subcriterias) }}</b> Sub Kriteria</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<!--ANALYSIS RESULT-->
+<div class="accordion" id="accordion">
+    <!--LIST OF INPUTS-->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="true" aria-controls="collapse-hasil">
+                Hasil Kuesioner
+            </button>
+        </h2>
+        <div id="collapse-hasil" class="accordion-collapse collapse" data-bs-parent="#accordion">
+            <div class="accordion-body">
+                    <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th scope="col"></th>
+                                @foreach ($criterias as $crit)
+                                <th scope="col">
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                    {{ $crit->id_sub_criteria }}
+                                    </span>
+                                </th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($alternatives as $alt)
+                            <tr>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name ?? '' }}">
+                                        {{ $alt->id_officer }}
+                                    </span>
+                                </td>
+                                @if (count($inputs) > 0)
+                                    @forelse ($inputs->where('id_officer', $alt->id_officer) as $input)
+                                        <td>{{ $input->input }}</td>
+                                    @empty
+                                        <td>0</td>
+                                    @endforelse
+                                @endif
+                            </tr>
+                            @empty
+
+                            @endforelse
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="{{count($criterias)+1}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -137,7 +217,7 @@
                     <table class="table table-hover table-bordered">
                         <thead>
                             <tr class="table-primary">
-                                <th scope="col">Alternatif / Kriteria</th>
+                                <th scope="col"></th>
                                 @foreach ($criterias as $crit)
                                 <th scope="col">
                                     <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
@@ -145,6 +225,12 @@
                                     </span>
                                 </th>
                                 @endforeach
+                                <tr class="table-secondary">
+                                    <th scope="col">Atribut</th>
+                                    @foreach ($subcriterias as $subcriteria)
+                                    <th>{{ $subcriteria->attribute }}</th>
+                                    @endforeach
+                                </tr>
                             </tr>
                         </thead>
                         <tbody>
@@ -277,55 +363,135 @@
 </div>
 <!--WP-->
 @elseif (Request::is('admin/analysis/wp/*'))
-<div class="accordion" id="accordion">
-    <!--LIST OF INPUTS-->
+@if ($v != array_unique($v))
+<div class="alert alert-warning" role="alert">
+    Terdapat Hasil V yang memiliki angka duplikat (Dua atau lebih).
+</div>
+@endif
+<!--DETAILS-->
+<div class="accordion" id="accordion-details">
+    <!--OFFICERS-->
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="true" aria-controls="collapse-hasil">
-                Hasil Kuesioner
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-officer" aria-expanded="false" aria-controls="collapse-officer">
+                Pegawai Yang Terlibat untuk Analisis
             </button>
         </h2>
-        <div id="collapse-hasil" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+        <div id="collapse-officer" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
             <div class="accordion-body">
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
-                            <th scope="col">Nama Alternatif</th>
-                            @foreach ($criterias as $crit)
-                            <th scope="col">
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
-                                {{ $crit->id_sub_criteria }}
-                                </span>
-                            </th>
-                            @endforeach
+                            <th>Kode</th>
+                            <th>Nama Pegawai</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($alternatives as $alt)
+                        @foreach ($officers as $officer)
                         <tr>
-                            <td>
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name }}">
-                                    {{ $alt->id_officer }}
-                                </span>
-                            </td>
-                            @if (count($inputs) > 0)
-                                @foreach ($inputs->where('id_officer', $alt->id_officer) as $input)
-                                <td>
-                                    {{ $input->input }}
-                                </td>
-                                @endforeach
-                            @endif
+                            <td>{{ $officer->id_officer }}</td>
+                            <td>{{ $officer->name }}</td>
                         </tr>
-                        @empty
-
-                        @endforelse
+                        @endforeach
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="{{count($criterias)+1}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
+                            <td colspan="2">Total Data: <b>{{ count($officers) }}</b> Pegawai</td>
                         </tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+    <!--CRITERIAS-->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-criteria" aria-expanded="false" aria-controls="collapse-criteria">
+                Kriteria Yang Terlibat untuk Analisis
+            </button>
+        </h2>
+        <div id="collapse-criteria" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
+            <div class="accordion-body">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>Kode</th>
+                            <th>Nama Kriteria</th>
+                            <th>Nama Sub Kriteria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($subcriterias as $subcriteria)
+                        <tr>
+                            <td>{{ $subcriteria->id_sub_criteria }}</td>
+                            <td>{{ $subcriteria->criteria->name }}</td>
+                            <td>{{ $subcriteria->name }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="table-group-divider table-secondary">
+                        <tr>
+                            <td colspan="3">Total Data: <b>{{ count($subcriterias) }}</b> Sub Kriteria</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<!--ANALYSIS RESULT-->
+<div class="accordion" id="accordion">
+    <!--LIST OF INPUTS-->
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-hasil" aria-expanded="false" aria-controls="collapse-hasil">
+                Hasil Kuesioner
+            </button>
+        </h2>
+        <div id="collapse-hasil" class="accordion-collapse collapse" data-bs-parent="#accordion">
+            <div class="accordion-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th scope="col"></th>
+                                @foreach ($criterias as $crit)
+                                <th scope="col">
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                    {{ $crit->id_sub_criteria }}
+                                    </span>
+                                </th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($alternatives as $alt)
+                            <tr>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name }}">
+                                        {{ $alt->id_officer }}
+                                    </span>
+                                </td>
+                                @if (count($inputs) > 0)
+                                    @foreach ($inputs->where('id_officer', $alt->id_officer) as $input)
+                                    <td>
+                                        {{ $input->input }}
+                                    </td>
+                                    @endforeach
+                                @endif
+                            </tr>
+                            @empty
+
+                            @endforelse
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="{{count($criterias)+1}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -338,47 +504,49 @@
         </h2>
         <div id="collapse-hitung" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr class="table-primary">
-                            <th scope="col"></th>
-                            @foreach ($criterias as $crit)
-                            <th scope="col">
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
-                                    {{ $crit->id_sub_criteria }}
-                                </span>
-                            </th>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th scope="col"></th>
+                                @foreach ($criterias as $crit)
+                                <th scope="col">
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $subcriterias->where('id_sub_criteria', $crit->id_sub_criteria)->first()->name }}">
+                                        {{ $crit->id_sub_criteria }}
+                                    </span>
+                                </th>
+                                @endforeach
+                                <th rowspan="3">S</th>
+                                <th rowspan="3">V</th>
+                            </tr>
+                            <tr>
+                                <th scope="col">Bobot (%)</th>
+                                @foreach ($criterias as $crit)
+                                <th>{{ $crit->weight * 100 }}%</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($v_hasil as $sqrt1 => $valsqrt1)
+                            <tr>
+                                <td>
+                                    <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $sqrt1)->first()->name }}">
+                                    {{ $sqrt1 }}
+                                    </span>
+                                </td>
+                                @foreach ($valsqrt1 as $sqrt2 => $valsqrt2)
+                                <td>{{ number_format($valsqrt2,3) }}</td>
+                                @endforeach
+                            </tr>
                             @endforeach
-                            <th rowspan="3">S</th>
-                            <th rowspan="3">V</th>
-                        </tr>
-                        <tr>
-                            <th scope="col">Bobot (%)</th>
-                            @foreach ($criterias as $crit)
-                            <th>{{ $crit->weight * 100 }}%</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($v_hasil as $sqrt1 => $valsqrt1)
-                        <tr>
-                            <td>
-                                <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $sqrt1)->first()->name }}">
-                                {{ $sqrt1 }}
-                                </span>
-                            </td>
-                            @foreach ($valsqrt1 as $sqrt2 => $valsqrt2)
-                            <td>{{ number_format($valsqrt2,3) }}</td>
-                            @endforeach
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="table-group-divider table-secondary">
-                        <tr>
-                            <td colspan="{{count($criterias)+3}}">Total Bobot: <b>{{ round((float)$criterias->sum('weight') * 100 ) }}%</b> dari <b>{{ count($alternatives) }}</b> Data</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="{{count($criterias)+3}}">Total Bobot: <b>{{ round((float)$criterias->sum('weight') * 100 ) }}%</b> dari <b>{{ count($alternatives) }}</b> Data</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -391,32 +559,34 @@
         </h2>
         <div id="collapse-rank" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr class="table-primary">
-                            <th scope="col">Nama Alternatif</th>
-                            <th scope="col">V</th>
-                            <th scope="col">Rank</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $no = 1;@endphp
-                        @foreach ($v as $sqrt1 => $valsqrt1)
-                        <tr>
-                            <th scope="row">
-                                {{$officers->where('id_officer', $sqrt1)->first()->name}} ({{ $sqrt1 }})
-                            </th>
-                            <td>{{ number_format($valsqrt1,3) }}</td>
-                            <td>{{ $no++ }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="table-group-divider table-secondary">
-                        <tr>
-                            <td colspan="{{count($criterias)+4}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th scope="col">Nama Alternatif</th>
+                                <th scope="col">V</th>
+                                <th scope="col">Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $no = 1;@endphp
+                            @foreach ($v as $sqrt1 => $valsqrt1)
+                            <tr>
+                                <th scope="row">
+                                    {{$officers->where('id_officer', $sqrt1)->first()->name}} ({{ $sqrt1 }})
+                                </th>
+                                <td>{{ number_format($valsqrt1,3) }}</td>
+                                <td>{{ $no++ }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot class="table-group-divider table-secondary">
+                            <tr>
+                                <td colspan="{{count($criterias)+4}}">Total Data: <b>{{ count($alternatives) }}</b> Data</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

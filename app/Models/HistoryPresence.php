@@ -16,8 +16,14 @@ class HistoryPresence extends Model
         'period_name',
         'id_officer',
         'officer_name',
+        'officer_department',
+        'id_criteria',
+        'criteria_name',
         'id_sub_criteria',
         'sub_criteria_name',
+        'weight',
+        'attribute',
+        'is_lead',
         'input',
     ];
 }

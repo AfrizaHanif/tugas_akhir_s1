@@ -30,8 +30,8 @@ return new class extends Migration
             $table->string('religion', 10);
             //$table->unsignedBigInteger('id_user')->nullable();
             //$table->foreign('id_user')->references('id')->on('users');
+            $table->char('is_lead', 10);
             $table->string('photo', 300)->nullable();
-            //$table->char('leader', 10);
             $table->timestamps();
         });
     }

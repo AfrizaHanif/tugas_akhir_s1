@@ -46,10 +46,10 @@ class PerformanceController extends Controller
             $officers = Officer::with('department', 'user')
             ->whereHas('user', function($query)
             {
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+                $query->whereIn('part', ['KBU', 'KTT']);
             })
             ->whereDoesntHave('department', function($query)
-            {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
+            {$query->where('name', 'Developer');})
             ->get();
         }
         $performances = Performance::get();
@@ -57,7 +57,7 @@ class PerformanceController extends Controller
         $status = Performance::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
+        $history_per = HistoryPerformance::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
@@ -80,8 +80,13 @@ class PerformanceController extends Controller
         ->count();
         $historyprs = HistoryPresence::get();
         $historyprf = HistoryPerformance::get();
+        $hofficer = HistoryPerformance::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
+        $hcriteria = HistoryPresence::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name'))->get();
+        $hallsub = HistoryPresence::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name'))->get();
+        $hsubprs = HistoryPresence::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
+        $hsubprf = HistoryPerformance::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
 
-        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf'));
+        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf', 'hofficer', 'hcriteria', 'hallsub', 'hsubprs', 'hsubprf'));
     }
 
     /**

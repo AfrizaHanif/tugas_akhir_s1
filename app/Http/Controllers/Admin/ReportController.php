@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
 use App\Models\Department;
+use App\Models\HistoryPerformance;
+use App\Models\HistoryPresence;
+use App\Models\HistoryScore;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Performance;
@@ -20,7 +23,7 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
         $officers = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
@@ -128,45 +131,37 @@ class ReportController extends Controller
 
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = SubCriteria::with('criteria')->get();
-        $officers = Officer::with('department', 'user')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
-        ->get();
+        $officers = HistoryPerformance::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('is_lead', 'No')->get();
 
-        $first_alt = Performance::with('subcriteria', 'officer')
-        ->select('id_officer')
+        $first_alt = HistoryPerformance::select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->whereHas('subcriteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            });
-        });
-        $last_alt = Presence::with('subcriteria')
-        ->select('id_officer')
+        ->where('is_lead', 'No');
+        $last_alt = HistoryPresence::select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->whereHas('subcriteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            });
-        })
+        ->where('is_lead', 'No')
         ->union($first_alt)
         ->getQuery()->get();
         $alternatives = $last_alt;
 
-        $first_cri = DB::table("performances")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')
+        $first_cri = DB::table("history_performances")
         ->select(
-            'performances.id_sub_criteria AS id_sub_criteria',
-            'sub_criterias.weight AS weight',
-            'sub_criterias.attribute AS attribute',
+            'id_sub_criteria',
+            'weight',
+            'attribute',
+            )
+        ->groupBy(
+            'id_sub_criteria',
+            'weight',
+            'attribute'
+            )
+        ->where('id_period', $period);
+        $last_cri = DB::table("history_presences")
+        ->select(
+            'id_sub_criteria',
+            'weight',
+            'attribute',
             )
         ->groupBy(
             'id_sub_criteria',
@@ -174,46 +169,14 @@ class ReportController extends Controller
             'attribute'
             )
         ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya');
-        $last_cri = DB::table("presences")
-        ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'presences.id_sub_criteria')
-        ->select(
-            'presences.id_sub_criteria AS id_sub_criteria',
-            'sub_criterias.weight AS weight',
-            'sub_criterias.attribute AS attribute',
-            )
-        ->groupBy(
-            'id_sub_criteria',
-            'weight',
-            'attribute'
-            )
-        ->where('id_period', $period)
-        ->where('sub_criterias.need', 'Ya')
         ->union($first_cri)
         ->get();
         $criterias = $last_cri;
         //$criterias = SubCriteria::get();
 
-        $first_inp = Performance::with('subcriteria', 'officer')
-        ->where('id_period', $period)
-        ->whereHas('subcriteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            });
-        });
-        $last_inp = Presence::with('subcriteria')
-        ->where('id_period', $period)
-        ->whereHas('subcriteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
-            });
-        })
+        $first_inp = HistoryPerformance::where('id_period', $period)->where('is_lead', 'No');
+        $last_inp = HistoryPresence::where('id_period', $period)
+        ->where('is_lead', 'No')
         ->union($first_inp)
         ->getQuery()->get();
         $inputs = $last_inp;
@@ -239,7 +202,16 @@ class ReportController extends Controller
                     if($value2->attribute == 'Benefit'){
                         $normal[$value1->id_officer][$value2->id_sub_criteria] = $value1->input / (max($minmax[$value2->id_sub_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
-                        $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
+                        if(min($minmax[$value2->id_sub_criteria]) == 0){
+                            if($value1->input == 0){
+                                $normal[$value1->id_officer][$value2->id_sub_criteria] = 0.5 / 0.5;
+                            }else{
+                                $normal[$value1->id_officer][$value2->id_sub_criteria] = 0.5 / ($value1->input ?: 1);
+                            }
+                        }else{
+                            $normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / ($value1->input ?: 1);
+                        }
+                        //$normal[$value1->id_officer][$value2->id_sub_criteria] = (min($minmax[$value2->id_sub_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }

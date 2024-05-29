@@ -13,7 +13,7 @@
         @foreach ($officers as $officer)
         <tr>
             <td>{{ $officer->id_officer }}</td>
-            <td>{{ $officer->name }}</td>
+            <td>{{ $officer->officer_name }}</td>
         </tr>
         @endforeach
     </tbody>
@@ -132,7 +132,7 @@
         @php $no = 1;@endphp
         @foreach ($matrix as $sqrt1 => $valsqrt1)
         <tr>
-            <th scope="row">{{$officers->where('id_officer', $sqrt1)->first()->name ?? ''}} ({{ $sqrt1 }})</th>
+            <th scope="row">{{$officers->where('id_officer', $sqrt1)->first()->officer_name ?? ''}} ({{ $sqrt1 }})</th>
             <td>{{ number_format($valsqrt1,3) }}</td>
             <td>{{ $no++ }}</td>
         </tr>

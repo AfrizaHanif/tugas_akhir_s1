@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HistoryVote;
+use App\Models\HistoryVoteCheck;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -16,21 +18,9 @@ class VoteController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $latest_per = Period::where('status', 'Voting')->latest()->first();
 
-        if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods', 'latest_per'));
-        }else{
-            return view('Pages.Officer.vote', compact('periods', 'latest_per'));
-        }
-    }
-
-    public function vote($period)
-    {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
-        $prd_select = Period::where('id_period', $period)->orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->first();
-        //dd($prd_select);
         $criterias = VoteCriteria::get();
         $votes = Vote::with('officer')
         ->whereNot('id_officer', Auth::user()->officer->id_officer)
@@ -39,7 +29,6 @@ class VoteController extends Controller
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
-        $latest_per = Period::Where('status', 'Voting')->latest()->first();
 
         if(Auth::user()->part == 'KBU'){
             $fil_offs = Officer::with('department')
@@ -74,9 +63,27 @@ class VoteController extends Controller
         }
 
         if(Auth::user()->part != "Pegawai"){
-            return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest_per'));
+            return view('Pages.Admin.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'latest_per'));
         }else{
-            return view('Pages.Officer.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'prd_select', 'latest_per'));
+            return view('Pages.Officer.vote', compact('periods', 'votes', 'officers', 'checks', 'fil_offs', 'criterias', 'latest_per'));
+        }
+    }
+
+    public function history($period)
+    {
+        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        //$prd_select = Period::where('id_period', $period)->orderBy('id_period', 'ASC')->where('status', 'Finished')->first();
+        $prd_select = HistoryVote::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->first();
+        //dd($prd_select);
+
+        $hcriterias = HistoryVote::select('id_vote_criteria', 'vote_criteria_name')->groupBy('id_vote_criteria', 'vote_criteria_name')->get();
+        $hvotes = HistoryVote::get();
+        $hchecks = HistoryVoteCheck::get();
+
+        if(Auth::user()->part != "Pegawai"){
+            return view('Pages.Admin.vote', compact('periods', 'hvotes', 'hchecks', 'hcriterias', 'prd_select'));
+        }else{
+            return view('Pages.Officer.vote', compact('periods', 'hvotes', 'hchecks', 'hcriterias', 'prd_select'));
         }
     }
 
@@ -112,9 +119,9 @@ class VoteController extends Controller
 
         //RETURN TO VIEW
         if(Auth::user()->part != "Pegawai"){
-            return redirect()->route('admin.inputs.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
+            return redirect()->route('admin.inputs.votes.index', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
         }else{
-            return redirect()->route('officer.votes.vote', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
+            return redirect()->route('officer.votes.index', $period)->withInput(['tab_redirect'=>'pills-'.$redirect])->with('success','Voting Berhasil');
         }
     }
 }

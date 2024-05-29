@@ -16,6 +16,8 @@ class HistoryVote extends Model
         'period_name',
         'id_officer',
         'officer_name',
+        'officer_department',
+        'officer_photo',
         'id_vote_criteria',
         'vote_criteria_name',
         'votes',

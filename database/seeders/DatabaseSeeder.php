@@ -150,6 +150,7 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             //'id_user' => '1',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -161,6 +162,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -172,6 +174,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -183,6 +186,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -194,6 +198,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -205,6 +210,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -216,6 +222,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -227,6 +234,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -238,6 +246,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -249,6 +258,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -260,6 +270,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
+            'is_lead' => 'No',
         ]);
 
         //USERS: Pengguna

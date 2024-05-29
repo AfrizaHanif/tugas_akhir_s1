@@ -29,9 +29,10 @@ class PresenceController extends Controller
             $query->where('name', 'Developer');
         })
         ->whereDoesntHave('user', function($query){
-            $query->whereIn('part', ['KBU', 'KTT', 'KBPS']);
+            $query->whereIn('part', ['KBPS']);
         })
         ->get();
+        /*
         $leaders = Officer::with('department', 'user')
         ->whereDoesntHave('department', function($query){
             $query->where('name', 'Developer');
@@ -40,12 +41,13 @@ class PresenceController extends Controller
             $query->whereIn('part', ['KBU', 'KTT']);
         })
         ->get();
+        */
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
+        $history_per = HistoryPresence::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
         $criterias = Criteria::with('subcriteria')->get();
         $allsubcriterias = SubCriteria::with('criteria')->get();
         $subcriterias = SubCriteria::with('criteria')
@@ -68,8 +70,13 @@ class PresenceController extends Controller
         ->count();
         $historyprs = HistoryPresence::get();
         $historyprf = HistoryPerformance::get();
+        $hofficer = HistoryPresence::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
+        $hcriteria = HistoryPresence::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name'))->get();
+        $hallsub = HistoryPresence::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name'))->get();
+        $hsubprs = HistoryPresence::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
+        $hsubprf = HistoryPerformance::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
 
-        return view('Pages.Admin.input', compact('officers', 'leaders', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf'));
+        return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf', 'hofficer', 'hcriteria', 'hallsub', 'hsubprs', 'hsubprf'));
     }
 
     /**
@@ -99,12 +106,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        $test = User::where('id_officer', $request->id_officer)->first();
-        if(!empty($test) && $test->part != 'Pegawai'){
-            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
-        }else{
-            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
-        }
+        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Tambah Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -144,12 +146,7 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        $test = User::where('id_officer', $request->id_officer)->first();
-        if(!empty($test) && $test->part != 'Pegawai'){
-            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
-        }else{
-            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
-        }
+        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Ubah Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -170,11 +167,6 @@ class PresenceController extends Controller
         }
 
         //RETURN TO VIEW
-        $test = User::where('id_officer', $request->id_officer)->first();
-        if(!empty($test) && $test->part != 'Pegawai'){
-            return redirect()->route('admin.inputs.presences.leaders.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
-        }else{
-            return redirect()->route('admin.inputs.presences.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
-        }
+        return redirect()->route('admin.inputs.presences.index')->withInput(['tab_redirect'=>'pills-'.$request->id_period])->with('success','Hapus Data Kehadiran Berhasil')->with('code_alert', 1);
     }
 }
