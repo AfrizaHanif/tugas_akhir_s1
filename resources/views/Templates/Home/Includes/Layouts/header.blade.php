@@ -23,15 +23,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/scores" class="nav-link {{ (request()->is('scores')) ? 'text-secondary' : 'text-white' }}">
+                        <a href="/eotm" class="nav-link {{ (request()->is('eotm')) ? 'text-secondary' : 'text-white' }}">
                             <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#score"/></svg>
-                            Top 3
+                            Hasil
                         </a>
                     </li>
                     <li>
-                        <a href="/results" class="nav-link {{ (request()->is('results')) ? 'text-secondary' : 'text-white' }}">
+                        <a href="/reports" class="nav-link {{ (request()->is('reports')) ? 'text-secondary' : 'text-white' }}">
                             <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#daftar"/></svg>
-                            Hasil
+                            Laporan
                         </a>
                     </li>
                 </ul>
@@ -51,13 +51,31 @@
             <div class="text-end">
                 @if (Auth::check())
                     @if (Auth::user()->part == "Pegawai")
-                    <a href="/officer" type="button" class="btn btn-light text-dark me-2">Dashboard</a>
+                    <a href="/officer" type="button" class="btn btn-light text-dark me-2">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                    @elseif (Auth::user()->part == "Dev")
+                    <a href="/developer" type="button" class="btn btn-light text-dark me-2">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
                     @else
-                    <a href="/admin" type="button" class="btn btn-light text-dark me-2">Dashboard</a>
+                    <a href="/admin" type="button" class="btn btn-light text-dark me-2">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
                     @endif
-                <button type="button" class="btn me-2 btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modallogout">Logout</button>
+                <button type="button" class="btn me-2 btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modallogout">
+                    <i class="bi bi-door-closed"></i>
+                    Logout
+                </button>
                 @else
-                <a href="/login" type="button" class="btn btn-light text-dark me-2">Login</a>
+                <a href="/login" type="button" class="btn btn-light text-dark me-2">
+                    <i class="bi bi-door-open"></i>
+                    Login
+                </a>
+                <!--<button type="button" class="btn btn-light text-dark me-2" data-bs-toggle="modal" data-bs-target="#modal-idx-login">Login</button>-->
                 @endif
             </div>
         </div>

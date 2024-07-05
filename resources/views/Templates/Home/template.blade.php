@@ -32,6 +32,18 @@
         @include('Templates.Home.Includes.Components.modal')
         <!--MODALS IN EACH PAGES-->
         @yield('modals')
+        <!--TOASTS IN EVERY TEMPLATES-->
+        @include('Templates.Includes.Components.toast')
+        <!--TOASTS IN ADMIN TEMPLATE ONLY-->
+        @include('Templates.Home.Includes.Components.toast')
+        <!--TOASTS IN EACH PAGES-->
+        @yield('toasts')
+        <!--OFFCANVAS IN EVERY TEMPLATES-->
+        @include('Templates.Includes.Components.offcanvas')
+        <!--OFFCANVAS IN ADMIN TEMPLATE ONLY-->
+        @include('Templates.Home.Includes.Components.offcanvas')
+        <!--OFFCANVAS IN EACH PAGES-->
+        @yield('offcanvas')
         <!--FOOTER-->
         @include('Templates.Home.Includes.Layouts.footer')
         <!--SCRIPTS (JS) IN EVERY TEMPLATES-->

@@ -1,39 +1,39 @@
 <h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
 <!--SCORE ANT VOTE ALERT-->
-@if (!empty($latest_per->status))
-    @if ($latest_per->status == 'Scoring')
-    @elseif ($latest_per->status == 'Voting')
-        @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Anda belum melakukan voting pemilihan karyawan terbaik. Silahkan buka halaman <strong>Voting</strong> untuk memilih karyawan.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @elseif ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == count($vote_criterias))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Terima kasih anda telah melakukan voting pemilihan karyawan terbaik. Mohon menunggu pengumuman hasil pemilihan karyawan terbaik.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @else
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Anda telah melakukan voting sebagian. Silahkan melanjutkan voting pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+@if (Auth::user()->part != "Dev")
+    @if (!empty($latest_per->status))
+        @if ($latest_per->status == 'Scoring')
+        @elseif ($latest_per->status == 'Voting')
+            @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Anda belum melakukan voting pemilihan karyawan terbaik. Silahkan buka halaman <strong>Voting</strong> untuk memilih karyawan.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @elseif ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == count($vote_criterias))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Terima kasih anda telah melakukan voting pemilihan karyawan terbaik. Mohon menunggu pengumuman hasil pemilihan karyawan terbaik.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @else
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Anda telah melakukan voting sebagian. Silahkan melanjutkan voting pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
         @endif
     @endif
 @endif
 
-@if (Auth::user()->part != "Pegawai")
-<div class="row align-items-md-stretch">
+@if (Auth::user()->part != "Pegawai" && Auth::user()->part != "Dev")
+<div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
     <!--DATA INPUT COUNTER CARD-->
-    <div class="col-md-4">
-        <div class="card">
+    <div class="col">
+        <div class="card h-100">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-10">
                         @if (Auth::user()->part == "Admin")
-                        <h4 class="card-title">Presensi Terinput</h4>
-                        @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
-                        <h4 class="card-title">Nilai Terinput</h4>
+                        <h4 class="card-title">Data Terinput</h4>
                         @elseif (Auth::user()->part == "KBPS")
                         <h4 class="card-title">Pending Confirm</h4>
                         @endif
@@ -41,9 +41,7 @@
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
                             @if (Auth::user()->part == "Admin")
-                            <h4>{{ count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Not Included'])) }}/{{ count($input_off) ?? '-' }}</h4>
-                            @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
-                            <h4>{{ count($count_per->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}/{{ count($input_off) ?? '-' }}</h4>
+                            <h4>{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Not Included'])) }}/{{ count($input_off) ?? '-' }}</h4>
                             @elseif (Auth::user()->part == "KBPS")
                             <h4>{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) ?? '-' }}/{{ count($input_off) }}</h4>
                             @endif
@@ -56,13 +54,9 @@
             @if (!empty($latest_per->id_period))
                 @if (Auth::user()->part == "Admin")
                 <div class="progress-stacked" style="border-radius: 0px; height: 5px">
-                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Not Included']))*100)/count($input_off) }}%">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Not Included']))*100)/count($input_off) }}%">
                         <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" ></div>
                     </div>
-                </div>
-                @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_per->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="border-radius: 0px; height: 5px">
-                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: {{ (count($count_per->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix']))*100)/count($input_off) }}%"></div>
                 </div>
                 @elseif (Auth::user()->part == "KBPS")
                 <div class="progress-stacked" style="border-radius: 0px; height: 5px">
@@ -93,7 +87,7 @@
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
                             @if (Auth::user()->part == "KBPS")
-                            <a href="{{ route('admin.inputs.scores.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
+                            <a href="{{ route('admin.inputs.validate.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                             @else
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Cek</button>
                             @endif
@@ -106,8 +100,8 @@
         </div>
     </div>
     <!--REJECTED INPUT COUNTER CARD-->
-    <div class="col-md-4">
-        <div class="card">
+    <div class="col">
+        <div class="card h-100">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-10">
@@ -116,7 +110,7 @@
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
                             @if (Auth::user()->part == "Admin")
-                            <h4>{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) ?? '-' }}</h4>
+                            <h4>{{ count($count->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) ?? '-' }}</h4>
                             @elseif (Auth::user()->part == "KBU" || Auth::user()->part == "KTT")
                             <h4>{{ count($count_per->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) ?? '-' }}</h4>
                             @elseif (Auth::user()->part == "KBPS")
@@ -134,13 +128,13 @@
                     <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised'))*100)/count($input_off) }}%">
                         <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
                     </div>
-                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'Need Fix'))*100)/count($input_off) }}%">
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->where('status', 'Need Fix'))*100)/count($input_off) }}%">
                         <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
                     </div>
-                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'In Review')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->where('status', 'In Review'))*100)/count($input_off) }}%;">
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->where('status', 'In Review')) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->where('status', 'In Review'))*100)/count($input_off) }}%;">
                         <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
                     </div>
-                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Final', 'Not Included'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count_pre->where('id_period', $latest_per->id_period)->whereIn('status', ['Final', 'Not Included']))*100)/count($input_off) }}%;">
+                    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Final', 'Not Included'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Final', 'Not Included']))*100)/count($input_off) }}%;">
                         <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
                     </div>
                 </div>
@@ -196,47 +190,25 @@
             </div>
         </div>
     </div>
-    <!--VOTE COUNTER CARD-->
-    <div class="col-md-4">
-        <div class="card">
+    <!--PERIOD STATUS CARD-->
+    <div class="col">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-10">
-                        <h4 class="card-title">Selesai Memilih</h4>
-                    </div>
-                    <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
-                        @if (!empty($latest_per->id_period))
-                        <h4>{{ floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias)) }}/{{ count($vote_officer) }}</h4>
-                        @else
-                        <h4>-/{{ count($vote_officer) }}</h4>
-                        @endif
-                    </div>
-                </div>
+                @if (!empty($latest_per))
+                    @if ($latest_per->status == 'Scoring')
+                    <h4 class="card-title">Status: Aktif</h4>
+                    @endif
+                @else
+                <h4 class="card-title">Status: Belum Aktif</h4>
+                @endif
             </div>
-            @if (!empty($latest_per->id_period))
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias)) }}" aria-valuemin="0" aria-valuemax="{{ count($vote_officer) }}" style="border-radius: 0px; height: 5px">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ (floor(count($vote_check->where('id_period', $latest_per->id_period))/count($vote_criterias))*100)/count($vote_officer) }}%"></div>
-            </div>
-            @else
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="border-radius: 0px; height: 5px">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
-            </div>
-            @endif
             <div class="card-footer text-body-secondary">
                 <div class="row align-items-center">
                     <div class="col-9">
                         Periode: {{ $latest_per->month ?? 'Belum Aktif' }} {{ $latest_per->year ?? '' }}
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                        @if (!empty($latest_per->id_period))
-                            @if ($latest_per->status == 'Voting')
-                            <a href="{{ route('admin.inputs.votes.index', $latest_per->id_period) }}" type="button" class="btn btn-primary btn-sm">Cek</a>
-                            @else
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
-                            @endif
-                        @else
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
-                        @endif
+                        <a href="{{ route('admin.masters.periods.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                     </div>
                 </div>
             </div>
@@ -245,16 +217,17 @@
 </div>
 <br/>
 @endif
-<div class="row align-items-md-stretch">
+@if (Auth::user()->part != "Dev")
+<div class="row row-cols-1 row-cols-md-2 align-items-md-stretch g-4">
     <!--RESULT CARD-->
-    <div class="col-md-6">
+    <div class="col">
         <div id="carousel-results" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators" style="bottom: -20px; filter: invert(100%)">
                 <button type="button" data-bs-target="#carousel-results" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carousel-results" data-bs-slide-to="1" aria-label="Slide 2"></button>
             </div>
             <div class="carousel-inner">
-                <!--VOTE RESULT CARD-->
+                <!--CHOOSEN CARD-->
                 <div class="carousel-item active">
                     <div class="card">
                         <div class="row g-0">
@@ -288,17 +261,17 @@
                         </div>
                     </div>
                 </div>
-                <!--SCORE RESULT CARD-->
+                <!--TOP 3 SCORES CARD-->
                 <div class="carousel-item">
                     <div class="card">
                         <div class="row g-0">
                             <div class="col-auto">
                                 <div class="card-body px-4" style="height:140px">
-                                    <h4 class="card-title">Calon Karyawan Terbaik</h4>
+                                    <h4 class="card-title">Tiga Hasil Akhir Terbaik Saat Ini</h4>
                                     <ol class="card-text">
-                                        @if (!empty($latest_per->id_period))
-                                            @forelse ($latest_top3->where('id_period', $latest_per->id_period) as $latest)
-                                            <li>{{ $latest->officer->name}}</li>
+                                        @if (!empty($history_prd))
+                                            @forelse ($latest_top3->where('id_period', $history_prd->id_period)->take(3) as $latest)
+                                            <li>{{ $latest->officer_name}}</li>
                                             @empty
                                             <p>Belum Ada</p>
                                             @endforelse
@@ -312,15 +285,11 @@
                         <div class="card-footer text-body-secondary">
                             <div class="row align-items-center">
                                 <div class="col-9 px-4">
-                                    Periode: {{ $latest_per->month ?? 'Belum Aktif' }} {{ $latest_per->year ?? '' }}
+                                    Periode: {{ $history_prd->period_name ?? 'Belum Aktif' }}
                                 </div>
                                 <div class="col-3 px-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                                    @if (!empty($latest_per->id_period))
-                                        @if ($latest_per->status == 'Voting')
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-score-{{ $latest_per->id_period }}">Details</button>
-                                        @else
-                                        <button type="button" class="btn btn-secondary btn-sm" disabled>Details</button>
-                                        @endif
+                                    @if (!empty($history_prd))
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-score-{{ $history_prd->id_period }}">Details</button>
                                     @else
                                     <button type="button" class="btn btn-secondary btn-sm" disabled>Details</button>
                                     @endif
@@ -341,7 +310,7 @@
         </div>
     </div>
     <!--INFO CARD-->
-    <div class="col-md-6">
+    <div class="col">
         <div id="carouselExampleIndicators" class="carousel slide carousel-fade">
             <div class="carousel-indicators" style="bottom: -20px;">
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -378,4 +347,5 @@
         </div>
     </div>
 </div>
+@endif
 <br/>

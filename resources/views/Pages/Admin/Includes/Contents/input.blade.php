@@ -1,8 +1,4 @@
-@if (Request::is('admin/inputs/presences*'))
-<h1 class="text-center mb-4">Data Kehadiran Pegawai</h1>
-@elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
-<h1 class="text-center mb-4">Data Prestasi Kerja</h1>
-@endif
+<h1 class="text-center mb-4">Data Input Pegawai</h1>
 @include('Templates.Includes.Components.alert')
 <div class="row g-2">
     <!--SIDEBAR-->
@@ -19,15 +15,9 @@
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <!--PERIODS-->
                 @if (!empty($latest_per))
-                    @if ($latest_per->status == 'Scoring')
-                    <button class="nav-link active text-start" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="true">
-                        <i class="bi bi-hourglass-split"></i> {{ $latest_per->name }}
-                    </button>
-                    @else
-                    <button class="nav-link active text-start" id="pills-complete-tab" data-bs-toggle="pill" data-bs-target="#pills-complete" type="button" role="tab" aria-controls="pills-complete" aria-selected="true">
-                        Not Running
-                    </button>
-                    @endif
+                <button class="nav-link active text-start" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="true">
+                    <i class="bi bi-hourglass-split"></i> {{ $latest_per->name }}
+                </button>
                 @else
                 <button class="nav-link active text-start" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
                     Not Running
@@ -54,112 +44,94 @@
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
-                @if ($latest_per->status == 'Scoring')
-                <div class="tab-pane fade show active" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab" tabindex="0">
-                    <h2>{{ $latest_per->name }}</h2>
-                    <!--MENU-->
-                    <p>
-                        <div class="row g-3 align-items-center pb-0">
-                            <!--DATA CHECKER-->
-                            <div class="col-auto">
-                                <label for="tahun_saw_dl" class="col-form-label">Lihat Data</label>
-                            </div>
-                            <div class="col-auto">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">
-                                        <i class="bi bi-file-spreadsheet"></i>
-                                        Hanya Data Ini
-                                    </a>
-                                    <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $latest_per->id_period }}">
-                                        <i class="bi bi-database"></i>
-                                        Semua Data
-                                    </a>
-                                </div>
+            <div class="tab-pane fade show active" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab" tabindex="0">
+                <h2>{{ $latest_per->name}}</h2>
+                <!--MENU-->
+                <p>
+                    <div class="row g-3 align-items-center pb-0">
+                        <!--IMPORT DATA-->
+                        <div class="col-auto">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">
+                                    <i class="bi bi-file-earmark-arrow-up"></i>
+                                    Import
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                    Export
+                                </button>
                             </div>
                         </div>
-                    </p>
-                    <!--NOTICE-->
-                    @if (Request::is('admin/inputs/kbps/performances'))
-                    <div class="alert alert-info" role="alert">
-                        Pengisian nilai untuk kepemimpinan (Kepala Bagian Umum dan Ketua Tim Teknis) hanya ditujukan untuk kebutuhan rekap dan tidak diikutkan dalam nominasi pemilihan karyawan terbaik.
+                        <!--DATA CHECKER-->
+                        <div class="col-auto">
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">
+                                <i class="bi bi-file-spreadsheet"></i>
+                                Lihat Data
+                            </a>
+                        </div>
+                        <!--DELETE ALL DATA-->
+                        <div class="col-auto">
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}">
+                                <i class="bi bi-trash3"></i>
+                                Hapus Semua Data
+                            </a>
+                        </div>
                     </div>
-                    @endif
-                    @if (count($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')) != 0)
-                    <div class="alert alert-danger" role="alert">
-                        Terdapat nilai yang ditolak oleh Kepala BPS Jawa Timur. Mohon untuk segera melakukan revisi agar dapat diverifikasi ulang.
-                    </div>
-                    @else
-                        @foreach ($periods->where('id_period', $latest_per->id_period) as $period)
-                            @if ($period->status == 'Voting')
-                            <div class="alert alert-success" role="alert">
-                                Proses Penilaian pada periode ini telah selesai. Silahkan melakukan pemilihan karyawan terbaik di halaman Voting
-                            </div>
-                            @endif
-                        @endforeach
-                    @endif
-                    <!--TABLE-->
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr class="table-primary">
-                                <th rowspan="2" class="col-1" scope="col">#</th>
-                                <th rowspan="2" scope="col">Nama</th>
-                                <th rowspan="2" scope="col">Jabatan</th>
-                                <th colspan="2" scope="col">Status</th>
-                                <th rowspan="2" class="col-1" scope="col">Action</th>
-                            </tr>
-                            <tr class="table-primary">
-                                <th>Isi</th>
-                                <th>Valid</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($officers as $officer)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
-                                <td>
-                                    @if (Request::is('admin/inputs/presences'))
-                                        @if ($countsub == 0)
-                                        <span class="badge text-bg-secondary">Kriteria Kosong</span>
-                                        @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
-                                        <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == 0)
-                                        <span class="badge text-bg-danger">Tidak Terisi</span>
-                                        @else
-                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                        @endif
-                                    @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
-                                        @if ($countsub == 0)
-                                        <span class="badge text-bg-secondary">Kriteria Kosong</span>
-                                        @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
-                                        <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == 0)
-                                        <span class="badge text-bg-danger">Tidak Terisi</span>
-                                        @else
-                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                        @endif
-                                    @endif
-                                </td>
+                </p>
+                <!--TABLE-->
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th rowspan="2" class="col-1" scope="col">#</th>
+                            <th rowspan="2" scope="col">Nama</th>
+                            <th rowspan="2" scope="col">Jabatan</th>
+                            <th colspan="2" scope="col">Status</th>
+                            <th rowspan="2" class="col-1" scope="col">Action</th>
+                        </tr>
+                        <tr class="table-primary">
+                            <th>Isi</th>
+                            <th>Valid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($officers as $officer)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $officer->name }}</td>
+                            <td>{{ $officer->department->name }}</td>
+                            <td>
+                                @if ($countsub == 0)
+                                <span class="badge text-bg-secondary">Kriteria Kosong</span>
+                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
+                                <span class="badge text-bg-primary">Terisi Semua</span>
+                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == 0)
+                                <span class="badge text-bg-danger">Tidak Terisi</span>
+                                @else
+                                <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($officer->is_lead == 'No')
                                 @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
-                                    @if ($officer->is_lead == 'No')
-                                        @if ($s->status == 'Pending')
-                                        <td><span class="badge text-bg-primary">Belum Diperiksa</span></td>
-                                        @elseif ($s->status == 'In Review')
-                                        <td><span class="badge text-bg-warning">Dalam Pemeriksaan</span></td>
-                                        @elseif ($s->status == 'Final')
-                                        <td><span class="badge text-bg-success">Hasil Akhir</span></td>
-                                        @elseif ($s->status == 'Need Fix')
-                                        <td><span class="badge text-bg-danger">Perlu Perbaikan</span></td>
-                                        @endif
-                                    @else
-                                    <td><span class="badge text-bg-secondary">Tidak Dihitung</span></td>
+                                    @if ($s->status == 'Pending')
+                                    <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                    @elseif ($s->status == 'In Review')
+                                    <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
+                                    @elseif ($s->status == 'Final')
+                                    <span class="badge text-bg-success">Hasil Akhir</span>
+                                    @elseif ($s->status == 'Need Fix')
+                                    <span class="badge text-bg-danger">Perlu Perbaikan</span>
                                     @endif
                                 @empty
-                                <td><span class="badge text-bg-secondary">Blank</span></td>
+                                <span class="badge text-bg-secondary">Blank</span>
                                 @endforelse
-                                <td>
-                                    <div class="dropdown">
+                                @else
+                                <span class="badge text-bg-secondary">Excluded</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    @if ($officer->is_lead == 'No')
                                         @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
                                             @if ($s->status == 'Pending' || $s->status == 'Need Fix')
                                             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -189,66 +161,48 @@
                                             <i class="bi bi-menu-button-fill"></i>
                                         </button>
                                         @endforelse
-                                        <ul class="dropdown-menu mx-0 shadow w-table-menu">
-                                            <li>
-                                                @if (Request::is('admin/inputs/presences'))
-                                                    @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
-                                                        Lihat Data
-                                                    </a>
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
-                                                        Ubah Data
-                                                    </a>
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
-                                                        Hapus Data
-                                                    </a>
-                                                    @else
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
-                                                        Tambah Data
-                                                    </a>
-                                                    @endif
-                                                @elseif (Request::is('admin/inputs/kbu/performances') || Request::is('admin/inputs/ktt/performances') || Request::is('admin/inputs/kbps/performances'))
-                                                    @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
-                                                        Lihat Data
-                                                    </a>
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
-                                                        Ubah Data
-                                                    </a>
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
-                                                        Hapus Data
-                                                    </a>
-                                                    @else
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
-                                                        Tambah Data
-                                                    </a>
-                                                    @endif
+                                    @else
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut tidak terlibat dalam pemilihan Karyawan Terbaik.">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                            <i class="bi bi-menu-button-fill"></i>
+                                        </button>
+                                    </span>
+                                    @endif
+                                    <ul class="dropdown-menu mx-0 shadow w-table-menu">
+                                        <li>
+                                            @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                                    Lihat Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-preupd-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                                    Ubah Data
+                                                </a>
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                                    Hapus Data
+                                                </a>
+                                                @else
+                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-precre-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
+                                                    Tambah Data
+                                                </a>
                                                 @endif
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                        <tfoot class="table-group-divider table-secondary">
-                            <tr>
-                                <td colspan="10">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                @else
-                <div class="tab-pane fade show active" id="pills-complete" role="tabpanel" aria-labelledby="pills-complete-tab" tabindex="0">
-                    <div class="alert alert-info" role="alert">
-                        Proses penilaian telah selesai pada periode ini. Silahkan melakukan pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
-                    </div>
-                </div>
-                @endif
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                    <tfoot class="table-group-divider table-secondary">
+                        <tr>
+                            <td colspan="10">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
             @else
             <div class="tab-pane fade show active" id="pills-empty" role="tabpanel" aria-labelledby="pills-empty-tab" tabindex="0">
                 <div class="alert alert-danger" role="alert">
@@ -264,21 +218,21 @@
                 <h2>{{ $period->period_name }}</h2>
                 <p>
                     <div class="row g-3 align-items-center">
-                        <!--DATA CHECKER-->
-                        <div class="col-auto">
-                            <label for="tahun_saw_dl" class="col-form-label">Lihat Data</label>
-                        </div>
+                        <!--EXPORT DATA-->
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}">
-                                    <i class="bi bi-file-spreadsheet"></i>
-                                    Hanya Data Ini
-                                </a>
-                                <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $period->id_period }}">
-                                    <i class="bi bi-database"></i>
-                                    Semua Data
-                                </a>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-export-{{ $period->id_period }}">
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                    Export
+                                </button>
                             </div>
+                        </div>
+                        <!--DATA CHECKER-->
+                        <div class="col-auto">
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $period->id_period }}">
+                                <i class="bi bi-file-spreadsheet"></i>
+                                Lihat Data
+                            </a>
                         </div>
                     </div>
                 </p>
@@ -293,7 +247,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($hofficer as $officer)
+                        @forelse ($hofficers as $officer)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->officer_name }}</td>
@@ -312,7 +266,7 @@
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="10">Total Data: <b>{{ $hofficer->count() }}</b> Pegawai</td>
+                            <td colspan="10">Total Data: <b>{{ $hofficers->count() }}</b> Pegawai</td>
                         </tr>
                     </tfoot>
                 </table>

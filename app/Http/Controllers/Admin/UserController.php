@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Officer;
 use App\Models\Part;
+use App\Models\SubTeam;
 use App\Models\User;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -18,9 +21,19 @@ class UserController extends Controller
     public function index()
     {
         $users = User::whereNot('id_user', 'USR-000')->get();
-        $parts = Part::whereNot('name', 'Developer')->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
-        return view('Pages.Admin.user', compact('users', 'officers', 'parts'));
+        //$parts = Part::whereNot('name', 'Developer')->get();
+        $subteams = SubTeam::get();
+        $officers = Officer::with('department', 'subteam_1')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->whereDoesntHave('subteam_1', function($query){
+            $query->with('team')->whereHas('team', function($query){
+                $query->with('part')->whereHas('part', function($query){
+                    $query->where('name', 'Tim Teknis');
+                });
+            });
+        })
+        ->get();
+        return view('Pages.Admin.user', compact('users', 'officers', 'subteams'));
     }
 
     /**
@@ -29,10 +42,19 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //COMBINE KODE
+        /*
         $total_id = User::whereNot('id_user', 'USR-000')->count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
         $id_user = "USR-".$str_id;
+        */
+        $id_user = IdGenerator::generate([
+            'table'=>'users',
+            'field'=>'id_user',
+            'length'=>7,
+            'prefix'=>'USR-',
+            'reset_on_prefix_change'=>true,
+        ]);
 
         //VALIDATE DATA
         /*
@@ -65,7 +87,7 @@ class UserController extends Controller
             'id_user'=>$id_user,
             'username'=>$request->username,
             'email'=>$request->email,
-            'password'=>$request->password,
+            'password'=>Hash::make($request->password),
             'part'=>$request->part,
             'id_officer'=>$request->id_officer,
 		]);
@@ -106,13 +128,22 @@ class UserController extends Controller
         }
 
         //UPDATE DATA
-        $user->update([
-            'username'=>$request->username,
-            'email'=>$request->email,
-            'password'=>$request->password,
-            'part'=>$request->part,
-            'id_officer'=>$request->id_officer,
-		]);
+        if($request->filled('password')) {
+            $user->update([
+                'username'=>$request->username,
+                'email'=>$request->email,
+                'password'=>Hash::make($request->password),
+                'part'=>$request->part,
+                'id_officer'=>$request->id_officer,
+            ]);
+        } else {
+            $user->update([
+                'username'=>$request->username,
+                'email'=>$request->email,
+                'part'=>$request->part,
+                'id_officer'=>$request->id_officer,
+            ]);
+        }
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);

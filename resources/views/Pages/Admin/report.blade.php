@@ -8,12 +8,20 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.report')
+@include('Pages.Includes.Contents.report')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
+@include('Pages.Admin.Includes.Components.Offcanvas.report')
 @endsection
 
 <!--SCRIPTS-->

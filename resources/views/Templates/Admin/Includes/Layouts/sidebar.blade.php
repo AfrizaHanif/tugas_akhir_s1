@@ -43,27 +43,11 @@
                                 Pengguna
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <div class="dropend">
-                                <a class="{{ (request()->is('admin/masters/criterias') || request()->is('admin/masters/vote-criterias')) ? 'nav-link active' : 'nav-link text-white' }} dropdown-toggle" aria-current="page" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#criteria"/></svg>
-                                    Kriteria
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark shadow mx-0 w-sidebar-menu">
-                                    <li>
-                                        <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/masters/criterias/">
-                                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-score"/></svg>
-                                            Untuk Penilaian
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/masters/vote-criterias/">
-                                            <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-vote"/></svg>
-                                            Untuk Pemilihan
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                        <li>
+                            <a href="/admin/masters/criterias" class="{{ (request()->is('admin/masters/criterias')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-score"/></svg>
+                                Kriteria
+                            </a>
                         </li>
                         <li>
                             <a href="/admin/masters/periods" class="{{ (request()->is('admin/masters/periods')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -84,45 +68,19 @@
                     <ul class="list-unstyled fw-normal pb-1 small">
                         @if (Auth::user()->part == "Admin")
                         <li>
-                            <a href="/admin/inputs/presences" class="{{ (request()->is('admin/inputs/presences*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                            <a href="/admin/inputs/data" class="{{ (request()->is('admin/inputs/data*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                 <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
-                                Data Kehadiran
-                            </a>
-                        </li>
-                        @elseif (Auth::user()->part == "KBU")
-                        <li>
-                            <a href="/admin/inputs/kbu/performances" class="{{ (request()->is('admin/inputs/kbu/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                Data Prestasi Kerja
-                            </a>
-                        </li>
-                        @elseif (Auth::user()->part == "KTT")
-                        <li>
-                            <a href="/admin/inputs/ktt/performances" class="{{ (request()->is('admin/inputs/ktt/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                Data Prestasi Kerja
+                                Data Input
                             </a>
                         </li>
                         @elseif (Auth::user()->part == "KBPS")
                         <li>
-                            <a href="/admin/inputs/kbps/performances" class="{{ (request()->is('admin/inputs/kbps/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                Data Prestasi Kerja
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/admin/inputs/scores" class="{{ (request()->is('admin/inputs/scores')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                            <a href="/admin/inputs/validate" class="{{ (request()->is('admin/inputs/validate*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                 <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
-                                Validasi
+                                Validasi Input
                             </a>
                         </li>
                         @endif
-                        <li>
-                            <a href="/admin/inputs/votes" class="{{ (request()->is('admin/inputs/votes*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#vote"/></svg>
-                                Voting
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -172,6 +130,12 @@
                 </a>
             </li>
             <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/messages">
+                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#message"/></svg>
+                    Pesan ke Dev
+                </a>
+            </li>
             <li>
                 <button class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#modallogout">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#logout"/></svg>

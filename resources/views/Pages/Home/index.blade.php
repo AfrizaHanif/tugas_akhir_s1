@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Home.Includes.Components.modal')
+@include('Pages.Home.Includes.Components.Modal.index')
 @endsection
 
 <!--SCRIPTS-->

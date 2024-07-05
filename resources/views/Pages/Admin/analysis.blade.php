@@ -17,7 +17,16 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Admin.Includes.Components.Modals.analysis')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
+@include('Pages.Admin.Includes.Components.Offcanvas.analysis')
 @endsection
 
 <!--SCRIPTS-->

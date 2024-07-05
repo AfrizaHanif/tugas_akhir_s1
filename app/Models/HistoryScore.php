@@ -15,6 +15,7 @@ class HistoryScore extends Model
         'id_period',
         'period_name',
         'id_officer',
+        'officer_nip',
         'officer_name',
         'officer_department',
         'final_score',

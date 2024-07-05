@@ -7,9 +7,6 @@ use App\Models\Result;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\SubCriteria;
-use App\Models\Vote;
-use App\Models\VoteCriteria;
-use App\Models\VoteResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,12 +16,9 @@ class ResultController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $results = Result::with('officer')->orderBy('count', 'DESC')->offset(0)->limit(1)->get();
-        $votes = Vote::get();
-        $votecriterias = VoteCriteria::get();
-        $voteresults = VoteResult::with('officer')->get();
         $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
 
-        return view('Pages.Admin.result', compact('periods', 'results', 'officers', 'votecriterias', 'votes', 'voteresults'));
+        return view('Pages.Admin.result', compact('periods', 'results', 'officers'));
     }
 
     /*
@@ -39,18 +33,18 @@ class ResultController extends Controller
         $performances = Performance::get();
         $presences = Presence::get();
         $status = Presence::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $criterias = Criteria::with('subcriteria')->get();
-        $allsubcriterias = SubCriteria::with('criteria')->get();
-        $subcritprs = SubCriteria::with('criteria')
+        $criterias = Category::with('criteria')->get();
+        $allsubcriterias = Criteria::with('category')->get();
+        $subcritprs = Criteria::with('category')
         ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->get();
-        $subcritprf = SubCriteria::with('criteria')
+        $subcritprf = Criteria::with('category')
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        $countprs = SubCriteria::with('criteria')
+        $countprs = Criteria::with('category')
         ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
         ->count();
-        $countprf = SubCriteria::with('criteria')
+        $countprf = Criteria::with('category')
         ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
         return view('Pages.Admin.result', compact('periods', 'results', 'officers', 'performances', 'presences', 'status', 'criterias', 'allsubcriterias', 'countprs', 'countprf', 'subcritprs', 'subcritprf'));
@@ -59,7 +53,7 @@ class ResultController extends Controller
     public function get($period)
     {
         $periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $subcriterias = SubCriteria::with('criteria')->get();
+        $subcriterias = Criteria::with('category')->get();
         $officers = Officer::with('department', 'part')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('part', function($query){$query->where('name', 'Kepemimpinan')->orWhere('name', 'Kepegawaian');})
@@ -140,7 +134,7 @@ class ResultController extends Controller
         ->union($first_cri)
         ->get();
         $criterias = $last_cri;
-        //$criterias = SubCriteria::get();
+        //$criterias = Criteria::get();
 
         $first_inp = DB::table("performances")
         ->join('sub_criterias', 'sub_criterias.id_sub_criteria', '=', 'performances.id_sub_criteria')

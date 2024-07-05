@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Kriteria untuk Penilaian | Tugas Akhir</title>
+<title>Kriteria | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
@@ -13,7 +13,16 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Admin.Includes.Components.Modals.criteria')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
+@include('Pages.Admin.Includes.Components.Offcanvas.criteria')
 @endsection
 
 <!--SCRIPTS-->

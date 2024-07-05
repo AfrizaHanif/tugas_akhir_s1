@@ -1,7 +1,7 @@
 <h1 style="text-align:center;">Laporan Karyawan Terbaik</h1>
-<p>Periode: {{ $month }} {{ $year }}</p>
+<p>Periode: {{ $periods->period_name  }}</p>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
-<table id="table">
+<table id="table-result">
     <thead>
         <tr>
             <th>#</th>
@@ -13,7 +13,7 @@
         @foreach ($results as $result)
         <tr>
             <th>{{ $loop->iteration }}</th>
-            <td>{{ $result->officer->name }}</td>
+            <td>{{ $result->officer_name }}</td>
             <td>{{ $result->final_score }}</td>
         </tr>
         @endforeach
@@ -24,3 +24,4 @@
         </tr>
     </tfoot>
 </table>
+<p>Jika angka akhir pada ranking pertama sama, maka akan dipilih dengan umur tertua (Senior)</p>

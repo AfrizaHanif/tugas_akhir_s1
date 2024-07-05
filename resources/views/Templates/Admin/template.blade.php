@@ -45,6 +45,12 @@
         @include('Templates.Admin.Includes.Components.modal')
         <!--MODALS IN EACH PAGES-->
         @yield('modals')
+        <!--TOASTS IN EVERY TEMPLATES-->
+        @include('Templates.Includes.Components.toast')
+        <!--TOASTS IN ADMIN TEMPLATE ONLY-->
+        @include('Templates.Admin.Includes.Components.toast')
+        <!--TOASTS IN EACH PAGES-->
+        @yield('toasts')
         <!--OFFCANVAS IN EVERY TEMPLATES-->
         @include('Templates.Includes.Components.offcanvas')
         <!--OFFCANVAS IN ADMIN TEMPLATE ONLY-->

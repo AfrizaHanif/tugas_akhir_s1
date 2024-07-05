@@ -16,13 +16,29 @@ class Criteria extends Model
 
     protected $fillable = [
         'id_criteria',
+        'id_category',
         'name',
-        'type',
+        'weight',
+        'attribute',
+        'level',
+        'max',
+        'need',
+        'source',
     ];
 
-    //CONNECT FROM ANOTHER TABLE
-    public function subcriteria()
+    //CONNECT TO ANOTHER TABLE
+    public function category()
     {
-        return $this->hasMany(SubCriteria::class, 'id_criteria', 'id_criteria');
+        return $this->belongsTo(Category::class, 'id_category', 'id_category');
+    }
+
+    //CONNECT FROM ANOTHER TABLE
+    public function input()
+    {
+        return $this->hasMany(Input::class, 'id_criteria', 'id_criteria');
+    }
+    public function crips()
+    {
+        return $this->hasMany(Crips::class, 'id_criteria', 'id_criteria');
     }
 }

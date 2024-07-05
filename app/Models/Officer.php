@@ -16,11 +16,13 @@ class Officer extends Model
 
     protected $fillable = [
         'id_officer',
-        'nip_bps',
+        //'nip_bps',
         'nip',
         'name',
         'org_code',
         'id_department',
+        'id_sub_team_1',
+        'id_sub_team_2',
         //'id_part',
         'status',
         'last_group',
@@ -29,7 +31,7 @@ class Officer extends Model
         'date_birth',
         'gender',
         'religion',
-        //'id_user',
+        'is_lead',
         'photo',
         //'leader',
     ];
@@ -39,27 +41,19 @@ class Officer extends Model
     {
         return $this->belongsTo(Department::class, 'id_department', 'id_department',);
     }
-    /*
-    public function user()
+    public function subteam_1()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user',);
+        return $this->belongsTo(SubTeam::class, 'id_sub_team_1', 'id_sub_team',);
     }
-    */
-    /*
-    public function part()
+    public function subteam_2()
     {
-        return $this->belongsTo(Part::class, 'id_part', 'id_part');
+        return $this->belongsTo(SubTeam::class, 'id_sub_team_2', 'id_sub_team',);
     }
-    */
 
     //CONNECT FROM ANOTHER TABLE
-    public function presence()
+    public function input()
     {
-        return $this->hasMany(Presence::class, 'id_officer', 'id_officer');
-    }
-    public function performance()
-    {
-        return $this->hasMany(Performance::class, 'id_officer', 'id_officer');
+        return $this->hasMany(Input::class, 'id_officer', 'id_officer');
     }
     public function result()
     {
@@ -69,30 +63,8 @@ class Officer extends Model
     {
         return $this->hasMany(Score::class, 'id_officer', 'id_officer');
     }
-    public function vote()
-    {
-        return $this->hasMany(Vote::class, 'id_officer', 'id_officer');
-    }
-    public function votecheck()
-    {
-        return $this->hasMany(VoteCheck::class, 'id_officer', 'id_officer');
-    }
-    public function voteresult()
-    {
-        return $this->hasMany(VoteResult::class, 'id_officer', 'id_officer');
-    }
     public function user()
     {
         return $this->hasMany(User::class, 'id_officer', 'id_officer',);
-    }
-
-    //BETA
-    public function betapresence()
-    {
-        return $this->hasMany(BetaPresence::class, 'id_officer', 'id_officer');
-    }
-    public function betaperformance()
-    {
-        return $this->hasMany(BetaPerformance::class, 'id_officer', 'id_officer');
     }
 }

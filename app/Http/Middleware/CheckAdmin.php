@@ -16,7 +16,7 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->part != "Pegawai") {
+        if (Auth::check() && Auth::user()->part != "Pegawai" && Auth::user()->part != "Dev") {
             return $next($request);
         }
 

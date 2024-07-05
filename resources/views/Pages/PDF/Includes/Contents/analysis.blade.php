@@ -1,8 +1,8 @@
 <h1 style="text-align:center;">Laporan Analisis SAW</h1>
-<p>Periode: {{ $month }} {{ $year }}</p>
+<p>Periode: {{ $periods->period_name }}</p>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
-<h2>Pegawai</h2>
-<table id="table">
+<h2>Pegawai yang Terlibat</h2>
+<table id="table-analysis">
     <thead>
         <tr>
             <th>Kode</th>
@@ -23,13 +23,35 @@
         </tr>
     </tfoot>
 </table>
+<h2>Kriteria yang terlibat</h2>
+<table id="table-analysis">
+    <thead>
+        <tr>
+            <th>Kode</th>
+            <th>Nama Pegawai</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($subcriterias as $subcriteria)
+        <tr>
+            <td>{{ $subcriteria->id_criteria }}</td>
+            <td>{{ $subcriteria->criteria_name }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2">Total Data: <b>{{ count($subcriterias) }}</b> Kriteria</td>
+        </tr>
+    </tfoot>
+</table>
 <h2>Hasil Kuesioner</h2>
-<table id="table">
+<table id="table-analysis">
     <thead>
         <tr>
             <th scope="col"></th>
             @foreach ($criterias as $crit)
-            <th scope="col">{{ $crit->id_sub_criteria }}</th>
+            <th scope="col">{{ $crit->id_criteria }}</th>
             @endforeach
         </tr>
     </thead>
@@ -56,12 +78,12 @@
     </tfoot>
 </table>
 <h2>Normalisasi</h2>
-<table id="table">
+<table id="table-analysis">
     <thead>
         <tr class="table-primary">
             <th scope="col"></th>
             @foreach ($criterias as $crit)
-            <th scope="col">{{ $crit->id_sub_criteria }}</th>
+            <th scope="col">{{ $crit->id_criteria }}</th>
             @endforeach
         </tr>
     </thead>
@@ -86,12 +108,12 @@
     </tfoot>
 </table>
 <h2>Matrix</h2>
-<table id="table">
+<table id="table-analysis">
     <thead>
         <tr class="table-primary">
             <th scope="col"></th>
             @foreach ($criterias as $crit)
-            <th scope="col">{{ $crit->id_sub_criteria }}</th>
+            <th scope="col">{{ $crit->id_criteria }}</th>
             @endforeach
             <th rowspan="2">Matrix</th>
         </tr>
@@ -120,7 +142,7 @@
     </tfoot>
 </table>
 <h2>Ranking</h2>
-<table id="table">
+<table id="table-analysis">
     <thead>
         <tr class="table-primary">
             <th scope="col">Nama Alternatif</th>

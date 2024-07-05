@@ -12,3 +12,4 @@
 <link rel="stylesheet" href="{{asset('Sources/CSS/bootstrap.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/dropdown.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/carousel-overlay.css')}}">
+<link rel="stylesheet" href="{{asset('Sources/CSS/modal.css')}}">

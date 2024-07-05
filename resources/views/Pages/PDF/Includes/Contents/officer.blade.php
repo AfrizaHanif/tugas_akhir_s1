@@ -2,24 +2,26 @@
 <p>Tanggal Pembaharuan: {{ now() }}</p>
 @foreach ($parts as $part)
 <h2>{{ $part->name }}</h2>
-    @foreach ($departments->where('id_part', $part->id_part) as $department)
-        @if (count($officers->where('id_department', $department->id_department)) !=0)
-        <h3>{{ $department->name }}</h3>
-        <table id="table">
+    @foreach ($teams->where('id_part', $part->id_part) as $team)
+        @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+        @if (count($officers->where('id_sub_team_1', $subteam->id_sub_team)) != 0)
+        <h3>{{ $team->name }}</h3>
+        <h4>{{ $subteam->name }}</h4>
+        <table id="table-officer">
             <thead>
                 <tr>
                     <th scope="col">Kode</th>
                     <th scope="col">Nama</th>
-                    <th scope="col">Jabatan</th>
+                    <th scope="col">Tim Cadangan</th>
                     <th scope="col">Jenis Kelamin</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($officers->where('id_department', $department->id_department) as $officer)
+                @forelse ($officers->where('id_sub_team_1', $subteam->id_sub_team) as $officer)
                 <tr>
                     <td>{{ $officer->id_officer }}</td>
                     <td>{{ $officer->name }}</td>
-                    <td>{{ $officer->department->name }}</td>
+                    <td>{{ $officer->subteam_2->name ?? 'Tidak Ada'}}</td>
                     <td>{{ $officer->gender }}</td>
                 </tr>
                 @empty
@@ -30,10 +32,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4">Total Data: <b>{{ $officers->where('id_department', $department->id_department)->count() }}</b> Pegawai dari Jabatan {{ $department->name }} di Bagian {{ $part->name }}</td>
+                    <td colspan="4">Total Data: <b>{{ $officers->where('id_sub_team_1', $subteam->id_sub_team)->count() }}</b> Pegawai</td>
                 </tr>
             </tfoot>
         </table>
         @endif
+        @endforeach
     @endforeach
 @endforeach

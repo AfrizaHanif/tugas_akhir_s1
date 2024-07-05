@@ -13,7 +13,16 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Admin.Includes.Components.Modals.period')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
+@include('Pages.Admin.Includes.Components.Offcanvas.period')
 @endsection
 
 <!--SCRIPTS-->

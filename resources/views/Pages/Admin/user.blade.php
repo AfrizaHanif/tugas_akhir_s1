@@ -8,12 +8,21 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Admin.Includes.Contents.user')
+@include('Pages.Includes.Contents.user')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.modal')
+@include('Pages.Includes.Components.Modals.user')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
+@include('Pages.Includes.Components.Offcanvas.user')
 @endsection
 
 <!--SCRIPTS-->

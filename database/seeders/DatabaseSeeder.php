@@ -23,141 +23,272 @@ class DatabaseSeeder extends Seeder
         //PARTS: Kategori Bagian
         DB::table('parts')->insert([
             'id_part' => 'PRT-000',
-            'name' => 'Developer',
+            'name' => 'Lain-Lain',
         ]);
 
+        /*
         DB::table('parts')->insert([
             'id_part' => 'PRT-001',
             'name' => 'Kepemimpinan',
         ]);
+        */
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-002',
+            'id_part' => 'PRT-001',
             'name' => 'Bagian Umum',
         ]);
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-003',
+            'id_part' => 'PRT-002',
             'name' => 'Tim Teknis',
         ]);
 
         //DEPARTMENTS: Jabatan
         DB::table('departments')->insert([
             'id_department' => 'DPT-000',
-            'id_part' => 'PRT-000',
+            //'id_part' => 'PRT-000',
             'name' => 'Developer',
             //'part' => 'Developer',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-001',
-            'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-001',
             'name' => 'Kepala BPS Jawa Timur',
             //'part' => 'Kepala BPS',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-002',
-            'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-002',
             'name' => 'Kepala Bagian Umum',
             //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-003',
-            'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-002',
             'name' => 'Pranata Keuangan APBN Penyelia',
             //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-004',
-            'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-002',
             'name' => 'Analis Kepegawaian Ahli Muda ',
             //'part' => 'Bagian Umum',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-005',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Pertama',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-006',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-007',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-008',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Utama',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-009',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Pertama',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-010',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-011',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('departments')->insert([
             'id_department' => 'DPT-012',
-            'id_part' => 'PRT-003',
+            //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Utama',
             //'part' => 'Tim Teknis',
+        ]);
+
+        //TEAMS: Tim Fungsi
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-000', //TIM-000-xxx
+            'id_part' => 'PRT-000',
+            'name' => 'Tidak Ada',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-001',
+            'id_part' => 'PRT-001',
+            'name' => 'Umum',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-002',
+            'id_part' => 'PRT-002',
+            'name' => 'IPDS',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-003',
+            'id_part' => 'PRT-002',
+            'name' => 'Diseminasi',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-004',
+            'id_part' => 'PRT-002',
+            'name' => 'Sosial',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-005',
+            'id_part' => 'PRT-002',
+            'name' => 'Produksi',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-006',
+            'id_part' => 'PRT-002',
+            'name' => 'Distribusi',
+        ]);
+
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-007',
+            'id_part' => 'PRT-002',
+            'name' => 'Nerwilis',
+        ]);
+
+        //SUB TEAMS: Pecahan Tim
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-000',
+            'id_team' => 'TIM-000',
+            'name' => 'Lain-Lain',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-001',
+            'id_team' => 'TIM-001',
+            'name' => 'Umum',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-002',
+            'id_team' => 'TIM-002',
+            'name' => 'Pengolahan Data',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-003',
+            'id_team' => 'TIM-002',
+            'name' => 'Jaringan',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-004',
+            'id_team' => 'TIM-002',
+            'name' => 'ZI dan SDI',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-005',
+            'id_team' => 'TIM-003',
+            'name' => 'Humas dan Postat',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-006',
+            'id_team' => 'TIM-004',
+            'name' => 'Susenas dan Sakerduk',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-007',
+            'id_team' => 'TIM-004',
+            'name' => 'Hansos dan Descan',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-008',
+            'id_team' => 'TIM-005',
+            'name' => 'Pertanian',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-009',
+            'id_team' => 'TIM-005',
+            'name' => 'Industri dan PEK',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-010',
+            'id_team' => 'TIM-006',
+            'name' => 'Distribusi dan Jasa',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-011',
+            'id_team' => 'TIM-006',
+            'name' => 'Harga',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-012',
+            'id_team' => 'TIM-007',
+            'name' => 'Neraca Produksi dan Konsuksi',
+        ]);
+
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-013',
+            'id_team' => 'TIM-007',
+            'name' => 'Analisis dan IPS',
         ]);
 
         //OFFICERS: Pegawai
         DB::table('officers')->insert([
             'id_officer' => 'OFF-000',
-            //'nip_bps' => '000000000',
-            //'nip' => '000000000',
+            'nip' => '000000000',
             'name' => 'Muhammad Afriza Hanif',
-            //'org_code' => '00000',
             'id_department' => 'DPT-000',
-            //'id_part' => 'PRT-000',
-            //'status' => 'PNS',
-            //'last_group' => 'I/a', //Golongan Akhir
-            //'last_education' => 'S1',
+            'id_sub_team_1' => 'STM-000',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            //'id_user' => '1',
             'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-001',
+            'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_department' => 'DPT-001',
-            //'id_part' => 'PRT-001',
+            'id_sub_team_1' => 'STM-000',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -167,21 +298,24 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
+            'nip' => '050064228',
             'name' => 'Nurhayati, SE',
             'id_department' => 'DPT-004',
-            //'id_part' => 'PRT-002',
+            'id_sub_team_1' => 'STM-001',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-003',
+            'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_department' => 'DPT-002',
-            //'id_part' => 'PRT-001',
+            'id_sub_team_1' => 'STM-001',
+            'id_sub_team_2' => 'STM-007',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -191,9 +325,10 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-004',
-            'name' => 'Ika Widiati Nugraheny, A.Md',
+            'nip' => '340056728',
+            'name' => 'La Ode Ahmad Arafat S.ST,',
             'id_department' => 'DPT-003',
-            //'id_part' => 'PRT-003',
+            'id_sub_team_1' => 'STM-010',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -203,9 +338,10 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-005',
-            'name' => 'Agusta Briliantono Yusuf, S.ST., M.AP.',
+            'nip' => '340012614',
+            'name' => 'Akhmad Yuliadi',
             'id_department' => 'DPT-004',
-            //'id_part' => 'PRT-003',
+            'id_sub_team_1' => 'STM-013',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -215,57 +351,37 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-006',
-            'name' => 'Riena Widianingtyas, S.Si, M.T',
+            'nip' => '340020343',
+            'name' => 'Widia Puspitasari SST, M.Stat,',
             'id_department' => 'DPT-006',
-            //'id_part' => 'PRT-001',
+            'id_sub_team_1' => 'STM-013',
+            'id_sub_team_2' => 'STM-012',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-007',
-            'name' => 'Dr. Agus Budhi Santosa, S.Si, M.T',
-            'id_department' => 'DPT-007',
-            //'id_part' => 'PRT-001',
+            'nip' => '340018542',
+            'name' => 'Peni Meivita, S.Si., M.M.',
+            'id_department' => 'DPT-006',
+            'id_sub_team_1' => 'STM-008',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
+            'gender' => 'Perempuan',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-008',
-            'name' => 'Peni Meivita, S.Si., M.M.',
-            'id_department' => 'DPT-006',
-            //'id_part' => 'PRT-004',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Perempuan',
-            'religion' => 'Islam',
-            'is_lead' => 'No',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-009',
-            'name' => 'Daizy Pangeswari, SE, MM',
-            'id_department' => 'DPT-006',
-            //'id_part' => 'PRT-004',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Perempuan',
-            'religion' => 'Islam',
-            'is_lead' => 'No',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-010',
-            'name' => 'Boby Eko Heru Mulyadi, SST, M.Si',
+            'nip' => '340015905',
+            'name' => 'Abdullah Hakim SE,',
             'id_department' => 'DPT-007',
-            //'id_part' => 'PRT-004',
+            'id_sub_team_1' => 'STM-008',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -292,6 +408,7 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-002',
         ]);
 
+        /*
         DB::table('users')->insert([
             'id_user' => 'USR-002',
             'username' => 'testkabag',
@@ -318,23 +435,15 @@ class DatabaseSeeder extends Seeder
             'part' => 'KTT',
             'id_officer' => 'OFF-007',
         ]);
+        */
 
         DB::table('users')->insert([
-            'id_user' => 'USR-005',
+            'id_user' => 'USR-002',
             'username' => 'testkbps',
             'email' => 'testkbps@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBPS',
             'id_officer' => 'OFF-001',
-        ]);
-
-        DB::table('users')->insert([
-            'id_user' => 'USR-006',
-            'username' => 'testpegawai',
-            'email' => 'testpegawai@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
-            'part' => 'Pegawai',
-            'id_officer' => 'OFF-008',
         ]);
 
         //PERIOODS: Periode
@@ -355,855 +464,360 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //CRITERIAS: Kriteria
-        DB::table('criterias')->insert([
-            'id_criteria' => 'CRT-001',
+        DB::table('categories')->insert([
+            'id_category' => 'CAT-001',
             'name' => 'Kedisiplinan',
             'type' => 'Kehadiran',
+            'source' => 'Presensi',
         ]);
 
-        DB::table('criterias')->insert([
-            'id_criteria' => 'CRT-002',
+        DB::table('categories')->insert([
+            'id_category' => 'CAT-002',
             'name' => 'Keterampilan Teknis',
             'type' => 'Prestasi Kerja',
+            'source' => 'CKP',
         ]);
 
-        DB::table('criterias')->insert([
-            'id_criteria' => 'CRT-003',
+        DB::table('categories')->insert([
+            'id_category' => 'CAT-003',
             'name' => 'Perilaku BerAkhlak',
             'type' => 'Prestasi Kerja',
+            'source' => 'SKP',
         ]);
 
         //SUB CRITERIAS: Sub Kriteria
         //Kedisiplinan
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-001',
+        DB::table('criterias')->insert([
             'id_criteria' => 'CRT-001',
-            'name' => 'Kehadiran Pegawai',
-            'weight' => '0.14',
-            'attribute' => 'Benefit',
-            'level' => '9',
-            'need' => 'Ya',
-        ]);
-
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-002',
-            'id_criteria' => 'CRT-001',
-            'name' => 'Ketepatan Waktu',
-            'weight' => '0.14',
-            'attribute' => 'Benefit',
-            'level' => '9',
-            'need' => 'Ya',
-        ]);
-
-        /*
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-001',
-            'id_criteria' => 'CRT-001',
+            'id_category' => 'CAT-001',
             'name' => 'Ketidakhadiran',
-            'weight' => '0.14',
+            'weight' => '0.15',
             'attribute' => 'Cost',
             'level' => '9',
+            'max' => '23',
             'need' => 'Ya',
+            'source' => 'tanpa_kabar',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-002',
-            'id_criteria' => 'CRT-001',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-002',
+            'id_category' => 'CAT-001',
             'name' => 'Keterlambatan',
-            'weight' => '0.14',
+            'weight' => '0.12',
             'attribute' => 'Cost',
-            'level' => '9',
+            'level' => '7',
+            'max' => '10350',
             'need' => 'Ya',
+            'source' => 'kjk',
         ]);
-        */
 
         //Keterampilan Teknis
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-003',
-            'id_criteria' => 'CRT-002',
-            'name' => 'Kecepatan Penyelesaian Tugas',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-003',
+            'id_category' => 'CAT-002',
+            'name' => 'Capaian Kinerja Pegawai',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '5',
+            'max' => '100',
             'need' => 'Ya',
-        ]);
-
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-004',
-            'id_criteria' => 'CRT-002',
-            'name' => 'Kerajinan',
-            'weight' => '0.10',
-            'attribute' => 'Benefit',
-            'level' => '9',
-            'need' => 'Ya',
-        ]);
-
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-005',
-            'id_criteria' => 'CRT-002',
-            'name' => 'Kualitas Hasil Kerja',
-            'weight' => '0.10',
-            'attribute' => 'Benefit',
-            'level' => '9',
-            'need' => 'Ya',
+            'source' => 'ckp',
         ]);
 
         //Perilaku BerAkhlak
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-006',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-004',
+            'id_category' => 'CAT-003',
             'name' => 'Berorientasi Pelayanan',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'berorientasi_pelayanan',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-007',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-005',
+            'id_category' => 'CAT-003',
             'name' => 'Akuntabel',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'akuntabel',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-008',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-006',
+            'id_category' => 'CAT-003',
             'name' => 'Kompeten',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'kompeten',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-009',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-007',
+            'id_category' => 'CAT-003',
             'name' => 'Harmonis',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'harmonis',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-010',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-008',
+            'id_category' => 'CAT-003',
             'name' => 'Loyal',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'loyal',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-011',
-            'id_criteria' => 'CRT-003',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-009',
+            'id_category' => 'CAT-003',
             'name' => 'Adaptif',
-            'weight' => '0.06',
+            'weight' => '0.09',
             'attribute' => 'Benefit',
-            'level' => '9',
+            'level' => '3',
+            'max' => '100',
             'need' => 'Ya',
+            'source' => 'adaptif',
         ]);
 
-        DB::table('sub_criterias')->insert([
-            'id_sub_criteria' => 'SUB-012',
+        DB::table('criterias')->insert([
+            'id_criteria' => 'CRT-010',
+            'id_category' => 'CAT-003',
+            'name' => 'Kolaboratif',
+            'weight' => '0.09',
+            'attribute' => 'Benefit',
+            'level' => '3',
+            'max' => '100',
+            'need' => 'Ya',
+            'source' => 'kolaboratif',
+        ]);
+
+        //CRIPS: Pemilihan Nilai
+        //Presensi
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-001-001', //Criteria-Crips
+            'id_criteria' => 'CRT-001',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '10',
+            //'value_to' => '',
+            'value_type' => 'More',
+            'score' => '1',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-001-002', //Criteria-Crips
+            'id_criteria' => 'CRT-001',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '7',
+            'value_to' => '9',
+            'value_type' => 'Between',
+            'score' => '2',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-001-003', //Criteria-Crips
+            'id_criteria' => 'CRT-001',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '4',
+            'value_to' => '6',
+            'value_type' => 'Between',
+            'score' => '3',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-001-004', //Criteria-Crips
+            'id_criteria' => 'CRT-001',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '1',
+            'value_to' => '3',
+            'value_type' => 'Between',
+            'score' => '4',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-001-005', //Criteria-Crips
+            'id_criteria' => 'CRT-001',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '0',
+            //'value_to' => '',
+            'value_type' => 'Less',
+            'score' => '5',
+        ]);
+
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-002-001', //Criteria-Crips
+            'id_criteria' => 'CRT-002',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '31',
+            //'value_to' => '',
+            'value_type' => 'More',
+            'score' => '1',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-002-002', //Criteria-Crips
+            'id_criteria' => 'CRT-002',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '21',
+            'value_to' => '30',
+            'value_type' => 'Between',
+            'score' => '2',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-002-003', //Criteria-Crips
+            'id_criteria' => 'CRT-002',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '11',
+            'value_to' => '20',
+            'value_type' => 'Between',
+            'score' => '3',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-002-004', //Criteria-Crips
+            'id_criteria' => 'CRT-002',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '1',
+            'value_to' => '10',
+            'value_type' => 'Between',
+            'score' => '4',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-002-005', //Criteria-Crips
+            'id_criteria' => 'CRT-002',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '0',
+            //'value_to' => '',
+            'value_type' => 'Less',
+            'score' => '5',
+        ]);
+
+        //CKP
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-003-001', //Criteria-Crips
             'id_criteria' => 'CRT-003',
-            'name' => 'Kolaboratif',
-            'weight' => '0.06',
-            'attribute' => 'Benefit',
-            'level' => '9',
-            'need' => 'Ya',
-        ]);
-
-        //VOTE CRITERIAS: Kriteria untuk Voting
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-001',
-            'name' => 'Berorientasi Pelayanan',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-002',
-            'name' => 'Akuntabel',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-003',
-            'name' => 'Kompeten',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-004',
-            'name' => 'Harmonis',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-005',
-            'name' => 'Loyal',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-006',
-            'name' => 'Adaptif',
-        ]);
-
-        DB::table('vote_criterias')->insert([
-            'id_vote_criteria' => 'VCR-007',
-            'name' => 'Kolaboratif',
-        ]);
-
-        //PRESENCES: Data Kehadiran
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-002-001', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '25',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-002-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '25',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-004-001', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '29',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-004-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '31',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-005-001',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '29',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-005-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '30',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-008-001',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '31',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-008-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '31',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-009-001',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '27',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-009-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '31',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-010-001',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-001',
-            'input' => '28',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('presences')->insert([
-            'id_presence' => 'PRS-01-24-010-002',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-002',
-            'input' => '27',
-            'status' => 'Pending',
-        ]);
-
-        //PERFORMANCE: Data Prestasi Kerja (Keterampilan Teknis)
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '95',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '89',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '79',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '99',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-003', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-003',
-            'input' => '97',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-004',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-004',
-            'input' => '97',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-005',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-005',
-            'input' => '97',
-            'status' => 'Pending',
-        ]);
-
-        //BerAkhlak
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-002-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-002',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-004-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-004',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-005-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-005',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-008-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-008',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-009-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-009',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-006', //Periode-Officer-SubCriteria
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-006',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-007',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-007',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-008',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-008',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-009',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-009',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-010',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-010',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-011',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-011',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
-
-        DB::table('performances')->insert([
-            'id_performance' => 'PRS-01-24-010-012',
-            'id_period' => 'PRD-01-24',
-            'id_officer' => 'OFF-010',
-            'id_sub_criteria' => 'SUB-012',
-            'input' => '0',
-            'status' => 'Pending',
-        ]);
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '80',
+            //'value_to' => '',
+            'value_type' => 'Less',
+            'score' => '1',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-003-002', //Criteria-Crips
+            'id_criteria' => 'CRT-003',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '81',
+            'value_to' => '85',
+            'value_type' => 'Between',
+            'score' => '2',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-003-003', //Criteria-Crips
+            'id_criteria' => 'CRT-003',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '86',
+            'value_to' => '90',
+            'value_type' => 'Between',
+            'score' => '3',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-003-004', //Criteria-Crips
+            'id_criteria' => 'CRT-003',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '91',
+            'value_to' => '95',
+            'value_type' => 'Between',
+            'score' => '4',
+        ]);
+        DB::table('crips')->insert([
+            'id_crips' => 'CRP-003-005', //Criteria-Crips
+            'id_criteria' => 'CRT-003',
+            'name' => 'Test',
+            //'description' => '',
+            'value_from' => '96',
+            //'value_to' => '',
+            'value_type' => 'More',
+            'score' => '5',
+        ]);
+
+        //SKP
+        for($x = 4; $x <= 10; $x++){
+            $y = str_pad($x, 3, '0', STR_PAD_LEFT);
+            DB::table('crips')->insert([
+                'id_crips' => 'CRP-'.$y.'-001', //Criteria-Crips
+                'id_criteria' => 'CRT-'.$y,
+                'name' => 'Test',
+                //'description' => '',
+                'value_from' => '80',
+                //'value_to' => '',
+                'value_type' => 'Less',
+                'score' => '1',
+            ]);
+            DB::table('crips')->insert([
+                'id_crips' => 'CRP-'.$y.'-002', //Criteria-Crips
+                'id_criteria' => 'CRT-'.$y,
+                'name' => 'Test',
+                //'description' => '',
+                'value_from' => '81',
+                'value_to' => '85',
+                'value_type' => 'Between',
+                'score' => '2',
+            ]);
+            DB::table('crips')->insert([
+                'id_crips' => 'CRP-'.$y.'-003', //Criteria-Crips
+                'id_criteria' => 'CRT-'.$y,
+                'name' => 'Test',
+                //'description' => '',
+                'value_from' => '86',
+                'value_to' => '90',
+                'value_type' => 'Between',
+                'score' => '3',
+            ]);
+            DB::table('crips')->insert([
+                'id_crips' => 'CRP-'.$y.'-004', //Criteria-Crips
+                'id_criteria' => 'CRT-'.$y,
+                'name' => 'Test',
+                //'description' => '',
+                'value_from' => '91',
+                'value_to' => '95',
+                'value_type' => 'Between',
+                'score' => '4',
+            ]);
+            DB::table('crips')->insert([
+                'id_crips' => 'CRP-'.$y.'-005', //Criteria-Crips
+                'id_criteria' => 'CRT-'.$y,
+                'name' => 'Test',
+                //'description' => '',
+                'value_from' => '96',
+                //'value_to' => '',
+                'value_type' => 'More',
+                'score' => '5',
+            ]);
+        }
     }
 }

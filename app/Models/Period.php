@@ -23,13 +23,9 @@ class Period extends Model
     ];
 
     //CONNECT FROM ANOTHER TABLE
-    public function presence()
+    public function input()
     {
-        return $this->hasMany(Presence::class, 'id_period', 'id_period');
-    }
-    public function performance()
-    {
-        return $this->hasMany(Performance::class, 'id_period', 'id_period');
+        return $this->hasMany(Input::class, 'id_period', 'id_period');
     }
     public function result()
     {
@@ -38,27 +34,5 @@ class Period extends Model
     public function score()
     {
         return $this->hasMany(Score::class, 'id_period', 'id_period');
-    }
-    public function vote()
-    {
-        return $this->hasMany(Vote::class, 'id_period', 'id_period');
-    }
-    public function votecheck()
-    {
-        return $this->hasMany(VoteCheck::class, 'id_period', 'id_period');
-    }
-    public function voteresult()
-    {
-        return $this->hasMany(VoteResult::class, 'id_period', 'id_period');
-    }
-
-    //BETA
-    public function betapresence()
-    {
-        return $this->hasMany(BetaPresence::class, 'id_period', 'id_period');
-    }
-    public function betaperformance()
-    {
-        return $this->hasMany(BetaPerformance::class, 'id_period', 'id_period');
     }
 }

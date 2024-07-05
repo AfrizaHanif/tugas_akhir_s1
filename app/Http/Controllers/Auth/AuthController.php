@@ -41,6 +41,8 @@ class AuthController extends Controller
             //RETURN TO VIEW
             if(auth()->user()->part == "Pegawai"){
                 return redirect()->route('officer')->withSuccess('Selamat Datang!');
+            }elseif(auth()->user()->part == "Dev"){
+                return redirect()->route('developer')->withSuccess('Selamat Datang!');
             }else{
                 return redirect()->route('admin')->withSuccess('Selamat Datang!');
             }

@@ -21,7 +21,15 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Includes.Components.modal')
+@include('Pages.Admin.Includes.Components.Modals.dashboard')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
 @endsection
 
 <!--SCRIPTS-->

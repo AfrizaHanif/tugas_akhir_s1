@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Officer;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,10 +18,19 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         //COMBINE KODE
+        /*
         $total_id = Department::count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
         $id_department = "DPT-".$str_id;
+        */
+        $id_department = IdGenerator::generate([
+            'table'=>'departments',
+            'field'=>'id_department',
+            'length'=>7,
+            'prefix'=>'DPT-',
+            'reset_on_prefix_change'=>true,
+        ]);
 
         //VALIDATE DATA
         /*
@@ -81,7 +91,7 @@ class DepartmentController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
     }
 
     /**
@@ -100,6 +110,6 @@ class DepartmentController extends Controller
         $department->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect',  'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
     }
 }

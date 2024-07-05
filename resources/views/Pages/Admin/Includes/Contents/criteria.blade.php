@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Kriteria untuk Penilaian</h1>
+<h1 class="text-center mb-4">Kriteria</h1>
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
@@ -8,9 +8,9 @@
         <div class="position-sticky" style="top: 2rem;">
             <!--MENU-->
             <p>
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-cat-create">
                     <i class="bi bi-folder-plus"></i>
-                    Tambah Kriteria
+                    Tambah Kategori
                 </a>
                 <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                     <i class="bi bi-question-lg"></i>
@@ -18,9 +18,9 @@
             </p>
             <!--LIST OF CRITERIA-->
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                @forelse ($criterias as $criteria)
-                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $criteria->id_criteria }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $criteria->id_criteria }}" type="button" role="tab" aria-controls="pills-{{ $criteria->id_criteria }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    {{ $criteria->name }}
+                @forelse ($categories as $category)
+                <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $category->id_category }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $category->id_category }}" type="button" role="tab" aria-controls="pills-{{ $category->id_category }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    {{ $category->name }}
                 </button>
                 @empty
                 <button class="nav-link active" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
@@ -34,20 +34,20 @@
     <!--LIST OF SUB CRITERIA-->
     <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
-            @forelse ($criterias as $criteria)
-            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $criteria->id_criteria }}" role="tabpanel" aria-labelledby="pills-{{ $criteria->id_criteria }}-tab" tabindex="0">
+            @forelse ($categories as $category)
+            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $category->id_category }}" role="tabpanel" aria-labelledby="pills-{{ $category->id_category }}-tab" tabindex="0">
                 <div class="row align-items-center">
-                    <div class="col-7">
-                        <h2>{{ $criteria->name }}</h2>
+                    <div class="col-6">
+                        <h2>{{ $category->name }}</h2>
                     </div>
-                    <div class="col-5 d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="col-6 d-grid gap-2 d-md-flex justify-content-md-end">
                         <!--SUB MENU-->
                         <div class="row g-3 align-items-center">
                             <!--ADD SUB CRITERIA-->
                             <div class="col-auto pe-0">
-                                <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-sub-create-{{ $criteria->id_criteria }}">
+                                <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create-{{ $category->id_category }}">
                                     <i class="bi bi-person-plus"></i>
-                                    Tambah Sub Kriteria
+                                    Tambah Kriteria
                                 </a>
                             </div>
                             <!--MANAGE CRITERIA-->
@@ -55,18 +55,19 @@
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-gear"></i>
+                                        Kelola Kategori
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-crt-update-{{ $criteria->id_criteria }}">
+                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-cat-update-{{ $category->id_category }}">
                                                 <i class="bi bi-pencil"></i>
-                                                Ubah Kriteria
+                                                Ubah Kategori
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-crt-delete-{{ $criteria->id_criteria }}">
+                                            <a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#modal-cat-delete-{{ $category->id_category }}">
                                                 <i class="bi bi-folder-minus"></i>
-                                                Hapus Kriteria
+                                                Hapus Kategori
                                             </a>
                                         </li>
                                     </ul>
@@ -75,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <h4 class="pb-2">{{ $criteria->type }}</h4>
+                <h4 class="pb-2">Jenis: {{ $category->type }} | Sumber: {{ $category->source }}</h4>
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -85,19 +86,21 @@
                             <th class="col-1" scope="col">Bobot</th>
                             <th class="col-1" scope="col">Atribut</th>
                             <th class="col-1" scope="col">Tingkat</th>
+                            <th class="col-1" scope="col">Crips</th>
                             <th class="col-1" scope="col">Butuh?</th>
                             <th class="col-1" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($subcriterias->where('id_criteria', $criteria->id_criteria) as $subcriteria)
+                        @forelse ($criterias->where('id_category', $category->id_category) as $criteria)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $subcriteria->name }}</td>
-                            <td>{{ ($subcriteria->weight * 100 ) }}%</td>
-                            <td>{{ $subcriteria->attribute }}</td>
-                            <td>{{ $subcriteria->level }}</td>
-                            <td>{{ $subcriteria->need }}</td>
+                            <td>{{ $criteria->name }}</td>
+                            <td>{{ ($criteria->weight * 100 ) }}%</td>
+                            <td>{{ $criteria->attribute }}</td>
+                            <td>{{ $criteria->level }}</td>
+                            <td>{{ count($crips->where('id_criteria', $criteria->id_criteria)) }}</td>
+                            <td>{{ $criteria->need }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -105,12 +108,19 @@
                                     </button>
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-sub-update-{{ $subcriteria->id_sub_criteria }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#"  data-bs-toggle="modal" data-bs-target="#modal-crp-view-{{ $criteria->id_criteria }}">
+                                                <i class="bi bi-gear"></i>
+                                                Kelola Crips
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-crt-update-{{ $criteria->id_criteria }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
                                                 Edit
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-sub-delete-{{ $subcriteria->id_sub_criteria }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-crt-delete-{{ $criteria->id_criteria }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                                 Delete
                                             </a>
                                         </li>
@@ -120,13 +130,13 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7">Tidak ada Pegawai yang terdaftar</td>
+                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
                         </tr>
                         @endforelse
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="7">Jumlah Data: <b>{{ $subcriterias->where('id_criteria', $criteria->id_criteria)->count() }}</b> Sub Kriteria dengan total bobot <b>{{ $subcriterias->where('id_criteria', $criteria->id_criteria)->sum('weight')*100 }}%</b> (Total seluruh bobot: <b>{{ $subcriterias->sum('weight')*100 }}%</b>)</td>
+                            <td colspan="10">Jumlah Data: <b>{{ $criterias->where('id_category', $criteria->id_category)->count() }}</b> Kriteria dengan total bobot <b>{{ $criterias->where('id_category', $criteria->id_category)->sum('weight')*100 }}%</b> (Total seluruh bobot: <b>{{ $criterias->sum('weight')*100 }}%</b>)</td>
                         </tr>
                     </tfoot>
                 </table>

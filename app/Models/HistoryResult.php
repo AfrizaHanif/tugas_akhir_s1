@@ -15,10 +15,10 @@ class HistoryResult extends Model
         'id_period',
         'period_name',
         'id_officer',
+        'officer_nip',
         'officer_name',
         'officer_department',
         'officer_photo',
-        'count',
         'final_score',
     ];
 }

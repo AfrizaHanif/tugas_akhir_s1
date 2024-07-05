@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Officer;
 use App\Models\Part;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,10 +18,19 @@ class PartController extends Controller
     public function store(Request $request)
     {
         //COMBINE KODE
+        /*
         $total_id = Part::count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
         $id_part = "PRT-".$str_id;
+        */
+        $id_part = IdGenerator::generate([
+            'table'=>'parts',
+            'field'=>'id_part',
+            'length'=> 7,
+            'prefix'=>'PRT-',
+            'reset_on_prefix_change' => true,
+        ]);
 
         //VALIDATE DATA
         /*

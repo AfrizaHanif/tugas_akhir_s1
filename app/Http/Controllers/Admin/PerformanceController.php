@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Criteria;
@@ -11,7 +12,6 @@ use App\Models\HistoryPresence;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
-use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,33 +58,33 @@ class PerformanceController extends Controller
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
         $history_per = HistoryPerformance::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
-        $criterias = Criteria::with('subcriteria')->get();
-        $allsubcriterias = SubCriteria::with('criteria')->get();
-        $subcriterias = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $criterias = Category::with('criteria')->get();
+        $allsubcriterias = Criteria::with('category')->get();
+        $subcriterias = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        $subcritprs = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        $subcritprs = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Kehadiran');})
         ->get();
-        $subcritprf = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $subcritprf = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        $countsub = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $countsub = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
-        $countprs = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Kehadiran');})
+        $countprs = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Kehadiran');})
         ->count();
-        $countprf = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $countprf = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->count();
         $historyprs = HistoryPresence::get();
         $historyprf = HistoryPerformance::get();
         $hofficer = HistoryPerformance::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
         $hcriteria = HistoryPresence::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name'))->get();
-        $hallsub = HistoryPresence::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->union(HistoryPerformance::select('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name')->groupBy('id_criteria', 'criteria_name', 'id_sub_criteria', 'sub_criteria_name'))->get();
-        $hsubprs = HistoryPresence::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
-        $hsubprf = HistoryPerformance::select('id_sub_criteria', 'sub_criteria_name')->groupBy('id_sub_criteria', 'sub_criteria_name')->get();
+        $hallsub = HistoryPresence::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->union(HistoryPerformance::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',))->get();
+        $hsubprs = HistoryPresence::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
+        $hsubprf = HistoryPerformance::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
         return view('Pages.Admin.input', compact('officers', 'performances', 'presences', 'periods', 'latest_per', 'history_per', 'criterias', 'allsubcriterias', 'subcriterias', 'countsub', 'countprs', 'countprf', 'subcritprs', 'subcritprf', 'status', 'historyprs', 'historyprf', 'hofficer', 'hcriteria', 'hallsub', 'hsubprs', 'hsubprf'));
     }
@@ -94,14 +94,14 @@ class PerformanceController extends Controller
      */
     public function store(Request $request)
     {
-        $subcriterias = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $criterias = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        foreach($subcriterias as $subcriteria){
+        foreach($criterias as $criteria){
             //COMBINE KODE (Ex: PRF-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
             $str_year = substr($request->id_period, -5);
-            $str_sub = substr($subcriteria->id_sub_criteria, 4);
+            $str_sub = substr($criteria->id_criteria, 4);
             $id_performance = "PRF-".$str_year.'-'.$str_officer.'-'.$str_sub;
 
             //STORE DATA
@@ -109,8 +109,8 @@ class PerformanceController extends Controller
                 'id_performance'=>$id_performance,
                 'id_period'=>$request->id_period,
                 'id_officer'=>$request->id_officer,
-                'id_sub_criteria'=>$subcriteria->id_sub_criteria,
-                'input'=>$request->input($subcriteria->id_sub_criteria),
+                'id_criteria'=>$criteria->id_criteria,
+                'input'=>$request->input($criteria->id_criteria),
                 'status'=>'Pending',
             ]);
         }
@@ -125,20 +125,20 @@ class PerformanceController extends Controller
      */
     public function update(Request $request)
     {
-        $subcriterias = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $criterias = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        foreach($subcriterias as $subcriteria){
+        foreach($criterias as $criteria){
             //COMBINE KODE (Ex: PRF-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
             $str_year = substr($request->id_period, -5);
-            $str_sub = substr($subcriteria->id_sub_criteria, 4);
+            $str_sub = substr($criteria->id_criteria, 4);
             $id_performance = "PRF-".$str_year.'-'.$str_officer.'-'.$str_sub;
 
             //UPDATE DATA
             if(Performance::where('id_performance', $id_performance)->exists()){
                 Performance::where('id_performance', $id_performance)->update([
-                    'input'=>$request->input($subcriteria->id_sub_criteria),
+                    'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
                 ]);
                 Score::where('id_period', $request->id_period)->where('id_officer', $request->id_officer)->update([
@@ -149,8 +149,8 @@ class PerformanceController extends Controller
                     'id_performance'=>$id_performance,
                     'id_period'=>$request->id_period,
                     'id_officer'=>$request->id_officer,
-                    'id_sub_criteria'=>$subcriteria->id_sub_criteria,
-                    'input'=>$request->input($subcriteria->id_sub_criteria),
+                    'id_criteria'=>$criteria->id_criteria,
+                    'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
                 ]);
             }
@@ -166,14 +166,14 @@ class PerformanceController extends Controller
      */
     public function destroy(Request $request)
     {
-        $subcriterias = SubCriteria::with('criteria')
-        ->WhereHas('criteria', function($query){$query->where('type', 'Prestasi Kerja');})
+        $criterias = Criteria::with('category')
+        ->WhereHas('category', function($query){$query->where('type', 'Prestasi Kerja');})
         ->get();
-        foreach($subcriterias as $subcriteria){
+        foreach($criterias as $criteria){
             //COMBINE KODE (Ex: PRS-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
             $str_year = substr($request->id_period, -5);
-            $str_sub = substr($subcriteria->id_sub_criteria, 4);
+            $str_sub = substr($criteria->id_criteria, 4);
             $id_performance = "PRF-".$str_year.'-'.$str_officer.'-'.$str_sub;
 
             //DELETE DATA

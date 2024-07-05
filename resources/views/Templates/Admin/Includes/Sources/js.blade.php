@@ -56,6 +56,46 @@
 </script>
 @endif
 
+@if (Session::get('modal_redirect') == 'modal-tim-view')
+<script>
+    $(function() {
+        $('#modal-tim-view-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-tim-create')
+<script>
+    $(function() {
+        $('#modal-tim-create-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-tim-update')
+<script>
+    $(function() {
+        $('#modal-tim-update-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-stm-create')
+<script>
+    $(function() {
+        $('#modal-stm-create-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-stm-update')
+<script>
+    $(function() {
+        $('#modal-stm-update-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
 @if (Session::get('modal_redirect') == 'modal-usr-create')
 <script>
     $(function() {
@@ -104,26 +144,18 @@
 </script>
 @endif
 
-@if (Session::get('modal_redirect') == 'modal-vcr-create')
-<script>
-    $(function() {
-        $('#modal-vcr-create').modal('show');
-    });
-</script>
-@endif
-
-@if (Session::get('modal_redirect') == 'modal-vcr-update')
-<script>
-    $(function() {
-        $('#modal-vcr-update-{{ Session::get('id_redirect') }}').modal('show');
-    });
-</script>
-@endif
-
 @if (Session::get('modal_redirect') == 'modal-per-create')
 <script>
     $(function() {
         $('#modal-per-create').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-crp-view')
+<script>
+    $(function() {
+        $('#modal-crp-view-{{ Session::get('id_redirect') }}').modal('show');
     });
 </script>
 @endif
