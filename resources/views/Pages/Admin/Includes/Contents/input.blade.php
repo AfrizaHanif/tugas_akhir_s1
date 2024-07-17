@@ -6,6 +6,7 @@
         <div class="position-sticky" style="top: 2rem;">
             <!--MENU-->
             <p>
+                <!--HELP-->
                 <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                     <i class="bi bi-question-lg"></i>
                     Bantuan

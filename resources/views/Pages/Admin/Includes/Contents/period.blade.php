@@ -5,6 +5,7 @@
 <!--MENU-->
 <p>
     <div class="dropdown">
+        <!--ADD PERIOD-->
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-calendar4-range"></i>
             Tambah Periode
@@ -18,6 +19,7 @@
             </li>
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-create">Manual</a></li>
         </ul>
+        <!--HELP-->
         <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
             <i class="bi bi-question-lg"></i>
             Bantuan

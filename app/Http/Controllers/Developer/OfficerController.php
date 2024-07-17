@@ -24,6 +24,26 @@ class OfficerController extends Controller
         ->get();
         //dd($officers);
 
+        //RETURN TO VIEW
         return view('Pages.Developer.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers'));
+    }
+
+    public function search(Request $request)
+    {
+        //GET DATA
+        $search = $request->search;
+        $parts = Part::whereNot('name', 'Developer')->get();
+        $departments = Department::whereNot('name', 'Developer')->get();
+        $teams = Team::with('part')->get();
+        $subteams = SubTeam::with('team')->get();
+
+        //GET SEARCH QUERY
+        $officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        ->where('name','like',"%".$search."%")
+        ->paginate(10);
+
+        //RETURN TO VIEW
+        return view('Pages.Developer.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers', 'search'));
     }
 }

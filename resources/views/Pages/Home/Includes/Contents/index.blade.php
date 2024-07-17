@@ -1,9 +1,12 @@
+<!--PRELOADER-->
 <div class="preloader">
     <div class="loading">
         <div class="spinner-border text-primary" role="status"></div>
     </div>
 </div>
+<!--MAIN CONTENT-->
 <div class="container py-4">
+    <!--MAIN JUMBOTRON-->
     <div class="p-5 mb-4 text-bg-dark rounded-3"
         style="
 background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');">
@@ -24,7 +27,7 @@ background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('
             </div>
         </div>
     </div>
-
+    <!--SUB JUMBOTRON-->
     <div class="row align-items-md-stretch">
         <div class="col-md-6">
             <div class="h-100 p-5 bg-body-tertiary border rounded-3">

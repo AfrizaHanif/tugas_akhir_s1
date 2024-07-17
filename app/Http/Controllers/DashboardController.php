@@ -22,21 +22,28 @@ use Illuminate\Support\Facades\Artisan;
 class DashboardController extends Controller
 {
     public function admin(){
+        //AUTO CREATE PERIOD (DISABLE IF NOT NEEDED)
         //Artisan::call('app:create-period');
+
         //GET DATA
-        //LIST OF OFFICERS
+        $periods = Period::get();
+        $inputs = Input::get();
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query)
         {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
         //->where('is_lead', 'No')
         ->get();
-        //OFFICERS WITH REJECTED SCORE
-        $reject_offs = Officer::with('department', 'score')
-        ->whereDoesntHave('department', function($query)
-        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
-        ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
-        ->where('is_lead', 'No')
+        $scores = Score::with('officer')
+        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
+        {$query->where('is_lead', 'No');})->get();
+        $count = Input::with('officer')
+        ->select('id_period', 'id_officer', 'status')
+        ->groupBy('id_period', 'id_officer', 'status')
         ->get();
+        $countsub = Criteria::count();
+        $subcriterias = Criteria::get();
+
+        //GET DATA PER PART OF ACCOUNT
         if(Auth::user()->part == 'Admin'){
             //LIST OF OFFICERS FOR INPUT
             $input_off = Officer::with('department', 'user')
@@ -52,35 +59,28 @@ class DashboardController extends Controller
             ->where('is_lead', 'No')
             ->get();
         }
-        //COUNT OFFICER FROM PRESENCE (INPUT)
-        $count = Input::with('officer')
-        ->select('id_period', 'id_officer', 'status')
-        ->groupBy('id_period', 'id_officer', 'status')
+
+        //GET DATA FOR CARDS
+        $reject_offs = Officer::with('department', 'score')
+        ->whereDoesntHave('department', function($query)
+        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
+        ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
+        ->where('is_lead', 'No')
         ->get();
-        //INPUT DATA
-        $inputs = Input::get();
-
-        //COUNT SUBCRITERIA FOR INPUT STATUS
-        $countsub = Criteria::count();
-        //LIST OF SUB CRITERIA
-        $subcriterias = Criteria::get();
-
-        $scores = Score::with('officer')
-        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
-        {$query->where('is_lead', 'No');})->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
-        $periods = Period::get();
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
         $latest_best = HistoryResult::orderBy('id', 'DESC')->latest()->first();
-        $latest_top3 = HistoryScore::orderBy('id', 'ASC')->latest()->get();
+        $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->latest()->get();
         $history_prd = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'DESC')->first();
         $voteresults = HistoryResult::orderBy('id_period', 'ASC')->get();
         $scoreresults = HistoryScore::orderBy('final_score', 'DESC')->get();
-       //dd($scoreresults);
+        //dd($scoreresults);
 
+        //RETURN TO VIEW
         return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults'));
     }
 
+    //OPTIONAL: DELETE
     public function officer(){
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
         $periods = Period::get();
@@ -98,6 +98,7 @@ class DashboardController extends Controller
     }
 
     public function developer(){
+        //RETURN TO VIEW
         return view('Pages.Developer.dashboard');
     }
 }

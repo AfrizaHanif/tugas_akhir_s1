@@ -39,19 +39,24 @@ class InputController extends Controller
         $inputs = Input::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
         $categories = Category::with('criteria')->get();
         $allcriterias = Criteria::with('category')->get();
         $criterias = Criteria::get();
         $countsub = Criteria::count();
         $crips = Crips::orderBy('value_from', 'ASC')->get();
+
+        //GET PERIOD FOR LIST
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
+
+        //GET HISTORY
         $histories = HistoryInput::get();
         $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
         $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
+        //RETURN TO VIEW
         return view('Pages.Admin.input', compact('officers', 'inputs', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'histories', 'hofficers', 'hcriterias', 'hallsub', 'hsubs'));
     }
 
@@ -60,7 +65,9 @@ class InputController extends Controller
      */
     public function store(Request $request)
     {
+        //GET DATA
         $criterias = Criteria::get();
+
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
@@ -88,7 +95,9 @@ class InputController extends Controller
      */
     public function update(Request $request)
     {
+        //GET DATA
         $criterias = Criteria::get();
+
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
@@ -98,6 +107,7 @@ class InputController extends Controller
 
             //UPDATE DATA
             if(Input::where('id_input', $id_input)->exists()){
+                //IF INPUT EXISTS
                 Input::where('id_input', $id_input)->update([
                     'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
@@ -106,6 +116,7 @@ class InputController extends Controller
                     'status'=>'Revised',
                 ]);
             }else{
+                //IF INPUT NOT EXISTS (NOT FILLED)
                 Input::insert([
                     'id_input'=>$id_input,
                     'id_period'=>$request->id_period,
@@ -126,7 +137,9 @@ class InputController extends Controller
      */
     public function destroy(Request $request)
     {
+        //GET DATA
         $criterias = Criteria::get();
+
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
             $str_officer = substr($request->id_officer, 4);
@@ -144,7 +157,7 @@ class InputController extends Controller
 
     public function destroyall(Request $request, $period)
     {
-        //DELETE DATA
+        //DELETE ALL DATA
         Input::where('id_period', $period)->delete();
 
         //RETURN TO VIEW
@@ -155,6 +168,7 @@ class InputController extends Controller
     {
         //GET DATA
         $crips = Crips::with('criteria')->get();
+        $latest_per = Period::where('id_period', $period)->first();
         $allcriterias = Criteria::get();
 
         //CHECK CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
@@ -167,60 +181,72 @@ class InputController extends Controller
         }*/
 
         //IMPORT MULTIPLE FILE
+        //GET MULTIPLE FILE
         $file = $request->file('file');
+
         foreach($file as $f){
             //GET NAME
             $name_file = $f->getClientOriginalName();
+
             //DELETE REMAINING DATA AND GET CRITERIA
-            if(Str::contains($name_file, 'Presensi') || Str::contains($name_file, 'presensi')){
-                //dd('Presensi Detected');
-                Input::with('criteria')
-                ->whereHas('criteria', function($query){
-                    $query->with('category')
+            if(Str::contains($name_file, $latest_per->month) && Str::contains($name_file, $latest_per->year)){
+                if(Str::contains($name_file, 'Presensi') || Str::contains($name_file, 'presensi')){
+                    //dd('Presensi Detected');
+                    Input::with('criteria')
+                    ->whereHas('criteria', function($query){
+                        $query->with('category')
+                        ->whereHas('category', function($query){
+                            $query->where('source', 'Presensi');
+                        });
+                    })
+                    ->delete();
+                    $criterias = Criteria::with('category')
                     ->whereHas('category', function($query){
                         $query->where('source', 'Presensi');
-                    });
-                })
-                ->delete();
-                $criterias = Criteria::with('category')
-                ->whereHas('category', function($query){
-                    $query->where('source', 'Presensi');
-                })->get();
-            }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
-                //dd('SKP Detected');
-                Input::with('criteria')
-                ->whereHas('criteria', function($query){
-                    $query->with('category')
+                    })->get();
+                }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
+                    //dd('SKP Detected');
+                    Input::with('criteria')
+                    ->whereHas('criteria', function($query){
+                        $query->with('category')
+                        ->whereHas('category', function($query){
+                            $query->where('source', 'SKP');
+                        });
+                    })
+                    ->delete();
+                    $criterias = Criteria::with('category')
                     ->whereHas('category', function($query){
                         $query->where('source', 'SKP');
-                    });
-                })
-                ->delete();
-                $criterias = Criteria::with('category')
-                ->whereHas('category', function($query){
-                    $query->where('source', 'SKP');
-                })->get();
-            }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
-                //dd('CKP Detected');
-                Input::with('criteria')
-                ->whereHas('criteria', function($query){
-                    $query->with('category')
+                    })->get();
+                }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
+                    //dd('CKP Detected');
+                    Input::with('criteria')
+                    ->whereHas('criteria', function($query){
+                        $query->with('category')
+                        ->whereHas('category', function($query){
+                            $query->where('source', 'CKP');
+                        });
+                    })
+                    ->delete();
+                    $criterias = Criteria::with('category')
                     ->whereHas('category', function($query){
                         $query->where('source', 'CKP');
-                    });
-                })
-                ->delete();
-                $criterias = Criteria::with('category')
-                ->whereHas('category', function($query){
-                    $query->where('source', 'CKP');
-                })->get();
+                    })->get();
+                }else{
+                    //OPTIONAL: USE RETURN IF FILE NAME NOT CONTAIN PRESENSI, SKP, OR CKP.
+                    //DB::table('inputs')->delete();
+                    //$criterias = Criteria::get();
+                    return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Presensi, CKP, atau SKP).')->with('modal_redirect', 'modal-inp-import');
+                }
             }else{
-                DB::table('inputs')->delete();
-                $criterias = Criteria::get();
+                return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Bulan dan Tahun).')->with('modal_redirect', 'modal-inp-import');
             }
+
             //IMPORT FILE
             Excel::import(new InputsImport($period), $f->store('temp'));
+
             //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
+            //GET INPUT DATA AFTER IMPORT
             $inputs = Input::get();
             foreach($criterias as $criteria){
                 foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
@@ -263,8 +289,9 @@ class InputController extends Controller
 
     public function export(Request $request, $period)
     {
-        //$periods = Period::where('id_period', $period)->first();
-
+        //GET EXPORT FILE
         return Excel::download(new InputsExport($period), 'INP-Backup-'.$period.'.xlsx');
+
+        //NOTE: NO NEED TO RETURN TO VIEW. LET TOASTS REMIND YOU AFTER EXPORT
     }
 }

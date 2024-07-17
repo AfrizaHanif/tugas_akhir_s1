@@ -86,18 +86,21 @@ class SubTeamsController extends Controller
     public function destroy(SubTeam $subteam)
     {
         //GET REDIRECT
+        /*
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($subteam){
             $query->where('id_team', $subteam->id_team);
         })->first();
         $redirect_team = Team::with('subteam')
         ->whereHas('subteam', function($query) use($subteam){$query->where('id_sub_team', $subteam->id_sub_team);})->latest()->first();
-
-        //DESTROY DATA
+        */
         $redirect_part = Part::with('team')
-        ->whereHas('team', function($query) use($subteam){$query->where('id_team', $subteam->id_team);})->latest()->first();
+        ->whereHas('team', function($query) use($subteam){
+            $query->where('id_team', $subteam->id_team);
+        })->latest()->first();
         $redirect_team = Team::where('id_team', $subteam->id_team)->first();
 
+        //DESTROY DATA
         $subteam->delete();
 
         //RETURN TO VIEW

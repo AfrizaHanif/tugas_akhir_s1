@@ -298,19 +298,6 @@ class DatabaseSeeder extends Seeder
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-002',
-            'nip' => '050064228',
-            'name' => 'Nurhayati, SE',
-            'id_department' => 'DPT-004',
-            'id_sub_team_1' => 'STM-001',
-            'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
-            'gender' => 'Laki-Laki',
-            'religion' => 'Islam',
-            'is_lead' => 'Yes',
-        ]);
-
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-003',
             'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_department' => 'DPT-002',
@@ -324,7 +311,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-004',
+            'id_officer' => 'OFF-003',
             'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
             'id_department' => 'DPT-003',
@@ -337,7 +324,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-005',
+            'id_officer' => 'OFF-004',
             'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
             'id_department' => 'DPT-004',
@@ -350,7 +337,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-006',
+            'id_officer' => 'OFF-005',
             'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
             'id_department' => 'DPT-006',
@@ -364,7 +351,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-007',
+            'id_officer' => 'OFF-006',
             'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_department' => 'DPT-006',
@@ -377,7 +364,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-008',
+            'id_officer' => 'OFF-007',
             'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
             'id_department' => 'DPT-007',
@@ -452,6 +439,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Januari 2024',
             'month' => 'Januari',
             'year' => '2024',
+            'active_days' => '22',
             'status' => 'Scoring',
         ]);
 
@@ -460,6 +448,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Februari 2024',
             'month' => 'Februari',
             'year' => '2024',
+            'active_days' => '17',
             'status' => 'Pending',
         ]);
 
@@ -490,10 +479,10 @@ class DatabaseSeeder extends Seeder
         DB::table('criterias')->insert([
             'id_criteria' => 'CRT-001',
             'id_category' => 'CAT-001',
-            'name' => 'Ketidakhadiran',
-            'weight' => '0.15',
-            'attribute' => 'Cost',
-            'level' => '9',
+            'name' => 'Kehadiran',
+            'weight' => '0.10',
+            'attribute' => 'Benefit',
+            'level' => '7',
             'max' => '23',
             'need' => 'Ya',
             'source' => 'tanpa_kabar',
@@ -503,9 +492,9 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-002',
             'id_category' => 'CAT-001',
             'name' => 'Keterlambatan',
-            'weight' => '0.12',
+            'weight' => '0.05',
             'attribute' => 'Cost',
-            'level' => '7',
+            'level' => '5',
             'max' => '10350',
             'need' => 'Ya',
             'source' => 'kjk',
@@ -516,9 +505,9 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-003',
             'id_category' => 'CAT-002',
             'name' => 'Capaian Kinerja Pegawai',
-            'weight' => '0.10',
+            'weight' => '0.15',
             'attribute' => 'Benefit',
-            'level' => '5',
+            'level' => '9',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'ckp',
@@ -529,7 +518,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-004',
             'id_category' => 'CAT-003',
             'name' => 'Berorientasi Pelayanan',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -541,7 +530,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-005',
             'id_category' => 'CAT-003',
             'name' => 'Akuntabel',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -553,7 +542,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-006',
             'id_category' => 'CAT-003',
             'name' => 'Kompeten',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -565,7 +554,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-007',
             'id_category' => 'CAT-003',
             'name' => 'Harmonis',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -577,7 +566,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-008',
             'id_category' => 'CAT-003',
             'name' => 'Loyal',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -589,7 +578,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-009',
             'id_category' => 'CAT-003',
             'name' => 'Adaptif',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -601,7 +590,7 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-010',
             'id_category' => 'CAT-003',
             'name' => 'Kolaboratif',
-            'weight' => '0.09',
+            'weight' => '0.10',
             'attribute' => 'Benefit',
             'level' => '3',
             'max' => '100',
@@ -616,9 +605,9 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-001',
             'name' => 'Test',
             //'description' => '',
-            'value_from' => '10',
+            'value_from' => '13',
             //'value_to' => '',
-            'value_type' => 'More',
+            'value_type' => 'Less',
             'score' => '1',
         ]);
         DB::table('crips')->insert([
@@ -626,8 +615,8 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-001',
             'name' => 'Test',
             //'description' => '',
-            'value_from' => '7',
-            'value_to' => '9',
+            'value_from' => '14',
+            'value_to' => '16',
             'value_type' => 'Between',
             'score' => '2',
         ]);
@@ -636,8 +625,8 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-001',
             'name' => 'Test',
             //'description' => '',
-            'value_from' => '4',
-            'value_to' => '6',
+            'value_from' => '17',
+            'value_to' => '19',
             'value_type' => 'Between',
             'score' => '3',
         ]);
@@ -646,8 +635,8 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-001',
             'name' => 'Test',
             //'description' => '',
-            'value_from' => '1',
-            'value_to' => '3',
+            'value_from' => '20',
+            'value_to' => '22',
             'value_type' => 'Between',
             'score' => '4',
         ]);
@@ -656,9 +645,9 @@ class DatabaseSeeder extends Seeder
             'id_criteria' => 'CRT-001',
             'name' => 'Test',
             //'description' => '',
-            'value_from' => '0',
+            'value_from' => '23',
             //'value_to' => '',
-            'value_type' => 'Less',
+            'value_type' => 'More',
             'score' => '5',
         ]);
 

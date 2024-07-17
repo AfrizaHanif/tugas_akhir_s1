@@ -45,7 +45,6 @@ class DepartmentController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create');
         }
@@ -79,7 +78,6 @@ class DepartmentController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $department->id_department);
         }

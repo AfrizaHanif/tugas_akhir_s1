@@ -34,8 +34,6 @@ class ScoreController extends Controller
         ->where('is_lead', 'No')
         ->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
         $inputs = Input::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
@@ -43,9 +41,16 @@ class ScoreController extends Controller
         $allcriterias = Criteria::with('category')->get();
         $criterias = Criteria::get();
         $countsub = Criteria::count();
+
+        //GET PERIODS FOR LIST
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
+
+        //GET HISTORY DATA
         $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
         $hofficer = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
 
+        //RETURN TO VIEW
         return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'hscore', 'hofficer'));
     }
 
@@ -160,18 +165,19 @@ class ScoreController extends Controller
             }
         }
         //dd($mxin);
-
         $mx_hasil = $mxin; //$ranking = $normal;
 
+        //INSERT FOR VALIDATION
         foreach($normal as $n => $value1){
+            //GET MATRIX
             $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
             $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
 
+            //INSERT DATA
             if(DB::table('scores')->where('id_period', $period)->where('id_officer', $n)->count() == 0){
                 $str_officer = substr($n, 4);
                 $str_year = substr($period, -5);
                 $id_score = "SCR-".$str_year.'-'.$str_officer;
-
                 DB::table('scores')->insert([
                     //'id_score'=>$id_score,
                     'id_officer'=>$n,
@@ -185,6 +191,7 @@ class ScoreController extends Controller
         }
         arsort($matrix);
 
+        //UPDATE STATUS
         Input::with('officer')
         ->where('id_period', $period)
         ->whereIn('status', ['Pending', 'Need Fix'])
@@ -195,33 +202,36 @@ class ScoreController extends Controller
             'status'=>'In Review'
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Ambil Data Berhasil')->with('code_alert', 1);
     }
 
     public function yes($id)
     {
+        //GET DATA
         $result = Score::where('id', $id)->first();
         $period = Period::where('id_period', $result->id_period)->first()->id_period;
         $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer;
         $name = Officer::where('id_officer', $result->id_officer)->first()->name;
 
+        //UPDATE STATUS
         Score::where('id', $id)->update([
             'status'=>'Accepted'
         ]);
-
         Input::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Final'
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
     }
 
     public function yesall($id)
     {
+        //UPDATE STATUS
         Score::where('id_period', $id)->update([
             'status'=>'Accepted'
         ]);
-
         Input::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
             $query->where('is_lead', 'No');
@@ -230,33 +240,36 @@ class ScoreController extends Controller
             'status'=>'Final'
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari seluruh pegawai telah disetujui')->with('code_alert', 1);
     }
 
     public function no($id)
     {
+        //GET DATA
         $result = Score::where('id', $id)->first();
         $period = Period::where('id_period', $result->id_period)->first()->id_period;
         $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer;
         $name = Officer::where('id_officer', $result->id_officer)->first()->name;
 
+        //UPDATE STATUS
         Score::where('id', $id)->update([
             'status'=>'Rejected'
         ]);
-
         Input::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Need Fix'
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
     }
 
     public function noall($id)
     {
+        //UPDATE STATUS
         Score::where('id_period', $id)->update([
             'status'=>'Rejected'
         ]);
-
         Input::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
             $query->where('is_lead', 'No');
@@ -265,18 +278,24 @@ class ScoreController extends Controller
             'status'=>'Need Fix'
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari seluruh pegawai telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)
     {
+        //HISTORY SCORE
+        //GET DATA (1/2)
         $scores1 = Score::where('id_period', $period)->get();
         foreach($scores1 as $score){
+            //GET DATA (2/2)
             $getperiod1 = Period::where('id_period', $score->id_period)->first();
             $getofficer1 = Officer::where('id_officer', $score->id_officer)->first();
             $getdepartment1 = Department::with('officer')->whereHas('officer', function($query) use($score){
                 $query->where('id_officer', $score->id_officer);
             })->first();
+
+            //INSERT DATA
             HistoryScore::insert([
                 'id_period'=>$getperiod1->id_period,
                 'period_name'=>$getperiod1->name,
@@ -288,8 +307,11 @@ class ScoreController extends Controller
             ]);
         }
 
+        //HISTORY INPUT
+        //GET DATA (1/2)
         $inputs = Input::where('id_period', $period)->get();
         foreach($inputs as $input){
+            //GET DATA (2/2)
             $getuser2 = User::where('id_officer', $input->id_officer)->first();
             $getperiod2 = Period::where('id_period', $input->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $input->id_officer)->first();
@@ -301,12 +323,14 @@ class ScoreController extends Controller
             })->first();
             $getsubcriteria2 = Criteria::where('id_criteria', $input->id_criteria)->first();
 
+            //CHECK IF ADMIN (WILL BE REMOVED)
             if(empty($getuser2->part) || $getuser2->part == 'Admin'){
                 $is_lead = 'No';
             }else{
                 $is_lead = 'Yes';
             }
 
+            //INSERT DATA
             HistoryInput::insert([
                 'id_period'=>$getperiod2->id_period,
                 'period_name'=>$getperiod2->name,
@@ -326,6 +350,8 @@ class ScoreController extends Controller
             ]);
         }
 
+        //HISTORY RESULT
+        //GET DATA (RESULT)
         $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->offset(0)->limit(1)->first();
         $getperiod4 = Period::where('id_period', $scores2->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first();
@@ -333,6 +359,7 @@ class ScoreController extends Controller
             $query->where('id_officer', $scores2->id_officer);
         })->first();
 
+        //GET PHOTO (RESULT)
         $photo = '';
         $id_officer = Officer::find($getofficer4->id_officer);
         $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
@@ -343,6 +370,7 @@ class ScoreController extends Controller
             File::copy($path_photo , $new_path);
         }
 
+        //INSERT DATA (RESULT)
         HistoryResult::insert([
             'id_period'=>$getperiod4->id_period,
             'period_name'=>$getperiod4->name,
@@ -354,6 +382,7 @@ class ScoreController extends Controller
             'final_score'=>$scores2->final_score,
         ]);
 
+        //UPDATE STATUS
         Period::where('id_period', $period)->update([
             'status'=>'Finished',
         ]);
@@ -362,6 +391,7 @@ class ScoreController extends Controller
         DB::table('inputs')->delete();
         DB::table('scores')->delete();
 
+        //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Proses Pemilihan Karyawan Terbaik Selesai. Hasil tersebut dapat dilihat pada halaman Dashboard dan Utama')->with('code_alert', 1);
     }
 }

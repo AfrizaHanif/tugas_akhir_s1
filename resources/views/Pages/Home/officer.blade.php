@@ -8,7 +8,7 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Home.Includes.Contents.officer')
+@include('Pages.Includes.Contents.officer')
 @endsection
 
 <!--MODALS-->

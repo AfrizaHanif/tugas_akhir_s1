@@ -17,6 +17,7 @@ class OfficerController extends Controller
      */
     public function index(Request $request)
     {
+        //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
         $departments = Department::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
@@ -24,18 +25,27 @@ class OfficerController extends Controller
         $officers = Officer::with('department', 'subteam_1', 'subteam_2')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
+
+        //RETURN TO VIEW
         return view('Pages.Home.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers'));
     }
 
     public function search(Request $request)
     {
+        //GET DATA
         $search = $request->search;
         $parts = Part::whereNot('name', 'Developer')->get();
         $departments = Department::get();
+        $teams = Team::with('part')->get();
+        $subteams = SubTeam::with('team')->get();
+
+        //GET SEARCH QUERY
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->where('name','like',"%".$search."%")
         ->paginate(10);
-        return view('Pages.Home.officer', compact('parts', 'departments', 'officers', 'search'));
+
+        //RETURN TO DATA
+        return view('Pages.Home.officer', compact('search', 'parts', 'departments', 'teams', 'subteams', 'officers'));
     }
 }

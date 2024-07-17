@@ -39,7 +39,6 @@ class CategoryController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-cat-create');
         }
@@ -67,7 +66,6 @@ class CategoryController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$category->id_category])->with('modal_redirect', 'modal-cat-update')->with('id_redirect', $category->id_category);
         }

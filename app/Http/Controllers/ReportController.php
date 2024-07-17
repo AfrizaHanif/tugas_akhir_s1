@@ -19,6 +19,7 @@ class ReportController extends Controller
 {
     public function officers()
     {
+        //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
         $departments = Department::whereNot('name', 'Developer')->get();
         $teams = Team::get();
@@ -26,6 +27,8 @@ class ReportController extends Controller
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->get();
+
+        //CREATE A REPORT
         $file = 'RPT-Pegawai.pdf';
         $pdf = PDF::
         loadview('Pages.PDF.officer', compact('parts', 'teams', 'subteams', 'departments', 'officers'))
@@ -36,6 +39,7 @@ class ReportController extends Controller
 
     public function analysis($period)
     {
+        //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
         $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->where('is_lead', 'No')->get();
@@ -128,6 +132,7 @@ class ReportController extends Controller
         arsort($matrix);
         //dd($mx_hasil);
 
+        //CREATE A REPORT
         $file = 'RPT-Analysis-'.$periods->id_period.'.pdf';
         $pdf = PDF::
         loadview('Pages.PDF.analysis', compact('periods', 'officers', 'alternatives', 'criterias', 'subcriterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix'))
@@ -139,8 +144,11 @@ class ReportController extends Controller
 
     public function result($period)
     {
+        //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
         $results = HistoryScore::where('id_period', $period)->orderBy('final_score', 'DESC')->get();
+        
+        //CREATE A REPORT
         $file = 'RPT-Result-'.$periods->id_period.'.pdf';
         $pdf = PDF::
         loadview('Pages.PDF.result', compact('periods','results'))

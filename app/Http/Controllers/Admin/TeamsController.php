@@ -65,11 +65,14 @@ class TeamsController extends Controller
      */
     public function destroy(Team $team)
     {
-        //DESTROY DATA
+        //GET REDIRECT
         $redirect_part = Part::with('team')
-        ->whereHas('team', function($query) use($team){$query->where('id_team', $team->id_team);})->latest()->first();
+        ->whereHas('team', function($query) use($team){
+            $query->where('id_team', $team->id_team);
+        })->latest()->first();
         $redirect_team = Team::where('id_team', $team->id_team)->first();
 
+        //DESTROY DATA
         $team->delete();
 
         //RETURN TO VIEW

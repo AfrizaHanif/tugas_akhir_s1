@@ -45,7 +45,6 @@ class PartController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
         }
@@ -78,7 +77,6 @@ class PartController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
         }

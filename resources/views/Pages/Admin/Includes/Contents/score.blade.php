@@ -119,6 +119,7 @@
                                             <i class="bi bi-menu-button-fill"></i>
                                         </button>
                                         <ul class="dropdown-menu">
+                                            <!--CHECK DATA-->
                                             <li>
                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $latest_per->id_period }}">
                                                     <i class="bi bi-database"></i>
@@ -132,6 +133,7 @@
                                                 </a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
+                                            <!--QUICK VERIFY-->
                                             @if ($latest_per->status == "Voting" || $latest_per->status == "Finished" || $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $latest_per->id_period)->count() == 0)
                                                 @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
@@ -300,7 +302,7 @@
                 </div>
             </div>
             @endif
-            <!--OLD PERIOD-->
+            <!--HISTORY-->
             @foreach ($history_per as $period)
             <div class="tab-pane fade" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
                 <h2>{{ $period->period_name }}</h2>

@@ -71,7 +71,6 @@ class PeriodController extends Controller
             'id_period' => $id_period,
             'name' => $name_month.' '.$request->year,
         ];
-
         $validator = Validator::make($input, [
             'id_period' => 'unique:periods',
             'name' => 'unique:periods',
@@ -79,7 +78,6 @@ class PeriodController extends Controller
             'id_period.unique' => 'ID telah terdaftar sebelumnya',
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create');
         }

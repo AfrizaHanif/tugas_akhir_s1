@@ -1,5 +1,5 @@
 <h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
-<!--SCORE ANT VOTE ALERT-->
+<!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
     @if (!empty($latest_per->status))
         @if ($latest_per->status == 'Scoring')
@@ -24,6 +24,7 @@
     @endif
 @endif
 
+<!--CARDS-->
 @if (Auth::user()->part != "Pegawai" && Auth::user()->part != "Dev")
 <div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
     <!--DATA INPUT COUNTER CARD-->

@@ -48,10 +48,11 @@ class CripsController extends Controller
             'score'=>$request->score,
 		]);
 
-        //RETURN TO VIEW
+        //TAB FOR RETURN
         $tab = Category::with('criteria')
         ->whereHas('criteria', function($query) use($request){$query->where('id_criteria', $request->id_criteria);})->latest()->first();
 
+        //RETURN TO VIEW
         return redirect()->route('admin.masters.criterias.index')->with('success','Tambah Data Crips Berhasil')->withInput(['tab_redirect'=>'pills-'.$tab->id_category])->with('modal_redirect', 'modal-crp-view')->with('id_redirect', $request->id_criteria);
     }
 
@@ -69,10 +70,11 @@ class CripsController extends Controller
             'score'=>$request->score,
 		]);
 
-        //RETURN TO VIEW
+        //TAB FOR RETURN
         $tab = Category::with('criteria')
         ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first();
 
+        //RETURN TO VIEW
         return redirect()->route('admin.masters.criterias.index')->with('success','Ubah Data Crips Berhasil')->withInput(['tab_redirect'=>'pills-'.$tab->id_category])->with('modal_redirect', 'modal-crp-view')->with('id_redirect', $crip->id_criteria);
     }
 
@@ -81,10 +83,11 @@ class CripsController extends Controller
      */
     public function destroy(Crips $crip)
     {
-        //DESTROY DATA
+        //TAB FOR RETURN
         $tab = Category::with('criteria')
         ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first();
 
+        //DESTROY DATA
         $crip->delete();
 
         //RETURN TO VIEW

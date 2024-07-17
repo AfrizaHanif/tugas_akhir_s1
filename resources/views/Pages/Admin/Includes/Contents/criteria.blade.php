@@ -8,10 +8,12 @@
         <div class="position-sticky" style="top: 2rem;">
             <!--MENU-->
             <p>
+                <!--CATEGORY-->
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-cat-create">
                     <i class="bi bi-folder-plus"></i>
                     Tambah Kategori
                 </a>
+                <!--HELP-->
                 <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                     <i class="bi bi-question-lg"></i>
                 </a>

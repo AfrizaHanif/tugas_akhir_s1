@@ -26,8 +26,9 @@
                                         <div class="alert alert-warning" role="alert">
                                             <i class="bi bi-info-circle-fill"></i> <strong>WARNING</strong>
                                             <br/>
-                                            1. Data yang telah terinput secara import akan <b>dihapus</b> saat proses import berlangsung<br/>
-                                            2. <b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error saat import
+                                            1. Baca <b>Cara Import</b> sebelum melakukan import<br/>
+                                            2. Data yang telah terinput secara import akan <b>dihapus</b> saat proses import berlangsung<br/>
+                                            3. <b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error saat import
                                         </div>
                                         <div class="mb-3">
                                             <label for="file" class="form-label">File Upload</label>
@@ -39,14 +40,16 @@
                                             <thead>
                                                 <tr>
                                                     <th class="col-1" scope="col">#</th>
+                                                    <th scope="col">Sumber</th>
                                                     <th scope="col">Nama Kriteria</th>
-                                                    <th scope="col">Sumber Kolom</th>
+                                                    <th scope="col">Kolom di Excel</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @forelse ($criterias as $criteria)
                                                 <tr>
                                                     <th scope="row">{{ $loop->iteration }}</th>
+                                                    <td>{{ $criteria->category->source }}</td>
                                                     <td>{{ $criteria->name }}</td>
                                                     <td>{{ $criteria->source }}</td>
                                                 </tr>
@@ -71,12 +74,19 @@
                                 <div class="alert alert-info" role="alert">
                                     <i class="bi bi-info-circle-fill"></i> <strong>CARA IMPORT</strong>
                                     <ol>
-                                        <li>Sebelum melakukan import, <b>periksa kolom dan baris</b> dari file yang akan di import. Samakan dengan ketentuan yang diberikan di tab sebelah.</li>
+                                        <li>Sebelum melakukan import, buatlah file Excel baru, dan pastikan file tersebut memenuhi ketentuan berikut:</li>
+                                        <ol>
+                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data pegawai. Anda juga dapat menambahkan kolom <b>Nama Pegawai</b> sebagai pelengkap.</li>
+                                            <li>Samakan dengan ketentuan yang diberikan di tab <b>Datar Sumber Kolom</b> (Contoh: Jika ingin import <b>presensi</b>, maka kolom yang harus ada adalah kriteria dari sumber <b>Presensi</b>).</li>
+                                        </ol>
                                         <li>Pilih file yang akan di import ke dalam sistem. Pastikan file tersebut mengandung nama seperti berikut:</li>
                                         <ol>
-                                            <li>Untuk presensi: <b>Presensi</b></li>
+                                            <li>Bulan dan Tahun <b>(Lengkap tanpa tanggal)</b></li>
+                                            <li>Untuk Presensi: <b>Presensi</b></li>
                                             <li>Untuk SKP: <b>SKP</b></li>
                                             <li>Untuk CKP: <b>CKP</b></li>
+                                            <li>Ekstensi Excel 2007: <b>(.xlsx)</b></li>
+                                            <li>Contoh nama File: CKP Januari 2024.xlsx</li>
                                         </ol>
                                         <li>Perlu diingat bahwa angka yang ada di file akan <b>dikonversi</b> sesuai dengan <b>data crips</b> di setiap kriteria yang ada. Cek halaman <b>konversi</b> untuk mengetahui range-range yang ada pada setiap kriteria.</li>
                                         <li>Setelah melakukan import, pastikan anda memeriksa data apakah sudah masuk atau belum.</li>

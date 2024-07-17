@@ -25,11 +25,12 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $officers, $criterias, $scores;
+    protected $latest_per, $active_days, $officers, $criterias, $scores;
 
     public function __construct($period)
     {
         $this->latest_per = $period;
+        $this->active_days = Period::where('id_period', $period)->first()->active_days;
         $this->officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->where('is_lead', 'No')->orderBy('name', 'ASC')->get();
         $this->criterias = Criteria::with('category')->get();
         $this->scores = Score::get();
@@ -49,14 +50,28 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                     $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
-                        Input::create([
-                            'id_input' => $id_input,
-                            'id_period' => $this->latest_per,
-                            'id_officer' => $officer->id_officer,
-                            'id_criteria' => $criteria->id_criteria,
-                            'input' => $row[$criteria->source],
-                            'status' => 'Pending',
-                        ]);
+                        if($criteria->name == 'Kehadiran'){
+                            //dd('Yes');
+                            $remain = $this->active_days - $row[$criteria->source];
+                            Input::create([
+                                'id_input' => $id_input,
+                                'id_period' => $this->latest_per,
+                                'id_officer' => $officer->id_officer,
+                                'id_criteria' => $criteria->id_criteria,
+                                'input' => $remain,
+                                'status' => 'Pending',
+                            ]);
+                        }else{
+                            //dd('No');
+                            Input::create([
+                                'id_input' => $id_input,
+                                'id_period' => $this->latest_per,
+                                'id_officer' => $officer->id_officer,
+                                'id_criteria' => $criteria->id_criteria,
+                                'input' => $row[$criteria->source],
+                                'status' => 'Pending',
+                            ]);
+                        }
                     }
 
                     $check = $this->scores->where('id_officer', $officer->id_officer)->where('id_period', $this->latest_per)->first();

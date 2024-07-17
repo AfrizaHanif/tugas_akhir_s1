@@ -15,6 +15,7 @@ class ReportController extends Controller
      */
     public function index()
     {
+        //GET DATA
         $periods = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
         $officers = Officer::with('department', 'user')
@@ -22,8 +23,7 @@ class ReportController extends Controller
         ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
 
+        //RETURN TO VIEW
         return view('Pages.Home.report', compact('periods','per_years','officers'));
     }
-
-    
 }

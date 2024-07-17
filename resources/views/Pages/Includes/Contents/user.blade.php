@@ -4,10 +4,12 @@
 @endif
 <!--MENU-->
 <p>
+    <!--ADD USER-->
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-usr-create">
         <i class="bi bi-person-add"></i>
         Tambah Pengguna
     </a>
+    <!--HELP-->
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
         <i class="bi bi-question-lg"></i>
         Bantuan

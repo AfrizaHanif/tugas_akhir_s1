@@ -38,6 +38,7 @@ class OfficerController extends Controller
         ->get();
         //dd($officers);
 
+        //RETURN TO VIEW
         return view('Pages.Admin.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers'));
     }
 
@@ -123,10 +124,11 @@ class OfficerController extends Controller
             }
         }
 
-        //RETURN TO VIEW
+        //GET FOR REDIRECT
         $tab = Team::with('subteam')
         ->whereHas('subteam', function($query) use($request){$query->where('id_sub_team', $request->id_sub_team_1);})->latest()->first();
 
+        //RETURN TO VIEW
         return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'sub_tab_redirect'=>$request->id_part.'-'.$tab->id_team.'-tab-pane'])->with('success','Tambah Pegawai Berhasil')->with('code_alert', 1);
     }
 
@@ -260,15 +262,21 @@ class OfficerController extends Controller
 
     public function search(Request $request)
     {
+        //GET DATA
         $search = $request->search;
         $parts = Part::whereNot('name', 'Developer')->get();
         $departments = Department::whereNot('name', 'Developer')->get();
+        $teams = Team::with('part')->get();
+        $subteams = SubTeam::with('team')->get();
+
+        //GET SEARCH QUERY
         $officers = Officer::with('department')
         ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
         ->where('name','like',"%".$search."%")
         ->paginate(10);
 
-        return view('Pages.Admin.officer', compact('parts', 'departments', 'officers', 'search'));
+        //RETURN TO VIEW
+        return view('Pages.Admin.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers', 'search'));
     }
 
     public function import(Request $request)
@@ -276,11 +284,15 @@ class OfficerController extends Controller
         //IMPORT FILE
         Excel::import(new OfficersImport, $request->file('file'));
 
+        //RETURN TO VIEW
         return redirect()->route('admin.masters.officers.index')->with('success','Import Pegawai Berhasil')->with('code_alert', 1);
     }
 
     public function export(Request $request)
     {
+        //GET EXPORT FILE
         return Excel::download(new OfficersExport, 'OFF-Backup.xlsx');
+
+        //NOTE: NO NEED TO RETURN TO VIEW. LET TOASTS REMIND YOU AFTER EXPORT
     }
 }

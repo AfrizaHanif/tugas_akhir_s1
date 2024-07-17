@@ -13,11 +13,13 @@ class ScoreController extends Controller
 {
     public function index()
     {
+        //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $scores = HistoryScore::orderBy('final_score', 'DESC')->get();
         $officers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
         //$check = Score::orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
 
+        //RETURN TO VIEW
         return view('Pages.Home.score', compact('periods', 'scores', 'officers'));
     }
 }

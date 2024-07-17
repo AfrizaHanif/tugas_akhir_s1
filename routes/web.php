@@ -12,17 +12,17 @@ use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\InputController;
 use App\Http\Controllers\Admin\SubTeamsController;
 use App\Http\Controllers\Admin\TeamsController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Developer\MessageController;
+use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\Home\ReportController as HomeReportController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Developer\MessageController;
-use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController as AllReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,10 +40,12 @@ use Illuminate\Support\Facades\Route;
 //FRONT END
 //HOMEPAGE
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/officers', [HomeOfficerController::class, 'index']);
-Route::prefix('officers')->name('officers.')->group(function () {
-    Route::get('/search', [HomeOfficerController::class, 'search'])->name('search');
-    //Route::get('/auto', [HomeOfficerController::class, 'auto'])->name('auto');
+Route::controller(HomeOfficerController::class)->group(function() {
+    Route::prefix('officers')->name('officers.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'search')->name('search');
+        //Route::get('/auto', 'auto')->name('auto');
+    });
 });
 Route::get('/eotm', [HomeScoreController::class, 'index']);
 Route::get('/reports', [HomeReportController::class, 'index']);
@@ -86,9 +88,11 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         Route::prefix('masters')->name('masters.')->group(function () {
             Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
             Route::prefix('officers')->name('officers.')->group(function () {
-                Route::get('/search', [OfficerController::class, 'search'])->name('search');
-                Route::post('/import', [OfficerController::class, 'import'])->name('import');
-                Route::post('/export', [OfficerController::class, 'export'])->name('export');
+                Route::controller(OfficerController::class)->group(function() {
+                    Route::get('/search', 'search')->name('search');
+                    Route::post('/import', 'import')->name('import');
+                    Route::post('/export', 'export')->name('export');
+                });
             });
             Route::middleware('checkPart:Admin')->group(function () {
                 Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
@@ -144,15 +148,17 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         });
         //ANALYSIS
         Route::prefix('analysis')->name('analysis.')->group(function () {
-            Route::prefix('saw')->name('saw.')->group(function () {
-                Route::get('/', [AnalysisController::class, 'index'])->name('index');
-                Route::get('/latest', [AnalysisController::class, 'saw'])->name('saw');
-                Route::get('/{period}', [AnalysisController::class, 'history_saw'])->name('history');
-            });
-            Route::prefix('wp')->name('wp.')->group(function () {
-                Route::get('/', [AnalysisController::class, 'index'])->name('index');
-                Route::get('/latest', [AnalysisController::class, 'wp'])->name('wp');
-                Route::get('/{period}', [AnalysisController::class, 'history_wp'])->name('history');
+            Route::controller(AnalysisController::class)->group(function() {
+                Route::prefix('saw')->name('saw.')->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/latest', 'saw')->name('saw');
+                    Route::get('/{period}', 'history_saw')->name('history');
+                });
+                Route::prefix('wp')->name('wp.')->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/latest', 'wp')->name('wp');
+                    Route::get('/{period}', 'history_wp')->name('history');
+                });
             });
         });
         //Route::get('/results', [ResultController::class, 'index'])->name('results');
@@ -180,11 +186,13 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
     Route::get('/developer', [DashboardController::class, 'developer'])->name('developer');
     Route::prefix('developer')->name('developer.')->group(function () {
         Route::prefix('masters')->name('masters.')->group(function () {
-            Route::get('/officers', [DeveloperOfficerController::class, 'index'])->name('index');
             Route::prefix('officers')->name('officers.')->group(function () {
-                Route::get('/search', [DeveloperOfficerController::class, 'search'])->name('search');
-                Route::post('/import', [DeveloperOfficerController::class, 'import'])->name('import');
-                Route::post('/export', [DeveloperOfficerController::class, 'export'])->name('export');
+                Route::controller(DeveloperOfficerController::class)->group(function() {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/search', 'search')->name('search');
+                    Route::post('/import', 'import')->name('import');
+                    Route::post('/export', 'export')->name('export');
+                });
             });
             Route::resource('/users', UserController::class);
         });

@@ -24,6 +24,7 @@ class CriteriaController extends Controller
         $crips = Crips::orderBy('value_from', 'ASC')->get();
         //dd($crips);
 
+        //RETURN TO VIEW
         return view('Pages.Admin.criteria', compact('categories', 'criterias', 'crips'));
     }
 
@@ -57,7 +58,6 @@ class CriteriaController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
         }
@@ -97,7 +97,6 @@ class CriteriaController extends Controller
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update')->with('id_redirect', $criteria->id_category);
         }

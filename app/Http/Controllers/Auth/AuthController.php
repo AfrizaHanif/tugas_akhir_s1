@@ -10,6 +10,7 @@ class AuthController extends Controller
 {
     public function login()
     {
+        //RETURN TO VIEW
         if (Auth::check()){
             if(Auth::user()->part != "Pegawai"){
                 return view('Pages.Admin.dashboard');
@@ -35,6 +36,7 @@ class AuthController extends Controller
         $remember = $request->has('remember_me') ? true : false;
 
         if (Auth::attempt($credentials, $remember)) {
+            //REGENERATE SESSION
             //dd(auth()->user()->part);
             $request->session()->regenerate();
 
@@ -54,11 +56,14 @@ class AuthController extends Controller
     }
 
     public function logout(){
+        //LOGOUT ACCOUNT
         //auth()->logout();
         Auth::logout();
         //request()->session()->flush();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+
+        //RETURN TO VIEW
         return redirect()->route('index')->withSuccess('Keluar Berhasil.');
     }
 }

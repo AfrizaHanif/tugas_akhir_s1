@@ -13,6 +13,7 @@ class MessageController extends Controller
         //GET DATA
         $messages = Message::get();
 
+        //RETURN TO VIEW
         return view('Pages.Developer.message', compact('messages'));
     }
 

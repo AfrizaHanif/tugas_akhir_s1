@@ -1,4 +1,5 @@
 <h1 class="text-center mb-4">Data Pegawai</h1>
+<!--SEARCH FORM-->
 <p>
     <form action="{{ route('officers.search') }}" method="GET">
         <div class="input-group mb-3">
@@ -13,6 +14,8 @@
     </form>
 </p>
 @if (Request::is('officers/search*'))
+<!--SEARCH PAGE-->
+<!--TABLE-->
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">
@@ -67,6 +70,7 @@
             <!--MENU-->
             <div class="dropdown pb-3">
                 <div class="dropdown">
+                    <!--HELP-->
                     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                         <i class="bi bi-question-lg"></i>
                         Bantuan

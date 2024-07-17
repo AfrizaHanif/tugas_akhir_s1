@@ -20,6 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        //GET DATA
         $users = User::whereNot('id_user', 'USR-000')->get();
         //$parts = Part::whereNot('name', 'Developer')->get();
         $subteams = SubTeam::get();
@@ -34,6 +35,7 @@ class UserController extends Controller
         })
         ->get();
 
+        //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
             return view('Pages.Admin.user', compact('users', 'officers', 'subteams'));
         }elseif(Auth::user()->part == "Dev"){
@@ -82,7 +84,6 @@ class UserController extends Controller
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
-
         if ($validator->fails()) {
             if(Auth::user()->part == "Admin"){
                 return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
@@ -135,7 +136,6 @@ class UserController extends Controller
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
-
         if ($validator->fails()) {
             if(Auth::user()->part == "Admin"){
                 return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);

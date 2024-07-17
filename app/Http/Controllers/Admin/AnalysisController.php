@@ -25,6 +25,7 @@ class AnalysisController extends Controller
         //$latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
         $latest_per = Period::where('status', 'Scoring')->latest()->first();
 
+        //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('periods', 'latest_per'));
     }
 
@@ -35,6 +36,7 @@ class AnalysisController extends Controller
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
+
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
@@ -172,6 +174,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
+        //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
@@ -181,6 +184,7 @@ class AnalysisController extends Controller
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
         $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
+
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->latest()->first();
 
@@ -278,6 +282,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
+        //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
@@ -289,6 +294,7 @@ class AnalysisController extends Controller
         $subcriterias = Criteria::with('category')->get();
         $critcount = Criteria::select('level')->sum('level');
         $officers = Officer::where('is_lead', 'No')->get();
+
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
 
@@ -427,6 +433,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
+        //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
     }
 
@@ -437,6 +444,7 @@ class AnalysisController extends Controller
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
         $critcount = HistoryInput::select('id_officer', 'id_period', 'level')->groupBy('id_officer', 'id_period')->where('id_period', $period)->sum('level');
         $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
+
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->latest()->first();
 
@@ -533,6 +541,7 @@ class AnalysisController extends Controller
 
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
+        //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
     }
 }

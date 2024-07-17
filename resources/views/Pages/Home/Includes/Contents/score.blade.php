@@ -1,5 +1,6 @@
 <h1 class="text-center mb-4">Pegawai Terbaik</h1>
 <div class="row">
+    <!--PERIOD PICKER-->
     <div class="col-md-3">
         <div class="position-sticky" style="top: 2rem;">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -16,11 +17,13 @@
             <br/>
         </div>
     </div>
+    <!--MAIN CONTENT-->
     <div class="col-md-9">
         <div class="tab-content" id="v-pills-tabContent">
             @forelse ($periods as $period)
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
                 <h2>{{ $period->name }}</h2>
+                <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
