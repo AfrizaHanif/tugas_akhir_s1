@@ -30,7 +30,11 @@
                         </thead>
                         <tbody>
                             @forelse ($officers as $officer)
+                            @if ($officer->is_lead == 'Yes')
+                            <tr class="table-secondary">
+                            @else
                             <tr>
+                            @endif
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
                                 <td>{{ $officer->department->name }}</td>

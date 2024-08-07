@@ -24,11 +24,11 @@
                                 <div class="tab-content pt-2" id="myTabContent">
                                     <div class="tab-pane fade show active" id="upload-{{ $latest_per->id_period }}-tab-pane" role="tabpanel" aria-labelledby="upload-{{ $latest_per->id_period }}-tab" tabindex="0">
                                         <div class="alert alert-warning" role="alert">
-                                            <i class="bi bi-info-circle-fill"></i> <strong>WARNING</strong>
+                                            <i class="bi bi-exclamation-triangle-fill"></i> <strong>WARNING</strong>
                                             <br/>
                                             1. Baca <b>Cara Import</b> sebelum melakukan import<br/>
-                                            2. Data yang telah terinput secara import akan <b>dihapus</b> saat proses import berlangsung<br/>
-                                            3. <b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error saat import
+                                            2. Data yang telah terinput akan <b>dihapus</b> saat proses import berlangsung<br/>
+                                            3. <b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import
                                         </div>
                                         <div class="mb-3">
                                             <label for="file" class="form-label">File Upload</label>
@@ -88,7 +88,7 @@
                                             <li>Ekstensi Excel 2007: <b>(.xlsx)</b></li>
                                             <li>Contoh nama File: CKP Januari 2024.xlsx</li>
                                         </ol>
-                                        <li>Perlu diingat bahwa angka yang ada di file akan <b>dikonversi</b> sesuai dengan <b>data crips</b> di setiap kriteria yang ada. Cek halaman <b>konversi</b> untuk mengetahui range-range yang ada pada setiap kriteria.</li>
+                                        <li>Perlu diingat bahwa angka yang ada di file akan <b>dikonversi</b> sesuai dengan <b>data crips</b> di setiap kriteria yang ada. Cek <b>Kelola Crips</b> di setiap kriteria pada halaman <b>Kriteria</b> untuk mengetahui range-range yang ada pada setiap kriteria.</li>
                                         <li>Setelah melakukan import, pastikan anda memeriksa data apakah sudah masuk atau belum.</li>
                                     </ol>
                                 </div>
@@ -142,7 +142,7 @@
 <div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-inp-export-{{ $latest_per->id_period }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
-            <form action="{{ route('admin.inputs.data.export', $latest_per->id_period) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.inputs.data.export.latest') }}" method="post" enctype="multipart/form-data">
                 <div class="modal-header border-bottom-0">
                     <h1 class="modal-title fs-5">Export Input Data ({{ $latest_per->id_period }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -580,7 +580,7 @@
 <div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-{{ $period->id_period }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
-            <form action="{{ route('admin.inputs.data.export', $period->id_period) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.inputs.data.export.old', $period->id_period) }}" method="post" enctype="multipart/form-data">
                 <div class="modal-header border-bottom-0">
                     <h1 class="modal-title fs-5">Export Input Data ({{ $period->id_period }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

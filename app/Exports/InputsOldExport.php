@@ -2,27 +2,27 @@
 
 namespace App\Exports;
 
-use App\Models\Input;
+use App\Models\HistoryInput;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMapping
+class InputsOldExport implements FromQuery, FromCollection, WithHeadings, WithMapping
 {
     use Exportable;
 
-    protected $latest_per;
+    protected $period;
 
-    public function __construct($latest_per)
+    public function __construct($period)
     {
-        $this->latest_per = $latest_per->id_period;
+        $this->period = $period;
     }
 
     public function query()
     {
-        return Input::query()->where('id_period', $this->latest_per);
+        return HistoryInput::query()->where('id_period', $this->period);
     }
 
     public function headings(): array
@@ -37,15 +37,15 @@ class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMappi
 
     public function map($data) : array {
         return [
-            $data->officer->nip,
-            $data->officer->name,
-            $data->criteria->name,
+            $data->officer_nip,
+            $data->officer_name,
+            $data->criteria_name,
             $data->input,
         ] ;
     }
 
     public function collection()
     {
-        return Input::all();
+        return HistoryInput::all();
     }
 }

@@ -29,7 +29,7 @@
                             <div class="tab-content pt-2" id="myTabContent">
                                 <div class="tab-pane fade show active" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
                                     <div class="alert alert-warning" role="alert">
-                                        <i class="bi bi-info-circle-fill"></i> <strong>WARNING</strong>
+                                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>WARNING</strong>
                                         <br/>
                                         Data yang telah terinput secara import / manual akan dihapus saat proses import berlangsung. Pastikan anda cadangkan data pegawai sebelum melakukan import.
                                     </div>
@@ -210,6 +210,165 @@
     </div>
 </div>
 @foreach ($parts as $part)
+<!--CHOICE METHODS (CREATE)-->
+<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-off-precre-{{ $part->id_part }}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5">Pilih Metode Create</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <p>Untuk mempercepat pengisian data pegawai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengisi data. Anda dapat melakukan pengisian secara manual jika membutuhkan.</p>
+            </div>
+            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-import">Import dari Excel (Disarankan)</button>
+                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-create-{{ $part->id_part }}">Isi Manual</button>
+                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--CREATE OFFICER-->
+<div class="modal modal-lg fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
+                </div>
+                <div class="modal-body">
+                    @csrf
+                    <div class="row justify-content-center g-4">
+                        <div class="col-md-7">
+                            <div class="position-sticky" style="top: 2rem;">
+                                @if (Session::get('modal_redirect') == 'modal-off-create')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="diri-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#diri-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="didi-{{ $part->id_part }}-tab-pane" aria-selected="true">Data Diri</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pegawai-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#pegawai-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="pegawai-{{ $part->id_part }}-tab-pane" aria-selected="false">Info Pegawai</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="diri-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="diri-{{ $part->id_part }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Nama Pegawai</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
+                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
+                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                                            <select class="form-select" id="gender" name="gender" required>
+                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
+                                                <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="religion" class="form-label">Agama</label>
+                                            <select class="form-select" id="religion" name="religion" required>
+                                                <option selected disabled value="">---Pilih Agama---</option>
+                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
+                                                <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                                <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
+                                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="photo" class="form-label">Foto (Pas Foto)</label>
+                                            <div class="input-group">
+                                                <input type="file" class="form-control" name="photo" id="photo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="pegawai-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $part->id_part }}-tab" tabindex="0">
+                                        <br/>
+                                        <div class="mb-3">
+                                            <label for="nip" class="form-label">NIP</label>
+                                            <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ old('nip') }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_part" class="form-label" hidden>Bagian</label>
+                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_department" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_department" name="id_department" required>
+                                                <option selected disabled value="">---Pilih Jabatan---</option>
+                                                @foreach ($departments as $department)
+                                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
+                                            <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
+                                                <option selected disabled value="">---Pilih Tim Fungsi---</option>
+                                                @foreach ($teams->where('id_part', $part->id_part) as $team)
+                                                    <option disabled value="">---{{ $team->name }}---</option>
+                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_1') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                    @endforeach
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
+                                            <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
+                                                <option selected value="">Tidak Ada</option>
+                                                @foreach ($teams as $team)
+                                                    <option disabled value="">---{{ $team->name }}---</option>
+                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_2') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                    @endforeach
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="position-sticky" style="top: 2rem;">
+                                <div class="alert alert-info" role="alert">
+                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                    <ol>
+                                        <li>Isi sesuai dengan data pegawai yang ada di BPS Jawa Timur</li>
+                                        <li>Untuk jabatan dan tim fungsi, pastikan data tersebut telah terdaftar di aplikasi ini. Jika tidak, silahkan tambahkan data jabatan dan tim fungsi</li>
+                                        <li>Periksa hasil kembali data pegawai sebelum ditambahkan ke aplikasi</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i>
+                        Tambah
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!--VIEW TEAMS-->
 <div class="modal modal-lg fade" id="modal-tim-view-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -384,7 +543,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $team->id_part }}">
                             <i class="bi bi-x-lg"></i>
                             Batal
                         </button>
@@ -414,7 +573,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $team->id_part }}">
                             <i class="bi bi-x-lg"></i>
                             Tidak
                         </button>
@@ -452,7 +611,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $team->part->id_part }}">
                             <i class="bi bi-x-lg"></i>
                             Batal
                         </button>
@@ -495,7 +654,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $subteam->team->part->id_part }}">
                                 <i class="bi bi-x-lg"></i>
                                 Batal
                             </button>
@@ -525,7 +684,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $subteam->team->id_part }}">
                                 <i class="bi bi-x-lg"></i>
                                 Tidak
                             </button>
@@ -541,165 +700,6 @@
         </div>
         @endforeach
     @endforeach
-<!--CHOICE METHODS (CREATE)-->
-<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-off-precre-{{ $part->id_part }}">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content rounded-4 shadow">
-            <div class="modal-header border-bottom-0">
-                <h1 class="modal-title fs-5">Pilih Metode Create</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-0">
-                <p>Untuk mempercepat pengisian data pegawai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengisi data. Anda dapat melakukan pengisian secara manual jika membutuhkan.</p>
-            </div>
-            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-import">Import dari Excel (Disarankan)</button>
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-create-{{ $part->id_part }}">Isi Manual</button>
-                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--CREATE OFFICER-->
-<div class="modal modal-lg fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
-                    <div class="row justify-content-center g-4">
-                        <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
-                                @if (Session::get('modal_redirect') == 'modal-off-create')
-                                @include('Templates.Includes.Components.alert')
-                                @endif
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="diri-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#diri-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="didi-{{ $part->id_part }}-tab-pane" aria-selected="true">Data Diri</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="pegawai-{{ $part->id_part }}-tab" data-bs-toggle="tab" data-bs-target="#pegawai-{{ $part->id_part }}-tab-pane" type="button" role="tab" aria-controls="pegawai-{{ $part->id_part }}-tab-pane" aria-selected="false">Info Pegawai</button>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="diri-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="diri-{{ $part->id_part }}-tab" tabindex="0">
-                                        <br/>
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Nama Pegawai</label>
-                                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
-                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                                            <select class="form-select" id="gender" name="gender" required>
-                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
-                                                <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="religion" class="form-label">Agama</label>
-                                            <select class="form-select" id="religion" name="religion" required>
-                                                <option selected disabled value="">---Pilih Agama---</option>
-                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
-                                                <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                                <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
-                                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="photo" class="form-label">Foto (Pas Foto)</label>
-                                            <div class="input-group">
-                                                <input type="file" class="form-control" name="photo" id="photo">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="pegawai-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $part->id_part }}-tab" tabindex="0">
-                                        <br/>
-                                        <div class="mb-3">
-                                            <label for="nip" class="form-label">NIP</label>
-                                            <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ old('nip') }}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_part" class="form-label" hidden>Bagian</label>
-                                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_department" class="form-label">Jabatan</label>
-                                            <select class="form-select" id="id_department" name="id_department" required>
-                                                <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
-                                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
-                                            <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
-                                                <option selected disabled value="">---Pilih Tim Fungsi---</option>
-                                                @foreach ($teams->where('id_part', $part->id_part) as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_1') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
-                                            <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
-                                                <option selected value="">Tidak Ada</option>
-                                                @foreach ($teams as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_2') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="alert alert-info" role="alert">
-                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
-                                    <ol>
-                                        <li>Isi sesuai dengan data pegawai yang ada di BPS Jawa Timur</li>
-                                        <li>Untuk jabatan dan tim fungsi, pastikan data tersebut telah terdaftar di aplikasi ini. Jika tidak, silahkan tambahkan data jabatan dan tim fungsi</li>
-                                        <li>Periksa hasil kembali data pegawai sebelum ditambahkan ke aplikasi</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
-                        Tambah
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endforeach
 @foreach ($officers as $officer)
 <!--CHOICE METHODS (UPDATE)-->

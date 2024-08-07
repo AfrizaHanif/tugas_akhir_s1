@@ -21,7 +21,7 @@
                 </button>
                 @else
                 <button class="nav-link active text-start" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
-                    Not Running
+                    <i class="bi bi-x-lg"></i> Not Running
                 </button>
                 @endif
                 <hr/>
@@ -57,10 +57,17 @@
                                     <i class="bi bi-file-earmark-arrow-up"></i>
                                     Import
                                 </button>
+                                @if (!$inputs->isEmpty())
                                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export
                                 </button>
+                                @else
+                                <button type="button" class="btn btn-secondary" disabled>
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                    Export
+                                </button>
+                                @endif
                             </div>
                         </div>
                         <!--DATA CHECKER-->

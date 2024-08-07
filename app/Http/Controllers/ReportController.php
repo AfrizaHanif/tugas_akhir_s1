@@ -12,8 +12,10 @@ use App\Models\SubTeam;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use setasign\Fpdi\Fpdi;
 
 class ReportController extends Controller
 {
@@ -147,7 +149,7 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
         $results = HistoryScore::where('id_period', $period)->orderBy('final_score', 'DESC')->get();
-        
+
         //CREATE A REPORT
         $file = 'RPT-Result-'.$periods->id_period.'.pdf';
         $pdf = PDF::
@@ -155,5 +157,63 @@ class ReportController extends Controller
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
+    }
+
+    public function certificate($period)
+    {
+        //GET DATA
+        $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
+        $results = HistoryScore::where('id_period', $period)->orderBy('final_score', 'DESC')->first();
+
+        //PREPARING A CERTIFICATE
+        $officer_name = $results->officer_name;
+        $period_name = $periods->period_name;
+        $now = Carbon::now()
+        ->locale('id')
+        ->settings(['formatFunction' => 'translatedFormat'])
+        ->format('d F Y');
+        $file = 'RPT-Certificate-'.$periods->id_period.'.pdf';
+        $output = public_path().'/PDFs/'.$file;
+        $source = public_path().'/PDFs/Default/New Certificate.pdf';
+
+        //CREATE A CERTIFICATE
+        $this->fillPDF($file, $source, $output, $officer_name, $period_name, $now);
+
+        //return response()->download($output, $file);
+    }
+
+    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now){
+        //SET TEMPLATE
+        $fpdi = new Fpdi;
+        $fpdi->setSourceFile($source);
+        $template = $fpdi->importPage(1);
+        $size = $fpdi->getTemplateSize($template);
+        $fpdi->AddPage($size['orientation'],array($size['width'],$size['height']));
+        $fpdi->useTemplate($template);
+
+        //GET AND CUSTOMIZE OFFICER NAME
+        $text1 = $officer_name;
+        $fpdi->SetFont("Helvetica", "", 35);
+        $fpdi->SetTextColor(25,26,25);
+        $fpdi->SetXY(103, 103);
+        $fpdi->Cell(75, 0, $text1, 0, 2, 'C');
+
+        //GET AND CUSTOMIZE PERIOD NAME
+        $text2 = $period_name;
+        $fpdi->SetFont("Helvetica", "", 20);
+        $fpdi->SetTextColor(25,26,25);
+        $fpdi->SetXY(103, 126);
+        $fpdi->Cell(75, 0, $text2, 0, 2, 'C');
+
+        //GET AND CUSTOMIZE TODAY'S DATE
+        $text3 = $now;
+        $fpdi->SetFont("Helvetica", "", 17);
+        $fpdi->SetTextColor(25,26,25);
+        $fpdi->SetXY(149, 165);
+        $fpdi->Cell(75, 0, $text3, 0, 2, 'L');
+
+        //RETURN TO VIEW
+        $fpdi->Output('F', $output);
+        return $fpdi->Output('I', $file);
     }
 }

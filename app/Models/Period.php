@@ -19,6 +19,7 @@ class Period extends Model
         'name',
         'month',
         'year',
+        'active_days',
         'status',
     ];
 

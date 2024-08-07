@@ -119,6 +119,10 @@
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
+                                                    <a href="{{ route('reports.certificate', $period->id_period) }}" type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                        <i class="bi bi-patch-check"></i>
+                                                        Sertifikat
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

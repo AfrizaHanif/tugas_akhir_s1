@@ -1,3 +1,4 @@
+<img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 40%;">
 <h1 style="text-align:center;">Laporan Penilaian</h1>
 @foreach ($officers as $officer)
 <p>Periode: {{ $month }} {{ $year }}</p>

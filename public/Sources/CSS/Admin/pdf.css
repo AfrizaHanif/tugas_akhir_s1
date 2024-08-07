@@ -13,11 +13,11 @@ p, h1, h2, h3 {
     padding: 8px;
 }
 
-#table-officer tr:nth-child(even), #table-result tr:nth-child(even), #table-analysis tr:nth-child(even) {
+#table-officer tr:nth-child(even), #table-analysis tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-#table-officer tr:hover, #table-result tr:hover, #table-analysis tr:hover {
+#table-officer tr:hover, #table-analysis tr:hover {
     background-color: #ddd;
 }
 
@@ -47,4 +47,4 @@ p, h1, h2, h3 {
 
 #table-result tbody tr:first-child td {
     background-color:lightskyblue
-  }
+}

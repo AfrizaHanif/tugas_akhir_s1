@@ -4,10 +4,9 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <!--LOGO-->
-                <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
-                    <svg class="bi me-2" style="vertical-align: -.125em;" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+                <a href="/" class="d-flex align-items-center col-md-4 my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                    <img src="{{ asset('Images/Logo/BPS White.png') }}" style="max-width: 70%;">
                 </a>
-
                 <!--NAVIGATIONS-->
                 <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                     <li>
@@ -38,7 +37,6 @@
             </div>
         </div>
     </div>
-
     <!--DOWNER MENU-->
     <div class="px-3 py-2 border-bottom mb-3">
         <div class="container d-flex flex-wrap justify-content-center">

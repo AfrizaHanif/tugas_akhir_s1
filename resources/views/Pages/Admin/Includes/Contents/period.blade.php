@@ -4,27 +4,16 @@
 @endif
 <!--MENU-->
 <p>
-    <div class="dropdown">
-        <!--ADD PERIOD-->
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-calendar4-range"></i>
-            Tambah Periode
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <form action="{{ route('admin.masters.periods.refresh') }}" method="post">
-                    @csrf
-                    <button class="dropdown-item" type="submit">Refresh</button>
-                </form>
-            </li>
-            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-create">Manual</a></li>
-        </ul>
-        <!--HELP-->
-        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-            <i class="bi bi-question-lg"></i>
-            Bantuan
-        </a>
-    </div>
+    <!--ADD PERIOD-->
+    <a class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#modal-per-create">
+        <i class="bi bi-calendar-plus"></i>
+        Tambah Periode
+    </a>
+    <!--HELP-->
+    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+        <i class="bi bi-question-lg"></i>
+        Bantuan
+    </a>
 </p>
 <!--TABLE-->
 <table class="table table-hover table-bordered">
@@ -32,6 +21,7 @@
         <tr class="table-primary">
             <th class="col-1" scope="col">#</th>
             <th scope="col">Nama</th>
+            <th scope="col">Hari Aktif Kerja</th>
             <th scope="col">Status</th>
             <th class="col-1" scope="col">Action</th>
         </tr>
@@ -41,6 +31,7 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $period->name }}</td>
+            <td>{{ $period->active_days }}</td>
             <td>
                 @if ($period->status == "Finished")
                 <span class="badge text-bg-success">Selesai</span>

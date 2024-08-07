@@ -12,27 +12,33 @@
                     @include('Templates.Includes.Components.alert')
                     @endif
                     @csrf
-                    <div class="mb-3">
-                        <label for="month" class="form-label">Bulan</label>
-                        <select class="form-select" id="month" name="month" required>
-                            <option selected disabled value="">---Pilih Bulan---</option>
-                            <option value="01" {{ old('month') == '01' ? 'selected' : null }}>Januari</option>
-                            <option value="02" {{ old('month') == '02' ? 'selected' : null }}>Februari</option>
-                            <option value="03" {{ old('month') == '03' ? 'selected' : null }}>Maret</option>
-                            <option value="04" {{ old('month') == '04' ? 'selected' : null }}>April</option>
-                            <option value="05" {{ old('month') == '05' ? 'selected' : null }}>Mei</option>
-                            <option value="06" {{ old('month') == '06' ? 'selected' : null }}>Juni</option>
-                            <option value="07" {{ old('month') == '07' ? 'selected' : null }}>Juli</option>
-                            <option value="08" {{ old('month') == '08' ? 'selected' : null }}>Agustus</option>
-                            <option value="09" {{ old('month') == '09' ? 'selected' : null }}>September</option>
-                            <option value="10" {{ old('month') == '10' ? 'selected' : null }}>Oktober</option>
-                            <option value="11" {{ old('month') == '11' ? 'selected' : null }}>November</option>
-                            <option value="12" {{ old('month') == '12' ? 'selected' : null }}>Desember</option>
-                        </select>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="month" class="form-label">Bulan</label>
+                            <select class="form-select" id="month" name="month" required>
+                                <option selected disabled value="">---Pilih Bulan---</option>
+                                <option value="01" {{ old('month') == '01' ? 'selected' : null }}>Januari</option>
+                                <option value="02" {{ old('month') == '02' ? 'selected' : null }}>Februari</option>
+                                <option value="03" {{ old('month') == '03' ? 'selected' : null }}>Maret</option>
+                                <option value="04" {{ old('month') == '04' ? 'selected' : null }}>April</option>
+                                <option value="05" {{ old('month') == '05' ? 'selected' : null }}>Mei</option>
+                                <option value="06" {{ old('month') == '06' ? 'selected' : null }}>Juni</option>
+                                <option value="07" {{ old('month') == '07' ? 'selected' : null }}>Juli</option>
+                                <option value="08" {{ old('month') == '08' ? 'selected' : null }}>Agustus</option>
+                                <option value="09" {{ old('month') == '09' ? 'selected' : null }}>September</option>
+                                <option value="10" {{ old('month') == '10' ? 'selected' : null }}>Oktober</option>
+                                <option value="11" {{ old('month') == '11' ? 'selected' : null }}>November</option>
+                                <option value="12" {{ old('month') == '12' ? 'selected' : null }}>Desember</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="year" class="form-label">Tahun</label>
+                            <input type="number" class="form-control" id="year" name="year" min="2010" max="2099" required>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="year" class="form-label">Tahun</label>
-                        <input type="number" class="form-control" id="year" name="year" min="2010" max="2099" required>
+                        <label for="year" class="form-label">Hari Aktif (Setelah dikurangi hari libur)</label>
+                        <input type="number" class="form-control" id="active_days" name="active_days" min="1" max="31" required>
                     </div>
                 </div>
                 <div class="modal-footer">

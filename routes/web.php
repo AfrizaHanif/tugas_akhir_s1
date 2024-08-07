@@ -76,6 +76,7 @@ Route::prefix('reports')->name('reports.')->group(function () {
         });
         Route::get('/analysis/{period}', 'analysis')->name('analysis');
         Route::get('/result/{period}', 'result')->name('result');
+        Route::get('/certificate/{period}', 'certificate')->name('certificate');
     });
 });
 
@@ -127,7 +128,10 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                             Route::get('/ckp/{period}', 'import_ckp')->name('ckp');
                             Route::get('/berakhlak/{period}', 'import_berakhlak')->name('berakhlak');
                         });
-                        Route::post('/export/{period}', 'export')->name('export');
+                        Route::prefix('export')->name('export.')->group(function () {
+                            Route::post('/', 'export_latest')->name('latest');
+                            Route::post('/old/{period}', 'export_old')->name('old');
+                        });
                         Route::post('/destroyall/{period}', 'destroyall')->name('destroyall');
                     });
                 });

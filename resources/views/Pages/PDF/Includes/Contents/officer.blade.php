@@ -1,4 +1,5 @@
-<h1 style="text-align:center;">Laporan Kriteria</h1>
+<img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 40%;">
+<h1 style="text-align:center;">Laporan Daftar Pegawai</h1>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
 @foreach ($parts as $part)
 <h2>{{ $part->name }}</h2>

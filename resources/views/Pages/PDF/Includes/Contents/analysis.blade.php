@@ -1,5 +1,6 @@
+<img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 30%;">
 <h1 style="text-align:center;">Laporan Analisis SAW</h1>
-<p>Periode: {{ $periods->period_name }}</p>
+<h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
 <h2>Pegawai yang Terlibat</h2>
 <table id="table-analysis">
@@ -23,7 +24,7 @@
         </tr>
     </tfoot>
 </table>
-<h2>Kriteria yang terlibat</h2>
+<h2>Kriteria yang Terlibat</h2>
 <table id="table-analysis">
     <thead>
         <tr>
@@ -166,3 +167,7 @@
         </tr>
     </tfoot>
 </table>
+<ul>
+    <li>Dikarenakan bahwa terbatasnya tampilan laporan, maka nama Pegawai dan Kriteria diganti dengan kode Pegawai dan Kriteria. Silahkan cek pada Pegawai dan Kriteria yang terlibat untuk melihat kode dan nama tersebut.</li>
+    <li>Analisis yang digunakan adalah analisis <b>SAW</b> untuk menentukan karyawan terbaik.</li>
+</ul>

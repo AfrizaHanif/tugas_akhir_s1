@@ -48,7 +48,7 @@
                             <!--ADD SUB CRITERIA-->
                             <div class="col-auto pe-0">
                                 <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crt-create-{{ $category->id_category }}">
-                                    <i class="bi bi-person-plus"></i>
+                                    <i class="bi bi-clipboard2-plus"></i>
                                     Tambah Kriteria
                                 </a>
                             </div>

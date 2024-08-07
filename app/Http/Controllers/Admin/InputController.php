@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\InputsExport;
+use App\Exports\InputsOldExport;
 use App\Http\Controllers\Controller;
 use App\Imports\InputsImport;
 use App\Models\Category;
@@ -287,10 +288,21 @@ class InputController extends Controller
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Import Data Berhasil')->with('code_alert', 1);
     }
 
-    public function export(Request $request, $period)
+    public function export_latest(Request $request)
+    {
+        //LATEST PERIODE
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+
+        //GET EXPORT FILE
+        return Excel::download(new InputsExport($latest_per), 'INP-Backup-'.$latest_per->id_period.'.xlsx');
+
+        //NOTE: NO NEED TO RETURN TO VIEW. LET TOASTS REMIND YOU AFTER EXPORT
+    }
+
+    public function export_old(Request $request, $period)
     {
         //GET EXPORT FILE
-        return Excel::download(new InputsExport($period), 'INP-Backup-'.$period.'.xlsx');
+        return Excel::download(new InputsOldExport($period), 'INP-Backup-'.$period.'.xlsx');
 
         //NOTE: NO NEED TO RETURN TO VIEW. LET TOASTS REMIND YOU AFTER EXPORT
     }

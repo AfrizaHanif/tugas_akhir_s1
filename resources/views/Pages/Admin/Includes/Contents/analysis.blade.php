@@ -9,7 +9,7 @@
     <div class="dropdown">
         <!--PERIOD PICKER-->
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-folder-plus"></i>
+            <i class="bi bi-calendar-range"></i>
             Pilih Periode
         </button>
         <ul class="dropdown-menu">

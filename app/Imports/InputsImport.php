@@ -50,7 +50,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                     $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
-                        if($criteria->name == 'Kehadiran'){
+                        if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){
                             //dd('Yes');
                             $remain = $this->active_days - $row[$criteria->source];
                             Input::create([
