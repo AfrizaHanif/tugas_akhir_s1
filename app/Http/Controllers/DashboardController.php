@@ -68,7 +68,7 @@ class DashboardController extends Controller
         ->where('is_lead', 'No')
         ->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
         $latest_best = HistoryResult::orderBy('id', 'DESC')->latest()->first();
         $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->latest()->get();
         $history_prd = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'DESC')->first();
@@ -82,7 +82,7 @@ class DashboardController extends Controller
 
     //OPTIONAL: DELETE
     public function officer(){
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
         $periods = Period::get();
         $results = Result::with('officer', 'period')
         ->orderBy('count', 'DESC')

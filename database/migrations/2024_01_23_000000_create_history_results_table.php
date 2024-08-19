@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('officer_department', 50);
             $table->string('officer_photo', 300)->nullable();
             $table->decimal('final_score', 8, 3);
+            //$table->smallInteger('ckp');
             $table->timestamps();
         });
     }

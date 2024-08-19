@@ -88,6 +88,7 @@ class PeriodController extends Controller
             'name'=>$name_month.' '.$request->year,
             'month'=>$name_month,
             'year'=>$request->year,
+            'active_days'=>$request->active_days,
             'status'=>'Pending',
 		]);
 

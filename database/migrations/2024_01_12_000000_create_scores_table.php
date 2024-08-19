@@ -18,6 +18,7 @@ return new class extends Migration
             $table->char('id_officer', 11);
             $table->foreign('id_officer')->references('id_officer')->on('officers');
             $table->decimal('final_score', 8, 3);
+            $table->smallInteger('ckp');
             $table->char('status', 15);
             $table->timestamps();
         });

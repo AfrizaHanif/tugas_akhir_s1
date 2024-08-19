@@ -2,7 +2,7 @@
 <!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
     @if (!empty($latest_per->status))
-        @if ($latest_per->status == 'Scoring')
+        @if ($latest_per->status == 'Scoring' || $latest_per->status == 'Validating')
         @elseif ($latest_per->status == 'Voting')
             @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -198,6 +198,8 @@
                 @if (!empty($latest_per))
                     @if ($latest_per->status == 'Scoring')
                     <h4 class="card-title">Status: Aktif</h4>
+                    @elseif ($latest_per->status == 'Validating')
+                    <h4 class="card-title">Status: Validasi</h4>
                     @endif
                 @else
                 <h4 class="card-title">Status: Belum Aktif</h4>
@@ -209,7 +211,11 @@
                         Periode: {{ $latest_per->month ?? 'Belum Aktif' }} {{ $latest_per->year ?? '' }}
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        @if (&& Auth::user()->part == "Admin")
                         <a href="{{ route('admin.masters.periods.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
+                        @else
+                        <a type="button" class="btn btn-primary btn-sm disabled">Cek</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -325,7 +331,7 @@
                     <div class="carousel-caption d-md-block" style="top:0; bottom:auto; left:6%; right:6%; text-align:left;">
                         <h5 class="card-title">Panduan Penggunaan</h5>
                         <p class="card-text">Apakah anda baru pertama kali memakai aplikasi ini? Klik tombol ini untuk melihat panduan penggunaan.</p>
-                        <button type="button" class="btn btn-primary btn-sm">Buka Panduan</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-idx-guide">Buka Panduan</button>
                     </div>
                 </div>
                 <div class="carousel-item">

@@ -133,6 +133,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                             Route::post('/old/{period}', 'export_old')->name('old');
                         });
                         Route::post('/destroyall/{period}', 'destroyall')->name('destroyall');
+                        Route::post('/refresh/{period}', 'refresh')->name('refresh');
                     });
                 });
             });

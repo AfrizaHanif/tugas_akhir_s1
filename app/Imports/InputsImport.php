@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Criteria;
 use App\Models\Input;
+use App\Models\InputRAW;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -25,15 +26,22 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $active_days, $officers, $criterias, $scores;
+    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $per_status;
 
     public function __construct($period)
     {
         $this->latest_per = $period;
         $this->active_days = Period::where('id_period', $period)->first()->active_days;
-        $this->officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->where('is_lead', 'No')->orderBy('name', 'ASC')->get();
+        $this->officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query){
+            $query->where('name', 'Developer');
+        })
+        ->where('is_lead', 'No')
+        ->orderBy('name', 'ASC')->get();
         $this->criterias = Criteria::with('category')->get();
-        $this->scores = Score::get();
+        $this->scores = Score::where('id_period', $period)->get();
+        $this->inputs = Input::where('id_period', $period)->get();
+        $this->per_status = Period::where('id_period', $period)->first()->status;
     }
 
     public function collection(Collection $rows)
@@ -53,30 +61,92 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                         if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){
                             //dd('Yes');
                             $remain = $this->active_days - $row[$criteria->source];
-                            Input::create([
-                                'id_input' => $id_input,
-                                'id_period' => $this->latest_per,
-                                'id_officer' => $officer->id_officer,
-                                'id_criteria' => $criteria->id_criteria,
-                                'input' => $remain,
-                                'status' => 'Pending',
-                            ]);
+                            if($this->per_status == 'Scoring'){
+                                Input::firstOrCreate([
+                                    'id_input' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $remain,
+                                    'status' => 'Pending',
+                                ]);
+                                InputRAW::firstOrCreate([
+                                    'id_input_raw' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $remain,
+                                    'status' => 'Pending',
+                                ]);
+                            }elseif($this->per_status == 'Validating'){
+                                Input::firstOrCreate([
+                                    'id_input' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $remain,
+                                    'status' => 'Fixed',
+                                ]);
+                                InputRAW::firstOrCreate([
+                                    'id_input_raw' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $remain,
+                                    'status' => 'Fixed',
+                                ]);
+                            }
                         }else{
                             //dd('No');
-                            Input::create([
-                                'id_input' => $id_input,
-                                'id_period' => $this->latest_per,
-                                'id_officer' => $officer->id_officer,
-                                'id_criteria' => $criteria->id_criteria,
-                                'input' => $row[$criteria->source],
-                                'status' => 'Pending',
-                            ]);
+                            if($this->per_status == 'Scoring'){
+                                Input::firstOrCreate([
+                                    'id_input' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $row[$criteria->source],
+                                    'status' => 'Pending',
+                                ]);
+                                InputRAW::firstOrCreate([
+                                    'id_input_raw' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $row[$criteria->source],
+                                    'status' => 'Pending',
+                                ]);
+                            }elseif($this->per_status == 'Validating'){
+                                Input::firstOrCreate([
+                                    'id_input' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $row[$criteria->source],
+                                    'status' => 'Fixed',
+                                ]);
+                                InputRAW::firstOrCreate([
+                                    'id_input_raw' => $id_input,
+                                    'id_period' => $this->latest_per,
+                                    'id_officer' => $officer->id_officer,
+                                    'id_criteria' => $criteria->id_criteria,
+                                ],[
+                                    'input' => $row[$criteria->source],
+                                    'status' => 'Fixed',
+                                ]);
+                            }
                         }
                     }
 
-                    $check = $this->scores->where('id_officer', $officer->id_officer)->where('id_period', $this->latest_per)->first();
-                    if(!is_null($check)){
-                        Score::where('id_period', $this->latest_per)->where('id_officer', $officer->id_officer)->update([
+                    $check_score = $this->scores->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->first();
+                    if(!is_null($check_score)){
+                        Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
                             'status'=>'Revised',
                         ]);
                     }

@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         //PARTS: Kategori Bagian
         DB::table('parts')->insert([
             'id_part' => 'PRT-000',
-            'name' => 'Lain-Lain',
+            'name' => 'Kepemimpinan',
         ]);
 
         /*
@@ -35,12 +35,17 @@ class DatabaseSeeder extends Seeder
 
         DB::table('parts')->insert([
             'id_part' => 'PRT-001',
-            'name' => 'Bagian Umum',
+            'name' => 'Umum',
         ]);
 
         DB::table('parts')->insert([
             'id_part' => 'PRT-002',
             'name' => 'Tim Teknis',
+        ]);
+
+        DB::table('parts')->insert([
+            'id_part' => 'PRT-999',
+            'name' => 'Developer',
         ]);
 
         //DEPARTMENTS: Jabatan
@@ -139,7 +144,7 @@ class DatabaseSeeder extends Seeder
         DB::table('teams')->insert([
             'id_team' => 'TIM-000', //TIM-000-xxx
             'id_part' => 'PRT-000',
-            'name' => 'Tidak Ada',
+            'name' => 'Pimpinan BPS',
         ]);
 
         DB::table('teams')->insert([
@@ -184,11 +189,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nerwilis',
         ]);
 
+        DB::table('teams')->insert([
+            'id_team' => 'TIM-999',
+            'id_part' => 'PRT-999',
+            'name' => 'Developer',
+        ]);
+
         //SUB TEAMS: Pecahan Tim
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-000',
             'id_team' => 'TIM-000',
-            'name' => 'Lain-Lain',
+            'name' => 'Pimpinan BPS',
         ]);
 
         DB::table('sub_teams')->insert([
@@ -269,15 +280,21 @@ class DatabaseSeeder extends Seeder
             'name' => 'Analisis dan IPS',
         ]);
 
+        DB::table('sub_teams')->insert([
+            'id_sub_team' => 'STM-999',
+            'id_team' => 'TIM-999',
+            'name' => 'Developer',
+        ]);
+
         //OFFICERS: Pegawai
         DB::table('officers')->insert([
             'id_officer' => 'OFF-000',
             'nip' => '000000000',
             'name' => 'Muhammad Afriza Hanif',
             'id_department' => 'DPT-000',
-            'id_sub_team_1' => 'STM-000',
+            'id_sub_team_1' => 'STM-999',
             'place_birth' => 'Surabaya',
-            'date_birth' => '2000/01/01',
+            'date_birth' => '1996/04/08',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             'is_lead' => 'Yes',
@@ -307,7 +324,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -456,21 +473,21 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->insert([
             'id_category' => 'CAT-001',
             'name' => 'Kedisiplinan',
-            'type' => 'Kehadiran',
+            //'type' => 'Kehadiran',
             'source' => 'Presensi',
         ]);
 
         DB::table('categories')->insert([
             'id_category' => 'CAT-002',
             'name' => 'Keterampilan Teknis',
-            'type' => 'Prestasi Kerja',
+            //'type' => 'Prestasi Kerja',
             'source' => 'CKP',
         ]);
 
         DB::table('categories')->insert([
             'id_category' => 'CAT-003',
             'name' => 'Perilaku BerAkhlak',
-            'type' => 'Prestasi Kerja',
+            //'type' => 'Prestasi Kerja',
             'source' => 'SKP',
         ]);
 

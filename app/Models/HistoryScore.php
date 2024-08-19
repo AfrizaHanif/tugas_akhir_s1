@@ -19,5 +19,6 @@ class HistoryScore extends Model
         'officer_name',
         'officer_department',
         'final_score',
+        'ckp',
     ];
 }

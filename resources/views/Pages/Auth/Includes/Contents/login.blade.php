@@ -1,16 +1,17 @@
 <main class="form-signin w-100 m-auto">
-    <div class="row g-5">
-        <div class="col-md-6 d-flex justify-content-center">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid" alt="Phone image">
+    <div class="row g-1 align-items-center"> <!-- G- For Padding -->
+        <div class="col-md-7 justify-content-center">
+            <img src="{{ asset('Images/Vector/Login.png') }}" class="img-fluid">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <form action="{{ route('login.auth') }}" method="post">
                 @csrf
                 <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/commons/2/28/Lambang_Badan_Pusat_Statistik_%28BPS%29_Indonesia.svg" alt="" width="72" height="57">
                 <h1 class="h3 mb-3 fw-normal">Masuk / Login</h1>
                 @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-x-circle-fill"></i> <strong>ERROR: </strong>Terdapat kesalahan saat melakukan input data:
+                    <i class="bi bi-x-circle-fill"></i> <strong>ERROR </strong>
+                    Terdapat kesalahan saat melakukan input data:
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>

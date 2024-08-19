@@ -10,7 +10,7 @@
     <!--PAGE MENU (CHANGE IF PAGE MENU FROM SIDEBAR HAS CHANGED)-->
     <div class="offcanvas-body text-bg-dark">
         <ul class="nav nav-pills flex-column mb-auto">
-            <div id="selector1">
+            <div id="selector-offcanvas">
                 @if (Auth::check())
                 <li class="nav-item">
                     <a href="/admin" class="{{ (request()->is('admin')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -32,7 +32,7 @@
                         <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#master"/></svg>
                         Master
                     </button>
-                    <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector1">
+                    <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector-offcanvas">
                         <ul class="list-unstyled fw-normal pb-1 small">
                             <li>
                                 <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -44,6 +44,12 @@
                                 <a href="/admin/masters/users" class="{{ (request()->is('admin/masters/users')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#user"/></svg>
                                     Pengguna
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/masters/criterias" class="{{ (request()->is('admin/masters/criterias')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#crit-score"/></svg>
+                                    Kriteria
                                 </a>
                             </li>
                             <li>
@@ -61,40 +67,20 @@
                         <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#input"/></svg>
                         Input
                     </button>
-                    <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector1">
+                    <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector-offcanvas">
                         <ul class="list-unstyled fw-normal pb-1 small">
                             @if (Auth::user()->part == "Admin")
                             <li>
-                                <a href="/admin/inputs/presences" class="{{ (request()->is('admin/inputs/presences*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <a href="/admin/inputs/data" class="{{ (request()->is('admin/inputs/data*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
-                                    Data Kehadiran
-                                </a>
-                            </li>
-                            @elseif (Auth::user()->part == "KBU")
-                            <li>
-                                <a href="/admin/inputs/kbu/performances" class="{{ (request()->is('admin/inputs/kbu/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                    Data Prestasi Kerja
-                                </a>
-                            </li>
-                            @elseif (Auth::user()->part == "KTT")
-                            <li>
-                                <a href="/admin/inputs/ktt/performances" class="{{ (request()->is('admin/inputs/ktt/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                    Data Prestasi Kerja
+                                    Data Input
                                 </a>
                             </li>
                             @elseif (Auth::user()->part == "KBPS")
                             <li>
-                                <a href="/admin/inputs/kbps/performances" class="{{ (request()->is('admin/inputs/kbps/performances')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#performance"/></svg>
-                                    Data Prestasi Kerja
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/inputs/scores" class="{{ (request()->is('admin/inputs/scores')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <a href="/admin/inputs/validate" class="{{ (request()->is('admin/inputs/validate*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
-                                    Validasi
+                                    Validasi Input
                                 </a>
                             </li>
                             @endif
@@ -106,7 +92,7 @@
                         <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
                         Analysis
                     </button>
-                    <div class="{{ (request()->is('admin/analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse" data-bs-parent="#selector1">
+                    <div class="{{ (request()->is('admin/analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse" data-bs-parent="#selector-offcanvas">
                         <ul class="list-unstyled fw-normal pb-1 small">
                             <li>
                                 <a href="/admin/analysis/saw" class="{{ (request()->is('admin/analysis/saw*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">

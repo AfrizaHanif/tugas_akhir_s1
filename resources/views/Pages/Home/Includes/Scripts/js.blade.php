@@ -13,6 +13,8 @@
 
         /**
          * Preloader
+         * NOTE: Change setTimeout to set delay timer after load complete. Or remove timer for
+         * instant without delay
          */
         const removePreloader = () => preloader.remove();
         let preloader = select(".preloader");

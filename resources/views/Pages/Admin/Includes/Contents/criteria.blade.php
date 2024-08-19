@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <h4 class="pb-2">Jenis: {{ $category->type }} | Sumber: {{ $category->source }}</h4>
+                <h4 class="pb-2">Sumber: {{ $category->source }}</h4>
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>

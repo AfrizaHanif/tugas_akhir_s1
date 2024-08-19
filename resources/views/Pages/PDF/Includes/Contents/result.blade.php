@@ -21,7 +21,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="4">Total Data: <b>{{ $results->count() }}</b> Pegawai</td>
+            <td colspan="4">Total Data: <b>{{ $results->take(3)->count() }}</b> Pegawai</td>
         </tr>
     </tfoot>
 </table>
@@ -30,4 +30,4 @@
     <li>Pegawai yang diambil pada laporan ini adalah tiga pegawai dengan hasil akhir terbaik.</li>
     <li>Jika angka akhir pada ranking pertama sama, maka akan dipilih dengan nilai CKP terbaik.</li>
 </ul>
-<p><b>PERHATIAN:</b> Hasil akhir tersebut merupakan hasil final dan tidak dapat dikomplain.</p>
+<p><b>PERHATIAN</b> Hasil akhir tersebut merupakan hasil final dan tidak dapat dikomplain.</p>

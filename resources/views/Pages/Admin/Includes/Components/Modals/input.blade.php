@@ -101,7 +101,10 @@
                         <i class="bi bi-x-lg"></i>
                         Tutup
                     </button>
-                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i>
+                        Import
+                    </button>
                 </div>
             </form>
         </div>
@@ -169,7 +172,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-0">
-                <p>Untuk mempercepat pengisian nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengisi nilai. Anda dapat melakukan pengisian secara manual jika membutuhkan.</p>
+                <p>Untuk mempercepat pengisian nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengisi nilai.</p>
             </div>
             <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
                 @if (!empty($latest_per))
@@ -190,7 +193,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-0">
-                <p>Untuk mempercepat update nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengupdate nilai. Anda dapat melakukan pengisian secara manual jika membutuhkan.</p>
+                <p>Untuk mempercepat update nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengupdate nilai.</p>
             </div>
             <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
                 @if (!empty($latest_per))
@@ -258,7 +261,7 @@
                                         </div>
                                         @empty
                                         <div class="alert alert-danger" role="alert">
-                                            Tidak ada data sub kriteria untuk Data Kehadiran
+                                            Tidak ada data sub kriteria
                                         </div>
                                         @endforelse
                                     </div>
@@ -375,7 +378,7 @@
                                             @endforelse
                                         @empty
                                         <div class="alert alert-danger" role="alert">
-                                            Tidak ada data sub kriteria untuk Data Kehadiran
+                                            Tidak ada data sub kriteria
                                         </div>
                                         @endforelse
                                     </div>
@@ -430,11 +433,13 @@
                     <tr>
                         <th scope="row">{{ $criteria->name }}</th>
                         <td>
+                            @foreach ($input_raws->where('id_input_raw', $input->id_input) as $raw)
                             @if ($criteria->need == 'Ya')
-                            <b>{{ $input->input }}</b>
+                            <b>{{ $input->input }} ({{ $raw->input }})</b>
                             @else
-                            {{ $input->input }}
+                            {{ $input->input }} ({{ $raw->input }})
                             @endif
+                            @endforeach
                         </td>
                     </tr>
                     @empty
@@ -504,6 +509,37 @@
     </div>
 </div>
 @endforeach
+<!--REFRESH CONVERT-->
+<div class="modal fade" id="modal-inp-refresh-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.inputs.data.refresh', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Refresh Input ({{ $latest_per->id_period}})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                        <br/>
+                        Apakah anda ingin melakukan konversi ulang penilaian? Data yang telah dikonversi akan dihapus untuk kebutuhan konversi ulang.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-backspace"></i>
+                        Tidak
+                    </button>
+                    @csrf
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endif
 
 @foreach ($periods as $period)
@@ -547,7 +583,9 @@
                                 <td>{{ $officer->officer_department }}</td>
                                 @foreach ($hcriterias as $criteria)
                                     @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $history)
-                                    <td>{{ $history->input }}</td>
+                                    @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $raw)
+                                    <td>{{ $history->input }} ({{ $raw->input }})</td>
+                                    @endforeach
                                     @empty
                                         <td>0</td>
                                     @endforelse
@@ -610,10 +648,12 @@
                     <table class="table">
                         @foreach ($hcriterias as $criteria)
                         @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $history)
+                        @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $raw)
                         <tr>
                             <th scope="row">{{ $criteria->criteria_name }}</th>
-                            <td>{{ $history->input }}</td>
+                            <td>{{ $history->input }} ({{ $raw->input }})</td>
                         </tr>
+                        @endforeach
                         @empty
                         <tr>
                             <th scope="row">{{ $criteria->criteria_name }}</th>

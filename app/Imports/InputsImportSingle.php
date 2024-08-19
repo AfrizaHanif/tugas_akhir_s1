@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Imports;
+
+use App\Models\Criteria;
+use App\Models\Input;
+use App\Models\Officer;
+use App\Models\Period;
+use App\Models\Score;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithValidation;
+
+class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsOnFailure, WithHeadingRow
+{
+    use Importable, SkipsErrors, SkipsFailures;
+
+    protected $latest_per, $active_days, $officers, $criterias, $scores;
+
+    public function __construct($period, $officer)
+    {
+        $this->latest_per = $period;
+        $this->active_days = Period::where('id_period', $period)->first()->active_days;
+        $this->officers = Officer::with('department')
+        ->whereDoesntHave('department', function($query){
+            $query->where('name', 'Developer');
+        })
+        ->where('is_lead', 'No')
+        ->where('id_officer', $officer)
+        ->orderBy('name', 'ASC')->get();
+        $this->criterias = Criteria::with('category')->get();
+        $this->scores = Score::get();
+    }
+
+    public function collection(Collection $rows)
+    {
+        foreach($this->criterias as $criteria){
+            foreach ($rows as $row){
+                //dd($row);
+                $officer = $this->officers->where('nip', $row['nip'])->first();
+                //dd(!is_null($officer));
+                if(!is_null($officer)){
+                    $str_officer = substr($officer->id_officer, 4);
+                    $str_year = substr($this->latest_per, -5);
+                    $str_sub = substr($criteria->id_criteria, 4);
+                    $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+                    //dd($id_input);
+                    if(isset($row[$criteria->source])){
+                        if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){
+                            //dd('Yes');
+                            $remain = $this->active_days - $row[$criteria->source];
+                            Input::create([
+                                'id_input' => $id_input,
+                                'id_period' => $this->latest_per,
+                                'id_officer' => $officer->id_officer,
+                                'id_criteria' => $criteria->id_criteria,
+                                'input' => $remain,
+                                'status' => 'Pending',
+                            ]);
+                        }else{
+                            //dd('No');
+                            Input::create([
+                                'id_input' => $id_input,
+                                'id_period' => $this->latest_per,
+                                'id_officer' => $officer->id_officer,
+                                'id_criteria' => $criteria->id_criteria,
+                                'input' => $row[$criteria->source],
+                                'status' => 'Pending',
+                            ]);
+                        }
+                    }
+
+                    $check = $this->scores->where('id_officer', $officer->id_officer)->where('id_period', $this->latest_per)->where('status', 'Rejected')->first();
+                    if(!is_null($check)){
+                        Score::where('id_period', $this->latest_per)->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
+                            'status'=>'Revised',
+                        ]);
+                    }
+                }else{
+                    //SKIP
+                }
+            }
+        }
+    }
+}

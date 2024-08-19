@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->char('id_category', 11)->primary();
             $table->char('name', 20);
-            $table->char('type', 15);
+            //$table->char('type', 15);
             $table->char('source', 15);
             $table->timestamps();
         });

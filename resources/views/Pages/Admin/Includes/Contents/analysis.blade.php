@@ -63,10 +63,14 @@
 <!--NOTICE (WHEN PERIOD IS NOT PICKED UP)-->
 @if (Request::is('admin/analysis/saw') || Request::is('admin/analysis/wp'))
 <div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
+    <br/>
     Untuk melihat hasil analisis di setiap periode, klik pilih periode untuk melihat hasil analisis.
 </div>
 <div class="alert alert-warning" role="alert">
-    <strong>PERHATIAN:</strong> Pastikan seluruh data input di setiap pegawai telah terisi. Cek status di halaman input apakah pegawai tersebut telah terinput atau belum.
+    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+    <br/>
+    Pastikan seluruh data input di setiap pegawai telah terisi. Cek status di halaman input apakah pegawai tersebut telah terinput atau belum.
 </div>
 @endif
 <!--ANALYSIS RESULT-->

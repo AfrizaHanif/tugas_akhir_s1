@@ -55,6 +55,10 @@ class Officer extends Model
     {
         return $this->hasMany(Input::class, 'id_officer', 'id_officer');
     }
+    public function inputraw()
+    {
+        return $this->hasMany(InputRAW::class, 'id_officer', 'id_officer');
+    }
     public function result()
     {
         return $this->hasMany(Result::class, 'id_officer', 'id_officer');

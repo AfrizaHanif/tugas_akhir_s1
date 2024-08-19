@@ -16,14 +16,15 @@
                         <label for="name" class="form-label">Nama Kategori</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="type" class="form-label">Jenis Kategori (Untuk Dimasukkan ke Tabel)</label>
+                    <!--
+                    <div-- class="mb-3">
+                        <label for="type" class="form-label">Jenis Kategori</label>
                         <select class="form-select" id="type" name="type" required>
                             <option selected disabled value="">---Pilih Jenis Kategori---</option>
                             <option value="Kehadiran" {{ old('type') == 'Kehadiran' ? 'selected' : null }}>Kehadiran</option>
                             <option value="Prestasi Kerja" {{ old('type') == 'Prestasi Kerja' ? 'selected' : null }}>Prestasi Kerja</option>
                         </select>
-                    </div>
+                    </div-->
                     <div class="mb-3">
                         <label for="source" class="form-label">Sumber Data</label>
                         <select class="form-select" id="source" name="source" required>
@@ -48,7 +49,6 @@
         </div>
     </div>
 </div>
-
 @foreach ($categories as $category)
 <!--UPDATE CATEGORY-->
 <div class="modal fade" id="modal-cat-update-{{ $category->id_category }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -68,14 +68,16 @@
                         <label for="name" class="form-label">Nama Kategori</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ $category->name }}" required>
                     </div>
+                    <!--
                     <div class="mb-3">
-                        <label for="type" class="form-label">Jenis Kategori (Untuk Dimasukkan ke Tabel)</label>
+                        <label for="type" class="form-label">Jenis Kategori</label>
                         <select class="form-select" id="type" name="type" required>
                             <option selected disabled value="">---Pilih Jenis Kategori---</option>
                             <option value="Kehadiran" {{ $category->type == 'Kehadiran' ? 'selected' : null }}>Kehadiran</option>
                             <option value="Prestasi Kerja" {{ $category->type == 'Prestasi Kerja' ? 'selected' : null }}>Prestasi Kerja</option>
                         </select>
                     </div>
+                    -->
                     <div class="mb-3">
                         <label for="source" class="form-label">Sumber Data</label>
                         <select class="form-select" id="source" name="source" required>
@@ -461,7 +463,7 @@
                         <div class="row mb-3">
                             <div class="col-md-5">
                                 <label for="value_type" class="form-label">Tipe Range</label>
-                                <select class="form-select" id="value_type" name="value_type" required>
+                                <select class="form-select" id="value_type_{{ $criteria->id_criteria }}" name="value_type" required>
                                     <option selected disabled value="">---Pilih Tipe Range---</option>
                                     <option value="Less" {{ old('value_type') == 'Less' ? 'selected' : null }}>Kurang Dari</option>
                                     <option value="Between" {{ old('value_type') == 'Between' ? 'selected' : null }}>Antara</option>
@@ -473,7 +475,7 @@
                                 <div class="input-group">
                                     <input type="number" id="value_from" name="value_from" aria-label="Awal Angka" class="form-control" min="0" required>
                                     <span class="input-group-text">-</span>
-                                    <input type="number" id="value_to" name="value_to" aria-label="Akhir Angka" class="form-control" min="0">
+                                    <input type="number" id="value_to_{{ $criteria->id_criteria }}" name="value_to" aria-label="Akhir Angka" class="form-control" min="0">
                                 </div>
                             </div>
                         </div>
@@ -518,7 +520,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-5">
                                     <label for="value_type" class="form-label">Tipe Range</label>
-                                    <select class="form-select" id="value_type" name="value_type" required>
+                                    <select class="form-select" id="value_type_{{ $crip->id_crips }}" name="value_type" required>
                                         <option selected disabled value="">---Pilih Tipe Range---</option>
                                         <option value="Less" {{ $crip->value_type == 'Less' ? 'selected' : null }}>Kurang Dari</option>
                                         <option value="Between" {{ $crip->value_type == 'Between' ? 'selected' : null }}>Antara</option>
@@ -530,7 +532,7 @@
                                     <div class="input-group">
                                         <input type="number" id="value_from" name="value_from" aria-label="Awal Angka" class="form-control" value="{{ $crip->value_from }}" min="0" required>
                                         <span class="input-group-text">-</span>
-                                        <input type="number" id="value_to" name="value_to" aria-label="Akhir Angka" class="form-control" value="{{ $crip->value_to }}" min="0">
+                                        <input type="number" id="value_to_{{ $crip->id_crips }}" name="value_to" aria-label="Akhir Angka" class="form-control" value="{{ $crip->value_to }}" min="0">
                                     </div>
                                 </div>
                             </div>

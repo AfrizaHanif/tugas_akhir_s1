@@ -4,12 +4,33 @@
         <div class="spinner-border text-primary" role="status"></div>
     </div>
 </div>
+<!--RESULT JUMBOTRON-->
+@if (!empty($latest_best))
+<div class="container my-1 collapse show pt-1" id="collapseExample">
+    <div class="jumbotron jumbotron-fluid my-1 rounded-3">
+        <video autoplay muted loop id="myVideo">
+            <source src="{{ asset('Videos/Fireworks.mp4') }}" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="container">
+            <div class="p-4 text-center rounded-3">
+                <h1 class="text-light">Selamat Kepada {{ $latest_best->officer_name }}</h1>
+                <p class="text-light lead">
+                    Atas terpilihnya menjadi <strong>KARYAWAN TERBAIK</strong> pada Periode {{ $latest_best->period_name }}
+                </p>
+                <div data-bs-theme="dark">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <!--MAIN CONTENT-->
-<div class="container py-4">
+<div class="container pt-1">
     <!--MAIN JUMBOTRON-->
     <div class="p-5 mb-4 text-bg-dark rounded-3"
-        style="
-background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');">
+        style="background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');">
         <div class="container-fluid py-5">
             <div class="row flex-lg-row-reverse align-items-center g-5">
                 <div class="col-10 col-sm-8 col-lg-6">
@@ -19,31 +40,43 @@ background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('
                     <div class="typing" style="width: 21ch;">
                         <h1 class="display-5 fw-bold">Selamat Datang</h1>
                     </div>
-                    <p class="col-md-8 fs-4">Using a series of utilities, you can create this jumbotron, just like the
-                        one in previous versions of Bootstrap. Check out the examples below for how you can remix and
-                        restyle it to your liking.</p>
-                    <button class="btn btn-primary btn-lg" type="button">Example button</button>
+                    <p class="col-md-8 fs-4">
+                        Selamat Datang di Aplikasi Karyawan Terbaik BPS Provinsi Jawa Timur.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-    <!--SUB JUMBOTRON-->
-    <div class="row align-items-md-stretch">
-        <div class="col-md-6">
-            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                <h2>Change the background</h2>
-                <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look.
-                    Then, mix and match with additional component themes and more.</p>
-                <button class="btn btn-outline-light" type="button">Example button</button>
+</div>
+<!--FEATURES-->
+<div class="container px-4 pt-1" id="hanging-icons">
+    <h2 class="pb-2 border-bottom">Fitur-Fitur</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#import-home"/></svg>
+            </div>
+            <div>
+                <h3 class="fs-2 text-body-emphasis">Import Data Nilai</h3>
+                <p>Dengan adanya fitur Import, anda tidak perlu melakukan penambahan data nilai secara manual.</p>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                <h2>Add borders</h2>
-                <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be
-                    sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of
-                    both column's content for equal-height.</p>
-                <button class="btn btn-outline-secondary" type="button">Example button</button>
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#analysis-home"/></svg>
+            </div>
+            <div>
+                <h3 class="fs-2 text-body-emphasis">Metode SAW</h3>
+                <p>Proses penentuan karyawan terbaik menggunakan metode Simple Additive Weighting (SAW) untuk mempercepat proses penentuan.</p>
+            </div>
+        </div>
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <svg class="bi" width="1em" height="1em"><use xlink:href="#easy-home"/></svg>
+            </div>
+            <div>
+                <h3 class="fs-2 text-body-emphasis">Easy To Use</h3>
+                <p>Penggunaan aplikasi akan terasa menjadi lebih cepat dan mudah dengan dukungan kombinasi Navs, Tabs, dan Modal dalam satu halaman saja.</p>
             </div>
         </div>
     </div>

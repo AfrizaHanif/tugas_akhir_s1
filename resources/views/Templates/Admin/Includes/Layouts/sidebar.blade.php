@@ -4,7 +4,7 @@
     <hr/>
     <!--PAGE MENU-->
     <ul class="nav nav-pills flex-column mb-auto">
-        <div id="selector">
+        <div id="selector-sidebar">
             @if (Auth::check())
             <li class="nav-item">
                 <a href="/admin" class="{{ (request()->is('admin')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -26,7 +26,7 @@
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#master"/></svg>
                     Master
                 </button>
-                <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector">
+                <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector-sidebar">
                     <ul class="list-unstyled fw-normal pb-1 small">
                         <li>
                             <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -61,7 +61,7 @@
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#input"/></svg>
                     Input
                 </button>
-                <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector">
+                <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector-sidebar">
                     <ul class="list-unstyled fw-normal pb-1 small">
                         @if (Auth::user()->part == "Admin")
                         <li>
@@ -86,7 +86,7 @@
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
                     Analysis
                 </button>
-                <div class="{{ (request()->is('admin/analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse" data-bs-parent="#selector">
+                <div class="{{ (request()->is('admin/analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse" data-bs-parent="#selector-sidebar">
                     <ul class="list-unstyled fw-normal pb-1 small">
                         <li>
                             <a href="/admin/analysis/saw" class="{{ (request()->is('admin/analysis/saw*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">

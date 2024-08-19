@@ -23,7 +23,7 @@ class AnalysisController extends Controller
         //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         //$latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
-        $latest_per = Period::where('status', 'Scoring')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('periods', 'latest_per'));
@@ -38,7 +38,7 @@ class AnalysisController extends Controller
         $officers = Officer::where('is_lead', 'No')->get();
 
         //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -186,7 +186,7 @@ class AnalysisController extends Controller
         $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
 
         //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //SAW ANALYSIS
         //GET ALTERNATIVE
@@ -296,7 +296,7 @@ class AnalysisController extends Controller
         $officers = Officer::where('is_lead', 'No')->get();
 
         //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Voting')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -446,7 +446,7 @@ class AnalysisController extends Controller
         $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
 
         //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->latest()->first();
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //WP ANALYSIS
         //GET ALTERNATIVE

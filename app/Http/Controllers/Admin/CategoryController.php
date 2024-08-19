@@ -47,7 +47,7 @@ class CategoryController extends Controller
         Category::insert([
             'id_category'=>$id_category,
             'name'=>$request->name,
-            'type'=>$request->type,
+            //'type'=>$request->type,
             'source'=>$request->source,
 		]);
 
@@ -73,7 +73,7 @@ class CategoryController extends Controller
         //STORE DATA
         $category->update([
             'name'=>$request->name,
-            'type'=>$request->type,
+            //'type'=>$request->type,
             'source'=>$request->source,
 		]);
 

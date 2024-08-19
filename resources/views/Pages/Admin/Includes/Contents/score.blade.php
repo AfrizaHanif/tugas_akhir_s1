@@ -14,31 +14,25 @@
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <!--PERIOD NAV-->
                 @if(!empty($latest_per))
-                    @if ($latest_per->status == 'Scoring')
+                    @if ($latest_per->status == 'Scoring' || $latest_per->status == 'Validating')
                     <button class="nav-link active text-start" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="true">
-                        {{ $latest_per->name }}
+                        <i class="bi bi-hourglass-split"></i> {{ $latest_per->name }}
                     </button>
                     @else
                     <button class="nav-link active text-start" id="pills-complete-tab" data-bs-toggle="pill" data-bs-target="#pills-complete" type="button" role="tab" aria-controls="pills-complete" aria-selected="true">
-                        Not Running
+                        <i class="bi bi-x-lg"></i> Not Running
                     </button>
                     @endif
                 @else
                 <button class="nav-link active text-start" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
-                    Not Running
+                    <i class="bi bi-x-lg"></i> Not Running
                 </button>
                 @endif
                 <hr/>
                 <!--HISTORY NAV-->
                 @forelse ($history_per as $period)
                 <button class="nav-link text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="false">
-                    @if ($period->status == "Voting")
-                    {{ $period->period_name }} <span class="badge bg-secondary">Voting</span>
-                    @elseif ($period->status == "Finished")
-                    {{ $period->period_name }} <span class="badge bg-secondary">Selesai</span>
-                    @else
-                    {{ $period->period_name }}
-                    @endif
+                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
                 </button>
                 @empty
                 <div class="alert alert-danger" role="alert">
@@ -55,7 +49,7 @@
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
-                @if ($latest_per->status == 'Scoring')
+                @if ($latest_per->status == 'Scoring' || $latest_per->status == 'Validating')
                 <div class="tab-pane fade show active" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab" tabindex="0">
                     <div class="row align-items-center pb-2">
                         <div class="col-5">
@@ -66,7 +60,7 @@
                             <div class="row g-3 align-items-center">
                                 <!--GET DATA-->
                                 <div class="col-auto pe-0">
-                                    @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
+                                    @if ($latest_per->status == "Finished")
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
                                     <a class="btn btn-primary disabled">
                                         <i class="bi bi-database-down"></i>
@@ -90,7 +84,7 @@
                                 <!--FINISH-->
                                 <div class="col-auto pe-0">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
+                                        @if ($latest_per->status == "Finished")
                                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                             <a class="btn btn-success disabled">
                                                 <i class="bi bi-clipboard2-check"></i>
@@ -134,8 +128,8 @@
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <!--QUICK VERIFY-->
-                                            @if ($latest_per->status == "Voting" || $latest_per->status == "Finished" || $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $latest_per->id_period)->count() == 0)
-                                                @if ($latest_per->status == "Voting" || $latest_per->status == "Finished")
+                                            @if ($latest_per->status == "Finished" || $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $latest_per->id_period)->count() == 0)
+                                                @if ($latest_per->status == "Finished")
                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                                 @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0)
                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak / direvisi.">
@@ -154,30 +148,6 @@
                                                         </a>
                                                     </li>
                                                 </span>
-                                            @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() == $officers->count())
-                                            <li>
-                                                <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
-                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                    Setuju Semua
-                                                </a>
-                                            </li><li>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $latest_per->id_period }}">
-                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                    Tolak Semua
-                                                </a>
-                                            </li>
-                                            @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() != $officers->count())
-                                            <li>
-                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
-                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                    Setuju Semua
-                                                </a>
-                                            </li><li>
-                                                <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $latest_per->id_period }}">
-                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                    Tolak Semua
-                                                </a>
-                                            </li>
                                             @else
                                             <li>
                                                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
@@ -203,6 +173,7 @@
                             <tr class="table-primary">
                                 <th class="col-1" scope="col">#</th>
                                 <th scope="col">Nama</th>
+                                <th scope="col">CKP</th>
                                 <th scope="col">Hasil Akhir</th>
                                 <th class="col-3" scope="col">Status</th>
                                 <th class="col-1" scope="col">Setuju?</th>
@@ -213,6 +184,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $score->officer->name }}</td>
+                                <td>{{ $score->ckp }}</td>
                                 <td>{{ $score->final_score }}</td>
                                 <td>
                                     @if ($score->status == 'Pending')
@@ -229,8 +201,8 @@
                                 </td>
                                 <td>
                                     <div class="dropdown">
-                                        @if ($latest_per->status == 'Finish' || $latest_per->status == 'Voting' || $score->status == 'Revised' || $score->status == 'Rejected')
-                                            @if ($latest_per->status == 'Finish' || $latest_per->status == 'Voting')
+                                        @if ($latest_per->status == 'Finished' || $score->status == 'Revised' || $score->status == 'Rejected')
+                                            @if ($latest_per->status == 'Finished')
                                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                                     <i class="bi bi-menu-button-fill"></i>
@@ -291,6 +263,8 @@
                 @else
                 <div class="tab-pane fade show active" id="pills-complete" role="tabpanel" aria-labelledby="pills-complete-tab" tabindex="0">
                     <div class="alert alert-info" role="alert">
+                        <i class="bi bi-x-circle-fill"></i> <strong>ERROR </strong>
+                        <br/>
                         Proses penilaian telah selesai pada periode ini. Silahkan melakukan pemilihan karyawan terbaik di halaman <strong>Voting</strong>.
                     </div>
                 </div>
@@ -298,6 +272,8 @@
             @else
             <div class="tab-pane fade show active" id="pills-empty" role="tabpanel" aria-labelledby="pills-empty-tab" tabindex="0">
                 <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-x-circle-fill"></i> <strong>ERROR </strong>
+                    <br/>
                     Proses penilaian belum dimulai. Mohon menghubungi Kepegawaian untuk mengetahui lebih lanjut.
                 </div>
             </div>
@@ -311,6 +287,7 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
+                            <th scope="col">CKP</th>
                             <th scope="col">Hasil Akhir</th>
                         </tr>
                     </thead>
@@ -319,6 +296,7 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $score->officer_name }}</td>
+                            <td>{{ $score->ckp }}</td>
                             <td>{{ $score->final_score }}</td>
                         </tr>
                         @empty

@@ -30,6 +30,7 @@ class OfficerController extends Controller
     {
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
+        $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get();
         $departments = Department::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
         $subteams = SubTeam::with('team')->get();
@@ -39,7 +40,7 @@ class OfficerController extends Controller
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers'));
+        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'departments', 'teams', 'subteams', 'officers'));
     }
 
     /**
@@ -80,7 +81,7 @@ class OfficerController extends Controller
         $count_lead = Officer::with('department')->whereHas('department', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_department', $request->id_department)->count();
         if(!empty($count_lead)){
             if($count_lead > 0){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur dan Kepala Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim sebelumnya, lalu ubah pada Kepala BPS Jatim terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+                return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
             }
         }
 
@@ -115,7 +116,7 @@ class OfficerController extends Controller
 		]);
 
         //IF LEAD
-        $check_lead = Department::where('name', 'LIKE', 'Kepala%')->where('id_department', $request->id_department)->first();
+        $check_lead = Department::where('name', 'LIKE', 'Kepala BPS%')->where('id_department', $request->id_department)->first();
         if(!empty($check_lead->id_department)){
             if($check_lead->id_department == $request->id_department){
                 Officer::where('id_officer', $id_officer)->update([
@@ -163,11 +164,13 @@ class OfficerController extends Controller
         }
 
         //CHECK LEAD MORE THAN 1
-        $count_lead = Officer::with('department')->whereHas('department', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_department', $request->id_department)->count();
-        //dd($count_lead);
-        if(!empty($count_lead)){
-            if($count_lead > 0){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur dan Kepala Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim sebelumnya, lalu ubah pada Kepala BPS Jatim terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+        if($request->id_department != $officer->id_department){
+            $count_lead = Officer::with('department')->whereHas('department', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_department', $request->id_department)->count();
+            //dd($count_lead);
+            if(!empty($count_lead)){
+                if($count_lead > 0){
+                    return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+                }
             }
         }
 
@@ -207,7 +210,7 @@ class OfficerController extends Controller
         }
 
         //IF LEAD
-        $check_lead = Department::where('name', 'LIKE', 'Kepala%')->where('id_department', $request->id_department)->first();
+        $check_lead = Department::where('name', 'LIKE', 'Kepala BPS%')->where('id_department', $request->id_department)->first();
         if(!empty($check_lead->id_department)){
             if($check_lead->id_department == $request->id_department){
                 Officer::where('id_officer', $officer->id_officer)->update([

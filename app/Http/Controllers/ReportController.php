@@ -176,7 +176,7 @@ class ReportController extends Controller
         $output = public_path().'/PDFs/'.$file;
         $source = public_path().'/PDFs/Default/New Certificate.pdf';
 
-        //CREATE A CERTIFICATE
+        //CREATE A CERTIFICATE (SWITCH TO ANOTHER FUNCTION)
         $this->fillPDF($file, $source, $output, $officer_name, $period_name, $now);
 
         //return response()->download($output, $file);

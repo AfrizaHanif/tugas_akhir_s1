@@ -119,10 +119,12 @@
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
+                                                    @if (Auth::check())
                                                     <a href="{{ route('reports.certificate', $period->id_period) }}" type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-patch-check"></i>
                                                         Sertifikat
                                                     </a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -153,7 +155,16 @@
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                 <br/>
-
+                <ol>
+                    <li>Laporan ini dapat dilihat oleh semua pegawai.</li>
+                    <li>Khusus hasil analisis dan karyawan terbaik, laporan tersebut dapat tersedia apabila proses pemilihan karyawan terbaik selesai.</li>
+                    @if (Auth::check())
+                    <li>Sertifikat hanya dapat diunduh oleh Kepemimpinan dan Kepala BPS Jawa Timur.</li>
+                    <li>Untuk mengganti template sertifikat, hubungi bagian <strong>Developer</strong> untuk mengatur letak tulisan.</li>
+                    @endif
+                    <li>Laporan dapat berubah sewaktu-waktu secara otomatis.</li>
+                    <li>Perlu diingat, hasil pemilihan karyawan terbaik tidak dapat diganggu gugat.</li>
+                </ol>
             </div>
         </div>
     </div>

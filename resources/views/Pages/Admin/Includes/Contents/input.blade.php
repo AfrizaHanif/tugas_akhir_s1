@@ -79,9 +79,52 @@
                         </div>
                         <!--DELETE ALL DATA-->
                         <div class="col-auto">
+                            @if (!$inputs->isEmpty())
+                            @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')->count() >= 1)
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena terdapat nilai yang ditolak.">
+                                <a class="btn btn-secondary disabled">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua Data
+                                </a>
+                            </span>
+                            @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1)
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
+                                <a class="btn btn-secondary disabled">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua Data
+                                </a>
+                            </span>
+                            @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'Final')->count() >= 1)
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena seluruh nilai sudah disetujui.">
+                                <a class="btn btn-secondary disabled">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua Data
+                                </a>
+                            </span>
+                            @else
                             <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}">
                                 <i class="bi bi-trash3"></i>
                                 Hapus Semua Data
+                            </a>
+                            @endif
+                            @else
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada nilai yang terdaftar.">
+                                <a class="btn btn-secondary disabled">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua Data
+                                </a>
+                            </span>
+                            @endif
+                        </div>
+                        <!--DATA CHECKER-->
+                        <div class="col-auto">
+                            @if ($latest_per->status == 'Scoring')
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
+                            @else
+                            <a class="btn btn-secondary disabled">
+                            @endif
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Refresh
                             </a>
                         </div>
                     </div>
@@ -129,6 +172,8 @@
                                     <span class="badge text-bg-success">Hasil Akhir</span>
                                     @elseif ($s->status == 'Need Fix')
                                     <span class="badge text-bg-danger">Perlu Perbaikan</span>
+                                    @elseif ($s->status == 'Fixed')
+                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
                                     @endif
                                 @empty
                                 <span class="badge text-bg-secondary">Blank</span>
@@ -141,7 +186,7 @@
                                 <div class="dropdown">
                                     @if ($officer->is_lead == 'No')
                                         @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
-                                            @if ($s->status == 'Pending' || $s->status == 'Need Fix')
+                                            @if ($s->status == 'Pending' || $s->status == 'Need Fix' || $s->status == 'Fixed')
                                             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bi bi-menu-button-fill"></i>
                                             </button>
@@ -188,11 +233,11 @@
                                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                                     Hapus Data
                                                 </a>
-                                                @else
+                                            @else
                                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-precre-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
                                                     Tambah Data
                                                 </a>
-                                                @endif
+                                            @endif
                                         </li>
                                     </ul>
                                 </div>

@@ -182,7 +182,10 @@
                         <i class="bi bi-x-lg"></i>
                         Tutup
                     </button>
-                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i>
+                        Import
+                    </button>
                 </div>
             </form>
         </div>
@@ -533,7 +536,7 @@
                             <input type="text" class="form-control" id="name" name="name" value="{{ $team->name }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="id_part" class="form-label">Tim</label>
+                            <label for="id_part" class="form-label">Bagian Tim</label>
                             <select class="form-select" id="id_part" name="id_part" required>
                                 <option selected disabled value="">---Pilih Bagian---</option>
                                 @foreach ($parts as $part)
@@ -647,8 +650,11 @@
                                 <label for="id_team" class="form-label">Tim</label>
                                 <select class="form-select" id="id_team" name="id_team" required>
                                     <option selected disabled value="">---Pilih Tim---</option>
-                                    @foreach ($teams as $team)
-                                    <option value="{{ $team->id_team }}" {{ $subteam->id_team ==  $team->id_team ? 'selected' : null }}>{{ $team->name }}</option>
+                                    @foreach ($parts_2 as $part)
+                                    <option disabled value="">---{{ $part->name }}---</option>
+                                        @foreach ($teams->where('id_part', $part->id_part) as $team)
+                                        <option value="{{ $team->id_team }}" {{ $subteam->id_team ==  $team->id_team ? 'selected' : null }}>{{ $team->name }}</option>
+                                        @endforeach
                                     @endforeach
                                 </select>
                             </div>
@@ -935,9 +941,17 @@
                             <td>{{ $department->name }}</td>
                             <td>
                                 <div class="dropdown">
+                                    @if (strpos($department,'Kepala'))
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kepala tidak dapat diubah.">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                        <i class="bi bi-menu-button-fill"></i>
+                                    </button>
+                                    <span
+                                    @else
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-menu-button-fill"></i>
                                     </button>
+                                    @endif
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
                                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-update-{{ $department->id_department }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
