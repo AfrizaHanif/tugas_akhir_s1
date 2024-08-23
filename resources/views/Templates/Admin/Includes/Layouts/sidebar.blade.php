@@ -130,7 +130,7 @@
             <li>
                 <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/messages">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#message"/></svg>
-                    Pesan ke Dev
+                    Feedback
                 </a>
             </li>
             <li>

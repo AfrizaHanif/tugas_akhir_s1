@@ -205,6 +205,7 @@
                                 <th scope="col">Jabatan</th>
                                 @if (Auth::user()->part != "Pegawai")
                                 <th scope="col">Nilai Akhir</th>
+                                <th scope="col">CKP</th>
                                 @endif
                             </tr>
                         </thead>
@@ -215,6 +216,7 @@
                                     <td>{{ $scoreresult->officer_name }}</td>
                                     <td>{{ $scoreresult->officer_department }}</td>
                                     <td>{{ $scoreresult->final_score }}</td>
+                                    <td>{{ $scoreresult->ckp }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

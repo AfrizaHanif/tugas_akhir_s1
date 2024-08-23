@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Criteria;
 use App\Models\Category;
 use App\Models\Crips;
+use App\Models\Period;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,6 +34,12 @@ class CriteriaController extends Controller
      */
     public function store(Request $request)
     {
+        //CHECK STATUS
+        $latest_per = Period::latest();
+        if($latest_per->status == 'Validating'){
+            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+        }
+
         //COMBINE KODE
         /*
         $total_id = Criteria::count();
@@ -91,6 +98,12 @@ class CriteriaController extends Controller
      */
     public function update(Request $request, Criteria $criteria)
     {
+        //CHECK STATUS
+        $latest_per = Period::latest();
+        if($latest_per->status == 'Validating'){
+            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
+        }
+
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
             'name' => [Rule::unique('criterias')->ignore($criteria),],

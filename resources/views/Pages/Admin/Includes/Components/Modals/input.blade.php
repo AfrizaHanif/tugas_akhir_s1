@@ -546,13 +546,13 @@
 <!--CURRENT PERIOD-->
 @endforeach
 
-@foreach ($history_per as $period)
+@foreach ($history_per as $hperiod)
 <!--VIEW OLD INPUTS-->
-<div class="modal modal-xl fade" id="modal-old-all-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="modal-old-all-view-{{ $hperiod->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $period->period_name }})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $hperiod->period_name }})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -576,14 +576,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($hofficers as $officer)
+                            @forelse ($hofficers->where('id_period', $hperiod->id_period) as $hofficer)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->officer_name }}</td>
-                                <td>{{ $officer->officer_department }}</td>
+                                <td>{{ $hofficer->officer_name }}</td>
+                                <td>{{ $hofficer->officer_department }}</td>
                                 @foreach ($hcriterias as $criteria)
-                                    @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $history)
-                                    @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $raw)
+                                    @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
+                                    @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $raw)
                                     <td>{{ $history->input }} ({{ $raw->input }})</td>
                                     @endforeach
                                     @empty
@@ -615,7 +615,7 @@
     </div>
 </div>
 <!--EXPORT OLD DATA-->
-<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-{{ $period->id_period }}">
+<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-{{ $hperiod->id_period }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
             <form action="{{ route('admin.inputs.data.export.old', $period->id_period) }}" method="post" enctype="multipart/form-data">
@@ -637,7 +637,7 @@
 </div>
     <!--ARCHIVED PERIOD-->
     @foreach ($hofficers as $officer)
-    <div class="modal fade" id="modal-old-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -647,8 +647,8 @@
                 <div class="modal-body">
                     <table class="table">
                         @foreach ($hcriterias as $criteria)
-                        @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $history)
-                        @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $raw)
+                        @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
+                        @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $raw)
                         <tr>
                             <th scope="row">{{ $criteria->criteria_name }}</th>
                             <td>{{ $history->input }} ({{ $raw->input }})</td>

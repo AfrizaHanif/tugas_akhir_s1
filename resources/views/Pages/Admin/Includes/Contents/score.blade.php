@@ -247,7 +247,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5">Silahkan klik Ambil Data terlebih dahulu untuk mendapatkan data.</td>
+                                <td colspan="10">Silahkan klik Ambil Data terlebih dahulu untuk mendapatkan data.</td>
                             </tr>
                             @endforelse
                         </tbody>

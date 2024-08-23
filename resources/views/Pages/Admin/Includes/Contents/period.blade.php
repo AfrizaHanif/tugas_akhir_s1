@@ -39,8 +39,8 @@
                 <span class="badge text-bg-secondary">Dilewatkan</span>
                 @elseif ($period->status == "Scoring")
                 <span class="badge text-bg-primary">Dalam Penilaian</span>
-                @elseif ($period->status == "Voting")
-                <span class="badge text-bg-primary">Dalam Pemilihan</span>
+                @elseif ($period->status == "Validation")
+                <span class="badge text-bg-primary">Dalam Validasi</span>
                 @elseif ($period->status == "Pending")
                 <span class="badge text-bg-warning">Pending</span>
                 @endif

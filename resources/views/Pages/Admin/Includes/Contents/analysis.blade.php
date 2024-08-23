@@ -79,13 +79,13 @@
     @if (Request::is('admin/analysis/saw/*'))
         @if ($matrix != array_unique($matrix))
         <div class="alert alert-warning" role="alert">
-            Terdapat Hasil Matrix yang memiliki angka duplikat (Dua atau lebih).
+            Terdapat Hasil Matrix yang memiliki angka yang sama (Dua atau lebih).
         </div>
         @endif
     @elseif (Request::is('admin/analysis/wp/*'))
         @if ($v != array_unique($v))
         <div class="alert alert-warning" role="alert">
-            Terdapat Hasil V yang memiliki angka duplikat (Dua atau lebih).
+            Terdapat Hasil V yang memiliki angka yang sama (Dua atau lebih).
         </div>
         @endif
     @endif
@@ -393,6 +393,7 @@
                                 <tr class="table-primary">
                                     <th scope="col">Nama Alternatif</th>
                                     <th scope="col">Matrix</th>
+                                    <th scope="col">CKP</th>
                                     <th scope="col">Rank</th>
                                 </tr>
                             </thead>
@@ -408,6 +409,13 @@
                                         @endif
                                     </th>
                                     <td>{{ number_format($valsqrt1,3) }}</td>
+                                    <td>
+                                        @if (Request::is('admin/analysis/saw/latest'))
+                                        {{$ckp->where('id_officer', $sqrt1)->first()->input ?? '0'}}
+                                        @elseif (Request::is('admin/analysis/saw/*'))
+                                        {{$history_ckp->where('id_officer', $sqrt1)->first()->input ?? '0'}}
+                                        @endif
+                                    </td>
                                     <td>{{ $no++ }}</td>
                                 </tr>
                                 @endforeach
@@ -573,6 +581,7 @@
                                 <tr class="table-primary">
                                     <th scope="col">Nama Alternatif</th>
                                     <th scope="col">V</th>
+                                    <th scope="col">CKP</th>
                                     <th scope="col">Rank</th>
                                 </tr>
                             </thead>
@@ -588,6 +597,9 @@
                                         @endif
                                     </th>
                                     <td>{{ number_format($valsqrt1,3) }}</td>
+                                    <td>
+                                        {{$ckp->where('id_officer', $sqrt1)->first()->input ?? ''}}
+                                    </td>
                                     <td>{{ $no++ }}</td>
                                 </tr>
                                 @endforeach

@@ -8,6 +8,7 @@ use App\Models\InputRAW;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
+use App\Models\Setting;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -26,7 +27,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $per_status;
+    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $setting, $per_status;
 
     public function __construct($period)
     {
@@ -41,6 +42,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
         $this->criterias = Criteria::with('category')->get();
         $this->scores = Score::where('id_period', $period)->get();
         $this->inputs = Input::where('id_period', $period)->get();
+        $this->setting = Setting::where('id_setting', 'STG-001')->first()->value;
         $this->per_status = Period::where('id_period', $period)->first()->status;
     }
 
@@ -58,7 +60,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                     $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
-                        if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){
+                        if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){ //STG
                             //dd('Yes');
                             $remain = $this->active_days - $row[$criteria->source];
                             if($this->per_status == 'Scoring'){

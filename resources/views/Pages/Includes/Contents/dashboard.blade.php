@@ -211,7 +211,7 @@
                         Periode: {{ $latest_per->month ?? 'Belum Aktif' }} {{ $latest_per->year ?? '' }}
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                        @if (&& Auth::user()->part == "Admin")
+                        @if (Auth::user()->part == "Admin")
                         <a href="{{ route('admin.masters.periods.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                         @else
                         <a type="button" class="btn btn-primary btn-sm disabled">Cek</a>

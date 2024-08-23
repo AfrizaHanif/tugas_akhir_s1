@@ -182,15 +182,14 @@ class InputController extends Controller
         //dd($inp_rejects);
 
         //CHECK CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
-        /*
         foreach($allcriterias as $criteria){
             //dd($crips->where('id_criteria', $criteria->id_criteria)->count());
             if(count($crips->where('id_criteria', $criteria->id_criteria)) == 0){
                 return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Terdapat Data Crips yang belum ditambahkan untuk konversi nilai. Silahkan tambahkan Data Crips di halaman Kriteria. ('.$criteria->id_criteria.')')->with('code_alert', 1);
             }
-        }*/
+        }
 
-        //IMPORT MULTIPLE FILE
+        //IMPORT MULTIPLE FILE (WITH LOOP)
         //GET MULTIPLE FILE
         $file = $request->file('file');
         foreach($file as $f){
@@ -326,7 +325,7 @@ class InputController extends Controller
                 return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Bulan dan Tahun).')->with('modal_redirect', 'modal-inp-import');
             }
 
-            //IMPORT FILE
+            //IMPORT FILE (USING LARAVEL EXCEL)
             Excel::import(new InputsImport($period), $f->store('temp'));
 
             //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
@@ -404,6 +403,7 @@ class InputController extends Controller
                     $query->where('source', 'CKP');
                 })->get();
             }
+            //UPDATE DATA
             foreach($criterias as $criteria){
                 foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
                     foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){
@@ -461,23 +461,12 @@ class InputController extends Controller
             ]);
         }
 
-        //CHANGE STATUS (DISABLE ONLY FOR TESTING PURPOSE)
-        /*
-        $inp_rejects = InputRAW::whereIn('status', ['Need Fix', 'Fixed'])->get();
-        foreach($inp_rejects as $inp_reject){
-            Input::where('id_input', $inp_reject->id_input_raw)->update([
-                'status' => 'Fixed',
-            ]);
-            InputRAW::where('id_input_raw', $inp_reject->id_input_raw)->update([
-                'status' => 'Fixed',
-            ]);
-        }
-            */
-
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
+        //GET INPUT DATA AND CRITERIA
         $inputs = Input::where('id_period', $period)->get();
         $criterias = Criteria::get();
         $crips = Crips::with('criteria')->get();
+        //UPDATE DATA
         foreach($criterias as $criteria){
             foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
                 foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){

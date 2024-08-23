@@ -265,16 +265,16 @@
             </div>
             @endif
             <!--OLD PERIODS-->
-            @foreach ($history_per as $period)
-            <div class="tab-pane fade" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
+            @foreach ($history_per as $hperiod)
+            <div class="tab-pane fade" id="pills-{{ $hperiod->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $hperiod->id_period }}-tab" tabindex="0">
                 <!--HEADING WITH MENU-->
-                <h2>{{ $period->period_name }}</h2>
+                <h2>{{ $hperiod->period_name }}</h2>
                 <p>
                     <div class="row g-3 align-items-center">
                         <!--EXPORT DATA-->
                         <div class="col-auto">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-export-{{ $period->id_period }}">
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-export-{{ $hperiod->id_period }}">
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export
                                 </button>
@@ -282,7 +282,7 @@
                         </div>
                         <!--DATA CHECKER-->
                         <div class="col-auto">
-                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $period->id_period }}">
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $hperiod->id_period }}">
                                 <i class="bi bi-file-spreadsheet"></i>
                                 Lihat Data
                             </a>
@@ -300,13 +300,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($hofficers as $officer)
+                        @forelse ($hofficers->where('id_period', $hperiod->id_period) as $officer)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->officer_name }}</td>
                             <td>{{ $officer->officer_department }}</td>
                             <td>
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}">
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </td>

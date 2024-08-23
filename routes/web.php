@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\SubTeamsController;
 use App\Http\Controllers\Admin\TeamsController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Developer\MessageController;
 use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
@@ -22,8 +21,10 @@ use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\Home\ReportController as HomeReportController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Developer\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController as AllReportController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +50,7 @@ Route::controller(HomeOfficerController::class)->group(function() {
 });
 Route::get('/eotm', [HomeScoreController::class, 'index']);
 Route::get('/reports', [HomeReportController::class, 'index']);
+Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
 Route::controller(JSONController::class)->group(function() {
     Route::get('/autocomplete', 'autocomplete')->name('json.autocomplete');
 });
@@ -123,11 +125,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::prefix('data')->name('data.')->group(function () {
                     Route::controller(InputController::class)->group(function() {
                         Route::post('/import/{period}', 'import')->name('import');
+                        /*
                         Route::prefix('import')->name('import.')->group(function () {
                             Route::get('/presensi/{period}', 'import_presensi')->name('presensi');
                             Route::get('/ckp/{period}', 'import_ckp')->name('ckp');
                             Route::get('/berakhlak/{period}', 'import_berakhlak')->name('berakhlak');
                         });
+                        */
                         Route::prefix('export')->name('export.')->group(function () {
                             Route::post('/', 'export_latest')->name('latest');
                             Route::post('/old/{period}', 'export_old')->name('old');
@@ -183,6 +187,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
         */
+        //FEEDBACK
+        Route::resource('/messages', MessageController::class, ['only' => ['index', 'destroy']]);
+        Route::prefix('messages')->name('messages.')->group(function () {
+            Route::controller(MessageController::class)->group(function() {
+                Route::post('/in', 'store_in')->name('in');
+            });
+        });
     });
 });
 
@@ -202,6 +213,17 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
             Route::resource('/users', UserController::class);
         });
         Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::prefix('messages')->name('messages.')->group(function () {
+            Route::controller(MessageController::class)->group(function() {
+                Route::post('/out/{id}', 'store_out')->name('out');
+            });
+        });
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::controller(SettingController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/update', 'update')->name('update');
+            });
+        });
     });
 });
 

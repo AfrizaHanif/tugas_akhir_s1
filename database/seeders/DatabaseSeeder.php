@@ -324,7 +324,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            'is_lead' => 'Yes',
         ]);
 
         DB::table('officers')->insert([
@@ -456,7 +456,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Januari 2024',
             'month' => 'Januari',
             'year' => '2024',
-            'active_days' => '22',
+            'active_days' => '23',
             'status' => 'Scoring',
         ]);
 

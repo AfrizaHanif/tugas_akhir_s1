@@ -1,9 +1,9 @@
 <!--TEMPLATE-->
-@extends('Templates.Developer.template')
+@extends('Templates.Home.template')
 
 <!--TITLE-->
 @section('title')
-<title>Pesan Feedback | Tugas Akhir</title>
+<title>Feedback Message | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
@@ -22,6 +22,7 @@
 
 <!--OFFCANVAS-->
 @section('offcanvas')
+@include('Pages.Includes.Components.Offcanvas.message')
 @endsection
 
 <!--SCRIPTS-->

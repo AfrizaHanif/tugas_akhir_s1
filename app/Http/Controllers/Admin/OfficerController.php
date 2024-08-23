@@ -10,6 +10,7 @@ use App\Models\Input;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Performance;
+use App\Models\Period;
 use App\Models\Presence;
 use App\Models\SubTeam;
 use App\Models\Team;
@@ -48,6 +49,12 @@ class OfficerController extends Controller
      */
     public function store(Request $request)
     {
+        //CHECK STATUS
+        $latest_per = Period::latest();
+        if($latest_per->status == 'Validating'){
+            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+        }
+
         //COMBINE KODE
         /*
         $total_id = Officer::
@@ -138,6 +145,12 @@ class OfficerController extends Controller
      */
     public function update(Request $request, Officer $officer)
     {
+        //CHECK STATUS
+        $latest_per = Period::latest();
+        if($latest_per->status == 'Validating'){
+            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
+        }
+
         //GET FOR REDIRECT
         $redirect = Part::with('team')
         ->whereHas('team', function($query) use($request){

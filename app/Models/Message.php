@@ -15,9 +15,9 @@ class Message extends Model
         'id_officer',
         'officer_nip',
         'officer_name',
-        'officer_department',
+        //'officer_department',
         'message_in',
         'message_out',
-        'status',
+        'type',
     ];
 }
