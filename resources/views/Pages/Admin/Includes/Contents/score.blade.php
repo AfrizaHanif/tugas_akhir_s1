@@ -173,8 +173,8 @@
                             <tr class="table-primary">
                                 <th class="col-1" scope="col">#</th>
                                 <th scope="col">Nama</th>
-                                <th scope="col">CKP</th>
                                 <th scope="col">Hasil Akhir</th>
+                                <th scope="col">Nilai Kedua</th>
                                 <th class="col-3" scope="col">Status</th>
                                 <th class="col-1" scope="col">Setuju?</th>
                             </tr>
@@ -184,8 +184,8 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $score->officer->name }}</td>
-                                <td>{{ $score->ckp }}</td>
                                 <td>{{ $score->final_score }}</td>
+                                <td>{{ $score->second_score }}</td>
                                 <td>
                                     @if ($score->status == 'Pending')
                                     <span class="badge text-bg-warning">Menunggu Persetujuan</span>
@@ -287,8 +287,8 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">CKP</th>
                             <th scope="col">Hasil Akhir</th>
+                            <th scope="col">Nilai Kedua</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -296,8 +296,8 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $score->officer_name }}</td>
-                            <td>{{ $score->ckp }}</td>
                             <td>{{ $score->final_score }}</td>
+                            <td>{{ $score->second_score }}</td>
                         </tr>
                         @empty
                         <tr>

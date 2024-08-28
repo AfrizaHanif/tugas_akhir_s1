@@ -156,22 +156,22 @@
                         </thead>
                         <tbody>
                         @foreach ($periods as $period)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
                             @foreach ($voteresults->where('id_period', $period->id_period) as $voteresult)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $voteresult->period_name }}</td>
-                                <td>{{ $voteresult->officer_name }}</td>
-                                <td>{{ $voteresult->officer_department }}</td>
+                            <td>{{ $voteresult->period_name }}</td>
+                            <td>{{ $voteresult->officer_name }}</td>
+                            <td>{{ $voteresult->officer_department }}</td>
                                 @if (Auth::user()->part != "Pegawai")
                                 <td>{{ $voteresult->final_score }}</td>
                                 @endif
-                            </tr>
                             @endforeach
+                        </tr>
                         @endforeach
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="5">Total Data: <b>00</b> Data</td>
+                                <td colspan="5">Total Data: <b>{{ count($voteresults) }}</b> Data</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -191,7 +191,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Tiga Hasil Akhir Terbaik Saat Ini ({{ $history_prd->period_name ?? ''}})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hasil Akhir Terbaik Saat Ini ({{ $history_prd->period_name ?? ''}})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -205,18 +205,18 @@
                                 <th scope="col">Jabatan</th>
                                 @if (Auth::user()->part != "Pegawai")
                                 <th scope="col">Nilai Akhir</th>
-                                <th scope="col">CKP</th>
+                                <th scope="col">Nilai Kedua</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($scoreresults->where('id_period', $history_prd->id_period)->take(3) as $scoreresult)
+                            @foreach ($scoreresults->where('id_period', $history_prd->id_period) as $scoreresult)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $scoreresult->officer_name }}</td>
                                     <td>{{ $scoreresult->officer_department }}</td>
                                     <td>{{ $scoreresult->final_score }}</td>
-                                    <td>{{ $scoreresult->ckp }}</td>
+                                    <td>{{ $scoreresult->second_score }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

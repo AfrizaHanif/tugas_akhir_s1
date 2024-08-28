@@ -21,7 +21,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.Modals.dashboard')
+@include('Pages.Admin.Includes.Components.Modal.dashboard')
 @endsection
 
 <!--TOASTS-->

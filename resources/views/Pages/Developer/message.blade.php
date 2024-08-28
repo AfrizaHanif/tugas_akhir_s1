@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Includes.Components.Modals.message')
+@include('Pages.Includes.Components.Modal.message')
 @endsection
 
 <!--TOASTS-->

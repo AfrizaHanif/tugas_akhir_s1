@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.Modals.criteria')
+@include('Pages.Admin.Includes.Components.Modal.criteria')
 @endsection
 
 <!--TOASTS-->

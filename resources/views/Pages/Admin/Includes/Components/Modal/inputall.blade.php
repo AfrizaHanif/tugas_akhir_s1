@@ -41,9 +41,7 @@
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
                                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)
-                                            @foreach ($input_raws->where('id_input_raw', $input->id_input) as $raw)
-                                            <td>{{ $input->input }} ({{ $raw->input }})</td>
-                                            @endforeach
+                                            <td>{{ $input->input }} ({{ $input->input_raw }})</td>
                                         @empty
                                             <td>0</td>
                                         @endforelse

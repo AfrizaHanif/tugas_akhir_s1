@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Includes.Components.Modals.user')
+@include('Pages.Includes.Components.Modal.user')
 @endsection
 
 <!--TOASTS-->

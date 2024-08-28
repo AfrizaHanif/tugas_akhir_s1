@@ -36,7 +36,7 @@
                         @if (Auth::user()->part == "Admin")
                         <h4 class="card-title">Data Terinput</h4>
                         @elseif (Auth::user()->part == "KBPS")
-                        <h4 class="card-title">Pending Confirm</h4>
+                        <h4 class="card-title">Data Terinput</h4>
                         @endif
                     </div>
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
@@ -214,7 +214,7 @@
                         @if (Auth::user()->part == "Admin")
                         <a href="{{ route('admin.masters.periods.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
                         @else
-                        <a type="button" class="btn btn-primary btn-sm disabled">Cek</a>
+                        <a type="button" class="btn btn-secondary btn-sm disabled">Cek</a>
                         @endif
                     </div>
                 </div>
@@ -351,6 +351,85 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
+        </div>
+    </div>
+</div>
+@endif
+@if (Auth::user()->part == "Dev")
+<div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
+    <!--OFFICERS COUNTER CARD-->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h4 class="card-title">Jumlah Pegawai</h4>
+                    </div>
+                    <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <h4>{{ count($officers) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-body-secondary">
+                <div class="row align-items-center">
+                    <div class="col-9">
+
+                    </div>
+                    <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--USERS COUNTER CARD-->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h4 class="card-title">Jumlah Pengguna</h4>
+                    </div>
+                    <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <h4>{{ count($users) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-body-secondary">
+                <div class="row align-items-center">
+                    <div class="col-9">
+
+                    </div>
+                    <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MESSGES COUNTER CARD-->
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h4 class="card-title">Jumlah Pesan</h4>
+                    </div>
+                    <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <h4>{{ count($messages) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-body-secondary">
+                <div class="row align-items-center">
+                    <div class="col-9">
+
+                    </div>
+                    <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a type="button" class="btn btn-secondary btn-sm disabled">Cek</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

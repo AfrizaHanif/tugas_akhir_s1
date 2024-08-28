@@ -6,6 +6,7 @@ use App\Models\Criteria;
 use App\Models\HistoryResult;
 use App\Models\HistoryScore;
 use App\Models\Input;
+use App\Models\Message;
 use App\Models\Officer;
 use App\Models\Performance;
 use App\Models\Period;
@@ -13,6 +14,7 @@ use App\Models\Presence;
 use App\Models\Result;
 use App\Models\Score;
 use App\Models\SubCriteria;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -98,7 +100,12 @@ class DashboardController extends Controller
     }
 
     public function developer(){
+        //GET DATA
+        $officers = Officer::get();
+        $users = User::get();
+        $messages = Message::get();
+
         //RETURN TO VIEW
-        return view('Pages.Developer.dashboard');
+        return view('Pages.Developer.dashboard', compact('officers', 'users', 'messages'));
     }
 }

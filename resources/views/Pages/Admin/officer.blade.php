@@ -14,7 +14,7 @@
 <!--MODALS-->
 @section('modals')
 @include('Templates.Includes.Components.Modals.officer')
-@include('Pages.Includes.Components.Modals.officer')
+@include('Pages.Includes.Components.Modal.officer')
 @endsection
 
 <!--TOASTS-->

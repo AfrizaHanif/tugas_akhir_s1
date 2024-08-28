@@ -20,6 +20,7 @@ use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Period;
 use App\Models\Score;
+use App\Models\Setting;
 use App\Models\SubCriteria;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,9 +37,9 @@ class ScoreController extends Controller
         ->where('is_lead', 'No')
         ->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
-        $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('ckp', 'DESC')->get();
+        $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         $inputs = Input::get();
-        $input_raws = InputRAW::get();
+        //$input_raws = InputRAW::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $categories = Category::with('criteria')->get();
         $allcriterias = Criteria::with('category')->get();
@@ -56,7 +57,7 @@ class ScoreController extends Controller
         $hofficer = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
 
         //RETURN TO VIEW
-        return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'input_raws', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'hscore', 'hofficer'));
+        return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'hscore', 'hofficer'));
     }
 
     public function get($period)
@@ -180,11 +181,12 @@ class ScoreController extends Controller
 
             //INSERT DATA
             if(DB::table('scores')->where('id_period', $period)->where('id_officer', $n)->count() == 0){
-                //GET CKP
-                $crit_ckp = Criteria::where('name', 'CKP')->orwhere('name', 'Capaian Kinerja Pegawai')->first();
-                $ckp = InputRAW::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $crit_ckp->id_criteria)->first()->input;
+                //GET DATA FOR SECOND SORT
+                $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+                $set_second = Criteria::where('id_criteria', $setting)->first();
+                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw;
 
-                //
+                //INSERT DATA SCORES
                 $str_officer = substr($n, 4);
                 $str_year = substr($period, -5);
                 $id_score = "SCR-".$str_year.'-'.$str_officer;
@@ -193,7 +195,7 @@ class ScoreController extends Controller
                     'id_officer'=>$n,
                     'id_period'=>$period,
                     'final_score'=>$matrix[$n],
-                    'ckp'=>$ckp,
+                    'second_score'=>$second_score,
                     'status'=>'Pending'
                 ]);
             }else{
@@ -212,6 +214,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'In Review'
         ]);
+        /*
         InputRAW::with('officer')
         ->where('id_period', $period)
         ->whereIn('status', ['Pending', 'Need Fix', 'Fixed'])
@@ -221,6 +224,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'In Review'
         ]);
+        */
         Period::where('id_period', $period)
         ->update([
             'status'=>'Validating'
@@ -245,9 +249,11 @@ class ScoreController extends Controller
         Input::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Final'
         ]);
+        /*
         InputRAW::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Final'
         ]);
+        */
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
@@ -266,6 +272,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'Final'
         ]);
+        /*
         InputRAW::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
             $query->where('is_lead', 'No');
@@ -273,6 +280,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'Final'
         ]);
+        */
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari seluruh pegawai telah disetujui')->with('code_alert', 1);
@@ -293,9 +301,11 @@ class ScoreController extends Controller
         Input::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Need Fix'
         ]);
+        /*
         InputRAW::where('id_period', $period)->where('id_officer', $officer)->update([
             'status'=>'Need Fix'
         ]);
+        */
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
@@ -314,6 +324,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'Need Fix'
         ]);
+        /*
         InputRAW::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
             $query->where('is_lead', 'No');
@@ -321,6 +332,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'Need Fix'
         ]);
+        */
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari seluruh pegawai telah dikembalikan')->with('code_alert', 1);
@@ -348,7 +360,7 @@ class ScoreController extends Controller
                 'officer_name'=>$getofficer1->name,
                 'officer_department'=>$getdepartment1->name,
                 'final_score'=>$score->final_score,
-                'ckp'=>$score->ckp,
+                'second_score'=>$score->second_score,
             ]);
         }
 
@@ -390,11 +402,14 @@ class ScoreController extends Controller
                 'weight'=>$getsubcriteria2->weight,
                 'attribute'=>$getsubcriteria2->attribute,
                 'level'=>$getsubcriteria2->level,
+                'max'=>$getsubcriteria2->max,
                 'is_lead'=>$is_lead,
                 'input'=>$input->input,
+                'input_raw'=>$input->input_raw,
             ]);
         }
 
+        /*
         //HISTORY INPUT (RAW)
         //GET DATA (1/2)
         $input_raws = InputRAW::where('id_period', $period)->get();
@@ -433,14 +448,16 @@ class ScoreController extends Controller
                 'weight'=>$getsubcriteria3->weight,
                 'attribute'=>$getsubcriteria3->attribute,
                 'level'=>$getsubcriteria3->level,
+                'max'=>$getsubcriteria3->max,
                 'is_lead'=>$is_lead,
                 'input'=>$raw->input,
             ]);
         }
+        */
 
         //HISTORY RESULT
         //GET DATA (RESULT)
-        $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->orderBy('ckp', 'DESC')->offset(0)->limit(1)->first();
+        $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->offset(0)->limit(1)->first();
         $getperiod4 = Period::where('id_period', $scores2->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first();
         $getdepartment4 = Department::with('officer')->whereHas('officer', function($query) use($scores2){
@@ -468,7 +485,7 @@ class ScoreController extends Controller
             'officer_department'=>$getdepartment4->name,
             'officer_photo'=>$photo,
             'final_score'=>$scores2->final_score,
-            //'ckp'=>$scores2->ckp,
+            //'second_score'=>$scores2->second_score,
         ]);
 
         //UPDATE STATUS
@@ -478,7 +495,7 @@ class ScoreController extends Controller
 
         //DELETE CURRENT DATA
         DB::table('inputs')->delete();
-        DB::table('input_raws')->delete();
+        //DB::table('input_raws')->delete();
         DB::table('scores')->delete();
 
         //RETURN TO VIEW

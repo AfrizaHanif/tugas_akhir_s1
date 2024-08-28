@@ -194,6 +194,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::post('/in', 'store_in')->name('in');
             });
         });
+        //PENGATURAN
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::controller(SettingController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/update', 'update')->name('update');
+            });
+        });
     });
 });
 

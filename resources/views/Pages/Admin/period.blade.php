@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.Modals.period')
+@include('Pages.Admin.Includes.Components.Modal.period')
 @endsection
 
 <!--TOASTS-->

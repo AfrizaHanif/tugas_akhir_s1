@@ -50,9 +50,11 @@ class OfficerController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::latest();
-        if($latest_per->status == 'Validating'){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Validating'){
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            }
         }
 
         //COMBINE KODE
@@ -146,9 +148,11 @@ class OfficerController extends Controller
     public function update(Request $request, Officer $officer)
     {
         //CHECK STATUS
-        $latest_per = Period::latest();
-        if($latest_per->status == 'Validating'){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Validating'){
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
+            }
         }
 
         //GET FOR REDIRECT

@@ -387,13 +387,21 @@
             </h2>
             <div id="collapse-ranking" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
+                        <br/>
+                        @if (Request::is('admin/analysis/saw/latest'))
+                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $set_crit->name }}</strong>. Silahkan menunggu hasil dari pemilihan Karyawan Terbaik.
+                        @elseif (Request::is('admin/analysis/saw/*'))
+                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $h_set_crit->criteria_name }}</strong> yang dapat dilihat di halaman Karyawan Terbaik pada halaman utama dan dashboard.
+                        @endif
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
                                     <th scope="col">Nama Alternatif</th>
                                     <th scope="col">Matrix</th>
-                                    <th scope="col">CKP</th>
                                     <th scope="col">Rank</th>
                                 </tr>
                             </thead>
@@ -409,13 +417,6 @@
                                         @endif
                                     </th>
                                     <td>{{ number_format($valsqrt1,3) }}</td>
-                                    <td>
-                                        @if (Request::is('admin/analysis/saw/latest'))
-                                        {{$ckp->where('id_officer', $sqrt1)->first()->input ?? '0'}}
-                                        @elseif (Request::is('admin/analysis/saw/*'))
-                                        {{$history_ckp->where('id_officer', $sqrt1)->first()->input ?? '0'}}
-                                        @endif
-                                    </td>
                                     <td>{{ $no++ }}</td>
                                 </tr>
                                 @endforeach
@@ -575,13 +576,21 @@
             </h2>
             <div id="collapse-rank" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
+                        <br/>
+                        @if (Request::is('admin/analysis/wp/latest'))
+                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $set_crit->name }}</strong>. Silahkan menunggu hasil dari pemilihan Karyawan Terbaik.
+                        @elseif (Request::is('admin/analysis/wp/*'))
+                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $h_set_crit->criteria_name }}</strong> yang dapat dilihat di halaman Karyawan Terbaik pada halaman utama dan dashboard.
+                        @endif
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
                                     <th scope="col">Nama Alternatif</th>
                                     <th scope="col">V</th>
-                                    <th scope="col">CKP</th>
                                     <th scope="col">Rank</th>
                                 </tr>
                             </thead>
@@ -597,9 +606,6 @@
                                         @endif
                                     </th>
                                     <td>{{ number_format($valsqrt1,3) }}</td>
-                                    <td>
-                                        {{$ckp->where('id_officer', $sqrt1)->first()->input ?? ''}}
-                                    </td>
                                     <td>{{ $no++ }}</td>
                                 </tr>
                                 @endforeach

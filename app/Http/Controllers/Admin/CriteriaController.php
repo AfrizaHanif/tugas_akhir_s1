@@ -7,6 +7,7 @@ use App\Models\Criteria;
 use App\Models\Category;
 use App\Models\Crips;
 use App\Models\Period;
+use App\Models\Setting;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -35,9 +36,11 @@ class CriteriaController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::latest();
-        if($latest_per->status == 'Validating'){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Validating'){
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+            }
         }
 
         //COMBINE KODE
@@ -56,7 +59,7 @@ class CriteriaController extends Controller
             //'prefix'=>'CRT-'.$str_cat.'-',
             'reset_on_prefix_change'=>true,
         ]);
-        dd($id_criteria);
+        //dd($id_criteria);
         //$id_criteria = $gen_cri.'-'.$str_cat;
 
         //VALIDATE DATA
@@ -85,12 +88,19 @@ class CriteriaController extends Controller
             'weight'=>$weight,
             'attribute'=>$request->attribute,
             'level'=>$request->level,
+            'max'=>$request->max,
             'need'=>$request->need,
             'source'=>$source,
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Scoring'){
+                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('success','Tambah Kriteria Berhasil. Jika diperlukan, segera lakukan import ulang.')->with('code_alert', 1);
+            }
+        }else{
+            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
+        }
     }
 
     /**
@@ -99,9 +109,11 @@ class CriteriaController extends Controller
     public function update(Request $request, Criteria $criteria)
     {
         //CHECK STATUS
-        $latest_per = Period::latest();
-        if($latest_per->status == 'Validating'){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Validating'){
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
+            }
         }
 
         //VALIDATE DATA
@@ -128,12 +140,19 @@ class CriteriaController extends Controller
             'weight'=>$weight,
             'attribute'=>$request->attribute,
             'level'=>$request->level,
+            'max'=>$request->max,
             'need'=>$request->need,
             'source'=>$source,
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Scoring'){
+                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Ubah Kriteria Berhasil. Jika diperlukan, segera lakukan import ulang')->with('code_alert', 1);
+            }
+        }else{
+            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
+        }
     }
 
     /**
@@ -141,10 +160,24 @@ class CriteriaController extends Controller
      */
     public function destroy(Criteria $criteria)
     {
+        //GET LATEST PERIOD
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+
         //DESTROY DATA
         $criteria->delete();
 
+        //CHANGE SETTING
+        Setting::where('id_setting', 'STG-001')->update([
+            'value'=>'None',
+        ]);
+
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Scoring'){
+                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Hapus Kriteria Berhasil. Jika diperlukan, segera ganti pengaturan dan lakukan import ulang')->with('code_alert', 1);
+            }
+        }else{
+            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
+        }
     }
 }

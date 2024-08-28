@@ -17,7 +17,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.Modals.analysis')
+@include('Pages.Admin.Includes.Components.Modal.analysis')
 @endsection
 
 <!--TOASTS-->

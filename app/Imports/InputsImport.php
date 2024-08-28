@@ -22,12 +22,13 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use PDO;
 
 class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsOnFailure, WithHeadingRow
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $setting, $per_status;
+    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $val_setting, $per_status;
 
     public function __construct($period)
     {
@@ -42,12 +43,13 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
         $this->criterias = Criteria::with('category')->get();
         $this->scores = Score::where('id_period', $period)->get();
         $this->inputs = Input::where('id_period', $period)->get();
-        $this->setting = Setting::where('id_setting', 'STG-001')->first()->value;
+        $this->val_setting = Setting::where('id_setting', 'STG-001')->first()->value;
         $this->per_status = Period::where('id_period', $period)->first()->status;
     }
 
     public function collection(Collection $rows)
     {
+        //dd($this->set_crit);
         foreach($this->criterias as $criteria){
             foreach ($rows as $row){
                 //dd($row);
@@ -60,7 +62,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                     $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
-                        if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){ //STG
+                        if($criteria->id_criteria == $this->val_setting){ //STG
                             //dd('Yes');
                             $remain = $this->active_days - $row[$criteria->source];
                             if($this->per_status == 'Scoring'){
@@ -71,8 +73,10 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
+                                    'input_raw' => $remain,
                                     'status' => 'Pending',
                                 ]);
+                                /*
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
@@ -82,6 +86,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'input' => $remain,
                                     'status' => 'Pending',
                                 ]);
+                                */
                             }elseif($this->per_status == 'Validating'){
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
@@ -90,8 +95,10 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
+                                    'input_raw' => $remain,
                                     'status' => 'Fixed',
                                 ]);
+                                /*
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
@@ -101,6 +108,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'input' => $remain,
                                     'status' => 'Fixed',
                                 ]);
+                                */
                             }
                         }else{
                             //dd('No');
@@ -112,8 +120,10 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
+                                    'input_raw' => $row[$criteria->source],
                                     'status' => 'Pending',
                                 ]);
+                                /*
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
@@ -123,6 +133,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'input' => $row[$criteria->source],
                                     'status' => 'Pending',
                                 ]);
+                                */
                             }elseif($this->per_status == 'Validating'){
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
@@ -131,8 +142,10 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
+                                    'input_raw' => $row[$criteria->source],
                                     'status' => 'Fixed',
                                 ]);
+                                /*
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
@@ -142,6 +155,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'input' => $row[$criteria->source],
                                     'status' => 'Fixed',
                                 ]);
+                                */
                             }
                         }
                     }

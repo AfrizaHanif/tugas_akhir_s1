@@ -20,6 +20,7 @@ return new class extends Migration
             $table->char('id_criteria', 11);
             $table->foreign('id_criteria')->references('id_criteria')->on('criterias');
             $table->smallInteger('input');
+            $table->smallInteger('input_raw');
             $table->char('status', 15);
             $table->timestamps();
         });

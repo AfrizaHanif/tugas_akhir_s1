@@ -41,7 +41,7 @@ class InputController extends Controller
         ->orderBy('name', 'ASC')
         ->get();
         $inputs = Input::get();
-        $input_raws = InputRAW::get();
+        //$input_raws = InputRAW::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
         $categories = Category::with('criteria')->get();
@@ -57,14 +57,14 @@ class InputController extends Controller
 
         //GET HISTORY
         $histories = HistoryInput::get();
-        $hraws = HistoryInputRAW::get();
+        //$hraws = HistoryInputRAW::get();
         $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
         $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
         //RETURN TO VIEW
-        return view('Pages.Admin.input', compact('officers', 'inputs', 'input_raws', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'scores', 'histories', 'hraws', 'hofficers', 'hcriterias', 'hallsub', 'hsubs'));
+        return view('Pages.Admin.input', compact('officers', 'inputs', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'scores', 'histories', 'hofficers', 'hcriterias', 'hallsub', 'hsubs'));
     }
 
     /**
@@ -166,7 +166,7 @@ class InputController extends Controller
     {
         //DELETE ALL DATA
         Input::where('id_period', $period)->delete();
-        InputRAW::where('id_period', $period)->delete();
+        //InputRAW::where('id_period', $period)->delete();
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Hapus Semua Data Nilai Berhasil')->with('code_alert', 1);
@@ -209,6 +209,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -217,6 +218,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        */
                     }elseif($latest_per->status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
@@ -227,6 +229,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -236,6 +239,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        */
                     }
                 }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
                     //dd('SKP Detected');
@@ -248,6 +252,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -256,6 +261,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        */
                     }elseif($latest_per->status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
@@ -266,6 +272,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -275,6 +282,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        */
                     }
                 }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
                     //dd('CKP Detected');
@@ -287,6 +295,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -295,6 +304,7 @@ class InputController extends Controller
                             });
                         })
                         ->delete();
+                        */
                     }elseif($latest_per->status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
@@ -305,6 +315,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        /*
                         InputRAW::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -314,6 +325,7 @@ class InputController extends Controller
                         })
                         ->where('status', 'Need Fix')
                         ->delete();
+                        */
                     }
                 }else{
                     //OPTIONAL: USE RETURN IF FILE NAME NOT CONTAIN PRESENSI, SKP, OR CKP.
@@ -446,9 +458,10 @@ class InputController extends Controller
     public function refresh($period)
     {
         //DELETE OLD INPUT
-        Input::truncate();
+        //Input::truncate();
 
         //MOVE INPUT RAW TO INPUT
+        /*
         $move = InputRAW::where('id_period', $period)->get();
         foreach($move as $m){
             Input::insert([
@@ -460,6 +473,7 @@ class InputController extends Controller
                 'status' => $m->status,
             ]);
         }
+        */
 
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
         //GET INPUT DATA AND CRITERIA

@@ -1,5 +1,5 @@
 <!--TEMPLATE-->
-@extends('Templates.Developer.template')
+@extends('Templates.Admin.template')
 
 <!--TITLE-->
 @section('title')

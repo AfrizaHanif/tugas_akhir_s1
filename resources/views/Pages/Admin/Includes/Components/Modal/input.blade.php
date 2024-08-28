@@ -433,13 +433,11 @@
                     <tr>
                         <th scope="row">{{ $criteria->name }}</th>
                         <td>
-                            @foreach ($input_raws->where('id_input_raw', $input->id_input) as $raw)
                             @if ($criteria->need == 'Ya')
-                            <b>{{ $input->input }} ({{ $raw->input }})</b>
+                            <b>{{ $input->input }} ({{ $input->input_raw }})</b>
                             @else
-                            {{ $input->input }} ({{ $raw->input }})
+                            {{ $input->input }} ({{ $input->input_raw }})
                             @endif
-                            @endforeach
                         </td>
                     </tr>
                     @empty
@@ -583,9 +581,7 @@
                                 <td>{{ $hofficer->officer_department }}</td>
                                 @foreach ($hcriterias as $criteria)
                                     @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
-                                    @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $raw)
-                                    <td>{{ $history->input }} ({{ $raw->input }})</td>
-                                    @endforeach
+                                        <td>{{ $history->input }} ({{ $history->input_raw }})</td>
                                     @empty
                                         <td>0</td>
                                     @endforelse
@@ -648,12 +644,10 @@
                     <table class="table">
                         @foreach ($hcriterias as $criteria)
                         @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
-                        @foreach ($hraws->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $raw)
                         <tr>
                             <th scope="row">{{ $criteria->criteria_name }}</th>
-                            <td>{{ $history->input }} ({{ $raw->input }})</td>
+                            <td>{{ $history->input }} ({{ $history->input_raw }})</td>
                         </tr>
-                        @endforeach
                         @empty
                         <tr>
                             <th scope="row">{{ $criteria->criteria_name }}</th>

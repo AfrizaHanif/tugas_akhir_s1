@@ -2,6 +2,19 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
+@if ($criterias->sum('weight')*100 > 100)
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+    <br/>
+    Total Bobot melebihi 100%. Cek kembali bobot di setiap kriteria
+</div>
+@elseif ($criterias->sum('weight')*100 <= 99)
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+    <br/>
+    Total Bobot belum mencapai 100%. Cek kembali bobot di setiap kriteria
+</div>
+@endif
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">

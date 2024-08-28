@@ -26,8 +26,10 @@ return new class extends Migration
             $table->double('weight');
             $table->char('attribute', 11);
             $table->smallInteger('level');
+            $table->smallInteger('max');
             $table->char('is_lead', 10);
             $table->smallInteger('input');
+            $table->smallInteger('input_raw');
             $table->timestamps();
         });
     }

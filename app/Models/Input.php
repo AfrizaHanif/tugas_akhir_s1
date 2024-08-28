@@ -20,6 +20,7 @@ class Input extends Model
         'id_officer', //FOREIGN
         'id_criteria', //FOREIGN
         'input',
+        'input_raw',
         'status',
     ];
 

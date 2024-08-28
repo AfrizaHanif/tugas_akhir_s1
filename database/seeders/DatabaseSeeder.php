@@ -825,5 +825,18 @@ class DatabaseSeeder extends Seeder
                 'score' => '5',
             ]);
         }
+
+        //SETTING (Pengaturan)
+        DB::table('settings')->insert([
+            'id_setting' => 'STG-001',
+            'name' => 'Perhitungan Kehadiran',
+            'value' => 'CRT-001',
+        ]);
+
+        DB::table('settings')->insert([
+            'id_setting' => 'STG-002',
+            'name' => 'Sorting Kedua',
+            'value' => 'CRT-003',
+        ]);
     }
 }

@@ -15,7 +15,7 @@ class Score extends Model
         'id_officer',
         'id_period',
         'final_score',
-        'ckp',
+        'second_score',
         'status',
     ];
 

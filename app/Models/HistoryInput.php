@@ -25,7 +25,9 @@ class HistoryInput extends Model
         'weight',
         'attribute',
         'level',
+        'max',
         'is_lead',
         'input',
+        'input_raw',
     ];
 }

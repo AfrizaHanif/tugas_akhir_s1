@@ -14,6 +14,7 @@ use App\Models\Presence;
 use App\Models\Result;
 use App\Models\Officer;
 use App\Models\Period;
+use App\Models\Setting;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,9 +43,10 @@ class AnalysisController extends Controller
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
-        //GET CKP
-        $crit_ckp = Criteria::where('name', 'CKP')->orwhere('name', 'Capaian Kinerja Pegawai')->first();
-        $ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
+        //GET DATA FOR SORT
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+        $set_crit = Criteria::where('id_criteria', $setting)->first();
+        //$ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -181,7 +183,7 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'ckp', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'set_crit','criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
     public function history_saw($period)
@@ -194,9 +196,10 @@ class AnalysisController extends Controller
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
-        //GET CKP
-        $h_crit_ckp = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('criteria_name', 'CKP')->orwhere('criteria_name', 'Capaian Kinerja Pegawai')->first();
-        $history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
+        //GET DATA FOR SORT
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+        $h_set_crit = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_criteria', $setting)->first();
+        //$history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
 
         //SAW ANALYSIS
         //GET ALTERNATIVE
@@ -293,7 +296,7 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'history_ckp', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 
     public function wp()
@@ -308,9 +311,10 @@ class AnalysisController extends Controller
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
-        //GET CKP
-        $crit_ckp = Criteria::where('name', 'CKP')->orwhere('name', 'Capaian Kinerja Pegawai')->first();
-        $ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
+        //GET DATA FOR SORT
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+        $set_crit = Criteria::where('id_criteria', $setting)->first();
+        //$ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -448,7 +452,7 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'ckp', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'set_crit', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
     }
 
     public function history_wp($period)
@@ -462,9 +466,10 @@ class AnalysisController extends Controller
         //LATEST PERIODE
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
-        //GET CKP
-        $h_crit_ckp = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('criteria_name', 'CKP')->orwhere('criteria_name', 'Capaian Kinerja Pegawai')->first();
-        $history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
+        //GET DATA FOR SORT
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+        $h_set_crit = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_criteria', $setting)->first();
+        //$history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
 
         //WP ANALYSIS
         //GET ALTERNATIVE
@@ -560,6 +565,6 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'history_ckp', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
     }
 }

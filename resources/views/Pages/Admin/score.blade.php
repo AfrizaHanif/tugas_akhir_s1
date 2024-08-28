@@ -13,8 +13,8 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Admin.Includes.Components.Modals.inputall')
-@include('Pages.Admin.Includes.Components.Modals.validate')
+@include('Pages.Admin.Includes.Components.Modal.inputall')
+@include('Pages.Admin.Includes.Components.Modal.validate')
 @endsection
 
 <!--TOASTS-->

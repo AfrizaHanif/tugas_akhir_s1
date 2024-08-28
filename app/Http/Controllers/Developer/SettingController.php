@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Developer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
+use App\Models\Period;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -13,11 +15,27 @@ class SettingController extends Controller
     {
         $criterias = Criteria::get();
         $settings = Setting::get();
-        return view('Pages.Developer.setting', compact('criterias', 'settings'));
+        if(Auth::user()->part == "Dev"){
+            return view('Pages.Developer.setting', compact('criterias', 'settings'));
+        }else{
+            return view('Pages.Admin.setting', compact('criterias', 'settings'));
+        }
     }
 
     public function update(Request $request) //MANUAL UNTUK DEVELOPER KARENA BERSIFAT UNIVERSAL
     {
+        //CHECK STATUS
+        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Validating'){
+                if(Auth::user()->part == "Dev"){
+                    return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1);
+                }else{
+                    return redirect()->route('admin.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1);
+                }
+            }
+        }
+
         //PRESENCE COUNT (PERHITUNGAN KEHADIRAN)
         Setting::where('id_setting', 'STG-001')->update([
             'value'=>$request->presence_counter,
@@ -29,6 +47,20 @@ class SettingController extends Controller
         ]);
 
         //RETURN TO VIEW
-        return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per)){
+            if($latest_per->status == 'Scoring'){
+                if(Auth::user()->part == "Dev"){
+                    return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil. Silahkan melakukan import kembali untuk memperbarui konversi data nilai')->with('code_alert', 1);
+                }else{
+                    return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil. Silahkan melakukan import kembali untuk memperbarui konversi data nilai')->with('code_alert', 1);
+                }
+            }
+        }else{
+            if(Auth::user()->part == "Dev"){
+                return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
+            }else{
+                return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
+            }
+        }
     }
 }
