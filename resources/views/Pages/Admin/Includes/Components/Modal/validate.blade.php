@@ -23,7 +23,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 <td>
                                     @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $s)
                                         @if ($s->status == 'Pending')

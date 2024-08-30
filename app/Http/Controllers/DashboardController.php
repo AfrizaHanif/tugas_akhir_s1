@@ -30,8 +30,8 @@ class DashboardController extends Controller
         //GET DATA
         $periods = Period::get();
         $inputs = Input::get();
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query)
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query)
         {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
         //->where('is_lead', 'No')
         ->get();
@@ -48,23 +48,23 @@ class DashboardController extends Controller
         //GET DATA PER PART OF ACCOUNT
         if(Auth::user()->part == 'Admin'){
             //LIST OF OFFICERS FOR INPUT
-            $input_off = Officer::with('department', 'user')
-            ->whereDoesntHave('department', function($query)
+            $input_off = Officer::with('position', 'user')
+            ->whereDoesntHave('position', function($query)
             {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
             ->where('is_lead', 'No')
             ->get();
         }elseif(Auth::user()->part == 'KBPS'){
             //LIST OF OFFICERS FOR INPUT
-            $input_off = Officer::with('department', 'user')
-            ->whereDoesntHave('department', function($query)
+            $input_off = Officer::with('position', 'user')
+            ->whereDoesntHave('position', function($query)
             {$query->where('name', 'Developer');})
             ->where('is_lead', 'No')
             ->get();
         }
 
         //GET DATA FOR CARDS
-        $reject_offs = Officer::with('department', 'score')
-        ->whereDoesntHave('department', function($query)
+        $reject_offs = Officer::with('position', 'score')
+        ->whereDoesntHave('position', function($query)
         {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
         ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
         ->where('is_lead', 'No')

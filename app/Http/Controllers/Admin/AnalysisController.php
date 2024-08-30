@@ -40,7 +40,7 @@ class AnalysisController extends Controller
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
 
-        //LATEST PERIODE
+        //LATEST PERIOD
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //GET DATA FOR SORT
@@ -52,15 +52,15 @@ class AnalysisController extends Controller
         //CHECK EMPTY DATA
         if(!empty($latest_per)){
             if(Input::where('id_period', $latest_per->id_period)->count() == 0){
-                return redirect()->route('admin.analysis.saw.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
+                return redirect()->route('admin.analysis.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
             }else{
                 foreach ($officers as $officer) {
                     if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
-                        return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
+                        return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
                     }else{ //IF OFFICER HAS A FEW DATA
                         foreach ($subcriterias as $subcriteria) {
                             if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
-                                return redirect()->route('admin.analysis.saw.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
+                                return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
                             }else{
                                 //CLEAR
                             }
@@ -69,7 +69,7 @@ class AnalysisController extends Controller
                 }
             }
         }else{
-            return redirect()->route('admin.analysis.saw.index')->with('fail','Tidak ada periode yang sedang berjalan.');
+            return redirect()->route('admin.analysis.index')->with('fail','Tidak ada periode yang sedang berjalan.');
         }
 
         //SAW ANALYSIS
@@ -191,9 +191,12 @@ class AnalysisController extends Controller
         //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
+        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->get();
 
-        //LATEST PERIODE
+        //SELECTED PERIOD
+        $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first();
+
+        //LATEST PERIOD
         $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
 
         //GET DATA FOR SORT
@@ -296,275 +299,6 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
-    }
-
-    public function wp()
-    {
-        //GET DATA
-        //$periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $subcriterias = Criteria::with('category')->get();
-        $critcount = Criteria::select('level')->sum('level');
-        $officers = Officer::where('is_lead', 'No')->get();
-
-        //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
-
-        //GET DATA FOR SORT
-        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-        $set_crit = Criteria::where('id_criteria', $setting)->first();
-        //$ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
-
-        //VERIFICATION
-        //CHECK EMPTY DATA
-        if(!empty($latest_per)){
-            if(Input::where('id_period', $latest_per->id_period)->count() == 0){
-                return redirect()->route('admin.analysis.wp.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
-            }else{
-                foreach ($officers as $officer) {
-                    if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
-                        return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
-                    }else{ //IF OFFICER HAS A FEW DATA
-                        foreach ($subcriterias as $subcriteria) {
-                            if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
-                                return redirect()->route('admin.analysis.wp.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
-                            }else{
-                                //CLEAR
-                            }
-                        }
-                    }
-                }
-            }
-        }else{
-            return redirect()->route('admin.analysis.wp.index')->with('fail','Tidak ada periode yang sedang berjalan.');
-        }
-
-        //WP ANALYSIS
-        //GET ALTERNATIVE
-        $alternatives = Input::with('criteria', 'officer')
-        ->select('id_officer')
-        ->groupBy('id_officer')
-        ->where('id_period', $latest_per->id_period)
-        ->whereHas('criteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->where('part', 'KBPS');
-            });
-        })
-        ->getQuery()->get();
-
-        //GET CRITERIA
-        $criterias = DB::table("inputs")
-        ->join('criterias', 'criterias.id_criteria', '=', 'inputs.id_criteria')
-        ->select(
-            'inputs.id_criteria AS id_criteria',
-            'criterias.weight AS weight',
-            'criterias.attribute AS attribute',
-            'criterias.level AS level',
-            )
-        ->groupBy(
-            'id_criteria',
-            'weight',
-            'attribute',
-            'level'
-            )
-        ->where('id_period', $latest_per->id_period)
-        ->where('criterias.need', 'Ya')
-        ->get();
-        //$criterias = Criteria::get();
-
-        //GET INPUT
-        $inputs = Input::with('criteria')
-        ->where('id_period', $latest_per->id_period)
-        ->whereHas('criteria', function($query){
-            $query->where('need', 'Ya');
-        })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->where('part', 'KBPS');
-            });
-        })
-        ->getQuery()->get();
-
-        //PERSENTASE BOBOT (DISABLE IF USING WEIGHT DIRECTLY)
-        //$persen = $criterias->level->count();
-        foreach($criterias as $crit => $value1){
-            $persen[$value1->id_criteria] = $value1->level / $critcount;
-        }
-        //dd($persen);
-
-        //PERPANGKATAN
-        //WEIGHT (DISABLE IF USING PERCENT)
-        /*
-        foreach($criterias as $crit => $value1){
-            if($value1->attribute == 'Benefit'){
-                $pangkat[$value1->id_criteria] = $value1->weight;
-            }elseif($value1->attribute == 'Cost'){
-                $pangkat[$value1->id_criteria] = -1 * $value1->weight;
-            }
-        }
-        */
-        //PERCENT (DISABLE IF USING WEIGHT)
-        foreach($criterias as $crit => $value1){
-            if($value1->attribute == 'Benefit'){
-                $pangkat[$value1->id_criteria] = $persen[$value1->id_criteria];
-            }elseif($value1->attribute == 'Cost'){
-                $pangkat[$value1->id_criteria] = -1 * $persen[$value1->id_criteria];
-            }
-        }
-
-        //PERHITUNGAN
-        foreach($inputs as $input => $value1){
-            foreach($criterias as $crit => $value2){
-                if($value1->id_criteria == $value2->id_criteria){
-                    if($value1->input == 0){
-                        $square[$value1->id_officer][$value2->id_criteria] = (pow(0.5 , $pangkat[$value1->id_criteria]) ?: 1);
-                    }else{
-                        $square[$value1->id_officer][$value2->id_criteria] = (pow($value1->input , $pangkat[$value1->id_criteria]) ?: 1);
-                    }
-                    //$square[$value1->id_officer][$value2->id_criteria] = (pow($value1->input , $pangkat[$value1->id_criteria]) ?: 1);
-                }
-            }
-        }
-
-        //S
-        $v_hasil = $square;
-        foreach($square as $sqrt1 => $value1){
-            $v_hasil[$sqrt1][] = array_product($value1);
-        }
-
-        //V
-        foreach($square as $sqrt1 => $value1){
-            $s[$sqrt1] = array_product($value1);
-        }
-        foreach($square as $sqrt2 => $value1){
-            $v_hasil[$sqrt2][] = $s[$sqrt2]/array_sum($s);
-        }
-        foreach($square as $sqrt2 => $value1){
-            $v[$sqrt2] = $s[$sqrt2]/array_sum($s);
-        }
-        arsort($v);
-        //dd($v_hasil);
-
-        //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
-
-        //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'set_crit', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
-    }
-
-    public function history_wp($period)
-    {
-        //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
-        $critcount = HistoryInput::select('id_officer', 'id_period', 'level')->groupBy('id_officer', 'id_period')->where('id_period', $period)->sum('level');
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->get();
-
-        //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
-
-        //GET DATA FOR SORT
-        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-        $h_set_crit = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_criteria', $setting)->first();
-        //$history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
-
-        //WP ANALYSIS
-        //GET ALTERNATIVE
-        $alternatives = HistoryInput::with('criteria', 'officer')
-        ->select('id_officer')
-        ->groupBy('id_officer')
-        ->where('id_period', $period)
-        ->where('is_lead', 'No')
-        ->getQuery()->get();
-
-        //GET CRITERIA
-        $criterias = DB::table("history_inputs")
-        ->select(
-            'id_criteria',
-            'weight',
-            'attribute',
-            'level',
-            )
-        ->groupBy(
-            'id_criteria',
-            'weight',
-            'attribute',
-            'level',
-            )
-        ->where('id_period', $period)
-        ->get();
-        //$criterias = Criteria::get();
-
-        //GET INPUT
-        $inputs = HistoryInput::where('id_period', $period)
-        ->getQuery()->get();
-
-        //PERSENTASE BOBOT (DISABLE IF USING WEIGHT DIRECTLY)
-        //$persen = $criterias->level->count();
-        foreach($criterias as $crit => $value1){
-            $persen[$value1->id_criteria] = $value1->level / $critcount;
-        }
-        //dd($persen);
-
-        //PERPANGKATAN
-        //WEIGHT (DISABLE IF USING PERCENT)
-        /*
-        foreach($criterias as $crit => $value1){
-            if($value1->attribute == 'Benefit'){
-                $pangkat[$value1->id_criteria] = $value1->weight;
-            }elseif($value1->attribute == 'Cost'){
-                $pangkat[$value1->id_criteria] = -1 * $value1->weight;
-            }
-        }
-        */
-        //PERCENT (DISABLE IF USING WEIGHT)
-        foreach($criterias as $crit => $value1){
-            if($value1->attribute == 'Benefit'){
-                $pangkat[$value1->id_criteria] = $persen[$value1->id_criteria];
-            }elseif($value1->attribute == 'Cost'){
-                $pangkat[$value1->id_criteria] = -1 * $persen[$value1->id_criteria];
-            }
-        }
-
-        //PERHITUNGAN
-        foreach($inputs as $input => $value1){
-            foreach($criterias as $crit => $value2){
-                if($value1->id_criteria == $value2->id_criteria){
-                    if($value1->input == 0){
-                        $square[$value1->id_officer][$value2->id_criteria] = (pow(0.5 , $pangkat[$value1->id_criteria]) ?: 1);
-                    }else{
-                        $square[$value1->id_officer][$value2->id_criteria] = (pow($value1->input , $pangkat[$value1->id_criteria]) ?: 1);
-                    }
-                    //$square[$value1->id_officer][$value2->id_criteria] = (pow($value1->input , $pangkat[$value1->id_criteria]) ?: 1);
-                }
-            }
-        }
-
-        //S
-        $v_hasil = $square;
-        foreach($square as $sqrt1 => $value1){
-            $v_hasil[$sqrt1][] = array_product($value1);
-        }
-
-        //V
-        foreach($square as $sqrt1 => $value1){
-            $s[$sqrt1] = array_product($value1);
-        }
-        foreach($square as $sqrt2 => $value1){
-            $v_hasil[$sqrt2][] = $s[$sqrt2]/array_sum($s);
-        }
-        foreach($square as $sqrt2 => $value1){
-            $v[$sqrt2] = $s[$sqrt2]/array_sum($s);
-        }
-        arsort($v);
-        //dd($v_hasil);
-
-        //return view('Pages.Admin.Analysis.wp', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods'));
-
-        //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'pangkat', 'square', 'v_hasil', 'v', 'periods', 'latest_per', 'critcount'));
+        return view('Pages.Admin.analysis', compact('select_period', 'subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
     }
 }

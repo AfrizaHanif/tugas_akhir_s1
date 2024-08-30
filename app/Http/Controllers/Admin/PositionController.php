@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\Officer;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class DepartmentController extends Controller
+class PositionController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -19,14 +19,14 @@ class DepartmentController extends Controller
     {
         //COMBINE KODE
         /*
-        $total_id = Department::count();
+        $total_id = Position::count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
-        $id_department = "DPT-".$str_id;
+        $id_position = "DPT-".$str_id;
         */
-        $id_department = IdGenerator::generate([
-            'table'=>'departments',
-            'field'=>'id_department',
+        $id_position = IdGenerator::generate([
+            'table'=>'positions',
+            'field'=>'id_position',
             'length'=>7,
             'prefix'=>'DPT-',
             'reset_on_prefix_change'=>true,
@@ -35,13 +35,13 @@ class DepartmentController extends Controller
         //VALIDATE DATA
         /*
         $request->validate([
-            'name' => 'unique:departments',
+            'name' => 'unique:positions',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         */
         $validator = Validator::make($request->all(), [
-            'name' => 'unique:departments',
+            'name' => 'unique:positions',
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
@@ -50,8 +50,8 @@ class DepartmentController extends Controller
         }
 
         //STORE DATA
-        Department::insert([
-            'id_department'=>$id_department,
+        Position::insert([
+            'id_position'=>$id_position,
             'name'=>$request->name,
             'description'=>$request->description,
 		]);
@@ -63,27 +63,27 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, Position $position)
     {
         //VALIDATE DATA
         /*
         $request->validate([
-            'name' => [Rule::unique('departments')->ignore($department),],
+            'name' => [Rule::unique('positions')->ignore($position),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         */
         $validator = Validator::make($request->all(), [
-            'name' => [Rule::unique('departments')->ignore($department),],
+            'name' => [Rule::unique('positions')->ignore($position),],
         ], [
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $department->id_department);
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $position->id_position);
         }
 
         //UPDATE DATA
-        $department->update([
+        $position->update([
             'name'=>$request->name,
             'description'=>$request->description,
 		]);
@@ -95,17 +95,17 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(Position $position)
     {
         //CHECK DATA
-        if(Officer::where('id_department', $department->id_department)->exists()) {
+        if(Officer::where('id_position', $position->id_position)->exists()) {
             return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view');
         }else{
             //CLEAR
         }
 
         //DESTROY DATA
-        $department->delete();
+        $position->delete();
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');

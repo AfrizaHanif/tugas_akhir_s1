@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Criteria;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\HistoryInput;
 use App\Models\HistoryInputRAW;
 use App\Models\HistoryPerformance;
@@ -32,8 +32,8 @@ class ScoreController extends Controller
     public function index()
     {
         //GET DATA
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->where('is_lead', 'No')
         ->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
@@ -54,7 +54,7 @@ class ScoreController extends Controller
 
         //GET HISTORY DATA
         $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
-        $hofficer = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
+        $hofficer = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
 
         //RETURN TO VIEW
         return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'hscore', 'hofficer'));
@@ -347,7 +347,7 @@ class ScoreController extends Controller
             //GET DATA (2/2)
             $getperiod1 = Period::where('id_period', $score->id_period)->first();
             $getofficer1 = Officer::where('id_officer', $score->id_officer)->first();
-            $getdepartment1 = Department::with('officer')->whereHas('officer', function($query) use($score){
+            $getposition1 = Position::with('officer')->whereHas('officer', function($query) use($score){
                 $query->where('id_officer', $score->id_officer);
             })->first();
 
@@ -358,7 +358,7 @@ class ScoreController extends Controller
                 'id_officer'=>$getofficer1->id_officer,
                 'officer_nip'=>$getofficer1->nip,
                 'officer_name'=>$getofficer1->name,
-                'officer_department'=>$getdepartment1->name,
+                'officer_position'=>$getposition1->name,
                 'final_score'=>$score->final_score,
                 'second_score'=>$score->second_score,
             ]);
@@ -372,7 +372,7 @@ class ScoreController extends Controller
             $getuser2 = User::where('id_officer', $input->id_officer)->first();
             $getperiod2 = Period::where('id_period', $input->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $input->id_officer)->first();
-            $getdepartment2 = Department::with('officer')->whereHas('officer', function($query) use($input){
+            $getposition2 = Position::with('officer')->whereHas('officer', function($query) use($input){
                 $query->where('id_officer', $input->id_officer);
             })->first();
             $getcriteria2 = Category::with('criteria')->whereHas('criteria', function($query) use($input){
@@ -394,7 +394,7 @@ class ScoreController extends Controller
                 'id_officer'=>$getofficer2->id_officer,
                 'officer_nip'=>$getofficer2->nip,
                 'officer_name'=>$getofficer2->name,
-                'officer_department'=>$getdepartment2->name,
+                'officer_position'=>$getposition2->name,
                 'id_category'=>$getcriteria2->id_category,
                 'category_name'=>$getcriteria2->name,
                 'id_criteria'=>$getsubcriteria2->id_criteria,
@@ -418,7 +418,7 @@ class ScoreController extends Controller
             $getuser3 = User::where('id_officer', $raw->id_officer)->first();
             $getperiod3 = Period::where('id_period', $raw->id_period)->first();
             $getofficer3 = Officer::where('id_officer', $raw->id_officer)->first();
-            $getdepartment3 = Department::with('officer')->whereHas('officer', function($query) use($raw){
+            $getposition3 = Position::with('officer')->whereHas('officer', function($query) use($raw){
                 $query->where('id_officer', $raw->id_officer);
             })->first();
             $getcriteria3 = Category::with('criteria')->whereHas('criteria', function($query) use($raw){
@@ -440,7 +440,7 @@ class ScoreController extends Controller
                 'id_officer'=>$getofficer3->id_officer,
                 'officer_nip'=>$getofficer3->nip,
                 'officer_name'=>$getofficer3->name,
-                'officer_department'=>$getdepartment3->name,
+                'officer_position'=>$getposition3->name,
                 'id_category'=>$getcriteria3->id_category,
                 'category_name'=>$getcriteria3->name,
                 'id_criteria'=>$getsubcriteria3->id_criteria,
@@ -460,7 +460,7 @@ class ScoreController extends Controller
         $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->offset(0)->limit(1)->first();
         $getperiod4 = Period::where('id_period', $scores2->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first();
-        $getdepartment4 = Department::with('officer')->whereHas('officer', function($query) use($scores2){
+        $getposition4 = Position::with('officer')->whereHas('officer', function($query) use($scores2){
             $query->where('id_officer', $scores2->id_officer);
         })->first();
 
@@ -482,7 +482,7 @@ class ScoreController extends Controller
             'id_officer'=>$getofficer4->id_officer,
             'officer_nip'=>$getofficer4->nip,
             'officer_name'=>$getofficer4->name,
-            'officer_department'=>$getdepartment4->name,
+            'officer_position'=>$getposition4->name,
             'officer_photo'=>$photo,
             'final_score'=>$scores2->final_score,
             //'second_score'=>$scores2->second_score,

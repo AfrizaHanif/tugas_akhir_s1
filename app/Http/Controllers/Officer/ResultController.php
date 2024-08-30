@@ -14,7 +14,7 @@ class ResultController extends Controller
     {
         $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
         $results = Result::with('officer')->orderBy('count', 'DESC')->offset(0)->limit(1)->get();
-        $officers = Officer::with('department')->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})->get();
+        $officers = Officer::with('position')->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})->get();
 
         return view('Pages.Officer.result', compact('periods', 'results', 'officers'));
     }

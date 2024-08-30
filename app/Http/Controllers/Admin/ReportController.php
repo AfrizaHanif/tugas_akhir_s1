@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\HistoryInput;
 use App\Models\HistoryPerformance;
 use App\Models\HistoryPresence;
@@ -31,8 +31,8 @@ class ReportController extends Controller
         //GET DATA
         $periods = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
-        $officers = Officer::with('department', 'user')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position', 'user')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
 

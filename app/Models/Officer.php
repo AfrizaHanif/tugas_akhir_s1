@@ -20,13 +20,15 @@ class Officer extends Model
         'nip',
         'name',
         'org_code',
-        'id_department',
+        'id_position',
         'id_sub_team_1',
         'id_sub_team_2',
         //'id_part',
-        'status',
-        'last_group',
-        'last_education',
+        //'status',
+        //'last_group',
+        //'last_education',
+        'email',
+        'phone',
         'place_birth',
         'date_birth',
         'gender',
@@ -37,9 +39,9 @@ class Officer extends Model
     ];
 
     //CONNECT TO ANOTHER TABLE
-    public function department()
+    public function position()
     {
-        return $this->belongsTo(Department::class, 'id_department', 'id_department',);
+        return $this->belongsTo(Position::class, 'id_position', 'id_position',);
     }
     public function subteam_1()
     {

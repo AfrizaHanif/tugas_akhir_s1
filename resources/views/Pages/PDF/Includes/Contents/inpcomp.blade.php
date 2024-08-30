@@ -22,7 +22,7 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $officer->name }}</td>
-            <td>{{ $officer->department->name }}</td>
+            <td>{{ $officer->position->name }}</td>
             @foreach ($subcritprs as $prs)
                 @forelse ($presences->where('id_sub_criteria', $prs->id_sub_criteria)->where('id_officer', $officer->id_officer) as $presence)
                 <td>{{ $presence->input }}</td>
@@ -64,7 +64,7 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $officer->name }}</td>
-            <td>{{ $officer->department->name }}</td>
+            <td>{{ $officer->position->name }}</td>
             @foreach ($subcritprf as $prf)
                 @forelse ($performances->where('id_sub_criteria', $prf->id_sub_criteria)->where('id_officer', $officer->id_officer) as $performance)
                 <td>{{ $performance->input }}</td>

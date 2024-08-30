@@ -37,7 +37,7 @@
                             @endif
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
                                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)

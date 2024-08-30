@@ -118,11 +118,11 @@
                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ old('org_code') }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="id_department" class="form-label">Jabatan</label>
-                            <select class="form-select" id="id_department" name="id_department" required>
+                            <label for="id_position" class="form-label">Jabatan</label>
+                            <select class="form-select" id="id_position" name="id_position" required>
                                 <option selected disabled>---Pilih Jabatan---</option>
-                                @foreach ($departments as $department)
-                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                @foreach ($positions as $position)
+                                <option value="{{ $position->id_position }}" {{ old('id_position') ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -228,11 +228,11 @@
                             <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="id_department" class="form-label">Jabatan</label>
-                            <select class="form-select" id="id_department" name="id_department" required>
+                            <label for="id_position" class="form-label">Jabatan</label>
+                            <select class="form-select" id="id_position" name="id_position" required>
                                 <option selected disabled>---Pilih Jabatan---</option>
-                                @foreach ($departments as $department)
-                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                @foreach ($positions as $position)
+                                <option value="{{ $position->id_position }}" {{ $officer->id_position ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -355,7 +355,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Jabatan</th>
-                            <td>{{ $officer->department->name }}</td>
+                            <td>{{ $officer->position->name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Bagian</th>
@@ -403,10 +403,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($departments as $department)
+                        @forelse ($positions as $position)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $department->name }}</td>
+                            <td>{{ $position->name }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -414,12 +414,12 @@
                                     </button>
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-update-{{ $department->id_department }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-update-{{ $position->id_position }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
                                                 Edit
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-delete-{{ $department->id_department }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-delete-{{ $position->id_position }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                                 Delete
                                             </a>
                                         </li>
@@ -435,7 +435,7 @@
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="7">Total Data: <b>{{ $departments->count() }}</b> Jabatan</td>
+                            <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -457,7 +457,7 @@
 <div class="modal fade" id="modal-dep-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('masters.departments.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('masters.positions.store') }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -492,24 +492,24 @@
     </div>
 </div>
 
-    @foreach ($departments as $department)
-    <div class="modal fade" id="modal-dep-update-{{ $department->id_department }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @foreach ($positions as $position)
+    <div class="modal fade" id="modal-dep-update-{{ $position->id_position }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('masters.departments.update', $department->id_department) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('masters.positions.update', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan ({{ $department->id_department }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan ({{ $position->id_position }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Jabatan</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $department->name }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $position->name }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="description">Deskripsi</label>
-                            <textarea class="form-control" name="description" id="description" rows="3">{{ $department->description }}</textarea>
+                            <textarea class="form-control" name="description" id="description" rows="3">{{ $position->description }}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -531,12 +531,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-dep-delete-{{ $department->id_department }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-dep-delete-{{ $position->id_position }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('masters.departments.destroy', $department->id_department) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan ({{ $department->id_department}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan ({{ $position->id_position}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -1101,7 +1101,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($subcriterias as $subcriteria)
                                         @if (Request::is('inputs/presences'))
@@ -1477,7 +1477,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 @foreach ($subcritprs as $scprs)
                                     @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
                                     <td>{{ $presence->input }}</td>
@@ -1562,7 +1562,7 @@
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $officer->name }}</td>
-                                    <td>{{ $officer->department->name }}</td>
+                                    <td>{{ $officer->position->name }}</td>
                                     <td>
                                         @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $s)
                                             @if ($s->status == 'Pending')

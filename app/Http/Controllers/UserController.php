@@ -24,8 +24,8 @@ class UserController extends Controller
         $users = User::whereNot('id_user', 'USR-000')->get();
         //$parts = Part::whereNot('name', 'Developer')->get();
         $subteams = SubTeam::get();
-        $officers = Officer::with('department', 'subteam_1')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position', 'subteam_1')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('subteam_1', function($query){
             $query->with('team')->whereHas('team', function($query){
                 $query->with('part')->whereHas('part', function($query){

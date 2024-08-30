@@ -16,7 +16,7 @@ class ScoreController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $scores = HistoryScore::orderBy('final_score', 'DESC')->get();
-        $officers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
+        $officers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
         //$check = Score::orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
 
         //RETURN TO VIEW

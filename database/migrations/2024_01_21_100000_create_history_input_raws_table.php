@@ -18,7 +18,7 @@ return new class extends Migration
             $table->char('id_officer', 11);
             $table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
-            $table->string('officer_department', 50);
+            $table->string('officer_position', 50);
             $table->char('id_category', 11);
             $table->string('category_name', 20);
             $table->char('id_criteria', 20);

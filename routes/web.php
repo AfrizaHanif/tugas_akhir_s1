@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CripsController;
-use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\PositionController;
 use App\Http\Controllers\Admin\OfficerController;
 use App\Http\Controllers\Admin\PartController;
 use App\Http\Controllers\Admin\PeriodController;
@@ -98,7 +98,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 });
             });
             Route::middleware('checkPart:Admin')->group(function () {
-                Route::resource('/departments', DepartmentController::class, ['only' => ['store', 'update', 'destroy']]);
+                Route::resource('/positions', PositionController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/users', UserController::class);
                 Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'destroy']]);
@@ -158,16 +158,16 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         //ANALYSIS
         Route::prefix('analysis')->name('analysis.')->group(function () {
             Route::controller(AnalysisController::class)->group(function() {
-                Route::prefix('saw')->name('saw.')->group(function () {
-                    Route::get('/', 'index')->name('index');
-                    Route::get('/latest', 'saw')->name('saw');
-                    Route::get('/{period}', 'history_saw')->name('history');
-                });
+                Route::get('/', 'index')->name('index');
+                Route::get('/latest', 'saw')->name('saw');
+                Route::get('/{period}', 'history_saw')->name('history');
+                /*
                 Route::prefix('wp')->name('wp.')->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('/latest', 'wp')->name('wp');
                     Route::get('/{period}', 'history_wp')->name('history');
                 });
+                */
             });
         });
         //Route::get('/results', [ResultController::class, 'index'])->name('results');

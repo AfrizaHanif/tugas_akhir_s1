@@ -3,11 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-    @if (Request::is('admin/analysis/saw*'))
-    <title>Analisis SAW | Tugas Akhir</title>
-    @elseif (Request::is('admin/analysis/wp*'))
-    <title>Analisis WP | Tugas Akhir</title>
-    @endif
+<title>Analisis SAW | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Developer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\SubTeam;
@@ -16,16 +16,16 @@ class OfficerController extends Controller
     {
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
-        $departments = Department::whereNot('name', 'Developer')->get();
+        $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
         $subteams = SubTeam::with('team')->get();
-        $officers = Officer::with('department', 'subteam_1', 'subteam_2')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position', 'subteam_1', 'subteam_2')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Developer.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers'));
+        return view('Pages.Developer.officer', compact('parts', 'positions', 'teams', 'subteams', 'officers'));
     }
 
     public function search(Request $request)
@@ -33,17 +33,17 @@ class OfficerController extends Controller
         //GET DATA
         $search = $request->search;
         $parts = Part::whereNot('name', 'Developer')->get();
-        $departments = Department::whereNot('name', 'Developer')->get();
+        $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
         $subteams = SubTeam::with('team')->get();
 
         //GET SEARCH QUERY
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->where('name','like',"%".$search."%")
         ->paginate(10);
 
         //RETURN TO VIEW
-        return view('Pages.Developer.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers', 'search'));
+        return view('Pages.Developer.officer', compact('parts', 'positions', 'teams', 'subteams', 'officers', 'search'));
     }
 }

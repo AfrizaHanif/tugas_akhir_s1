@@ -13,7 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
-@include('Templates.Includes.Components.Modals.officer')
+@include('Templates.Includes.Components.Modal.officer')
 @include('Pages.Includes.Components.modal')
 @endsection
 

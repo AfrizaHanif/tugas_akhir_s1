@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\Officer;
 use App\Models\SubTeam;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -21,11 +21,11 @@ class OfficersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $departments, $subteams;
+    protected $positions, $subteams;
 
     public function __construct()
     {
-        $this->departments = Department::get();
+        $this->positions = Position::get();
         $this->subteams = SubTeam::get();
     }
 
@@ -50,7 +50,7 @@ class OfficersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         //COMBINE KODE
         /*
         $total_id = Officer::
-        whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
@@ -64,7 +64,7 @@ class OfficersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'reset_on_prefix_change'=>true,
         ]);
 
-        $departments = $this->departments->where('name', $row['jabatan'])->first();
+        $positions = $this->positions->where('name', $row['jabatan'])->first();
         $subteams1 = $this->subteams->where('name', $row['subtim1'])->first();
         $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
 
@@ -72,7 +72,7 @@ class OfficersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'id_officer'=>$id_officer,
             'nip'=>$row['nip'],
             'name'=>$row['nama'],
-            'id_department'=>$departments->id_department,
+            'id_position'=>$positions->id_position,
             'id_sub_team_1'=>$subteams1->id_sub_team,
             'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
             'place_birth'=>$row['tmplahir'],

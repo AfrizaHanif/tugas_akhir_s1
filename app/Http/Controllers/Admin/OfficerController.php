@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\OfficersExport;
 use App\Http\Controllers\Controller;
 use App\Imports\OfficersImport;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\Input;
 use App\Models\Officer;
 use App\Models\Part;
@@ -32,16 +32,16 @@ class OfficerController extends Controller
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
         $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get();
-        $departments = Department::whereNot('name', 'Developer')->get();
+        $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
         $subteams = SubTeam::with('team')->get();
-        $officers = Officer::with('department', 'subteam_1', 'subteam_2')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position', 'subteam_1', 'subteam_2')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'departments', 'teams', 'subteams', 'officers'));
+        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'positions', 'teams', 'subteams', 'officers'));
     }
 
     /**
@@ -60,7 +60,7 @@ class OfficerController extends Controller
         //COMBINE KODE
         /*
         $total_id = Officer::
-        whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
@@ -87,7 +87,7 @@ class OfficerController extends Controller
         }
 
         //CHECK LEAD MORE THAN 1
-        $count_lead = Officer::with('department')->whereHas('department', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_department', $request->id_department)->count();
+        $count_lead = Officer::with('position')->whereHas('position', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_position', $request->id_position)->count();
         if(!empty($count_lead)){
             if($count_lead > 0){
                 return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
@@ -113,9 +113,11 @@ class OfficerController extends Controller
             'id_officer'=>$id_officer,
             'nip'=>$request->nip,
             'name'=>$request->name,
-            'id_department'=>$request->id_department,
+            'id_position'=>$request->id_position,
             'id_sub_team_1'=>$request->id_sub_team_1,
             'id_sub_team_2'=>$request->id_sub_team_2,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
             'place_birth'=>$request->place_birth,
             'date_birth'=>$request->date_birth,
             'gender'=>$request->gender,
@@ -125,9 +127,9 @@ class OfficerController extends Controller
 		]);
 
         //IF LEAD
-        $check_lead = Department::where('name', 'LIKE', 'Kepala BPS%')->where('id_department', $request->id_department)->first();
-        if(!empty($check_lead->id_department)){
-            if($check_lead->id_department == $request->id_department){
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead->id_position)){
+            if($check_lead->id_position == $request->id_position){
                 Officer::where('id_officer', $id_officer)->update([
                     'is_lead'=>'Yes',
                 ]);
@@ -181,8 +183,8 @@ class OfficerController extends Controller
         }
 
         //CHECK LEAD MORE THAN 1
-        if($request->id_department != $officer->id_department){
-            $count_lead = Officer::with('department')->whereHas('department', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_department', $request->id_department)->count();
+        if($request->id_position != $officer->id_position){
+            $count_lead = Officer::with('position')->whereHas('position', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_position', $request->id_position)->count();
             //dd($count_lead);
             if(!empty($count_lead)){
                 if($count_lead > 0){
@@ -200,9 +202,11 @@ class OfficerController extends Controller
         $officer->update([
             'nip'=>$request->nip,
             'name'=>$request->name,
-            'id_department'=>$request->id_department,
+            'id_position'=>$request->id_position,
             'id_sub_team_1'=>$request->id_sub_team_1,
             'id_sub_team_2'=>$request->id_sub_team_2,
+            'email'=>$request->email,
+            'phone'=>$request->phone,
             'place_birth'=>$request->place_birth,
             'date_birth'=>$request->date_birth,
             'gender'=>$request->gender,
@@ -227,9 +231,9 @@ class OfficerController extends Controller
         }
 
         //IF LEAD
-        $check_lead = Department::where('name', 'LIKE', 'Kepala BPS%')->where('id_department', $request->id_department)->first();
-        if(!empty($check_lead->id_department)){
-            if($check_lead->id_department == $request->id_department){
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead->id_position)){
+            if($check_lead->id_position == $request->id_position){
                 Officer::where('id_officer', $officer->id_officer)->update([
                     'is_lead'=>'Yes',
                 ]);
@@ -285,18 +289,18 @@ class OfficerController extends Controller
         //GET DATA
         $search = $request->search;
         $parts = Part::whereNot('name', 'Developer')->get();
-        $departments = Department::whereNot('name', 'Developer')->get();
+        $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
         $subteams = SubTeam::with('team')->get();
 
         //GET SEARCH QUERY
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->where('name','like',"%".$search."%")
         ->paginate(10);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.officer', compact('parts', 'departments', 'teams', 'subteams', 'officers', 'search'));
+        return view('Pages.Admin.officer', compact('parts', 'positions', 'teams', 'subteams', 'officers', 'search'));
     }
 
     public function import(Request $request)

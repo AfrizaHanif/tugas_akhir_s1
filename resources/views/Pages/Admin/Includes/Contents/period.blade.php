@@ -39,7 +39,7 @@
                 <span class="badge text-bg-secondary">Dilewatkan</span>
                 @elseif ($period->status == "Scoring")
                 <span class="badge text-bg-primary">Dalam Penilaian</span>
-                @elseif ($period->status == "Validation")
+                @elseif ($period->status == "Validating")
                 <span class="badge text-bg-primary">Dalam Validasi</span>
                 @elseif ($period->status == "Pending")
                 <span class="badge text-bg-warning">Pending</span>
@@ -47,11 +47,13 @@
             </td>
             <td>
                 <div class="dropdown">
-                    @if ($period->status == "Finished" || $period->status == "Scoring" || $period->status == "Skipped")
+                    @if ($period->status == "Finished" || $period->status == "Scoring" || $period->status == "Validating" ||$period->status == "Skipped")
                         @if ($period->status == "Finished")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena proses pemilihan karyawan terbaik pada periode ini sudah selesai.">
                         @elseif ($period->status == "Scoring")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam penilaian seluruh pegawai.">
+                        @elseif ($period->status == "Validating")
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam validasi penilaian.">
                         @elseif ($period->status == "Skipped")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena periode ini tidak dilakukan pemilihan karyawan terbaik.">
                         @endif
@@ -59,7 +61,7 @@
                             <i class="bi bi-menu-button-fill"></i>
                         </button>
                     </span>
-                    @elseif ($period->status == "Pending" || $period->status == "Voting")
+                    @elseif ($period->status == "Pending")
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-menu-button-fill"></i>
                     </button>
@@ -72,10 +74,6 @@
                             </a>
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-skip-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#skip"/></svg>
                                 Lewati
-                            </a>
-                            @elseif ($period->status == "Voting")
-                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-finish-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#finish"/></svg>
-                                Selesai
                             </a>
                             @endif
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-delete-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>

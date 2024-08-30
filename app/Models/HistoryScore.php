@@ -17,7 +17,7 @@ class HistoryScore extends Model
         'id_officer',
         'officer_nip',
         'officer_name',
-        'officer_department',
+        'officer_position',
         'final_score',
         'ckp',
     ];

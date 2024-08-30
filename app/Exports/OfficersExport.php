@@ -30,15 +30,15 @@ class OfficersExport implements FromQuery, FromCollection, WithHeadings, WithMap
 
     public function query()
     {
-        return Officer::query()->with('department')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');});
+        return Officer::query()->with('position')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');});
     }
 
     public function map($data) : array {
         return [
             $data->nip,
             $data->name,
-            $data->department->name,
+            $data->position->name,
             $data->subteam_1->name,
             $data->subteam_2->name ?? '',
             $data->place_birth,

@@ -29,9 +29,9 @@ class Part extends Model
     {
         return $this->hasMany(Officer::class, 'id_part', 'id_part');
     }
-    public function department()
+    public function position()
     {
-        return $this->hasMany(Department::class, 'id_part', 'id_part');
+        return $this->hasMany(Position::class, 'id_part', 'id_part');
     }
     */
 }

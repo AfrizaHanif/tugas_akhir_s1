@@ -141,7 +141,7 @@
                         </tr>
                         <tr class="table-primary">
                             <th>Isi</th>
-                            <th>Valid</th>
+                            <th>Proses</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,7 +149,7 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->name }}</td>
-                            <td>{{ $officer->department->name }}</td>
+                            <td>{{ $officer->position->name }}</td>
                             <td>
                                 @if ($countsub == 0)
                                 <span class="badge text-bg-secondary">Kriteria Kosong</span>
@@ -304,7 +304,7 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $officer->officer_name }}</td>
-                            <td>{{ $officer->officer_department }}</td>
+                            <td>{{ $officer->officer_position }}</td>
                             <td>
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}">
                                     <i class="bi bi-info-circle"></i>

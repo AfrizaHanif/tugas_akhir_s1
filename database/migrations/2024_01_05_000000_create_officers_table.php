@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigInteger('nip')->unique();
             $table->string('name', 50)->unique();
             //$table->smallInteger('org_code');
-            $table->char('id_department', 10);
-            $table->foreign('id_department')->references('id_department')->on('departments');
+            $table->char('id_position', 10);
+            $table->foreign('id_position')->references('id_position')->on('positions');
             $table->char('id_sub_team_1', 20);
             $table->foreign('id_sub_team_1')->references('id_sub_team')->on('sub_teams');
             $table->char('id_sub_team_2', 20)->nullable();
@@ -26,6 +26,8 @@ return new class extends Migration
             //$table->string('status', 10);
             //$table->string('last_group', 7);
             //$table->string('last_education', 20);
+            $table->string('email', 30)->unique();
+            $table->string('phone', 15)->unique();
             $table->string('place_birth', 30);
             $table->date('date_birth');
             $table->string('gender', 15);

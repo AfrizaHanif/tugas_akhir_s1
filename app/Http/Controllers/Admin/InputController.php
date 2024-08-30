@@ -31,8 +31,8 @@ class InputController extends Controller
     public function index()
     {
         //GET DATA
-        $officers = Officer::with('department', 'user')
-        ->whereDoesntHave('department', function($query){
+        $officers = Officer::with('position', 'user')
+        ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer');
         })
         ->whereDoesntHave('user', function($query){
@@ -58,7 +58,7 @@ class InputController extends Controller
         //GET HISTORY
         $histories = HistoryInput::get();
         //$hraws = HistoryInputRAW::get();
-        $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->get();
+        $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
         $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();

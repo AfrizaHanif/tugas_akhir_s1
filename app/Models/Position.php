@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Department extends Model
+class Position extends Model
 {
     use HasFactory;
 
-    protected $table = "departments";
-    protected $primaryKey = 'id_department';
+    protected $table = "positions";
+    protected $primaryKey = 'id_position';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id_department',
+        'id_position',
         //'id_part',
         'name',
         //'part',
@@ -33,6 +33,6 @@ class Department extends Model
     //CONNECT FROM ANOTHER TABLE
     public function officer()
     {
-        return $this->hasMany(Officer::class, 'id_department', 'id_department');
+        return $this->hasMany(Officer::class, 'id_position', 'id_position');
     }
 }

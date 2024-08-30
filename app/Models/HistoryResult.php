@@ -17,7 +17,7 @@ class HistoryResult extends Model
         'id_officer',
         'officer_nip',
         'officer_name',
-        'officer_department',
+        'officer_position',
         'officer_photo',
         'final_score',
     ];

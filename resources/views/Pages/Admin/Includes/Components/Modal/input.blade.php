@@ -578,7 +578,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $hofficer->officer_name }}</td>
-                                <td>{{ $hofficer->officer_department }}</td>
+                                <td>{{ $hofficer->officer_position }}</td>
                                 @foreach ($hcriterias as $criteria)
                                     @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
                                         <td>{{ $history->input }} ({{ $history->input_raw }})</td>

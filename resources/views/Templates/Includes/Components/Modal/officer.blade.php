@@ -20,7 +20,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Jabatan</th>
-                                    <td>{{ $officer->department->name }}</td>
+                                    <td>{{ $officer->position->name }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Tim Utama</th>
@@ -29,6 +29,14 @@
                                 <tr>
                                     <th scope="row">Tim Cadangan</th>
                                     <td>{{ $officer->subteam_2->name ?? 'Tidak Ada' }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">E-Mail</th>
+                                    <td>{{ $officer->email }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Nomor Telepon</th>
+                                    <td>{{ $officer->phone }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Tempat Tanggal Lahir</th>

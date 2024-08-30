@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\HistoryResult;
 use App\Models\Officer;
 use App\Models\Period;

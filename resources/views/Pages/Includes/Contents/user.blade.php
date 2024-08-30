@@ -21,7 +21,6 @@
         <tr class="table-primary">
             <th class="col-1" scope="col">#</th>
             <th scope="col">User Name</th>
-            <th scope="col">E-Mail</th>
             <th scope="col">Pengguna Akun</th>
             <th scope="col">Bagian</th>
             <th class="col-1" scope="col">Action</th>
@@ -32,7 +31,6 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->username }}</td>
-            <td>{{ $user->email }}</td>
             <td>{{ $user->officer->name }}</td>
             <td>{{ $user->part }}</td>
             <td>

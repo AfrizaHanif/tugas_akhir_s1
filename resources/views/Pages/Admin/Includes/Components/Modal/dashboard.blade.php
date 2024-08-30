@@ -23,7 +23,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 @if ($countsub != 0)
                                 <td>
                                     @if ($officer->is_lead == 'No')
@@ -91,7 +91,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->department->name }}</td>
+                                <td>{{ $officer->position->name }}</td>
                                 <td>
                                     @foreach ($scores->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $score)
                                     @if ($score->status == 'Rejected')
@@ -155,13 +155,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($periods as $period)
+                        @foreach ($periods->where('status', 'Finished') as $period)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             @foreach ($voteresults->where('id_period', $period->id_period) as $voteresult)
                             <td>{{ $voteresult->period_name }}</td>
                             <td>{{ $voteresult->officer_name }}</td>
-                            <td>{{ $voteresult->officer_department }}</td>
+                            <td>{{ $voteresult->officer_position }}</td>
                                 @if (Auth::user()->part != "Pegawai")
                                 <td>{{ $voteresult->final_score }}</td>
                                 @endif
@@ -214,7 +214,7 @@
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $scoreresult->officer_name }}</td>
-                                    <td>{{ $scoreresult->officer_department }}</td>
+                                    <td>{{ $scoreresult->officer_position }}</td>
                                     <td>{{ $scoreresult->final_score }}</td>
                                     <td>{{ $scoreresult->second_score }}</td>
                                 </tr>

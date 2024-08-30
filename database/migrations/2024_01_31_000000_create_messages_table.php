@@ -16,7 +16,7 @@ return new class extends Migration
             $table->char('id_officer', 11);
             $table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
-            //$table->string('officer_department', 50);
+            //$table->string('officer_position', 50);
             $table->char('type', 15);
             $table->string('message_in', 200);
             $table->string('message_out', 200)->nullable();

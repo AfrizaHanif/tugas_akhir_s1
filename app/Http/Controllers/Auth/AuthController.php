@@ -27,7 +27,8 @@ class AuthController extends Controller
     {
         //GET AND VALIDATE LOGIN INFO
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required'],
+            //'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
         //dd($credentials); //Check Bug
@@ -50,7 +51,8 @@ class AuthController extends Controller
             }
         }
         return redirect()->route('login')->withErrors([
-            'email' => 'E-Mail yang anda masukkan salah.',
+            'username' => 'User Name yang anda masukkan salah.',
+            //'email' => 'E-Mail yang anda masukkan salah.',
             'password' => 'Password yang anda masukkan salah.',
         ])->onlyInput('email');
     }

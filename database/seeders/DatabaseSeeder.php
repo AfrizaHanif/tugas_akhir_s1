@@ -48,93 +48,93 @@ class DatabaseSeeder extends Seeder
             'name' => 'Developer',
         ]);
 
-        //DEPARTMENTS: Jabatan
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-000',
+        //POSITIONS: Jabatan
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-000',
             //'id_part' => 'PRT-000',
             'name' => 'Developer',
             //'part' => 'Developer',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-001',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-001',
             //'id_part' => 'PRT-001',
             'name' => 'Kepala BPS Jawa Timur',
             //'part' => 'Kepala BPS',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-002',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-002',
             //'id_part' => 'PRT-002',
             'name' => 'Kepala Bagian Umum',
             //'part' => 'Bagian Umum',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-003',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-003',
             //'id_part' => 'PRT-002',
             'name' => 'Pranata Keuangan APBN Penyelia',
             //'part' => 'Bagian Umum',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-004',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-004',
             //'id_part' => 'PRT-002',
             'name' => 'Analis Kepegawaian Ahli Muda ',
             //'part' => 'Bagian Umum',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-005',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-005',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Pertama',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-006',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-006',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-007',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-007',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-008',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-008',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Utama',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-009',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-009',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Pertama',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-010',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-010',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-011',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-011',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
-        DB::table('departments')->insert([
-            'id_department' => 'DPT-012',
+        DB::table('positions')->insert([
+            'id_position' => 'DPT-012',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Utama',
             //'part' => 'Tim Teknis',
@@ -291,8 +291,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-000',
             'nip' => '000000000',
             'name' => 'Muhammad Afriza Hanif',
-            'id_department' => 'DPT-000',
+            'id_position' => 'DPT-000',
             'id_sub_team_1' => 'STM-999',
+            'email' => 'firzavista728@gmail.com',
+            'phone' => '081217248427',
             'place_birth' => 'Surabaya',
             'date_birth' => '1996/04/08',
             'gender' => 'Laki-Laki',
@@ -304,8 +306,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-001',
             'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
-            'id_department' => 'DPT-001',
+            'id_position' => 'DPT-001',
             'id_sub_team_1' => 'STM-000',
+            'email' => 'izqpli@yahoo.com',
+            'phone' => '08123545822',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -317,9 +321,11 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-002',
             'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
-            'id_department' => 'DPT-002',
+            'id_position' => 'DPT-002',
             'id_sub_team_1' => 'STM-001',
             'id_sub_team_2' => 'STM-007',
+            'email' => 'satriyo@bps.com',
+            'phone' => '081234567890',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -331,8 +337,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-003',
             'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
-            'id_department' => 'DPT-003',
+            'id_position' => 'DPT-003',
             'id_sub_team_1' => 'STM-010',
+            'email' => 'laode@bps.com',
+            'phone' => '081234567891',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -344,8 +352,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-004',
             'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
-            'id_department' => 'DPT-004',
+            'id_position' => 'DPT-004',
             'id_sub_team_1' => 'STM-013',
+            'email' => 'akhmad@bps.com',
+            'phone' => '081234567892',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -357,9 +367,11 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-005',
             'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
-            'id_department' => 'DPT-006',
+            'id_position' => 'DPT-006',
             'id_sub_team_1' => 'STM-013',
             'id_sub_team_2' => 'STM-012',
+            'email' => 'widia@bps.com',
+            'phone' => '081234567893',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -371,8 +383,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-006',
             'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
-            'id_department' => 'DPT-006',
+            'id_position' => 'DPT-006',
             'id_sub_team_1' => 'STM-008',
+            'email' => 'peni@bps.com',
+            'phone' => '081234567894',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
@@ -384,8 +398,10 @@ class DatabaseSeeder extends Seeder
             'id_officer' => 'OFF-007',
             'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
-            'id_department' => 'DPT-007',
+            'id_position' => 'DPT-007',
             'id_sub_team_1' => 'STM-008',
+            'email' => 'abdullah@bps.com',
+            'phone' => '081234567895',
             'place_birth' => 'Surabaya',
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
@@ -397,7 +413,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-000',
             'username' => 'developer',
-            'email' => 'dev@bps.com',
+            //'email' => 'dev@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Dev',
             'id_officer' => 'OFF-000',
@@ -406,7 +422,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-001',
             'username' => 'testadmin',
-            'email' => 'testadmin@bps.com',
+            //'email' => 'testadmin@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Admin',
             'id_officer' => 'OFF-002',
@@ -416,7 +432,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-002',
             'username' => 'testkabag',
-            'email' => 'testkabag@bps.com',
+            //'email' => 'testkabag@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBU',
             'id_officer' => 'OFF-003',
@@ -425,7 +441,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-003',
             'username' => 'testketim1',
-            'email' => 'testketim1@bps.com',
+            //'email' => 'testketim1@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KTT',
             'id_officer' => 'OFF-006',
@@ -434,7 +450,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-004',
             'username' => 'testketim2',
-            'email' => 'testketim2@bps.com',
+            //'email' => 'testketim2@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KTT',
             'id_officer' => 'OFF-007',
@@ -444,7 +460,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-002',
             'username' => 'testkbps',
-            'email' => 'testkbps@bps.com',
+            //'email' => 'testkbps@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBPS',
             'id_officer' => 'OFF-001',

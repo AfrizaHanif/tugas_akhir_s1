@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
+use App\Models\Position;
 use App\Models\HistoryInput;
 use App\Models\HistoryScore;
 use App\Models\Officer;
@@ -23,17 +23,17 @@ class ReportController extends Controller
     {
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
-        $departments = Department::whereNot('name', 'Developer')->get();
+        $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::get();
         $subteams = SubTeam::get();
-        $officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){$query->where('name', 'Developer');})
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
 
         //CREATE A REPORT
         $file = 'RPT-Pegawai.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.officer', compact('parts', 'teams', 'subteams', 'departments', 'officers'))
+        loadview('Pages.PDF.officer', compact('parts', 'teams', 'subteams', 'positions', 'officers'))
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
@@ -44,7 +44,7 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_department')->where('id_period', $period)->where('is_lead', 'No')->get();
+        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->where('is_lead', 'No')->get();
         //$prd_name = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first()->period_name;
 
         $alternatives = HistoryInput::with('criteria', 'officer')

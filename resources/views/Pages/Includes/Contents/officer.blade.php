@@ -54,7 +54,7 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $officer->name }}</td>
-            <td>{{ $officer->department->name }}</td>
+            <td>{{ $officer->position->name }}</td>
             <td>{{ $officer->gender }}</td>
             <td>
                 <div class="dropdown">
@@ -227,7 +227,7 @@
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $officer->name }}</td>
-                                    <td>{{ $officer->department->name }}</td>
+                                    <td>{{ $officer->position->name }}</td>
                                     <td>{{ $officer->subteam_2->name ?? 'Tidak Ada'}}</td>
                                     <td>
                                         <div class="dropdown">

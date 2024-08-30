@@ -20,7 +20,7 @@
                                     <button class="nav-link" id="columns-tab" data-bs-toggle="tab" data-bs-target="#columns-tab-pane" type="button" role="tab" aria-controls="columns-tab-pane" aria-selected="false">Column</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="departments-tab" data-bs-toggle="tab" data-bs-target="#departments-tab-pane" type="button" role="tab" aria-controls="departments-tab-pane" aria-selected="false">Jabatan</button>
+                                    <button class="nav-link" id="positions-tab" data-bs-toggle="tab" data-bs-target="#positions-tab-pane" type="button" role="tab" aria-controls="positions-tab-pane" aria-selected="false">Jabatan</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams-tab-pane" type="button" role="tab" aria-controls="teams-tab-pane" aria-selected="false">Tim</button>
@@ -38,7 +38,7 @@
                                         <input class="form-control" type="file" id="file" name="file" required>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="departments-tab-pane" role="tabpanel" aria-labelledby="departments-tab" tabindex="0">
+                                <div class="tab-pane fade" id="positions-tab-pane" role="tabpanel" aria-labelledby="positions-tab" tabindex="0">
                                     <table class="table">
                                         <thead>
                                             <tr>
@@ -47,10 +47,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse ($departments as $department)
+                                            @forelse ($positions as $position)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $department->name }}</td>
+                                                <td>{{ $position->name }}</td>
                                             </tr>
                                             @empty
                                             <tr>
@@ -60,7 +60,7 @@
                                         </tbody>
                                         <tfoot class="table-group-divider">
                                             <tr>
-                                                <td colspan="7">Total Data: <b>{{ $departments->count() }}</b> Jabatan</td>
+                                                <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -265,6 +265,10 @@
                                             <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="phone" class="form-label">Nomor Telepon</label>
+                                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="place_birth" class="form-label">Tempat Lahir</label>
                                             <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
                                         </div>
@@ -304,15 +308,19 @@
                                             <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ old('nip') }}">
                                         </div>
                                         <div class="mb-3">
+                                            <label for="email" class="form-label">E-Mail</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="id_part" class="form-label" hidden>Bagian</label>
                                             <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="id_department" class="form-label">Jabatan</label>
-                                            <select class="form-select" id="id_department" name="id_department" required>
+                                            <label for="id_position" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_position" name="id_position" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
-                                                <option value="{{ $department->id_department }}" {{ old('id_department') ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @foreach ($positions as $position)
+                                                <option value="{{ $position->id_position }}" {{ old('id_position') ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -456,7 +464,7 @@
                                     </tbody>
                                     <tfoot class="table-group-divider table-secondary">
                                         <tr>
-                                            <td colspan="7">Total Data: <b>{{ $departments->count() }}</b> Jabatan</td>
+                                            <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -760,6 +768,10 @@
                                             <input type="text" class="form-control" id="name" name="name" value="{{ $officer->name }}" required>
                                         </div>
                                         <div class="mb-3">
+                                            <label for="phone" class="form-label">Nomor Telepon</label>
+                                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ $officer->phone }}" required>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="place_birth" class="form-label">Tempat Lahir</label>
                                             <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
                                         </div>
@@ -812,15 +824,19 @@
                                             <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ $officer->nip }}">
                                         </div>
                                         <div class="mb-3">
+                                            <label for="email" class="form-label">E-Mail</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ $officer->email }}" required>
+                                        </div>
+                                        <div class="mb-3">
                                             <label for="id_part" class="form-label" hidden>Bagian</label>
                                             <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->subteam_1->team->part->id_part }}" readonly hidden>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="id_department" class="form-label">Jabatan</label>
-                                            <select class="form-select" id="id_department" name="id_department" required>
+                                            <label for="id_position" class="form-label">Jabatan</label>
+                                            <select class="form-select" id="id_position" name="id_position" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($departments as $department)
-                                                <option value="{{ $department->id_department }}" {{ $officer->id_department ==  $department->id_department ? 'selected' : null }}>{{ $department->name }}</option>
+                                                @foreach ($positions as $position)
+                                                <option value="{{ $position->id_position }}" {{ $officer->id_position ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -917,7 +933,7 @@
     </div>
 </div>
 @endforeach
-<!--VIEW DEPARTMENTS-->
+<!--VIEW POSITIONS-->
 <div class="modal fade" id="modal-dep-view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -935,13 +951,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($departments as $department)
+                        @forelse ($positions as $position)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $department->name }}</td>
+                            <td>{{ $position->name }}</td>
                             <td>
                                 <div class="dropdown">
-                                    @if (strpos($department,'Kepala'))
+                                    @if (strpos($position,'Kepala'))
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kepala tidak dapat diubah.">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                         <i class="bi bi-menu-button-fill"></i>
@@ -954,12 +970,12 @@
                                     @endif
                                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-update-{{ $department->id_department }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-update-{{ $position->id_position }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
                                                 Edit
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-delete-{{ $department->id_department }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-delete-{{ $position->id_position }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                                 Delete
                                             </a>
                                         </li>
@@ -975,7 +991,7 @@
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="7">Total Data: <b>{{ $departments->count() }}</b> Jabatan</td>
+                            <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -993,11 +1009,11 @@
         </div>
     </div>
 </div>
-<!--CREATE DEPARTMENT-->
+<!--CREATE POSITIONS-->
 <div class="modal fade" id="modal-dep-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.departments.store') }}" method="POST" enctype="multipart/form-data" id="form-dep-create">
+            <form action="{{ route('admin.masters.positions.store') }}" method="POST" enctype="multipart/form-data" id="form-dep-create">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-dep-create"></button>
@@ -1030,14 +1046,14 @@
         </div>
     </div>
 </div>
-@foreach ($departments as $department)
-<!--UPDATE DEPARTMENT-->
-<div class="modal fade" id="modal-dep-update-{{ $department->id_department }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@foreach ($positions as $position)
+<!--UPDATE POSITIONS-->
+<div class="modal fade" id="modal-dep-update-{{ $position->id_position }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.departments.update', $department->id_department) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.positions.update', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan ({{ $department->id_department }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan ({{ $position->id_position }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1047,11 +1063,11 @@
                     @csrf @method('PUT')
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Jabatan</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ $department->name }}" required>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $position->name }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="description">Deskripsi</label>
-                        <textarea class="form-control" name="description" id="description" rows="3">{{ $department->description }}</textarea>
+                        <textarea class="form-control" name="description" id="description" rows="3">{{ $position->description }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1068,13 +1084,13 @@
         </div>
     </div>
 </div>
-<!--DELETE DEPARTMENT-->
-<div class="modal fade" id="modal-dep-delete-{{ $department->id_department }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--DELETE POSITIONS-->
+<div class="modal fade" id="modal-dep-delete-{{ $position->id_position }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.departments.destroy', $department->id_department) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan ({{ $department->id_department}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan ({{ $position->id_position}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

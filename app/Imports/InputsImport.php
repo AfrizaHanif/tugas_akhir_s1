@@ -34,8 +34,8 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
     {
         $this->latest_per = $period;
         $this->active_days = Period::where('id_period', $period)->first()->active_days;
-        $this->officers = Officer::with('department')
-        ->whereDoesntHave('department', function($query){
+        $this->officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer');
         })
         ->where('is_lead', 'No')
