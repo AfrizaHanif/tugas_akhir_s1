@@ -25,9 +25,9 @@ class SettingController extends Controller
     public function update(Request $request) //MANUAL UNTUK DEVELOPER KARENA BERSIFAT UNIVERSAL
     {
         //CHECK STATUS
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->status == 'Validating'){
+            if($latest_per->progress_status == 'Validating'){
                 if(Auth::user()->part == "Dev"){
                     return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1);
                 }else{
@@ -48,7 +48,7 @@ class SettingController extends Controller
 
         //RETURN TO VIEW
         if(!empty($latest_per)){
-            if($latest_per->status == 'Scoring'){
+            if($latest_per->progress_status == 'Scoring'){
                 if(Auth::user()->part == "Dev"){
                     return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil. Silahkan melakukan import kembali untuk memperbarui konversi data nilai')->with('code_alert', 1);
                 }else{

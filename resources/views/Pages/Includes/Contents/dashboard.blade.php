@@ -1,9 +1,9 @@
 <h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
 <!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
-    @if (!empty($latest_per->status))
-        @if ($latest_per->status == 'Scoring' || $latest_per->status == 'Validating')
-        @elseif ($latest_per->status == 'Voting')
+    @if (!empty($latest_per->progress_status))
+        @if ($latest_per->progress_status == 'Scoring' || $latest_per->progress_status == 'Validating')
+        @elseif ($latest_per->progress_status == 'Voting')
             @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 Anda belum melakukan voting pemilihan karyawan terbaik. Silahkan buka halaman <strong>Voting</strong> untuk memilih karyawan.
@@ -124,9 +124,9 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     @if (!empty($latest_per))
-                        @if ($latest_per->status == 'Scoring')
+                        @if ($latest_per->progress_status == 'Scoring')
                         <h4 class="card-title">Status: Aktif</h4>
-                        @elseif ($latest_per->status == 'Validating')
+                        @elseif ($latest_per->progress_status == 'Validating')
                         <h4 class="card-title">Status: Validasi</h4>
                         @endif
                     @else
@@ -140,11 +140,7 @@
                         Periode: {{ $latest_per->month ?? 'Belum Aktif' }} {{ $latest_per->year ?? '' }}
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                        @if (!empty($latest_per->id_period))
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-reject-{{ $latest_per->id_period }}">Cek</button>
-                        @else
-                        <a type="button" class="btn btn-secondary btn-sm disabled">Cek</a>
-                        @endif
+                        <a type="button" href="/admin/masters/periods" class="btn btn-primary btn-sm">Cek</a>
                     </div>
                 </div>
             </div>

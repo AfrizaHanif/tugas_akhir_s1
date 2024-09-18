@@ -8,6 +8,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
+                    @if (!empty($latest_per))
+                        @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Blok kuning merupakan data yang belum dilakukan konversi. Silahkan lakukan konversi data dengan menekan tombol <strong>Convert</strong> apabila telah menyelesaikan pemeriksaan data.
+                        </div>
+                        @endif
+                    @endif
+                @endif
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered">
                         <thead>
@@ -41,7 +52,11 @@
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
                                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)
+                                            @if ($input->status == 'Not Converted')
+                                            <td class="table-warning">{{ $input->input }}</td>
+                                            @else
                                             <td>{{ $input->input }} ({{ $input->input_raw }})</td>
+                                            @endif
                                         @empty
                                             <td>0</td>
                                         @endforelse
@@ -78,6 +93,16 @@
                 </div>
             </div>
             <div class="modal-footer">
+                @if (Auth::user()->part == 'Admin')
+                    @if (!empty($latest_per))
+                        @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-convert-{{ $latest_per->id_period }}">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Convert
+                        </a>
+                        @endif
+                    @endif
+                @endif
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="bi bi-x-lg"></i>
                     Tutup

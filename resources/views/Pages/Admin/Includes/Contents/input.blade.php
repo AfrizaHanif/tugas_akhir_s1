@@ -19,20 +19,22 @@
                 <button class="nav-link active text-start" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="true">
                     <i class="bi bi-hourglass-split"></i> {{ $latest_per->name }}
                 </button>
-                @else
-                <button class="nav-link active text-start" id="pills-empty-tab" data-bs-toggle="pill" data-bs-target="#pills-empty" type="button" role="tab" aria-controls="pills-empty" aria-selected="true">
-                    <i class="bi bi-x-lg"></i> Not Running
-                </button>
-                @endif
                 <hr/>
+                @endif
                 <!--HISTORY-->
                 @forelse ($history_per as $period)
+                @if (!empty($latest_per))
                 <button class="nav-link text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="false">
                     <i class="bi bi-check-lg"></i> {{ $period->period_name }}
                 </button>
+                @else
+                <button class="nav-link {{ $loop->first ? 'active' : '' }} text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
+                </button>
+                @endif
                 @empty
-                <div class="alert alert-danger" role="alert">
-                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong></br>
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
                     Hasil Rekap belum tersedia. Silahkan selesaikan proses Karyawan Terbaik terlebih dahulu untuk melihat rekap.
                 </div>
                 @endforelse
@@ -70,6 +72,68 @@
                                 @endif
                             </div>
                         </div>
+                        <!--MODIFY IMPORT DATA-->
+                        <div class="col-auto">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <!--CONVERT DATA-->
+                                @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
+                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-inp-convert-{{ $latest_per->id_period }}">
+                                @else
+                                <a class="btn btn-success disabled">
+                                @endif
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    Convert
+                                </a>
+                                <!--REFRESH DATA-->
+                                @if ($latest_per->progress_status == 'Scoring' && !$inputs->isEmpty() && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0)
+                                <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
+                                @else
+                                <a class="btn btn-warning disabled">
+                                @endif
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    Refresh
+                                </a>
+                            </div>
+                        </div>
+                        <!--DELETE ALL DATA-->
+                        <div class="col-auto">
+                            @if (!$inputs->isEmpty())
+                                @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')->count() >= 1)
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena terdapat nilai yang ditolak.">
+                                    <a class="btn btn-danger disabled">
+                                        <i class="bi bi-trash3"></i>
+                                        Hapus Semua
+                                    </a>
+                                </span>
+                                @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1)
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
+                                    <a class="btn btn-danger disabled">
+                                        <i class="bi bi-trash3"></i>
+                                        Hapus Semua
+                                    </a>
+                                </span>
+                                @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'Final')->count() >= 1)
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena seluruh nilai sudah disetujui.">
+                                    <a class="btn btn-danger disabled">
+                                        <i class="bi bi-trash3"></i>
+                                        Hapus Semua
+                                    </a>
+                                </span>
+                                @else
+                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua
+                                </a>
+                                @endif
+                            @else
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada nilai yang terdaftar.">
+                                <a class="btn btn-danger disabled">
+                                    <i class="bi bi-trash3"></i>
+                                    Hapus Semua
+                                </a>
+                            </span>
+                            @endif
+                        </div>
                         <!--DATA CHECKER-->
                         <div class="col-auto">
                             <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">
@@ -77,58 +141,9 @@
                                 Lihat Data
                             </a>
                         </div>
-                        <!--DELETE ALL DATA-->
-                        <div class="col-auto">
-                            @if (!$inputs->isEmpty())
-                            @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')->count() >= 1)
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena terdapat nilai yang ditolak.">
-                                <a class="btn btn-secondary disabled">
-                                    <i class="bi bi-trash3"></i>
-                                    Hapus Semua Data
-                                </a>
-                            </span>
-                            @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1)
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
-                                <a class="btn btn-secondary disabled">
-                                    <i class="bi bi-trash3"></i>
-                                    Hapus Semua Data
-                                </a>
-                            </span>
-                            @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'Final')->count() >= 1)
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena seluruh nilai sudah disetujui.">
-                                <a class="btn btn-secondary disabled">
-                                    <i class="bi bi-trash3"></i>
-                                    Hapus Semua Data
-                                </a>
-                            </span>
-                            @else
-                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}">
-                                <i class="bi bi-trash3"></i>
-                                Hapus Semua Data
-                            </a>
-                            @endif
-                            @else
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada nilai yang terdaftar.">
-                                <a class="btn btn-secondary disabled">
-                                    <i class="bi bi-trash3"></i>
-                                    Hapus Semua Data
-                                </a>
-                            </span>
-                            @endif
-                        </div>
-                        <!--DATA CHECKER-->
-                        <div class="col-auto">
-                            @if ($latest_per->status == 'Scoring')
-                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
-                            @else
-                            <a class="btn btn-secondary disabled">
-                            @endif
-                                <i class="bi bi-arrow-clockwise"></i>
-                                Refresh
-                            </a>
-                        </div>
                     </div>
                 </p>
+                @if ($latest_per->import_status == 'Clear')
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -166,6 +181,8 @@
                                 @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
                                     @if ($s->status == 'Pending')
                                     <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                    @elseif ($s->status == 'Not Converted')
+                                    <span class="badge text-bg-warning">Menunggu Konversi</span>
                                     @elseif ($s->status == 'In Review')
                                     <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
                                     @elseif ($s->status == 'Final')
@@ -198,6 +215,12 @@
                                             </span>
                                             @elseif ($s->status == 'Not Included')
                                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut telah dikunci dan tidak diikutkan dalam proses validasi.">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                                    <i class="bi bi-menu-button-fill"></i>
+                                                </button>
+                                            </span>
+                                            @elseif ($s->status == 'Not Converted')
+                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Mohon untuk melakukan konversi sebelum melakukan perubahan / penghapusan data.">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                                     <i class="bi bi-menu-button-fill"></i>
                                                 </button>
@@ -255,18 +278,25 @@
                         </tr>
                     </tfoot>
                 </table>
-            </div>
-            @else
-            <div class="tab-pane fade show active" id="pills-empty" role="tabpanel" aria-labelledby="pills-empty-tab" tabindex="0">
-                <div class="alert alert-danger" role="alert">
-                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong></br>
-                    Tidak ada periode yang sedang berjalan. Untuk menjalankan Proses Karyawan Terbaik, kunjungi halaman Periode, lalu klik Mulai pada periode yang dipilih untuk memulai.
+                @elseif ($latest_per->import_status == 'Not Clear')
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b> </br>
+                    Anda telah melakukan Import Data dan diperlukan pemeriksaan data yang telah dimasukkan ke dalam aplikasi ini.
+                    <ul>
+                        <li>Periksa data yang telah anda masukkan melalui modal <strong>Lihat Data</strong>. Jika sudah, silahkan lalukan konversi data dengan menekan tombol <strong>Convert</strong>.</li>
+                        <li>Apabila ada kesalahan saat melakukan import, anda dapat melakukan <strong> Import Ulang</strong>. Perlu diperhatikan bahwa data yang telah dilakukan Import atau Konversi akan terhapus saat melakukan <strong>Import Ulang</strong>.</li>
+                    </ul>
                 </div>
+                @endif
             </div>
             @endif
             <!--OLD PERIODS-->
             @foreach ($history_per as $hperiod)
+            @if (!empty($latest_per))
             <div class="tab-pane fade" id="pills-{{ $hperiod->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $hperiod->id_period }}-tab" tabindex="0">
+            @else
+            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $hperiod->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $hperiod->id_period }}-tab" tabindex="0">
+            @endif
                 <!--HEADING WITH MENU-->
                 <h2>{{ $hperiod->period_name }}</h2>
                 <p>

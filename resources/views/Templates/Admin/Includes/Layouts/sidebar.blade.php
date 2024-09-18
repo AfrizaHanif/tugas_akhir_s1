@@ -72,7 +72,7 @@
             </li>
             @endif
             <li class="nav-item">
-                <a href="/admin/analysis" class="{{ (request()->is('admin/analysis/*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                <a href="/admin/analysis" class="{{ (request()->is('admin/analysis*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
                     Analisis SAW
                 </a>

@@ -44,7 +44,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
         $this->scores = Score::where('id_period', $period)->get();
         $this->inputs = Input::where('id_period', $period)->get();
         $this->val_setting = Setting::where('id_setting', 'STG-001')->first()->value;
-        $this->per_status = Period::where('id_period', $period)->first()->status;
+        $this->per_status = Period::where('id_period', $period)->first()->progress_status;
     }
 
     public function collection(Collection $rows)
@@ -74,7 +74,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 ],[
                                     'input' => $remain,
                                     'input_raw' => $remain,
-                                    'status' => 'Pending',
+                                    'status' => 'Not Converted',
                                 ]);
                                 /*
                                 InputRAW::firstOrCreate([
@@ -84,7 +84,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
-                                    'status' => 'Pending',
+                                    'status' => 'Not Converted',
                                 ]);
                                 */
                             }elseif($this->per_status == 'Validating'){
@@ -96,7 +96,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 ],[
                                     'input' => $remain,
                                     'input_raw' => $remain,
-                                    'status' => 'Fixed',
+                                    'status' => 'Not Converted',
                                 ]);
                                 /*
                                 InputRAW::firstOrCreate([
@@ -106,7 +106,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
-                                    'status' => 'Fixed',
+                                    'status' => 'Not Converted',
                                 ]);
                                 */
                             }
@@ -121,7 +121,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 ],[
                                     'input' => $row[$criteria->source],
                                     'input_raw' => $row[$criteria->source],
-                                    'status' => 'Pending',
+                                    'status' => 'Not Converted',
                                 ]);
                                 /*
                                 InputRAW::firstOrCreate([
@@ -131,7 +131,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
-                                    'status' => 'Pending',
+                                    'status' => 'Not Converted',
                                 ]);
                                 */
                             }elseif($this->per_status == 'Validating'){
@@ -143,7 +143,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 ],[
                                     'input' => $row[$criteria->source],
                                     'input_raw' => $row[$criteria->source],
-                                    'status' => 'Fixed',
+                                    'status' => 'Not Converted',
                                 ]);
                                 /*
                                 InputRAW::firstOrCreate([
@@ -153,19 +153,21 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
-                                    'status' => 'Fixed',
+                                    'status' => 'Not Converted',
                                 ]);
                                 */
                             }
                         }
                     }
 
+                    /*
                     $check_score = $this->scores->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->first();
                     if(!is_null($check_score)){
                         Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
                             'status'=>'Revised',
                         ]);
                     }
+                    */
                 }else{
                     //SKIP
                 }
@@ -189,7 +191,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                 'id_officer' => $officer->id_officer,
                 'id_criteria' => $criteria->id_criteria,
                 'input' => $row[$criteria->source],
-                'status' => 'Pending',
+                'status' => 'Not Converted',
             ]);
         }
     }

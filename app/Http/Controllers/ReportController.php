@@ -154,6 +154,7 @@ class ReportController extends Controller
         $file = 'RPT-Result-'.$periods->id_period.'.pdf';
         $pdf = PDF::
         loadview('Pages.PDF.result', compact('periods','results'))
+        ->setPaper('a4', 'landscape')
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;

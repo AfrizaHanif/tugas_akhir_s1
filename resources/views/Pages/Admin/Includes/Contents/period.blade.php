@@ -19,11 +19,15 @@
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">
-            <th class="col-1" scope="col">#</th>
-            <th scope="col">Nama</th>
-            <th scope="col">Hari Aktif Kerja</th>
-            <th scope="col">Status</th>
-            <th class="col-1" scope="col">Action</th>
+            <th rowspan="2" class="col-1" scope="col">#</th>
+            <th rowspan="2" scope="col">Nama</th>
+            <th rowspan="2" class="col-2" scope="col">Hari Aktif Kerja</th>
+            <th colspan="2" scope="col">Status</th>
+            <th rowspan="2" class="col-1" scope="col">Action</th>
+        </tr>
+        <tr class="table-primary">
+            <th class="col-2" scope="col">Proses</th>
+            <th class="col-2" scope="col">Import</th>
         </tr>
     </thead>
     <tbody>
@@ -33,42 +37,49 @@
             <td>{{ $period->name }}</td>
             <td>{{ $period->active_days }}</td>
             <td>
-                @if ($period->status == "Finished")
+                @if ($period->progress_status == "Finished")
                 <span class="badge text-bg-success">Selesai</span>
-                @elseif ($period->status == "Skipped")
+                @elseif ($period->progress_status == "Skipped")
                 <span class="badge text-bg-secondary">Dilewatkan</span>
-                @elseif ($period->status == "Scoring")
+                @elseif ($period->progress_status == "Scoring")
                 <span class="badge text-bg-primary">Dalam Penilaian</span>
-                @elseif ($period->status == "Validating")
+                @elseif ($period->progress_status == "Validating")
                 <span class="badge text-bg-primary">Dalam Validasi</span>
-                @elseif ($period->status == "Pending")
+                @elseif ($period->progress_status == "Pending")
                 <span class="badge text-bg-warning">Pending</span>
                 @endif
             </td>
             <td>
+                @if ($period->import_status == "Clear")
+                <span class="badge text-bg-primary">Sudah Dikonversi</span>
+                @elseif ($period->import_status == "Not Clear")
+                <span class="badge text-bg-danger">Belum Dikonversi</span>
+                @endif
+            </td>
+            <td>
                 <div class="dropdown">
-                    @if ($period->status == "Finished" || $period->status == "Scoring" || $period->status == "Validating" ||$period->status == "Skipped")
-                        @if ($period->status == "Finished")
+                    @if ($period->progress_status == "Finished" || $period->progress_status == "Scoring" || $period->progress_status == "Validating" ||$period->progress_status == "Skipped")
+                        @if ($period->progress_status == "Finished")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena proses pemilihan karyawan terbaik pada periode ini sudah selesai.">
-                        @elseif ($period->status == "Scoring")
+                        @elseif ($period->progress_status == "Scoring")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam penilaian seluruh pegawai.">
-                        @elseif ($period->status == "Validating")
+                        @elseif ($period->progress_status == "Validating")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam validasi penilaian.">
-                        @elseif ($period->status == "Skipped")
+                        @elseif ($period->progress_status == "Skipped")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena periode ini tidak dilakukan pemilihan karyawan terbaik.">
                         @endif
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                             <i class="bi bi-menu-button-fill"></i>
                         </button>
                     </span>
-                    @elseif ($period->status == "Pending")
+                    @elseif ($period->progress_status == "Pending")
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-menu-button-fill"></i>
                     </button>
                     @endif
                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                         <li>
-                            @if ($period->status == "Pending")
+                            @if ($period->progress_status == "Pending")
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-start-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#start"/></svg>
                                 Mulai
                             </a>

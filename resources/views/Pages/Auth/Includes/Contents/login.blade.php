@@ -22,7 +22,7 @@
                 </div>
                 @endif
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="User Name" required>
                     <label for="username">User Name</label>
                 </div>
                 <div class="form-floating">

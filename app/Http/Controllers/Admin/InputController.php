@@ -43,7 +43,7 @@ class InputController extends Controller
         $inputs = Input::get();
         //$input_raws = InputRAW::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending'])->get();
         $categories = Category::with('criteria')->get();
         $allcriterias = Criteria::with('category')->get();
         $criterias = Criteria::get();
@@ -52,7 +52,7 @@ class InputController extends Controller
         $scores = Score::get();
 
         //GET PERIOD FOR LIST
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
         $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
 
         //GET HISTORY
@@ -74,6 +74,7 @@ class InputController extends Controller
     {
         //GET DATA
         $criterias = Criteria::get();
+        $latest_per = Period::where('id_period', $request->id_period)->first();
 
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
@@ -91,6 +92,17 @@ class InputController extends Controller
                 'input'=>$request->input($criteria->id_criteria),
                 'status'=>'Pending',
             ]);
+
+            //UPDATE STATUS IN INPUTS
+            if($latest_per->progress_status == 'Scoring'){
+                Input::where('id_input', $id_input)->update([
+                    'status' => 'Pending',
+                ]);
+            }elseif($latest_per->progress_status == 'Validating'){
+                Input::where('id_input', $id_input)->update([
+                    'status' => 'Fixed',
+                ]);
+            }
         }
 
         //RETURN TO VIEW
@@ -104,6 +116,7 @@ class InputController extends Controller
     {
         //GET DATA
         $criterias = Criteria::get();
+        $latest_per = Period::where('id_period', $request->id_period)->first();
 
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
@@ -131,6 +144,17 @@ class InputController extends Controller
                     'id_criteria'=>$criteria->id_criteria,
                     'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
+                ]);
+            }
+
+            //UPDATE STATUS IN INPUTS
+            if($latest_per->progress_status == 'Scoring'){
+                Input::where('id_input', $id_input)->update([
+                    'status' => 'Pending',
+                ]);
+            }elseif($latest_per->progress_status == 'Validating'){
+                Input::where('id_input', $id_input)->update([
+                    'status' => 'Fixed',
                 ]);
             }
         }
@@ -168,6 +192,11 @@ class InputController extends Controller
         Input::where('id_period', $period)->delete();
         //InputRAW::where('id_period', $period)->delete();
 
+        //UPDATE IMPORT STATUS
+        Period::where('id_period', $period)->update([
+            'import_status'=>'Clear',
+        ]);
+
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Hapus Semua Data Nilai Berhasil')->with('code_alert', 1);
     }
@@ -200,7 +229,7 @@ class InputController extends Controller
             if(Str::contains($name_file, $latest_per->month) && Str::contains($name_file, $latest_per->year)){
                 if(Str::contains($name_file, 'Presensi') || Str::contains($name_file, 'presensi')){
                     //dd('Presensi Detected');
-                    if($latest_per->status == 'Scoring'){
+                    if($latest_per->progress_status == 'Scoring'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -219,7 +248,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -243,7 +272,7 @@ class InputController extends Controller
                     }
                 }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
                     //dd('SKP Detected');
-                    if($latest_per->status == 'Scoring'){
+                    if($latest_per->progress_status == 'Scoring'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -262,7 +291,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -286,7 +315,7 @@ class InputController extends Controller
                     }
                 }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
                     //dd('CKP Detected');
-                    if($latest_per->status == 'Scoring'){
+                    if($latest_per->progress_status == 'Scoring'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -305,7 +334,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Validating'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -340,10 +369,11 @@ class InputController extends Controller
             //IMPORT FILE (USING LARAVEL EXCEL)
             Excel::import(new InputsImport($period), $f->store('temp'));
 
+            /*
             //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
             //GET INPUT DATA AND CRITERIA AFTER IMPORT
             if(Str::contains($name_file, 'Presensi') || Str::contains($name_file, 'presensi')){
-                if($latest_per->status == 'Scoring'){
+                if($latest_per->progress_status == 'Scoring'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -351,7 +381,7 @@ class InputController extends Controller
                             $query->where('source', 'Presensi');
                         });
                     })->get();
-                }elseif($latest_per->status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Validating'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -367,7 +397,7 @@ class InputController extends Controller
                     $query->where('source', 'Presensi');
                 })->get();
             }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
-                if($latest_per->status == 'Scoring'){
+                if($latest_per->progress_status == 'Scoring'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -375,7 +405,7 @@ class InputController extends Controller
                             $query->where('source', 'SKP');
                         });
                     })->get();
-                }elseif($latest_per->status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Validating'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -391,7 +421,7 @@ class InputController extends Controller
                     $query->where('source', 'SKP');
                 })->get();
             }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
-                if($latest_per->status == 'Scoring'){
+                if($latest_per->progress_status == 'Scoring'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -399,7 +429,7 @@ class InputController extends Controller
                             $query->where('source', 'CKP');
                         });
                     })->get();
-                }elseif($latest_per->status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Validating'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -415,69 +445,27 @@ class InputController extends Controller
                     $query->where('source', 'CKP');
                 })->get();
             }
-            //UPDATE DATA
-            foreach($criterias as $criteria){
-                foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
-                    foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){
-                        //dd($input->input.'<='.$crip->value_from);
-                        if(($input->input >= 0) && ($input->input <= $crip->value_from) && ($crip->value_type == 'Less')){
-                            //($input->input <= $crip->value_from) && ($crip->value_type == 'Less')
-                            Input::where('id_input', $input->id_input)->update([
-                                'input'=>$crip->score,
-                            ]);
-                        }elseif(($input->input >= $crip->value_from) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')){
-                            //($crip->value_from <= $input->input) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')
-                            Input::where('id_input', $input->id_input)->update([
-                                'input'=>$crip->score,
-                            ]);
-                        }elseif(($input->input >= $crip->value_from) && ($input->input <= $criteria->max) && ($crip->value_type == 'More')){
-                            //($crip->value_from <= $input->input) && ($crip->value_type == 'More')
-                            Input::where('id_input', $input->id_input)->update([
-                                'input'=>$crip->score,
-                            ]);
-                        }else{
-                            /*
-                            if($crip->value_type == 'Less'){
-                                return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Gagal. Terdapat gap yang ada di range Kriteria. Silahkan cek kembali data crips pada setiap Kriteria di halaman Kriteria. ('.$criteria->name.') ('.$crip->value_type.') ('.$input->input.'>=0) ('.$input->input.'<='.$crip->value_from.')')->with('code_alert', 1);
-                            }elseif($crip->value_type == 'Between'){
-                                return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Gagal. Terdapat gap yang ada di range Kriteria. Silahkan cek kembali data crips pada setiap Kriteria di halaman Kriteria. ('.$criteria->name.') ('.$crip->value_type.') ('.$input->input.'>='.$crip->value_from.') ('.$input->input.'<='.$crip->value_to.')')->with('code_alert', 1);
-                            }elseif($crip->value_type == 'More'){
-                                return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Gagal. Terdapat gap yang ada di range Kriteria. Silahkan cek kembali data crips pada setiap Kriteria di halaman Kriteria. ('.$criteria->name.') ('.$crip->value_type.') ('.$input->input.'>='.$crip->value_from.') ('.$input->input.'<='.$criteria->max.')')->with('code_alert', 1);
-                            }
-                            */
-                        }
-                    }
-                }
-            }
+            */
         }
+
+        //UPDATE IMPORT STATUS
+        Period::where('id_period', $period)->update([
+            'import_status'=>'Not Clear',
+        ]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Import Data Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Import Data Berhasil. Silahkan cek kembali sebelum dilakukan Konversi Data')->with('code_alert', 1);
     }
 
-    public function refresh($period)
+    public function convert($period)
     {
-        //DELETE OLD INPUT
-        //Input::truncate();
-
-        //MOVE INPUT RAW TO INPUT
-        /*
-        $move = InputRAW::where('id_period', $period)->get();
-        foreach($move as $m){
-            Input::insert([
-                'id_input' => $m->id_input_raw,
-                'id_period' => $m->id_period,
-                'id_officer' => $m->id_officer,
-                'id_criteria' => $m->id_criteria,
-                'input' => $m->input,
-                'status' => $m->status,
-            ]);
-        }
-        */
+        //GET DATA
+        $officers = Officer::get();
+        $latest_per = Period::where('id_period', $period)->first();
 
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
         //GET INPUT DATA AND CRITERIA
-        $inputs = Input::where('id_period', $period)->get();
+        $inputs = Input::where('id_period', $period)->where('status', 'Not Converted')->get();
         $criterias = Criteria::get();
         $crips = Crips::with('criteria')->get();
         //UPDATE DATA
@@ -505,6 +493,92 @@ class InputController extends Controller
             }
         }
 
+        //UPDATE STATUS IN INPUTS
+        if($latest_per->progress_status == 'Scoring'){
+            Input::where('status', 'Not Converted')->update([
+                'status' => 'Pending',
+            ]);
+        }elseif($latest_per->progress_status == 'Validating'){
+            Input::where('status', 'Not Converted')->update([
+                'status' => 'Fixed',
+            ]);
+        }
+
+        //UPDATE STATUS IN SCORES
+        foreach($officers as $officer){
+            $check_score = Score::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->first();
+            if(!is_null($check_score)){
+                Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
+                    'status'=>'Revised',
+                ]);
+                Input::where('id_officer', $officer->id_officer)->where('status', 'Need Fix')->update([
+                    'status'=>'Fixed',
+                ]);
+            }
+        }
+
+        //UPDATE IMPORT STATUS
+        Period::where('id_period', $period)->update([
+            'import_status'=>'Clear',
+        ]);
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Konversi Data Berhasil')->with('code_alert', 1);
+    }
+
+    public function refresh($period)
+    {
+        //CHECK STATUS
+
+
+        //MOVE INPUT RAW TO INPUT
+        $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        foreach($move as $m){
+            $m->update([
+                'input' => $m->input_raw,
+            ]);
+        }
+
+        //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
+        //GET INPUT DATA AND CRITERIA
+        $inputs = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        $criterias = Criteria::get();
+        $crips = Crips::with('criteria')->get();
+        //UPDATE DATA
+        foreach($criterias as $criteria){
+            foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
+                foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){
+                    //dd($input->input.'<='.$crip->value_from);
+                    if(($input->input >= 0) && ($input->input <= $crip->value_from) && ($crip->value_type == 'Less')){
+                        //($input->input <= $crip->value_from) && ($crip->value_type == 'Less')
+                        Input::where('id_input', $input->id_input)->update([
+                            'input'=>$crip->score,
+                        ]);
+                    }elseif(($input->input >= $crip->value_from) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')){
+                        //($crip->value_from <= $input->input) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')
+                        Input::where('id_input', $input->id_input)->update([
+                            'input'=>$crip->score,
+                        ]);
+                    }elseif(($input->input >= $crip->value_from) && ($input->input <= $criteria->max) && ($crip->value_type == 'More')){
+                        //($crip->value_from <= $input->input) && ($crip->value_type == 'More')
+                        Input::where('id_input', $input->id_input)->update([
+                            'input'=>$crip->score,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        //UPDATE STATUS IN INPUTS
+        Input::where('status', 'Not Converted')->update([
+            'status' => 'Pending',
+        ]);
+
+        //UPDATE IMPORT STATUS
+        Period::where('id_period', $period)->update([
+            'import_status'=>'Clear',
+        ]);
+
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Refresh Data Berhasil')->with('code_alert', 1);
     }
@@ -512,7 +586,7 @@ class InputController extends Controller
     public function export_latest()
     {
         //LATEST PERIODE
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
 
         //GET EXPORT FILE
         return Excel::download(new InputsExport($latest_per), 'INP-Backup-'.$latest_per->id_period.'.xlsx');

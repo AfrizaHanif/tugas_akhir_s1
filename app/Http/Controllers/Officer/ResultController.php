@@ -12,7 +12,7 @@ class ResultController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->where('progress_status', 'Finished')->get();
         $results = Result::with('officer')->orderBy('count', 'DESC')->offset(0)->limit(1)->get();
         $officers = Officer::with('position')->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})->get();
 

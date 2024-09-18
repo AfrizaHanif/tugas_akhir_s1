@@ -20,7 +20,8 @@ class Period extends Model
         'month',
         'year',
         'active_days',
-        'status',
+        'progress_status',
+        'import_status',
     ];
 
     //CONNECT FROM ANOTHER TABLE

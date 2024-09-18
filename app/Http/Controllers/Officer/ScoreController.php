@@ -12,7 +12,7 @@ class ScoreController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('status', 'Voting')->orWhere('status', 'Finished')->get();
+        $periods = Period::orderBy('id_period', 'ASC')->where('progress_status', 'Voting')->orWhere('progress_status', 'Finished')->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
         $officers = Officer::with('position')->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})->get();
         $check = Score::orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();

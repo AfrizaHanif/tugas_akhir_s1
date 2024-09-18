@@ -18,6 +18,7 @@ class HistoryInput extends Model
         'officer_nip',
         'officer_name',
         'officer_position',
+        'officer_team',
         'id_category',
         'category_name',
         'id_criteria',

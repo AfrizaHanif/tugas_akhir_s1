@@ -17,7 +17,8 @@ return new class extends Migration
             $table->char('month', 10);
             $table->unsignedSmallInteger('year');
             $table->unsignedTinyInteger('active_days');
-            $table->char('status', 20);
+            $table->char('progress_status', 20);
+            $table->char('import_status', 15);
             $table->timestamps();
         });
     }

@@ -29,7 +29,7 @@ class ReportController extends Controller
     public function index()
     {
         //GET DATA
-        $periods = Period::orderBy('id_period', 'ASC')->whereIn('status', ['Voting', 'Finished'])->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Voting', 'Finished'])->get();
         $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
         $officers = Officer::with('position', 'user')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})

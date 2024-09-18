@@ -22,6 +22,7 @@ use App\Models\Period;
 use App\Models\Score;
 use App\Models\Setting;
 use App\Models\SubCriteria;
+use App\Models\SubTeam;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class ScoreController extends Controller
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->where('is_lead', 'No')
         ->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending'])->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending'])->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         $inputs = Input::get();
         //$input_raws = InputRAW::get();
@@ -47,7 +48,7 @@ class ScoreController extends Controller
         $countsub = Criteria::count();
 
         //GET PERIODS FOR LIST
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
         $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
 
         //dd($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() != $officers->count());
@@ -63,24 +64,29 @@ class ScoreController extends Controller
     public function get($period)
     {
         //GET DATA
-        //$periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
+        //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
+        $latest_per = Period::whereIn('progress_status', ['Scoring', 'Validating'])->latest()->first();
 
         //VERIFICATION
         //CHECK EMPTY DATA
         if(Input::where('id_period', $period)->count() == 0){
             return redirect()->route('admin.inputs.validate.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
-            foreach ($officers as $officer) {
-                if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
-                    return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
-                }else{ //IF OFFICER HAS A FEW DATA IN BOTH TABLE
-                    foreach ($subcriterias as $subcriteria) {
-                        if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
-                            return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
-                        }else{
-                            //CLEAR
+            if($latest_per->import_status == 'Not Clear'){
+                return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat nilai yang belum dikonversi. Hubungi kepegawaian untuk melakukan konversi nilai.');
+            }else{
+                foreach ($officers as $officer) {
+                    if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
+                        return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
+                    }else{ //IF OFFICER HAS A FEW DATA IN BOTH TABLE
+                        foreach ($subcriterias as $subcriteria) {
+                            if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
+                                return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
+                            }else{
+                                //CLEAR
+                            }
                         }
                     }
                 }
@@ -227,7 +233,7 @@ class ScoreController extends Controller
         */
         Period::where('id_period', $period)
         ->update([
-            'status'=>'Validating'
+            'progress_status'=>'Validating'
         ]);
 
         //RETURN TO VIEW
@@ -350,6 +356,11 @@ class ScoreController extends Controller
             $getposition1 = Position::with('officer')->whereHas('officer', function($query) use($score){
                 $query->where('id_officer', $score->id_officer);
             })->first();
+            //dd($score->id_officer);
+            $getteam1 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($score)
+            {
+                $query->where('id_officer', $score->id_officer);
+            })->first();
 
             //INSERT DATA
             HistoryScore::insert([
@@ -359,6 +370,7 @@ class ScoreController extends Controller
                 'officer_nip'=>$getofficer1->nip,
                 'officer_name'=>$getofficer1->name,
                 'officer_position'=>$getposition1->name,
+                'officer_team'=>$getteam1->name,
                 'final_score'=>$score->final_score,
                 'second_score'=>$score->second_score,
             ]);
@@ -373,6 +385,10 @@ class ScoreController extends Controller
             $getperiod2 = Period::where('id_period', $input->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $input->id_officer)->first();
             $getposition2 = Position::with('officer')->whereHas('officer', function($query) use($input){
+                $query->where('id_officer', $input->id_officer);
+            })->first();
+            $getteam2 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($input)
+            {
                 $query->where('id_officer', $input->id_officer);
             })->first();
             $getcriteria2 = Category::with('criteria')->whereHas('criteria', function($query) use($input){
@@ -395,6 +411,7 @@ class ScoreController extends Controller
                 'officer_nip'=>$getofficer2->nip,
                 'officer_name'=>$getofficer2->name,
                 'officer_position'=>$getposition2->name,
+                'officer_team'=>$getteam2->name,
                 'id_category'=>$getcriteria2->id_category,
                 'category_name'=>$getcriteria2->name,
                 'id_criteria'=>$getsubcriteria2->id_criteria,
@@ -470,7 +487,7 @@ class ScoreController extends Controller
         $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
         if(!empty($getofficer4->photo)){
             $extension = File::extension($path_photo);
-            $photo = 'IMG-'.$getperiod1->id_period.'-'.$getofficer4->id_officer.'.'.$extension;
+            $photo = 'IMG-'.$getperiod4->id_period.'-'.$getofficer4->id_officer.'.'.$extension;
             $new_path = 'Images/History/Portrait/'.$photo;
             File::copy($path_photo , $new_path);
         }
@@ -490,7 +507,7 @@ class ScoreController extends Controller
 
         //UPDATE STATUS
         Period::where('id_period', $period)->update([
-            'status'=>'Finished',
+            'progress_status'=>'Finished',
         ]);
 
         //DELETE CURRENT DATA

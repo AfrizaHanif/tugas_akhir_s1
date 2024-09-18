@@ -2,7 +2,7 @@
 <h1 style="text-align:center;">Laporan Analisis SAW</h1>
 <h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
-<h2>Pegawai yang Terlibat</h2>
+<h3>Pegawai yang Terlibat</h3>
 <table id="table-analysis">
     <thead>
         <tr>
@@ -24,7 +24,7 @@
         </tr>
     </tfoot>
 </table>
-<h2>Kriteria yang Terlibat</h2>
+<h3>Kriteria yang Terlibat</h3>
 <table id="table-analysis">
     <thead>
         <tr>
@@ -46,7 +46,8 @@
         </tr>
     </tfoot>
 </table>
-<h2>Hasil Kuesioner</h2>
+<hr>
+<h3>Hasil Kuesioner</h3>
 <table id="table-analysis">
     <thead>
         <tr>
@@ -78,7 +79,7 @@
         </tr>
     </tfoot>
 </table>
-<h2>Normalisasi</h2>
+<h3>Normalisasi</h3>
 <table id="table-analysis">
     <thead>
         <tr class="table-primary">
@@ -108,7 +109,7 @@
         </tr>
     </tfoot>
 </table>
-<h2>Matrix</h2>
+<h3>Matrix</h3>
 <table id="table-analysis">
     <thead>
         <tr class="table-primary">
@@ -142,7 +143,7 @@
         </tr>
     </tfoot>
 </table>
-<h2>Ranking</h2>
+<h3>Ranking</h3>
 <table id="table-analysis">
     <thead>
         <tr class="table-primary">

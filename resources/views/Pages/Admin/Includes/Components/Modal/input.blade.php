@@ -507,20 +507,51 @@
     </div>
 </div>
 @endforeach
-<!--REFRESH CONVERT-->
-<div class="modal fade" id="modal-inp-refresh-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--CONVERT DATA-->
+<div class="modal fade" id="modal-inp-convert-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('admin.inputs.data.refresh', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.inputs.data.convert', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Refresh Input ({{ $latest_per->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Konversi Data ({{ $latest_per->id_period}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin melakukan konversi ulang penilaian? Data yang telah dikonversi akan dihapus untuk kebutuhan konversi ulang.
+                        Apakah anda ingin melakukan konversi penilaian? Pastikan data yang telah diimport sudah benar. Jika tidak, periksa kembali data yang ada.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-backspace"></i>
+                        Tidak
+                    </button>
+                    @csrf
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--REFRESH DATA-->
+<div class="modal fade" id="modal-inp-refresh-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.inputs.data.refresh', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Refresh Data ({{ $latest_per->id_period}})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                        <br/>
+                        Apakah anda ingin melakukan refresh penilaian? Gunakan fitur ini setelah melakukan perubahan kriteria.
                     </div>
                 </div>
                 <div class="modal-footer">

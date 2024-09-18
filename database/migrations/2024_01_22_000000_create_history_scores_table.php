@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
             $table->string('officer_position', 50);
+            $table->string('officer_team', 50);
             $table->decimal('final_score', 8, 3);
             $table->smallInteger('second_score');
             $table->timestamps();

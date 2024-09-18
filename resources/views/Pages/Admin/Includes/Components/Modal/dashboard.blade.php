@@ -155,7 +155,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($periods->where('status', 'Finished') as $period)
+                        @foreach ($periods->where('progress_status', 'Finished') as $period)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             @foreach ($voteresults->where('id_period', $period->id_period) as $voteresult)

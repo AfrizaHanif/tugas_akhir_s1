@@ -7,6 +7,8 @@
         <tr>
             <th>#</th>
             <th>Nama</th>
+            <th>Jabatan</th>
+            <th>Tim Teknis Utama</th>
             <th>Hasil Akhir</th>
         </tr>
     </thead>
@@ -15,13 +17,15 @@
         <tr>
             <th>{{ $loop->iteration }}</th>
             <td>{{ $result->officer_name }}</td>
+            <td>{{ $result->officer_position }}</td>
+            <td>{{ $result->officer_team }}</td>
             <td>{{ $result->final_score }}</td>
         </tr>
         @endforeach
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="4">Total Data: <b>{{ $results->take(3)->count() }}</b> Pegawai</td>
+            <td colspan="5">Total Data: <b>{{ $results->take(3)->count() }}</b> Pegawai</td>
         </tr>
     </tfoot>
 </table>

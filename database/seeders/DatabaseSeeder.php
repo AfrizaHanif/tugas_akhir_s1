@@ -473,7 +473,8 @@ class DatabaseSeeder extends Seeder
             'month' => 'Januari',
             'year' => '2024',
             'active_days' => '23',
-            'status' => 'Scoring',
+            'progress_status' => 'Scoring',
+            'import_status' => 'Clear',
         ]);
 
         DB::table('periods')->insert([
@@ -482,7 +483,8 @@ class DatabaseSeeder extends Seeder
             'month' => 'Februari',
             'year' => '2024',
             'active_days' => '17',
-            'status' => 'Pending',
+            'progress_status' => 'Pending',
+            'import_status' => 'Clear',
         ]);
 
         //CRITERIAS: Kriteria

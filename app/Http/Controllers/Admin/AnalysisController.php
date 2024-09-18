@@ -25,8 +25,8 @@ class AnalysisController extends Controller
     {
         //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        //$latest = Period::whereNot('status', 'Skipped')->whereNot('status', 'Pending')->latest()->first();
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        //$latest = Period::whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
 
         //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('periods', 'latest_per'));
@@ -35,13 +35,13 @@ class AnalysisController extends Controller
     public function saw()
     {
         //GET DATA
-        //$periods = Period::orderBy('id_period', 'ASC')->whereNot('status', 'Skipped')->whereNot('status', 'Pending')->get();
+        //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->get();
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
 
         //LATEST PERIOD
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
 
         //GET DATA FOR SORT
         $setting = Setting::where('id_setting', 'STG-002')->first()->value;
@@ -197,7 +197,7 @@ class AnalysisController extends Controller
         $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first();
 
         //LATEST PERIOD
-        $latest_per = Period::where('status', 'Scoring')->orWhere('status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
 
         //GET DATA FOR SORT
         $setting = Setting::where('id_setting', 'STG-002')->first()->value;
