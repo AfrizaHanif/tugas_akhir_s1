@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Laporan Karyawan Terbaik ({{ $periods->period_name }}) | Tugas Akhir</title>
+<title>Laporan Karyawan Tim {{ $subteams->officer_team }} Terbaik ({{ $periods->period_name }}) | Tugas Akhir</title>
 @endsection
 
 <!--CSS-->
@@ -13,5 +13,5 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.PDF.Includes.Contents.result')
+@include('Pages.PDF.Includes.Contents.teamresult')
 @endsection

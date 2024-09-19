@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\HistoryInput;
+use App\Models\HistoryScore;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Result;
@@ -16,14 +18,15 @@ class ReportController extends Controller
     public function index()
     {
         //GET DATA
-        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Voting', 'Finished'])->get();
-        $per_years = Period::orderBy('id_period', 'ASC')->select('year')->groupBy('year')->get();
-        $officers = Officer::with('position', 'user')
-        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
-        ->get();
+        $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
+        $h_team_years = HistoryInput::select('id_sub_team', 'officer_team', 'period_year')->groupBy('id_sub_team', 'officer_team', 'period_year')->orderBy('period_year', 'ASC')->get();
+        $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
+        $h_subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->whereNotIn('officer_team', ['Pimpinan BPS', 'Developer'])->get();
+        $h_officers = HistoryInput::select('id_officer', 'officer_nip', 'officer_name')->groupBy('id_officer', 'officer_nip', 'officer_name')->get();
+        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
 
         //RETURN TO VIEW
-        return view('Pages.Home.report', compact('periods','per_years','officers'));
+        return view('Pages.Home.report', compact('h_periods', 'h_years', 'h_team_years', 'h_months', 'h_subteams', 'h_officers', 'h_scores'));
     }
 }

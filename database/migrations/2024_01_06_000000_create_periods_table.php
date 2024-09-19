@@ -15,6 +15,7 @@ return new class extends Migration
             $table->char('id_period', 11)->primary();
             $table->char('name', 20);
             $table->char('month', 10);
+            $table->unsignedSmallInteger('num_month');
             $table->unsignedSmallInteger('year');
             $table->unsignedTinyInteger('active_days');
             $table->char('progress_status', 20);

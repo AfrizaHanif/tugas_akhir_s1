@@ -1,11 +1,11 @@
 @if (Request::is('admin/analysis'))
-<h1 class="text-center mb-4">Analisis SAW</h1>
+<h1 class="text-center mb-4">Analisis Data</h1>
 @elseif (Request::is('admin/analysis/latest'))
     @if (!empty($latest_per))
-    <h1 class="text-center mb-4">Analisis SAW ({{ $latest_per->month }} {{ $latest_per->year }})</h1>
+    <h1 class="text-center mb-4">Analisis Data ({{ $latest_per->month }} {{ $latest_per->year }})</h1>
     @endif
 @elseif (Request::is('admin/analysis/*'))
-<h1 class="text-center mb-4">Analisis SAW ({{ $select_period->period_name }})</h1>
+<h1 class="text-center mb-4">Analisis Data ({{ $select_period->period_name }})</h1>
 @endif
 @include('Templates.Includes.Components.alert')
 <!--MENU-->

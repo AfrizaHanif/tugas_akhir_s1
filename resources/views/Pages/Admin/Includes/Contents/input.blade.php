@@ -200,70 +200,21 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    @if ($officer->is_lead == 'No')
-                                        @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
-                                            @if ($s->status == 'Pending' || $s->status == 'Need Fix' || $s->status == 'Fixed')
-                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-menu-button-fill"></i>
-                                            </button>
-                                            @elseif ($s->status == 'In Review')
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                    <i class="bi bi-menu-button-fill"></i>
-                                                </button>
-                                            </span>
-                                            @elseif ($s->status == 'Not Included')
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut telah dikunci dan tidak diikutkan dalam proses validasi.">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                    <i class="bi bi-menu-button-fill"></i>
-                                                </button>
-                                            </span>
-                                            @elseif ($s->status == 'Not Converted')
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Mohon untuk melakukan konversi sebelum melakukan perubahan / penghapusan data.">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                    <i class="bi bi-menu-button-fill"></i>
-                                                </button>
-                                            </span>
-                                            @else
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sudah disetujui sebagai hasil akhir dan tidak dapat diubah kembali.">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                                    <i class="bi bi-menu-button-fill"></i>
-                                                </button>
-                                            </span>
-                                            @endif
-                                        @empty
-                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-menu-button-fill"></i>
-                                        </button>
-                                        @endforelse
+                                @if ($officer->is_lead == 'No')
+                                    @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
                                     @else
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut tidak terlibat dalam pemilihan Karyawan Terbaik.">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                            <i class="bi bi-menu-button-fill"></i>
-                                        </button>
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut belum memiliki data nilai.">
+                                    <button type="button" class="btn btn-info" disabled>
                                     </span>
                                     @endif
-                                    <ul class="dropdown-menu mx-0 shadow w-table-menu">
-                                        <li>
-                                            @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
-                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
-                                                    Lihat Data
-                                                </a>
-                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-preupd-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
-                                                    Ubah Data
-                                                </a>
-                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
-                                                    Hapus Data
-                                                </a>
-                                            @else
-                                                <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-precre-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#create"/></svg>
-                                                    Tambah Data
-                                                </a>
-                                            @endif
-                                        </li>
-                                    </ul>
-                                </div>
+                                @else
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut tidak terlibat dalam pemilihan Karyawan Terbaik.">
+                                <button type="button" class="btn btn-secondary" disabled>
+                                </span>
+                                @endif
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
                             </td>
                         </tr>
                         @empty

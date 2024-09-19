@@ -47,23 +47,23 @@
                 <div id="collapse-analysis" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="accordion" id="accordion-analysis">
-                            @foreach ($per_years as $per_year)
+                            @forelse ($h_years as $h_year)
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-analysis-{{ $per_year->year }}">
-                                        {{ $per_year->year }}
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis-{{ $h_year->period_year }}" aria-expanded="true" aria-controls="collapse-analysis-{{ $h_year->period_year }}">
+                                        {{ $h_year->period_year }}
                                     </button>
                                 </h2>
-                                <div id="collapse-analysis-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
+                                <div id="collapse-analysis-{{ $h_year->period_year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
                                     <div class="accordion-body">
-                                        @forelse ($periods->where('year', $per_year->year) as $period)
+                                        @forelse ($h_months->where('period_year', $h_year->period_year) as $h_month)
                                         <div class="row align-items-center pt-1">
                                             <div class="col">
-                                                {{ $period->month }}
+                                                {{ $h_month->period_month }}
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="{{ route('reports.analysis', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.analysis', ['month'=>$h_month->period_month,'year'=>$h_year->period_year]) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
@@ -84,7 +84,106 @@
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
+                            @empty
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                        <br/>
+                                        Tidak Ada Laporan
+                                    </div>
+                                </div>
+                            </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--TEAM RESULT REPORT-->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-team-result" aria-expanded="false" aria-controls="collapse-team-result">
+                        Laporan Hasil (Per Tim Teknis)
+                    </button>
+                </h2>
+                <div id="collapse-team-result" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="accordion" id="accordion-team-result">
+                            @forelse ($h_subteams as $h_subteam)
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $h_subteam->id_sub_team }}" aria-expanded="true" aria-controls="collapse-{{ $h_subteam->id_sub_team }}">
+                                        {{ $h_subteam->officer_team }}
+                                    </button>
+                                </h2>
+                                <div id="collapse-{{ $h_subteam->id_sub_team }}" class="accordion-collapse collapse" data-bs-parent="#accordion-team-result">
+                                    <div class="accordion-body">
+                                        <div class="accordion" id="accordion-team-result-{{ $h_subteam->id_sub_team }}">
+                                            @forelse ($h_team_years->where('id_sub_team', $h_subteam->id_sub_team) as $h_year)
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-{{ $h_subteam->id_sub_team }}-{{ $h_year->period_year }}" aria-expanded="true" aria-controls="collapse-result-{{ $h_subteam->id_sub_team }}-{{ $h_year->period_year }}">
+                                                        {{ $h_year->period_year }}
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse-result-{{ $h_subteam->id_sub_team }}-{{ $h_year->period_year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-team-result-{{ $h_subteam->id_sub_team }}">
+                                                    <div class="accordion-body">
+                                                        @forelse ($h_months->where('period_year', $h_year->period_year) as $h_month)
+                                                            @foreach ($h_scores->where('id_sub_team', $h_subteam->id_sub_team)->where('period_year', $h_year->period_year)->where('period_month', $h_month->period_month) as $h_score)
+                                                            <div class="row align-items-center pt-1">
+                                                                <div class="col">
+                                                                    {{ $h_score->period_month }}
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                                        <a href="{{ route('reports.teamresult', ['subteam'=>$h_score->id_sub_team,'month'=>$h_score->period_month,'year'=>$h_score->period_year]) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                                            <i class="bi bi-filetype-pdf"></i>
+                                                                            PDF
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+                                                        @empty
+                                                        <div class="row align-items-center">
+                                                            <div class="col">
+                                                                <div class="alert alert-danger" role="alert">
+                                                                    <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                                                    <br/>
+                                                                    Tidak Ada Laporan
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @endforelse
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @empty
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                                        <br/>
+                                                        Tidak Ada Laporan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                        <br/>
+                                        Tidak Ada Laporan
+                                    </div>
+                                </div>
+                            </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -99,28 +198,28 @@
                 <div id="collapse-result" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="accordion" id="accordion-result">
-                            @foreach ($per_years as $per_year)
+                            @forelse ($h_years as $h_year)
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-{{ $per_year->year }}" aria-expanded="true" aria-controls="collapse-result-{{ $per_year->year }}">
-                                        {{ $per_year->year }}
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-result-{{ $h_year->period_year }}" aria-expanded="true" aria-controls="collapse-result-{{ $h_year->period_year }}">
+                                        {{ $h_year->period_year }}
                                     </button>
                                 </h2>
-                                <div id="collapse-result-{{ $per_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-result">
+                                <div id="collapse-result-{{ $h_year->period_year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-result">
                                     <div class="accordion-body">
-                                        @forelse ($periods->where('year', $per_year->year) as $period)
+                                        @forelse ($h_months->where('period_year', $h_year->period_year) as $h_month)
                                         <div class="row align-items-center pt-1">
                                             <div class="col">
-                                                {{ $period->month }}
+                                                {{ $h_month->period_month }}
                                             </div>
                                             <div class="col">
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                    <a href="{{ route('reports.result', $period->id_period) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.result', ['month'=>$h_month->period_month,'year'=>$h_year->period_year]) }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-filetype-pdf"></i>
                                                         PDF
                                                     </a>
                                                     @if (Auth::check())
-                                                    <a href="{{ route('reports.certificate', $period->id_period) }}" type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                                    <a href="{{ route('reports.certificate', ['month'=>$h_month->period_month,'year'=>$h_year->period_year]) }}" type="button" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                                         <i class="bi bi-patch-check"></i>
                                                         Sertifikat
                                                     </a>
@@ -141,8 +240,17 @@
                                         @endforelse
                                     </div>
                                 </div>
+                            </div>@empty
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="bi bi-x-octagon-fill"></i> <strong>ERROR</strong>
+                                        <br/>
+                                        Tidak Ada Laporan
+                                    </div>
+                                </div>
                             </div>
-                            @endforeach
+                            @endforelse
                         </div>
                     </div>
                 </div>

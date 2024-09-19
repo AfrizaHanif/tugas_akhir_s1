@@ -42,7 +42,7 @@
                 </h2>
                 <div id="collapse-3" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
                     <div class="accordion-body">
-                        Untuk memudahkan saat melakukan analisis SAW, penentuan range (Data Crips) di setiap kriteria perlu dilakukan.
+                        Untuk memudahkan saat melakukan Analisis Data, penentuan range (Data Crips) di setiap kriteria perlu dilakukan.
                     </div>
                 </div>
             </div>

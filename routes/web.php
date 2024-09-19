@@ -76,9 +76,10 @@ Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/{period}', 'inpall')->name('all');
             Route::get('/{period}/{id}', 'inpsingle')->name('single');
         });
-        Route::get('/analysis/{period}', 'analysis')->name('analysis');
-        Route::get('/result/{period}', 'result')->name('result');
-        Route::get('/certificate/{period}', 'certificate')->name('certificate');
+        Route::get('/analysis/{month}/{year}', 'analysis')->name('analysis');
+        Route::get('/result/{subteam}/{month}/{year}', 'team_result')->name('teamresult');
+        Route::get('/result/{month}/{year}', 'result')->name('result');
+        Route::get('/certificate/{month}/{year}', 'certificate')->name('certificate');
     });
 });
 
@@ -101,7 +102,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::resource('/positions', PositionController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/users', UserController::class);
-                Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'destroy']]);
+                Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
                 Route::prefix('periods')->name('periods.')->group(function () {
                     Route::controller(PeriodController::class)->group(function() {
                         Route::post('/refresh', 'refresh')->name('refresh');
@@ -196,12 +197,14 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
         //PENGATURAN
+        /*
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::controller(SettingController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::post('/update', 'update')->name('update');
             });
         });
+        */
     });
 });
 

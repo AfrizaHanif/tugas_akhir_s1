@@ -74,7 +74,7 @@
             <li class="nav-item">
                 <a href="/admin/analysis" class="{{ (request()->is('admin/analysis*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
-                    Analisis SAW
+                    Analisis Data
                 </a>
             </li>
             <li class="nav-item">
@@ -101,12 +101,6 @@
                 </a>
             </li>
             <li><hr class="dropdown-divider"></li>
-            <li>
-                <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/settings">
-                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#settings"/></svg>
-                    Pengaturan
-                </a>
-            </li>
             <li>
                 <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/messages">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#message"/></svg>

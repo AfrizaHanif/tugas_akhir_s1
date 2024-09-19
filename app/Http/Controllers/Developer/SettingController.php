@@ -47,20 +47,10 @@ class SettingController extends Controller
         ]);
 
         //RETURN TO VIEW
-        if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Scoring'){
-                if(Auth::user()->part == "Dev"){
-                    return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil. Silahkan melakukan import kembali untuk memperbarui konversi data nilai')->with('code_alert', 1);
-                }else{
-                    return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil. Silahkan melakukan import kembali untuk memperbarui konversi data nilai')->with('code_alert', 1);
-                }
-            }
+        if(Auth::user()->part == "Dev"){
+            return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }else{
-            if(Auth::user()->part == "Dev"){
-                return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
-            }else{
-                return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
-            }
+            return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }
     }
 }

@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Analisis SAW | Tugas Akhir</title>
+<title>Analisis Data | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->

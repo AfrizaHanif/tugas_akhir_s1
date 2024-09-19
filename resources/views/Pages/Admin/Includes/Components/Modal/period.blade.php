@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="year" class="form-label">Hari Aktif (Setelah dikurangi hari libur)</label>
+                        <label for="active_days" class="form-label">Hari Aktif (Setelah dikurangi hari libur)</label>
                         <input type="number" class="form-control" id="active_days" name="active_days" min="1" max="31" required>
                     </div>
                 </div>
@@ -56,6 +56,39 @@
     </div>
 </div>
 @foreach ($periods as $period)
+<!--UPDATE PERIOD-->
+<div class="modal fade" id="modal-per-update-{{ $period->id_period }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.masters.periods.update', $period->id_period) }}" method="POST" enctype="multipart/form-data" id="form-per-create">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Periode</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-per-create"></button>
+                </div>
+                <div class="modal-body">
+                    @if (Session::get('modal_redirect') == 'modal-per-create')
+                    @include('Templates.Includes.Components.alert')
+                    @endif
+                    @csrf @method('PUT')
+                    <div class="mb-3">
+                        <label for="active_days" class="form-label">Hari Aktif (Setelah dikurangi hari libur)</label>
+                        <input type="number" class="form-control" id="active_days" name="active_days" min="1" max="31" value="{{ $period->active_days }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i>
+                        Ubah
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!--START PROGRESS-->
 <div class="modal fade" id="modal-per-start-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

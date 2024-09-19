@@ -15,10 +15,14 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('id_period', 11);
             $table->char('period_name', 20);
+            $table->char('period_month', 10);
+            $table->unsignedSmallInteger('period_num_month');
+            $table->unsignedSmallInteger('period_year');
             $table->char('id_officer', 11);
             $table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
             $table->string('officer_position', 50);
+            $table->char('id_sub_team', 20);
             $table->string('officer_team', 50);
             $table->char('id_category', 11);
             $table->string('category_name', 20);

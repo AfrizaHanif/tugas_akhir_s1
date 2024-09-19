@@ -24,13 +24,10 @@ class PeriodController extends Controller
      */
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->get();
+        $periods = Period::orderBy('year', 'ASC')->orderBy('num_month', 'ASC')->get();
         return view('Pages.Admin.period', compact('periods'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //COMBINE KODE
@@ -87,6 +84,7 @@ class PeriodController extends Controller
             'id_period'=>$id_period,
             'name'=>$name_month.' '.$request->year,
             'month'=>$name_month,
+            'num_month'=>$request->month,
             'year'=>$request->year,
             'active_days'=>$request->active_days,
             'progress_status'=>'Pending',
@@ -95,6 +93,30 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.periods.index')->with('success','Tambah Periode Berhasil')->with('code_alert', 1);
+    }
+
+    public function update(Request $request, Period $period)
+    {
+        //UPDATE DATA
+        $period->update([
+            'active_days'=>$request->active_days,
+		]);
+
+        //RETURN TO VIEW
+        if($period->progress_status == 'Scoring'){
+            return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil. Jika diperlukan, segera lakukan import ulang')->with('code_alert', 1);
+        }else{
+            return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil')->with('code_alert', 1);
+        }
+    }
+
+    public function destroy(Period $period)
+    {
+        //DELETE DATA
+        $period->delete();
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.masters.periods.index')->with('success','Hapus Periode Berhasil')->with('code_alert', 1);
     }
 
     public function refresh()
@@ -129,17 +151,5 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.periods.index')->with('success','Proses Lewat Berhasil')->with('code_alert', 1);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Period $period)
-    {
-        //DELETE DATA
-        $period->delete();
-
-        //RETURN TO VIEW
-        return redirect()->route('admin.masters.periods.index')->with('success','Hapus Periode Berhasil')->with('code_alert', 1);
     }
 }

@@ -53,7 +53,7 @@ class InputController extends Controller
 
         //GET PERIOD FOR LIST
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
+        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get();
 
         //GET HISTORY
         $histories = HistoryInput::get();

@@ -110,7 +110,7 @@
                                     <ul class="dropdown-menu">
                                         <!--CHECK DATA-->
                                         <li>
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-all-view-{{ $latest_per->id_period }}">
+                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">
                                                 <i class="bi bi-database"></i>
                                                 Cek Data
                                             </a>
@@ -169,9 +169,14 @@
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Hasil Akhir</th>
-                            <th scope="col">Nilai Kedua</th>
+                            <th scope="col">
+                                <span data-bs-toggle="tooltip" data-bs-title="{{ $set_crit->name }}">
+                                    <div>Nilai Kedua</div>
+                                    <div style="font-size: 10px">({{ $set_crit->name }})</div>
+                                </span>
+                            </th>
                             <th class="col-3" scope="col">Status</th>
-                            <th class="col-1" scope="col">Setuju?</th>
+                            <th scope="col" style="width: 17%">Setuju?</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -196,6 +201,9 @@
                             </td>
                             <td>
                                 <div class="dropdown">
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $score->id_officer }}">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
                                     @if ($latest_per->progress_status == 'Finished' || $score->status == 'Revised' || $score->status == 'Rejected')
                                         @if ($latest_per->progress_status == 'Finished')
                                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
@@ -263,7 +271,20 @@
             @else
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $period->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $period->id_period }}-tab" tabindex="0">
             @endif
-                <h2>{{ $period->period_name }}</h2>
+                <div class="row align-items-center pb-2">
+                    <div class="col-5">
+                        <h2>{{ $period->period_name }}</h2>
+                    </div>
+                    <!--MENU-->
+                    <div class="col-7 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <div class="col-auto pe-0">
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-all-view-{{ $period->id_period }}">
+                                <i class="bi bi-database-down"></i>
+                                Lihat Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -271,6 +292,7 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Hasil Akhir</th>
                             <th scope="col">Nilai Kedua</th>
+                            <th class="col-1" scope="col">Detail</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -280,6 +302,11 @@
                             <td>{{ $score->officer_name }}</td>
                             <td>{{ $score->final_score }}</td>
                             <td>{{ $score->second_score }}</td>
+                            <td>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}-{{ $score->id_officer }}">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                            </td>
                         </tr>
                         @empty
                         <tr>

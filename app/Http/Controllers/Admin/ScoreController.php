@@ -46,19 +46,23 @@ class ScoreController extends Controller
         $allcriterias = Criteria::with('category')->get();
         $criterias = Criteria::get();
         $countsub = Criteria::count();
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+        $set_crit = Criteria::where('id_criteria', $setting)->first();
 
         //GET PERIODS FOR LIST
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->get();
+        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get();
 
         //dd($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() != $officers->count());
 
         //GET HISTORY DATA
+        $histories = HistoryInput::get();
         $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
-        $hofficer = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
+        $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
         //RETURN TO VIEW
-        return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'hscore', 'hofficer'));
+        return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'set_crit', 'histories', 'hscore', 'hofficers', 'hcriterias'));
     }
 
     public function get($period)
@@ -366,10 +370,14 @@ class ScoreController extends Controller
             HistoryScore::insert([
                 'id_period'=>$getperiod1->id_period,
                 'period_name'=>$getperiod1->name,
+                'period_month'=>$getperiod1->month,
+                'period_num_month'=>$getperiod1->num_month,
+                'period_year'=>$getperiod1->year,
                 'id_officer'=>$getofficer1->id_officer,
                 'officer_nip'=>$getofficer1->nip,
                 'officer_name'=>$getofficer1->name,
                 'officer_position'=>$getposition1->name,
+                'id_sub_team'=>$getteam1->id_sub_team,
                 'officer_team'=>$getteam1->name,
                 'final_score'=>$score->final_score,
                 'second_score'=>$score->second_score,
@@ -407,10 +415,14 @@ class ScoreController extends Controller
             HistoryInput::insert([
                 'id_period'=>$getperiod2->id_period,
                 'period_name'=>$getperiod2->name,
+                'period_month'=>$getperiod2->month,
+                'period_num_month'=>$getperiod2->num_month,
+                'period_year'=>$getperiod2->year,
                 'id_officer'=>$getofficer2->id_officer,
                 'officer_nip'=>$getofficer2->nip,
                 'officer_name'=>$getofficer2->name,
                 'officer_position'=>$getposition2->name,
+                'id_sub_team'=>$getteam2->id_sub_team,
                 'officer_team'=>$getteam2->name,
                 'id_category'=>$getcriteria2->id_category,
                 'category_name'=>$getcriteria2->name,

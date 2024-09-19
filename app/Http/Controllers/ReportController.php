@@ -39,18 +39,18 @@ class ReportController extends Controller
         return $pdf;
     }
 
-    public function analysis($period)
+    public function analysis($month, $year)
     {
         //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
-        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->where('is_lead', 'No')->get();
+        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
+        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $periods->id_period)->get();
+        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $periods->id_period)->where('is_lead', 'No')->get();
         //$prd_name = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first()->period_name;
 
         $alternatives = HistoryInput::with('criteria', 'officer')
         ->select('id_officer')
         ->groupBy('id_officer')
-        ->where('id_period', $period)
+        ->where('id_period', $periods->id_period)
         ->where('is_lead', 'No')
         ->getQuery()->get();
 
@@ -65,11 +65,11 @@ class ReportController extends Controller
             'weight',
             'attribute'
             )
-        ->where('id_period', $period)
+        ->where('id_period', $periods->id_period)
         ->get();
 
         $inputs = HistoryInput::with('criteria')
-        ->where('id_period', $period)
+        ->where('id_period', $periods->id_period)
         ->where('is_lead', 'No')
         ->getQuery()->get();
 
@@ -144,11 +144,28 @@ class ReportController extends Controller
         return $pdf;
     }
 
-    public function result($period)
+    public function team_result($subteam, $month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
-        $results = HistoryScore::where('id_period', $period)->orderBy('final_score', 'DESC')->get();
+        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
+        $results = HistoryScore::where('period_month', $month)->where('period_year', $year)->where('id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
+        $subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->where('id_sub_team', $subteam)->first();
+
+        //CREATE A REPORT
+        $file = 'RPT-Result-'.$subteams->id_sub_team.'-'.$periods->id_period.'.pdf';
+        $pdf = PDF::
+        loadview('Pages.PDF.teamresult', compact('periods','results','subteams'))
+        ->setPaper('a4', 'landscape')
+        ->save('PDFs/'.$file)
+        ->stream($file);
+        return $pdf;
+    }
+
+    public function result($month, $year)
+    {
+        //GET DATA
+        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
+        $results = HistoryScore::where('id_period', $periods->id_period)->orderBy('final_score', 'DESC')->get();
 
         //CREATE A REPORT
         $file = 'RPT-Result-'.$periods->id_period.'.pdf';
@@ -160,11 +177,11 @@ class ReportController extends Controller
         return $pdf;
     }
 
-    public function certificate($period)
+    public function certificate($month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first();
-        $results = HistoryScore::where('id_period', $period)->orderBy('final_score', 'DESC')->first();
+        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
+        $results = HistoryScore::where('id_period', $periods->id_period)->orderBy('final_score', 'DESC')->first();
 
         //PREPARING A CERTIFICATE
         $officer_name = $results->officer_name;
@@ -183,7 +200,8 @@ class ReportController extends Controller
         //return response()->download($output, $file);
     }
 
-    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now){
+    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now)
+    {
         //SET TEMPLATE
         $fpdi = new Fpdi;
         $fpdi->setSourceFile($source);

@@ -1,6 +1,6 @@
 <img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 40%;">
-<h1 style="text-align:center;">Laporan Karyawan Terbaik</h1>
-<h2 style="text-align:center;">Periode {{ $periods->period_name }}</h3>
+<h1 style="text-align:center;">Laporan Hasil ({{ $subteams->officer_team }})</h1>
+<h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}
 <table id="table-result">
     <thead>
@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($results->take(3) as $result)
+        @foreach ($results as $result)
         <tr>
             <th>{{ $loop->iteration }}</th>
             <td>{{ $result->officer_name }}</td>

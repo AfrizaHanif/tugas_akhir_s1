@@ -1,5 +1,5 @@
 <img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 30%;">
-<h1 style="text-align:center;">Laporan Analisis SAW</h1>
+<h1 style="text-align:center;">Laporan Analisis Data</h1>
 <h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
 <h3>Pegawai yang Terlibat</h3>
