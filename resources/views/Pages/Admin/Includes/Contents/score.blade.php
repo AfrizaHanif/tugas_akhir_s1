@@ -168,7 +168,7 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Hasil Akhir</th>
+                            <th scope="col">Nilai Akhir</th>
                             <th scope="col">
                                 <span data-bs-toggle="tooltip" data-bs-title="{{ $set_crit->name }}">
                                     <div>Nilai Kedua</div>
@@ -290,7 +290,7 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Hasil Akhir</th>
+                            <th scope="col">Nilai Akhir</th>
                             <th scope="col">Nilai Kedua</th>
                             <th class="col-1" scope="col">Detail</th>
                         </tr>

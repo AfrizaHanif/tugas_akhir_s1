@@ -29,9 +29,9 @@ class SettingController extends Controller
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Validating'){
                 if(Auth::user()->part == "Dev"){
-                    return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1);
+                    return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1);
                 }else{
-                    return redirect()->route('admin.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1);
+                    return redirect()->route('admin.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1);
                 }
             }
         }

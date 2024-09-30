@@ -4,7 +4,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.categories.store') }}" method="POST" enctype="multipart/form-data" id="form-crt-create">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kategori</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-crt-create"></button>
                 </div>
                 <div class="modal-body">
@@ -108,7 +108,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.categories.destroy', $category->id_category) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kriteria ({{ $category->id_category}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kategori ({{ $category->id_category}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -320,7 +320,7 @@
                             Batal
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-plus-lg"></i>
+                            <i class="bi bi-pencil"></i>
                             Ubah
                         </button>
                     </div>
@@ -547,7 +547,7 @@
                                 Batal
                             </button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-plus-lg"></i>
+                                <i class="bi bi-pencil"></i>
                                 Ubah
                             </button>
                         </div>

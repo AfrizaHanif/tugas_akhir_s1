@@ -24,8 +24,8 @@
     </div>
     <div class="col-md-6">
         <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-            <h2>Sorting Kedua (Validasi)</h2>
-            <p>Apabila jumlah nilai akhir dari hasil sama saat mengambil data untuk kebutuhan validasi, maka dapat disortir lagi menggunakan peraturan ini. Pengaturan ini wajib diatur untuk menghindari duplikat nilai akhir pada peringkat pertama.</p>
+            <h2>Sorting Kedua (Verifikasi)</h2>
+            <p>Apabila jumlah nilai akhir dari hasil sama saat mengambil data untuk kebutuhan verifikasi, maka dapat disortir lagi menggunakan peraturan ini. Pengaturan ini wajib diatur untuk menghindari duplikat nilai akhir pada peringkat pertama.</p>
             <select class="form-select" id="s_second_sort" name="s_second_sort">
                 <option selected disabled value="">---Pilih Kriteria---</option>
                 @foreach ($criterias as $criteria)

@@ -154,8 +154,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -163,7 +161,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
+                        <i class="bi bi-pencil"></i>
                         Ubah
                     </button>
                 </div>

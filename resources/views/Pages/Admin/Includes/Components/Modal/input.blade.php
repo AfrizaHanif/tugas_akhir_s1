@@ -410,7 +410,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
+                        <i class="bi bi-pencil"></i>
                         Ubah
                     </button>
                 </div>

@@ -28,23 +28,23 @@ class DatabaseSeeder extends Seeder
 
         /*
         DB::table('parts')->insert([
-            'id_part' => 'PRT-001',
+            'id_part' => 'PRT-002',
             'name' => 'Kepemimpinan',
         ]);
         */
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-001',
+            'id_part' => 'PRT-002',
             'name' => 'Umum',
         ]);
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-002',
+            'id_part' => 'PRT-003',
             'name' => 'Tim Teknis',
         ]);
 
         DB::table('parts')->insert([
-            'id_part' => 'PRT-999',
+            'id_part' => 'PRT-001',
             'name' => 'Developer',
         ]);
 
@@ -58,28 +58,28 @@ class DatabaseSeeder extends Seeder
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-001',
-            //'id_part' => 'PRT-001',
+            //'id_part' => 'PRT-002',
             'name' => 'Kepala BPS Jawa Timur',
             //'part' => 'Kepala BPS',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-002',
-            //'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-003',
             'name' => 'Kepala Bagian Umum',
             //'part' => 'Bagian Umum',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-003',
-            //'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-003',
             'name' => 'Pranata Keuangan APBN Penyelia',
             //'part' => 'Bagian Umum',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-004',
-            //'id_part' => 'PRT-002',
+            //'id_part' => 'PRT-003',
             'name' => 'Analis Kepegawaian Ahli Muda ',
             //'part' => 'Bagian Umum',
         ]);
@@ -148,50 +148,50 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-001',
-            'id_part' => 'PRT-001',
+            'id_team' => 'TIM-002',
+            'id_part' => 'PRT-002',
             'name' => 'Umum',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-002',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-003',
+            'id_part' => 'PRT-003',
             'name' => 'IPDS',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-003',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-004',
+            'id_part' => 'PRT-003',
             'name' => 'Diseminasi',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-004',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-005',
+            'id_part' => 'PRT-003',
             'name' => 'Sosial',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-005',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-006',
+            'id_part' => 'PRT-003',
             'name' => 'Produksi',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-006',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-007',
+            'id_part' => 'PRT-003',
             'name' => 'Distribusi',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-007',
-            'id_part' => 'PRT-002',
+            'id_team' => 'TIM-008',
+            'id_part' => 'PRT-003',
             'name' => 'Nerwilis',
         ]);
 
         DB::table('teams')->insert([
-            'id_team' => 'TIM-999',
-            'id_part' => 'PRT-999',
+            'id_team' => 'TIM-001',
+            'id_part' => 'PRT-001',
             'name' => 'Developer',
         ]);
 
@@ -205,85 +205,85 @@ class DatabaseSeeder extends Seeder
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-001',
             'id_team' => 'TIM-001',
-            'name' => 'Umum',
+            'name' => 'Developer',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-002',
             'id_team' => 'TIM-002',
-            'name' => 'Pengolahan Data',
+            'name' => 'Umum',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-003',
-            'id_team' => 'TIM-002',
-            'name' => 'Jaringan',
+            'id_team' => 'TIM-003',
+            'name' => 'Pengolahan Data',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-004',
-            'id_team' => 'TIM-002',
-            'name' => 'ZI dan SDI',
+            'id_team' => 'TIM-003',
+            'name' => 'Jaringan',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-005',
             'id_team' => 'TIM-003',
-            'name' => 'Humas dan Postat',
+            'name' => 'ZI dan SDI',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-006',
             'id_team' => 'TIM-004',
-            'name' => 'Susenas dan Sakerduk',
+            'name' => 'Humas dan Postat',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-007',
-            'id_team' => 'TIM-004',
-            'name' => 'Hansos dan Descan',
+            'id_team' => 'TIM-005',
+            'name' => 'Susenas dan Sakerduk',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-008',
             'id_team' => 'TIM-005',
-            'name' => 'Pertanian',
+            'name' => 'Hansos dan Descan',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-009',
-            'id_team' => 'TIM-005',
-            'name' => 'Industri dan PEK',
+            'id_team' => 'TIM-006',
+            'name' => 'Pertanian',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-010',
             'id_team' => 'TIM-006',
-            'name' => 'Distribusi dan Jasa',
+            'name' => 'Industri dan PEK',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-011',
-            'id_team' => 'TIM-006',
-            'name' => 'Harga',
+            'id_team' => 'TIM-007',
+            'name' => 'Distribusi dan Jasa',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-012',
             'id_team' => 'TIM-007',
-            'name' => 'Neraca Produksi dan Konsuksi',
+            'name' => 'Harga',
         ]);
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-013',
-            'id_team' => 'TIM-007',
-            'name' => 'Analisis dan IPS',
+            'id_team' => 'TIM-008',
+            'name' => 'Neraca Produksi dan Konsuksi',
         ]);
 
         DB::table('sub_teams')->insert([
-            'id_sub_team' => 'STM-999',
-            'id_team' => 'TIM-999',
-            'name' => 'Developer',
+            'id_sub_team' => 'STM-014',
+            'id_team' => 'TIM-008',
+            'name' => 'Analisis dan IPS',
         ]);
 
         //OFFICERS: Pegawai
@@ -292,7 +292,7 @@ class DatabaseSeeder extends Seeder
             'nip' => '000000000',
             'name' => 'Muhammad Afriza Hanif',
             'id_position' => 'DPT-000',
-            'id_sub_team_1' => 'STM-999',
+            'id_sub_team_1' => 'STM-001',
             'email' => 'firzavista728@gmail.com',
             'phone' => '081217248427',
             'place_birth' => 'Surabaya',
@@ -322,8 +322,8 @@ class DatabaseSeeder extends Seeder
             'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_position' => 'DPT-002',
-            'id_sub_team_1' => 'STM-001',
-            'id_sub_team_2' => 'STM-007',
+            'id_sub_team_1' => 'STM-002',
+            'id_sub_team_2' => 'STM-008',
             'email' => 'satriyo@bps.com',
             'phone' => '081234567890',
             'place_birth' => 'Surabaya',
@@ -338,7 +338,7 @@ class DatabaseSeeder extends Seeder
             'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
             'id_position' => 'DPT-003',
-            'id_sub_team_1' => 'STM-010',
+            'id_sub_team_1' => 'STM-011',
             'email' => 'laode@bps.com',
             'phone' => '081234567891',
             'place_birth' => 'Surabaya',
@@ -353,7 +353,7 @@ class DatabaseSeeder extends Seeder
             'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
             'id_position' => 'DPT-004',
-            'id_sub_team_1' => 'STM-013',
+            'id_sub_team_1' => 'STM-014',
             'email' => 'akhmad@bps.com',
             'phone' => '081234567892',
             'place_birth' => 'Surabaya',
@@ -368,8 +368,8 @@ class DatabaseSeeder extends Seeder
             'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
             'id_position' => 'DPT-006',
-            'id_sub_team_1' => 'STM-013',
-            'id_sub_team_2' => 'STM-012',
+            'id_sub_team_1' => 'STM-014',
+            'id_sub_team_2' => 'STM-013',
             'email' => 'widia@bps.com',
             'phone' => '081234567893',
             'place_birth' => 'Surabaya',
@@ -384,7 +384,7 @@ class DatabaseSeeder extends Seeder
             'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_position' => 'DPT-006',
-            'id_sub_team_1' => 'STM-008',
+            'id_sub_team_1' => 'STM-009',
             'email' => 'peni@bps.com',
             'phone' => '081234567894',
             'place_birth' => 'Surabaya',
@@ -399,7 +399,7 @@ class DatabaseSeeder extends Seeder
             'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
             'id_position' => 'DPT-007',
-            'id_sub_team_1' => 'STM-008',
+            'id_sub_team_1' => 'STM-009',
             'email' => 'abdullah@bps.com',
             'phone' => '081234567895',
             'place_birth' => 'Surabaya',

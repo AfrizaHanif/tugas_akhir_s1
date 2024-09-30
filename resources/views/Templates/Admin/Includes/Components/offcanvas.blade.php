@@ -80,7 +80,7 @@
                             <li>
                                 <a href="/admin/inputs/validate" class="{{ (request()->is('admin/inputs/validate*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
-                                    Validasi Input
+                                    Verifikasi Input
                                 </a>
                             </li>
                             @endif

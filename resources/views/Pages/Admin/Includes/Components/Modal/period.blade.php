@@ -81,7 +81,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
+                        <i class="bi bi-pencil"></i>
                         Ubah
                     </button>
                 </div>
@@ -107,11 +107,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
                         <i class="bi bi-backspace"></i>
                         Tidak
                     </button>
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-primary">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>
@@ -169,11 +169,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
                         <i class="bi bi-backspace"></i>
                         Tidak
                     </button>
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-primary">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>

@@ -39,7 +39,7 @@ class CriteriaController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
             }
         }
 
@@ -112,7 +112,7 @@ class CriteriaController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
             }
         }
 

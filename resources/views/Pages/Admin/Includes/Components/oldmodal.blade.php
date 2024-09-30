@@ -1570,7 +1570,7 @@
                                             @elseif ($s->status == 'In Review')
                                             <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
                                             @elseif ($s->status == 'Final')
-                                            <span class="badge text-bg-success">Hasil Akhir</span>
+                                            <span class="badge text-bg-success">Nilai Akhir</span>
                                             @elseif ($s->status == 'Need Fix')
                                             <span class="badge text-bg-danger">Perlu Perbaikan</span>
                                             @endif
@@ -1621,7 +1621,7 @@
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda telah selesai melakukan validasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
+                            Apakah anda telah selesai melakukan verifikasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
                         </div>
                     </div>
                     <div class="modal-footer">

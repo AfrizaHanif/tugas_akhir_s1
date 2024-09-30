@@ -53,7 +53,7 @@ class OfficerController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
             }
         }
 
@@ -153,7 +153,7 @@ class OfficerController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses validasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
             }
         }
 

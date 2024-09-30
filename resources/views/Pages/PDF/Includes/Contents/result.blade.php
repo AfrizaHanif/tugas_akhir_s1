@@ -9,7 +9,7 @@
             <th>Nama</th>
             <th>Jabatan</th>
             <th>Tim Teknis Utama</th>
-            <th>Hasil Akhir</th>
+            <th>Nilai Akhir</th>
         </tr>
     </thead>
     <tbody>

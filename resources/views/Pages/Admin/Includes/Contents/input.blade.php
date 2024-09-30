@@ -186,7 +186,7 @@
                                     @elseif ($s->status == 'In Review')
                                     <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
                                     @elseif ($s->status == 'Final')
-                                    <span class="badge text-bg-success">Hasil Akhir</span>
+                                    <span class="badge text-bg-success">Nilai Akhir</span>
                                     @elseif ($s->status == 'Need Fix')
                                     <span class="badge text-bg-danger">Perlu Perbaikan</span>
                                     @elseif ($s->status == 'Fixed')

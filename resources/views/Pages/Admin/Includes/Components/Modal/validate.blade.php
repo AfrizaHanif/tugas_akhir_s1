@@ -31,7 +31,7 @@
                                         @elseif ($s->status == 'In Review')
                                         <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
                                         @elseif ($s->status == 'Final')
-                                        <span class="badge text-bg-success">Hasil Akhir</span>
+                                        <span class="badge text-bg-success">Nilai Akhir</span>
                                         @elseif ($s->status == 'Need Fix')
                                         <span class="badge text-bg-danger">Perlu Perbaikan</span>
                                         @endif
@@ -74,15 +74,15 @@
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="mb-3">
-                        <div class="col">
+                    <div class="mb-3" hidden>
+                        <div class="col" hidden>
                             <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" hidden>
                         </div>
                     </div>
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda telah selesai melakukan validasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
+                        Apakah anda telah selesai melakukan verifikasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -110,8 +110,8 @@
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="mb-3">
-                        <div class="col">
+                    <div class="mb-3" hidden>
+                        <div class="col" hidden>
                             <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" hidden>
                         </div>
                     </div>
@@ -141,13 +141,13 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.validate.yesall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penyetujuan Hasil Akhir ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $period->id_period}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="mb-3">
-                        <div class="col">
+                    <div class="mb-3" hidden>
+                        <div class="col" hidden>
                             <input type="text" class="form-control" id="id" name="id" value="{{ $period->id_period }}" hidden>
                         </div>
                     </div>
@@ -177,13 +177,13 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.validate.noall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Hasil Akhir ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $period->id_period}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="mb-3">
-                        <div class="col">
+                    <div class="mb-3" hidden>
+                        <div class="col" hidden>
                             <input type="text" class="form-control" id="id" name="id" value="{{ $period->id_period }}" hidden>
                         </div>
                     </div>
@@ -198,7 +198,7 @@
                         <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-danger">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>
@@ -214,13 +214,13 @@
             <div class="modal-content">
                 <form action="{{ route('admin.inputs.validate.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penyetujuan Hasil Akhir ({{ $score->id}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->id}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="mb-3">
-                            <div class="col">
+                        <div class="mb-3" hidden>
+                            <div class="col" hidden>
                                 <input type="text" class="form-control" id="id" name="id" value="{{ $score->id }}" hidden>
                             </div>
                         </div>
@@ -250,13 +250,13 @@
             <div class="modal-content">
                 <form action="{{ route('admin.inputs.validate.no', $score->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Hasil Akhir ({{ $score->id}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->id}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="mb-3">
-                            <div class="col">
+                        <div class="mb-3" hidden>
+                            <div class="col" hidden>
                                 <input type="text" class="form-control" id="id" name="id" value="{{ $score->id }}" hidden>
                             </div>
                         </div>
@@ -271,7 +271,7 @@
                             <i class="bi bi-x-lg"></i>
                             Tidak
                         </button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-danger">
                             <i class="bi bi-check-lg"></i>
                             Ya
                         </button>

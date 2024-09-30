@@ -44,7 +44,7 @@
                 @elseif ($period->progress_status == "Scoring")
                 <span class="badge text-bg-primary">Dalam Penilaian</span>
                 @elseif ($period->progress_status == "Validating")
-                <span class="badge text-bg-primary">Dalam Validasi</span>
+                <span class="badge text-bg-primary">Dalam Verifikasi</span>
                 @elseif ($period->progress_status == "Pending")
                 <span class="badge text-bg-warning">Pending</span>
                 @endif
@@ -62,7 +62,7 @@
                         @if ($period->progress_status == "Finished")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena proses pemilihan karyawan terbaik pada periode ini sudah selesai.">
                         @elseif ($period->progress_status == "Validating")
-                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam validasi penilaian.">
+                        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam verifikasi penilaian.">
                         @elseif ($period->progress_status == "Skipped")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena periode ini tidak dilakukan pemilihan karyawan terbaik.">
                         @endif

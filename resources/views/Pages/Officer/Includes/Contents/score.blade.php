@@ -26,7 +26,7 @@
                         <tr class="table-primary">
                             <th class="col-1" scope="col">#</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Hasil Akhir</th>
+                            <th scope="col">Nilai Akhir</th>
                         </tr>
                     </thead>
                     <tbody>
