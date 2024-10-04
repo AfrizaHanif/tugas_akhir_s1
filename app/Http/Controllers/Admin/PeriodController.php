@@ -76,7 +76,7 @@ class PeriodController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create');
+            return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create')->with('code_alert', 2);
         }
 
         //STORE DATA
@@ -104,7 +104,7 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         if($period->progress_status == 'Scoring'){
-            return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil. Jika diperlukan, segera lakukan import ulang')->with('code_alert', 1);
+            return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil. Jika diperlukan, silahkan lakukan import ulang')->with('code_alert', 1);
         }else{
             return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil')->with('code_alert', 1);
         }
@@ -128,7 +128,7 @@ class PeriodController extends Controller
     public function start($period)
     {
         //CHECK RUNNING
-        $count = Period::whereIn('progress_status', ['Scoring', 'Voting'])->count();
+        $count = Period::where('progress_status', 'Scoring')->count();
         if($count != 0){
             return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Pemilihan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
         }

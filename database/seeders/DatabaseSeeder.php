@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         //PARTS: Kategori Bagian
         DB::table('parts')->insert([
-            'id_part' => 'PRT-000',
+            'id_part' => 'PRT-001',
             'name' => 'Kepemimpinan',
         ]);
 
@@ -43,18 +43,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'Tim Teknis',
         ]);
 
+        /*
         DB::table('parts')->insert([
             'id_part' => 'PRT-001',
             'name' => 'Developer',
         ]);
+        */
 
         //POSITIONS: Jabatan
+        /*
         DB::table('positions')->insert([
             'id_position' => 'DPT-000',
             //'id_part' => 'PRT-000',
             'name' => 'Developer',
             //'part' => 'Developer',
         ]);
+        */
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-001',
@@ -142,8 +146,8 @@ class DatabaseSeeder extends Seeder
 
         //TEAMS: Tim Fungsi
         DB::table('teams')->insert([
-            'id_team' => 'TIM-000', //TIM-000-xxx
-            'id_part' => 'PRT-000',
+            'id_team' => 'TIM-001', //TIM-000-xxx
+            'id_part' => 'PRT-001',
             'name' => 'Pimpinan BPS',
         ]);
 
@@ -189,24 +193,28 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nerwilis',
         ]);
 
+        /*
         DB::table('teams')->insert([
             'id_team' => 'TIM-001',
             'id_part' => 'PRT-001',
             'name' => 'Developer',
         ]);
+        */
 
         //SUB TEAMS: Pecahan Tim
         DB::table('sub_teams')->insert([
-            'id_sub_team' => 'STM-000',
-            'id_team' => 'TIM-000',
+            'id_sub_team' => 'STM-001',
+            'id_team' => 'TIM-001',
             'name' => 'Pimpinan BPS',
         ]);
 
+        /*
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-001',
             'id_team' => 'TIM-001',
             'name' => 'Developer',
         ]);
+        */
 
         DB::table('sub_teams')->insert([
             'id_sub_team' => 'STM-002',
@@ -287,9 +295,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //OFFICERS: Pegawai
+        /*
         DB::table('officers')->insert([
             'id_officer' => 'OFF-000',
-            'nip' => '000000000',
+            'nip' => '100000000',
             'name' => 'Muhammad Afriza Hanif',
             'id_position' => 'DPT-000',
             'id_sub_team_1' => 'STM-001',
@@ -301,13 +310,14 @@ class DatabaseSeeder extends Seeder
             'religion' => 'Islam',
             'is_lead' => 'Yes',
         ]);
+        */
 
         DB::table('officers')->insert([
             'id_officer' => 'OFF-001',
             'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_position' => 'DPT-001',
-            'id_sub_team_1' => 'STM-000',
+            'id_sub_team_1' => 'STM-001',
             'email' => 'izqpli@yahoo.com',
             'phone' => '08123545822',
             'place_birth' => 'Surabaya',
@@ -416,7 +426,7 @@ class DatabaseSeeder extends Seeder
             //'email' => 'dev@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Dev',
-            'id_officer' => 'OFF-000',
+            //'id_officer' => 'OFF-000',
         ]);
 
         DB::table('users')->insert([
@@ -425,7 +435,7 @@ class DatabaseSeeder extends Seeder
             //'email' => 'testadmin@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Admin',
-            'id_officer' => 'OFF-002',
+            //'id_officer' => 'OFF-002',
         ]);
 
         /*
@@ -463,7 +473,7 @@ class DatabaseSeeder extends Seeder
             //'email' => 'testkbps@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBPS',
-            'id_officer' => 'OFF-001',
+            //'id_officer' => 'OFF-001',
         ]);
 
         //PERIOODS: Periode
@@ -474,7 +484,7 @@ class DatabaseSeeder extends Seeder
             'num_month' => '1',
             'year' => '2024',
             'active_days' => '23',
-            'progress_status' => 'Scoring',
+            'progress_status' => 'Pending',
             'import_status' => 'Clear',
         ]);
 

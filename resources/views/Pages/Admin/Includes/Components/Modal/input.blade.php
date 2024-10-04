@@ -116,19 +116,23 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.data.destroyall', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Semua Input ({{ $latest_per->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Semua Input ({{ $latest_per->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menghapus seluruh data tersebut? Ini akan berpengaruh dengan total penilaian.
+                        Apakah anda ingin menghapus seluruh data nilai yang ada?
+                        <ul>
+                            <li>Data input yang telah terdaftar akan dihapus.</li>
+                            <li>Segera lakukan lakukan <strong>Import Ulang</strong> setelah melakukan proses ini.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-backspace"></i>
+                        <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
                     @csrf
@@ -147,7 +151,7 @@
         <div class="modal-content rounded-4 shadow">
             <form action="{{ route('admin.inputs.data.export.latest') }}" method="post" enctype="multipart/form-data">
                 <div class="modal-header border-bottom-0">
-                    <h1 class="modal-title fs-5">Export Input Data ({{ $latest_per->id_period }})</h1>
+                    <h1 class="modal-title fs-5">Export Input Data ({{ $latest_per->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body py-0">
@@ -162,324 +166,29 @@
         </div>
     </div>
 </div>
-@foreach ($officers as $officer)
-<!--CHOICE METHODS (INPUT)-->
-<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-inp-precre-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content rounded-4 shadow">
-            <div class="modal-header border-bottom-0">
-                <h1 class="modal-title fs-5">Pilih Metode Input</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-0">
-                <p>Untuk mempercepat pengisian nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengisi nilai.</p>
-            </div>
-            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
-                @if (!empty($latest_per))
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">Import dari Excel (Disarankan)</button>
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">Isi Manual</button>
-                @endif
-                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--CHOICE METHODS (UPDATE)-->
-<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-inp-preupd-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content rounded-4 shadow">
-            <div class="modal-header border-bottom-0">
-                <h1 class="modal-title fs-5">Pilih Metode Update</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-0">
-                <p>Untuk mempercepat update nilai, disarankan menggunakan Import dari Excel untuk memudahkan anda saat mengupdate nilai.</p>
-            </div>
-            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
-                @if (!empty($latest_per))
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">Import dari Excel (Disarankan)</button>
-                <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-update-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">Update Manual</button>
-                @endif
-                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--INSERT INPUT-->
-<div class="modal modal-lg fade" id="modal-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.inputs.data.store') }}" method="POST" enctype="multipart/form-data" id="form-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Input ({{ $officer->name }})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-inp-create-{{ $latest_per->id_period }}-{{ $officer->id_officer }}"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
-                    <div class="row justify-content-center g-4">
-                        <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                        <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
-                                    </div>
-                                    <div class="col">
-                                        <label for="id_period" class="form-label">Kode Periode</label>
-                                        <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $latest_per->id_period }}" readonly>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
-                                    @foreach ($categories as $category)
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="input-create-{{ $officer->id_officer }}-{{ $category->id_category }}-tab" data-bs-toggle="tab" data-bs-target="#input-create-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" type="button" role="tab" aria-controls="input-create-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ Str::limit($category->name, 15) }}</button>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    @foreach ($categories as $category)
-                                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }} pt-2" id="input-create-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" role="tabpanel" aria-labelledby="input-create-{{ $officer->id_officer }}-{{ $category->id_category }}-tab" tabindex="0">
-                                        @forelse ($criterias->where('id_category', $category->id_category) as $criteria)
-                                        <div class="mb-3">
-                                            <label for="{{ $criteria->id_criteria }}" class="form-label">{{ $criteria->name }}</label>
-                                            <select class="form-select" id="{{ $criteria->id_criteria }}" name="{{ $criteria->id_criteria }}" required>
-                                                <option selected disabled value="">---Pilih Pilihan---</option>
-                                                @foreach ($crips->where('id_criteria', $criteria->id_criteria) as $crip)
-                                                <option value="{{ $crip->score }}" {{ old($criteria->id_criteria) ==  $crip->id_criteria ? 'selected' : null }}>
-                                                    {{ $crip->score }}. {{ $crip->name }}
-                                                    @if($crip->value_type == 'Less')
-                                                    (Range: 0 - {{ $crip->value_from }})
-                                                    @elseif($crip->value_type == 'More')
-                                                    (Range: {{ $crip->value_from }} - {{ $criteria->max }})
-                                                    @else
-                                                    (Range: {{ $crip->value_from }} - {{ $crip->value_to}})
-                                                    @endif
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        @empty
-                                        <div class="alert alert-danger" role="alert">
-                                            Tidak ada data sub kriteria
-                                        </div>
-                                        @endforelse
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="alert alert-info" role="alert">
-                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
-                                    <ol>
-                                        <li>Pengisian secara manual hanya dilakukan jika proses import tidak dapat berjalan</li>
-                                        <li>Isi sesuai dengan data yang ada di aplikasi</li>
-                                        <ol>
-                                            <li>BackOffice: Presensi dan CKP</li>
-                                            <li>KipApp: BerAkhlak</li>
-                                        </ol>
-                                        <li>Periksa kembali hasil input anda sebelum dimasukkan ke dalam sistem</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
-                        Tambah
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!--UPDATE INPUT-->
-<div class="modal modal-lg fade" id="modal-inp-update-{{ $latest_per->id_period }}-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.inputs.data.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Input ({{ $officer->id_officer }})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf @method('PUT')
-                    <div class="row justify-content-center g-4">
-                        <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                        <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
-                                    </div>
-                                    <div class="col">
-                                        <label for="id_period" class="form-label">Kode Periode</label>
-                                        <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $latest_per->id_period }}" readonly>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
-                                    @foreach ($categories as $category)
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="input-update-{{ $officer->id_officer }}-{{ $category->id_category }}-tab" data-bs-toggle="tab" data-bs-target="#input-update-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" type="button" role="tab" aria-controls="input-update-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ Str::limit($category->name, 15) }}</button>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    @foreach ($categories as $category)
-                                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }} pt-2" id="input-update-{{ $officer->id_officer }}-{{ $category->id_category }}-tab-pane" role="tabpanel" aria-labelledby="input-update-{{ $officer->id_officer }}-{{ $category->id_category }}-tab" tabindex="0">
-                                        @forelse ($criterias->where('id_category', $category->id_category) as $criteria)
-                                            @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $input)
-                                            <div class="mb-3">
-                                                <label for="{{ $criteria->id_criteria }}" class="form-label">{{ $criteria->name }}</label>
-                                                <select class="form-select" id="{{ $criteria->id_criteria }}" name="{{ $criteria->id_criteria }}" required>
-                                                    <option selected disabled value="">---Pilih Pilihan---</option>
-                                                    @foreach ($crips->where('id_criteria', $criteria->id_criteria) as $crip)
-                                                    <option value="{{ $crip->score }}" {{ $input->input ==  $crip->score ? 'selected' : null }}>
-                                                        {{ $crip->score }}. {{ $crip->name }}
-                                                        @if($crip->value_type == 'Less')
-                                                        (Range: 0 - {{ $crip->value_from }})
-                                                        @elseif($crip->value_type == 'More')
-                                                        (Range: {{ $crip->value_from }} - {{ $criteria->max }})
-                                                        @else
-                                                        (Range: {{ $crip->value_from }} - {{ $crip->value_to}})
-                                                        @endif
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @empty
-                                            <div class="mb-3">
-                                                <label for="{{ $criteria->id_criteria }}" class="form-label">{{ $criteria->name }}</label>
-                                                <select class="form-select" id="{{ $criteria->id_criteria }}" name="{{ $criteria->id_criteria }}" required>
-                                                    <option selected disabled value="">---Pilih Pilihan---</option>
-                                                    @foreach ($crips->where('id_criteria', $criteria->id_criteria) as $crip)
-                                                    <option value="{{ $crip->score }}" {{ old($criteria->id_criteria) ==  $crip->id_criteria ? 'selected' : null }}>
-                                                        {{ $crip->score }}. {{ $crip->name }}
-                                                        @if($crip->value_type == 'Less')
-                                                        (Range: 0 - {{ $crip->value_from }})
-                                                        @elseif($crip->value_type == 'More')
-                                                        (Range: {{ $crip->value_from }} - {{ $criteria->max }})
-                                                        @else
-                                                        (Range: {{ $crip->value_from }} - {{ $crip->value_to}})
-                                                        @endif
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @endforelse
-                                        @empty
-                                        <div class="alert alert-danger" role="alert">
-                                            Tidak ada data sub kriteria
-                                        </div>
-                                        @endforelse
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="alert alert-info" role="alert">
-                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
-                                    <ol>
-                                        <li>Pengisian secara manual hanya dilakukan jika proses import tidak dapat berjalan</li>
-                                        <li>Isi sesuai dengan data yang ada di aplikasi</li>
-                                        <ol>
-                                            <li>BackOffice: Presensi dan CKP</li>
-                                            <li>KipApp: BerAkhlak</li>
-                                        </ol>
-                                        <li>Periksa kembali hasil input anda sebelum dimasukkan ke dalam sistem</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-pencil"></i>
-                        Ubah
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!--DELETE INPUT-->
-<div class="modal fade" id="modal-inp-delete-{{ $latest_per->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.inputs.data.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Input ({{ $officer->id_officer}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label for="id_officer" class="form-label">Kode Pegawai</label>
-                            <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
-                        </div>
-                        <div class="col">
-                            <label for="id_period" class="form-label">Kode Periode</label>
-                            <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $latest_per->id_period }}" readonly>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="alert alert-warning" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
-                        <br/>
-                        Apakah anda ingin menghapus data tersebut? Ini akan berpengaruh dengan total penilaian.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-backspace"></i>
-                        Tidak
-                    </button>
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endforeach
 <!--CONVERT DATA-->
 <div class="modal fade" id="modal-inp-convert-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ route('admin.inputs.data.convert', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Konversi Data ({{ $latest_per->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Konversi Data ({{ $latest_per->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin melakukan konversi penilaian? Pastikan data yang telah diimport sudah benar. Jika tidak, periksa kembali data yang ada.
+                        Apakah anda ingin melakukan konversi penilaian?
+                        <ul>
+                            <li>Pastikan data yang telah terdaftar sudah benar.</li>
+                            <li>Jika tidak, periksa kembali data yang ada.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-backspace"></i>
+                        <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
                     @csrf
@@ -492,29 +201,84 @@
         </div>
     </div>
 </div>
+<!--CHOICE METHODS (REFRESH)-->
+<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-inp-refresh-{{ $latest_per->id_period }}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5">Pilih Metode Refresh</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                <button type="button" class="btn btn-lg btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-convert-{{ $latest_per->id_period }}">Convert Ulang (Refresh)</button>
+                <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-reset-{{ $latest_per->id_period }}">Reset ke RAW</button>
+                <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--REFRESH DATA-->
-<div class="modal fade" id="modal-inp-refresh-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-inp-refresh-convert-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ route('admin.inputs.data.refresh', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Refresh Data ({{ $latest_per->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Refresh Data ({{ $latest_per->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin melakukan refresh penilaian? Gunakan fitur ini setelah melakukan perubahan kriteria.
+                        Apakah anda ingin melakukan refresh data nilai?
+                        <ul>
+                            <li>Gunakan fitur ini jika anda telah mengubah <strong>Data Crips</strong>.</li>
+                            <li>Hasil konversi akan dihitung ulang setelah melakukan refresh nilai.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-backspace"></i>
+                        <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
                     @csrf
                     <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--RESET DATA-->
+<div class="modal fade" id="modal-inp-refresh-reset-{{ $latest_per->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.inputs.data.reset', $latest_per->id_period) }}" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Reset Data ({{ $latest_per->name}})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                        <br/>
+                        Apakah anda ingin melakukan reset data nilai?
+                        <ul>
+                            <li>Hasil konversi akan hilang setelah melakukan reset nilai.</li>
+                            <li>Segera lakukan <strong>Konversi Ulang</strong> setelah melakukan proses ini.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    @csrf
+                    <button type="submit" class="btn btn-danger">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>
@@ -534,9 +298,9 @@
 <div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-{{ $hperiod->id_period }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
-            <form action="{{ route('admin.inputs.data.export.old', $period->id_period) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.inputs.data.export.old', $hperiod->id_period) }}" method="post" enctype="multipart/form-data">
                 <div class="modal-header border-bottom-0">
-                    <h1 class="modal-title fs-5">Export Input Data ({{ $period->id_period }})</h1>
+                    <h1 class="modal-title fs-5">Export Input Data ({{ $hperiod->period_name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body py-0">
@@ -544,7 +308,7 @@
                 </div>
                 <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
                     @csrf
-                    <button type="submit" class="btn btn-lg btn-primary" id="exportToastBtn-{{ $period->id_period }}">Export Data</button>
+                    <button type="submit" class="btn btn-lg btn-primary" id="exportToastBtn-{{ $hperiod->id_period }}">Export Data</button>
                     <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </form>

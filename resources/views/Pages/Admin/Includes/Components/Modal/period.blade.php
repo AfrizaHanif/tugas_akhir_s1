@@ -62,7 +62,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.periods.update', $period->id_period) }}" method="POST" enctype="multipart/form-data" id="form-per-create">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Periode</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Periode ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-per-create"></button>
                 </div>
                 <div class="modal-body">
@@ -95,7 +95,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.periods.start', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Mulai Proses Pemilihan Karyawan Terbaik ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Mulai Proses Pemilihan Karyawan Terbaik ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -126,7 +126,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.periods.skip', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Lewati Periode ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Lewati Periode ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -151,44 +151,13 @@
         </div>
     </div>
 </div>
-<!--FINISH PROGRESS-->
-<div class="modal fade" id="modal-per-finish-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('admin.masters.periods.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Selesai Proses Karyawan Terbaik ({{ $period->id_period}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
-                    <div class="alert alert-warning" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
-                        <br/>
-                        Apakah anda ingin menyelesaikan proses karyawan terbaik pada periode ini? Pastikan seluruh pegawai tersebut telah melakukan pemilihan pegawai yang akan dijadikan sebagai karyawan terbaik pada periode ini.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-                        <i class="bi bi-backspace"></i>
-                        Tidak
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <!--DELETE PERIOD-->
 <div class="modal fade" id="modal-per-delete-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{ route('admin.masters.periods.destroy', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Periode ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Periode ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

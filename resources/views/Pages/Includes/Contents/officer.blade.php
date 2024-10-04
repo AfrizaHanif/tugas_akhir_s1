@@ -19,17 +19,17 @@
             <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
             @if (Request::is('officers/search*') || Request::is('admin/masters/officers/search*') || Request::is('developer/masters/officers/search*'))
             <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
-            @if (!empty(Auth::user()->part))
-                @if (Request::is('officers*'))
+                @if (!empty(Auth::user()->part))
+                    @if (Request::is('officers*'))
+                    <a class="btn btn-outline-secondary" type="button" href="{{ route('officers.index') }}">Kembali</a>
+                    @elseif (Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
+                    <a class="btn btn-outline-secondary" type="button" href="{{ route('developer.masters.officers.index') }}">Kembali</a>
+                    @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+                    <a class="btn btn-outline-secondary" type="button" href="{{ route('admin.masters.officers.index') }}">Kembali</a>
+                    @endif
+                @else
                 <a class="btn btn-outline-secondary" type="button" href="{{ route('officers.index') }}">Kembali</a>
-                @elseif (Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
-                <a class="btn btn-outline-secondary" type="button" href="{{ route('developer.masters.officers.index') }}">Kembali</a>
-                @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
-                <a class="btn btn-outline-secondary" type="button" href="{{ route('admin.masters.officers.index') }}">Kembali</a>
                 @endif
-            @else
-            <a class="btn btn-outline-secondary" type="button" href="{{ route('officers') }}">Kembali</a>
-            @endif
             @else
             <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
             @endif
@@ -170,7 +170,7 @@
                         <!--MENU-->
                         @if (!empty(Auth::user()->part))
                             @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
-                                @if ($part->id_part == 'PRT-000')
+                                @if ($part->id_part == 'PRT-001')
                                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}" hidden>
                                     <i class="bi bi-person-plus"></i>
                                     Tambah Pegawai
@@ -197,7 +197,7 @@
                 <nav>
                     <div class="nav nav-pills" id="teams-tab" role="tablist">
                         @foreach ($teams->where('id_part', $part->id_part) as $team)
-                            @if ($team->id_team == 'TIM-000')
+                            @if ($team->id_team == 'TIM-001')
                             <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $part->id_part }}-{{ $team->id_team }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" type="button" role="tab" aria-controls="{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}" hidden>{{ $team->name }}</button>
                             @else
                             <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $part->id_part }}-{{ $team->id_team }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" type="button" role="tab" aria-controls="{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $team->name }}</button>

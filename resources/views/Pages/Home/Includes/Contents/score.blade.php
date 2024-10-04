@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Pegawai Terbaik</h1>
+<h1 class="text-center mb-4">Karyawan Terbaik</h1>
 <div class="row">
     <!--PERIOD PICKER-->
     <div class="col-md-3">

@@ -9,7 +9,7 @@
             <li class="nav-item">
                 <a href="/admin" class="{{ (request()->is('admin')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                     <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#dashboard"/></svg>
-                    {{ Auth::user()->part }}
+                    Dashboard
                 </a>
             </li>
             @if (Auth::user()->part == "KBU" || Auth::user()->part == "KTT" || Auth::user()->part == "KBPS")
@@ -90,8 +90,14 @@
     <!--USER MENU-->
     <div class="dropup">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-            <strong>{{ Str::limit(Auth::user()->officer->name, 19); }}</strong>
+            <snap class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="{{ Auth::user()->username }}">
+                @if (Auth::user()->part == 'Admin')
+                <img src="{{ url('Images/User/'.Auth::user()->part.'.png') }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" alt="" width="32" height="32" style="object-fit:cover;" class="rounded me-2">
+                @elseif (Auth::user()->part == 'KBPS')
+                <img src="{{ url('Images/User/'.Auth::user()->part.'.png') }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" alt="" width="32" height="32" style="object-fit:cover;" class="rounded me-2">
+                @endif
+                </snap>
+            <strong>{{ Auth::user()->part }}</strong>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow mx-0 w-account-menu">
             <li>

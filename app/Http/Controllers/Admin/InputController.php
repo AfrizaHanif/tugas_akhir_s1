@@ -31,19 +31,16 @@ class InputController extends Controller
     public function index()
     {
         //GET DATA
-        $officers = Officer::with('position', 'user')
+        $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){
-            $query->where('name', 'Developer');
-        })
-        ->whereDoesntHave('user', function($query){
-            $query->whereIn('part', ['KBPS']);
+            $query->where('name', 'LIKE', 'Kepala BPS%');
         })
         ->orderBy('name', 'ASC')
         ->get();
         $inputs = Input::get();
         //$input_raws = InputRAW::get();
         $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending'])->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get();
         $categories = Category::with('criteria')->get();
         $allcriterias = Criteria::with('category')->get();
         $criterias = Criteria::get();
@@ -98,7 +95,7 @@ class InputController extends Controller
                 Input::where('id_input', $id_input)->update([
                     'status' => 'Pending',
                 ]);
-            }elseif($latest_per->progress_status == 'Validating'){
+            }elseif($latest_per->progress_status == 'Verifying'){
                 Input::where('id_input', $id_input)->update([
                     'status' => 'Fixed',
                 ]);
@@ -152,7 +149,7 @@ class InputController extends Controller
                 Input::where('id_input', $id_input)->update([
                     'status' => 'Pending',
                 ]);
-            }elseif($latest_per->progress_status == 'Validating'){
+            }elseif($latest_per->progress_status == 'Verifying'){
                 Input::where('id_input', $id_input)->update([
                     'status' => 'Fixed',
                 ]);
@@ -248,7 +245,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->progress_status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Verifying'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -291,7 +288,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->progress_status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Verifying'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -334,7 +331,7 @@ class InputController extends Controller
                         })
                         ->delete();
                         */
-                    }elseif($latest_per->progress_status == 'Validating'){
+                    }elseif($latest_per->progress_status == 'Verifying'){
                         Input::with('criteria')
                         ->whereHas('criteria', function($query){
                             $query->with('category')
@@ -381,7 +378,7 @@ class InputController extends Controller
                             $query->where('source', 'Presensi');
                         });
                     })->get();
-                }elseif($latest_per->progress_status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Verifying'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -405,7 +402,7 @@ class InputController extends Controller
                             $query->where('source', 'SKP');
                         });
                     })->get();
-                }elseif($latest_per->progress_status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Verifying'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -429,7 +426,7 @@ class InputController extends Controller
                             $query->where('source', 'CKP');
                         });
                     })->get();
-                }elseif($latest_per->progress_status == 'Validating'){
+                }elseif($latest_per->progress_status == 'Verifying'){
                     $inputs = Input::with('criteria')
                     ->whereHas('criteria', function($query){
                         $query->with('category')
@@ -472,7 +469,7 @@ class InputController extends Controller
         foreach($criterias as $criteria){
             foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
                 foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){
-                    //dd($input->input.'<='.$crip->value_from);
+                    //dd(($input->input >= 0) && ($input->input <= $crip->value_from));
                     if(($input->input >= 0) && ($input->input <= $crip->value_from) && ($crip->value_type == 'Less')){
                         //($input->input <= $crip->value_from) && ($crip->value_type == 'Less')
                         Input::where('id_input', $input->id_input)->update([
@@ -498,7 +495,7 @@ class InputController extends Controller
             Input::where('status', 'Not Converted')->update([
                 'status' => 'Pending',
             ]);
-        }elseif($latest_per->progress_status == 'Validating'){
+        }elseif($latest_per->progress_status == 'Verifying'){
             Input::where('status', 'Not Converted')->update([
                 'status' => 'Fixed',
             ]);
@@ -523,7 +520,11 @@ class InputController extends Controller
         ]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Konversi Data Berhasil')->with('code_alert', 1);
+        return redirect()
+        ->route('admin.inputs.data.index')
+        ->withInput(['tab_redirect'=>'pills-'.$period])
+        ->with('success','Konversi Data Berhasil')
+        ->with('code_alert', 1);
     }
 
     public function refresh($period)
@@ -583,10 +584,31 @@ class InputController extends Controller
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Refresh Data Berhasil')->with('code_alert', 1);
     }
 
+    public function reset($period)
+    {
+        //MOVE INPUT RAW TO INPUT
+        $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        foreach($move as $m){
+            $m->update([
+                'input' => $m->input_raw,
+                'status' => 'Not Converted',
+            ]);
+        }
+
+        //UPDATE IMPORT STATUS
+        Period::where('id_period', $period)->update([
+            'import_status'=>'Not Clear',
+        ]);
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Reset Data Berhasil')->with('code_alert', 1);
+    }
+
+
     public function export_latest()
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
 
         //GET EXPORT FILE
         return Excel::download(new InputsExport($latest_per), 'INP-Backup-'.$latest_per->id_period.'.xlsx');

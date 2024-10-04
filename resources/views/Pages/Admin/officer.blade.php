@@ -44,17 +44,17 @@
     $(document).ready(function () {
         $('#parts-tab button[data-bs-target="#{{ old('tab_redirect') }}"]').trigger("click")
     });
-</script>
+</script><!--AUTO SWITCH TAB (PART)-->
 <script>
     $(document).ready(function () {
         $('#teams-tab button[data-bs-target="#{{ old('sub_tab_redirect') }}"]').trigger("click")
     });
-</script>
+</script><!--AUTO SWITCH TAB (TEAMS)-->
 <script>
     $(document).ready(function () {
         $('#teams-modal-tab button[data-bs-target="#{{ old('modal_tab_redirect') }}"]').trigger("click")
     });
-</script>
+</script><!--AUTO SWITCH TAB (VIEW TEAMS AND SUB TEAMS)-->
 <script>
     const toastTrigger = document.getElementById('exportToastBtn')
     const toastLiveExample = document.getElementById('exportToast')

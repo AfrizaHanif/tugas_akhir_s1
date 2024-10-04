@@ -43,7 +43,7 @@
                 <span class="badge text-bg-secondary">Dilewatkan</span>
                 @elseif ($period->progress_status == "Scoring")
                 <span class="badge text-bg-primary">Dalam Penilaian</span>
-                @elseif ($period->progress_status == "Validating")
+                @elseif ($period->progress_status == "Verifying")
                 <span class="badge text-bg-primary">Dalam Verifikasi</span>
                 @elseif ($period->progress_status == "Pending")
                 <span class="badge text-bg-warning">Pending</span>
@@ -58,10 +58,10 @@
             </td>
             <td>
                 <div class="dropdown">
-                    @if ($period->progress_status == "Finished" || $period->progress_status == "Validating" ||$period->progress_status == "Skipped")
+                    @if ($period->progress_status == "Finished" || $period->progress_status == "Verifying" ||$period->progress_status == "Skipped")
                         @if ($period->progress_status == "Finished")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena proses pemilihan karyawan terbaik pada periode ini sudah selesai.">
-                        @elseif ($period->progress_status == "Validating")
+                        @elseif ($period->progress_status == "Verifying")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena sedang dalam verifikasi penilaian.">
                         @elseif ($period->progress_status == "Skipped")
                         <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat mengubah periode ini karena periode ini tidak dilakukan pemilihan karyawan terbaik.">

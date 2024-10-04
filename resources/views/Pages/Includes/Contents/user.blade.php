@@ -21,7 +21,6 @@
         <tr class="table-primary">
             <th class="col-1" scope="col">#</th>
             <th scope="col">User Name</th>
-            <th scope="col">Pengguna Akun</th>
             <th scope="col">Bagian</th>
             <th class="col-1" scope="col">Action</th>
         </tr>
@@ -31,7 +30,6 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->username }}</td>
-            <td>{{ $user->officer->name }}</td>
             <td>{{ $user->part }}</td>
             <td>
                 <div class="dropdown">
@@ -44,11 +42,23 @@
                                 Edit
                             </a>
                         </li>
+                        @if (Auth::user()->id_user == $user->id_user)
                         <li>
-                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-usr-delete-{{ $user->id_user }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tidak dapat menghapus akun anda sendiri">
+                                <button class="dropdown-item d-flex gap-2 align-items-center" disabled>
+                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
+                                    Delete
+                                </button>
+                            </span>
+                        </li>
+                        @else
+                        <li>
+                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-usr-delete-{{ $user->id_user }}">
+                                <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                 Delete
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </td>

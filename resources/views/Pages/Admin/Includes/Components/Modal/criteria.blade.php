@@ -56,7 +56,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.categories.update', $category->id_category) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kategori ({{ $category->id_category }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kategori</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -108,14 +108,20 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.categories.destroy', $category->id_category) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kategori ({{ $category->id_category}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kategori</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menghapus Kriteria?
+                        Apakah anda ingin menghapus Kategori <b>{{ $category->name }}</b>?
+                        <ul>
+                            <li>Seluruh <strong>Kriteria (Termasuk Data Crips)</strong> dari Kategori ini akan dihapus bersamaan.</li>
+                            <li>Proses ini akan menghapus data nilai yang berkaitan dengan <strong>Kriteria</strong> pada Kategori ini.</li>
+                            <li>Segera lakukan perubahan angka bobot pada seluruh Kriteria agar bisa mencapai <strong>100%</strong>.</li>
+                            <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Kategori ini.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -139,7 +145,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.criterias.store') }}" method="POST" enctype="multipart/form-data" id="form-sub-create-{{ $category->id_category }}">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria dari Kategori {{ $category->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-sub-create-{{ $category->id_category }}"></button>
                 </div>
                 <div class="modal-body">
@@ -239,7 +245,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.criterias.update', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kriteria ({{ $criteria->id_criteria }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kriteria dari Kategori {{ $category->name }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -334,14 +340,20 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.criterias.destroy', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kriteria ({{ $criteria->id_criteria}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kriteria</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda ingin menghapus Kriteria?
+                            Apakah anda ingin menghapus Kriteria <b>{{ $criteria->name }}</b>?
+                            <ul>
+                                <li>Seluruh <strong>Data Crips</strong> dari Kriteria ini akan dihapus bersamaan.</li>
+                                <li>Proses ini akan menghapus data nilai yang berkaitan dengan <strong>Kriteria</strong> dari Kategori ini.</li>
+                                <li>Segera lakukan perubahan angka bobot pada seluruh Kriteria agar bisa mencapai <strong>100%</strong>.</li>
+                                <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Kriteria ini.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -364,10 +376,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Data Crips ({{ $criteria->id_criteria }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Data Crips pada Kriteria {{ $criteria->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Session::get('code_alert') == 2)
+                    @include('Templates.Includes.Components.alert')
+                    @endif
                     <table class="table table-hover table-bordered">
                         <thead>
                             <tr class="table-primary">
@@ -444,7 +459,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.crips.store') }}" method="POST" enctype="multipart/form-data" id="form-crt-create">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Crips ({{ $criteria->id_criteria }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Crips pada Kriteria {{ $criteria->name }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-crt-create"></button>
                     </div>
                     <div class="modal-body">
@@ -505,7 +520,7 @@
                 <div class="modal-content">
                     <form action="{{ route('admin.masters.crips.update', $crip->id_crips) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Crips ({{ $crip->id_crips }})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Crips pada Kriteria {{ $criteria->name }}</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -568,7 +583,10 @@
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                                 <br/>
-                                Apakah anda ingin menghapus Data Crips?
+                                Apakah anda ingin menghapus Data Crips dengan Nama <b>{{ $crip->name }}</b>?
+                                <ul>
+                                    <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Data Crips ini.</li>
+                                </ul>
                             </div>
                         </div>
                         <div class="modal-footer">

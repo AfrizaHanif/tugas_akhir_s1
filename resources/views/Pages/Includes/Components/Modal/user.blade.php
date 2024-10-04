@@ -20,10 +20,6 @@
                                     <input type="text" class="form-control" id="username" name="username" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">E-Mail</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
-                                </div>
-                                <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
@@ -33,20 +29,6 @@
                                         <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
                                         <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                                         <option value="KBPS" {{ old('part') == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                                    <select class="form-select" id="id_officer" name="id_officer" required>
-                                        <option selected disabled value="">---Pilih Pegawai---</option>
-                                        @foreach ($subteams as $subteam)
-                                        @if (count($officers->where('id_sub_team_1', $subteam->id_sub_team)) != 0)
-                                        <option disabled value="">//{{ $subteam->name}}</option>
-                                            @foreach ($officers->where('id_sub_team_1', $subteam->id_sub_team) as $officer)
-                                            <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
-                                            @endforeach
-                                        @endif
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -90,7 +72,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.users.update', $user->id_user) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Pengguna ({{ $user->username }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Pengguna</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -106,10 +88,6 @@
                                     <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">E-Mail</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
-                                </div>
-                                <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="form-control" id="password" name="password">
                                 </div>
@@ -119,20 +97,6 @@
                                         <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
                                         <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
                                         <option value="KBPS" {{ $user->part == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                                    <select class="form-select" id="id_officer" name="id_officer" required>
-                                        <option selected disabled value="">---Pilih Pegawai---</option>
-                                        @foreach ($subteams as $subteam)
-                                        @if (count($officers->where('id_sub_team_1', $subteam->id_sub_team)) != 0)
-                                        <option disabled value="">//{{ $subteam->name}}</option>
-                                            @foreach ($officers->where('id_sub_team_1', $subteam->id_sub_team) as $officer)
-                                            <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
-                                            @endforeach
-                                        @endif
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -175,14 +139,17 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.users.destroy', $user->id_user) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Pengguna ({{ $user->username}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Pengguna</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menghapus Pengguna tersebut?
+                        Apakah anda ingin menghapus Pengguna dengan nama user <b>{{ $user->username }}</b>?
+                        <ul>
+                            <li>Pengguna yang sudah dihapus tidak dapat melakukan login ke aplikasi ini.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">

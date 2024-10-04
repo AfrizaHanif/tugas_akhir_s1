@@ -19,7 +19,7 @@
 @if (Session::get('modal_redirect') == 'modal-off-create')
 <script>
     $(function() {
-        $('#modal-off-create').modal('show');
+        $('#modal-off-create-{{ Session::get('id_redirect') }}').modal('show');
     });
 </script>
 @endif

@@ -69,7 +69,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.validate.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Kunci Data ({{ $period->name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penutupan Proses ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -82,7 +82,13 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda telah selesai melakukan verifikasi dan mulai pelaksanaan voting? Proses ini akan mengunci perubahan yang ada di periode tersebut. Jika sudah dikunci, data tersebut tidak dapat diubah dan dihapus kembali untuk menghindari hal-hal yang tidak diinginkan.
+                        Apakah anda telah selesai melakukan verifikasi?
+                        <ul>
+                            <li>Proses ini juga akan <strong>mengakhiri proses penentuan karyawan terbaik</strong>.</li>
+                            <li>Data Nilai, Data Nilai Akhir, dan pegawai terpilih sebagai karyawan terbaik akan dipindahkan ke <strong>riwayat</strong> yang tidak dapat diubah atau dihapus kembali <strong>(Permanen)</strong>.</li>
+                            <li>Kepegawaian dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong>.</li>
+                            <li><strong>Laporan</strong> akan tersedia secara langsung oleh sistem setelah proses ini selesai.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -118,7 +124,12 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin mengambil data hasil analisis pada periode ini? Jika ya, data tersebut akan menghapus data sebelumnya dan menggantikan dengan yang baru.
+                        Apakah anda ingin mengambil data nilai akhir pada periode ini?
+                        <ul>
+                            <li>Data nilai yang telah dimasukkan akan dilakukan <strong>Analisis SAW</strong> untuk mendapatkan nilai akhir.</li>
+                            <li>Data nilai akhir yang lama akan <strong>dihapus dan digantikan</strong> dengan nilai akhir yang baru.</li>
+                            <li>Setelah dilakukannya pengambilan data, kepegawaian tidak dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong> sampai seluruh proses ini selesai.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -141,7 +152,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.validate.yesall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $period->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -154,7 +165,10 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menyetujui seluruh hasil penilaian ini? Jika ya, data tersebut akan disimpan sebagai hasil akhir.
+                        Apakah anda ingin menyetujui seluruh hasil penilaian ini?
+                        <ul>
+                            <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -177,7 +191,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.inputs.validate.noall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $period->id_period}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $period->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -190,7 +204,12 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin tidak menyetujui seluruh hasil penilaian ini? Jika ya, data tersebut akan dikembalikan oleh penilai.
+                        Apakah anda ingin tidak menyetujui seluruh hasil penilaian ini?
+                        <ul>
+                            <li>Segera hubungi bagian <strong>Kepegawaian</strong> untuk dilakukannya pemeriksaan dan Import ulang pada seluruh data nilai yang ditolak.</li>
+                            <li>Status nilai akhir yang ditolak akan berubah menjadi telah direvisi apabila Kepegawaian telah melakukan Import ulang.</li>
+                            <li>Segera lakukan pengambilan data <strong>nilai akhir</strong> setelah seluruh nilai akhir yang ditolak telah direvisi.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -214,7 +233,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.inputs.validate.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->id}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->officer->name}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -227,7 +246,10 @@
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda ingin menyetujui hasil penilaian ini? Jika ya, data tersebut akan disimpan sebagai hasil akhir.
+                            Apakah anda ingin menyetujui hasil penilaian ini?
+                            <ul>
+                                <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -250,7 +272,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.inputs.validate.no', $score->id) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->id}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->officer->name}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -264,6 +286,11 @@
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
                             Apakah anda ingin tidak menyetujui hasil penilaian ini? Jika ya, data tersebut akan dikembalikan oleh penilai.
+                            <ul>
+                                <li>Segera hubungi bagian <strong>Kepegawaian</strong> untuk dilakukannya pemeriksaan dan Import ulang pada data nilai yang ditolak.</li>
+                                <li>Status nilai akhir yang ditolak akan berubah menjadi telah direvisi apabila Kepegawaian telah melakukan Import ulang.</li>
+                                <li>Segera lakukan pengambilan data <strong>nilai akhir</strong> setelah seluruh nilai akhir yang ditolak telah direvisi.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="modal-footer">

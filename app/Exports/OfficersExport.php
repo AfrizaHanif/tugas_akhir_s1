@@ -8,8 +8,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class OfficersExport implements FromQuery, FromCollection, WithHeadings, WithMapping
+class OfficersExport implements FromQuery, WithHeadings, WithMapping, WithStrictNullComparison
 {
     use Exportable;
 
@@ -21,10 +22,13 @@ class OfficersExport implements FromQuery, FromCollection, WithHeadings, WithMap
             'jabatan',
             'subtim1',
             'subtim2',
+            'email',
+            'telp',
             'tmplahir',
             'tgllahir',
             'jk',
             'agama',
+            'foto',
         ];
     }
 
@@ -41,15 +45,13 @@ class OfficersExport implements FromQuery, FromCollection, WithHeadings, WithMap
             $data->position->name,
             $data->subteam_1->name,
             $data->subteam_2->name ?? '',
+            $data->email,
+            $data->phone,
             $data->place_birth,
             $data->date_birth,
             $data->gender,
             $data->religion,
+            $data->photo,
         ] ;
-    }
-
-    public function collection()
-    {
-        return Officer::all();
     }
 }

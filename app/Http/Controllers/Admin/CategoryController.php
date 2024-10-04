@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Crips;
 use App\Models\Criteria;
+use App\Models\Input;
+use App\Models\Period;
 use App\Models\SubCriteria;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -33,6 +36,17 @@ class CategoryController extends Controller
             'reset_on_prefix_change'=>true,
         ]);
 
+        //CHECK STATUS
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tidak dapat melakukan penambahan kategori dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1);
+            }
+        }
+
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
             'name' => 'unique:categories',
@@ -40,7 +54,10 @@ class CategoryController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->with('modal_redirect', 'modal-cat-create');
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withErrors($validator)
+            ->with('modal_redirect', 'modal-cat-create');
         }
 
         //STORE DATA
@@ -52,7 +69,19 @@ class CategoryController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$id_category])->with('success','Tambah Kategori Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per) && $latest_per->progress_status == 'Scoring'){
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$id_category])
+            ->with('success','Tambah Kategori Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
+            ->with('code_alert', 1);
+        }else{
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$id_category])
+            ->with('success','Tambah Kategori Berhasil')
+            ->with('code_alert', 1);
+        }
     }
 
     /**
@@ -60,6 +89,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        //CHECK STATUS
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
+                ->with('fail','Tidak dapat melakukan perubahan kategori dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1);
+            }
+        }
+
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
             'name' => [Rule::unique('categories')->ignore($category),],
@@ -67,7 +108,12 @@ class CategoryController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$category->id_category])->with('modal_redirect', 'modal-cat-update')->with('id_redirect', $category->id_category);
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
+            ->with('modal_redirect', 'modal-cat-update')
+            ->with('id_redirect', $category->id_category);
         }
 
         //STORE DATA
@@ -78,7 +124,19 @@ class CategoryController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$category->id_category])->with('success','Ubah Kategori Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per) && $latest_per->progress_status == 'Scoring'){
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
+            ->with('success','Ubah Kategori Berhasil. Jika diperlukan, silahkan lakukan Import ulang.')
+            ->with('code_alert', 1);
+        }else{
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
+            ->with('success','Ubah Kategori Berhasil')
+            ->with('code_alert', 1);
+        }
     }
 
     /**
@@ -86,17 +144,49 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        //CHECK STATUS
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tidak dapat melakukan penghapusan kategori dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1);
+            }
+        }
+
         //CHECK DATA
+        /*
         if(Criteria::where('id_category', $category->id_category)->exists()) {
-            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$category->id_category])->with('fail', 'Hapus Kategori Tidak Berhasil (Terhubung dengan tabel Kriteria)');
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
+            ->with('fail', 'Hapus Kategori Tidak Berhasil (Untuk keamanan, silahkan hapus kriteria terlebih dahulu.)');
         }else{
             //CLEAR
         }
+            */
 
         //DESTROY DATA
+        $loop_criteria = Criteria::where('id_category', $category->id_category)->get();
+        foreach($loop_criteria as $criteria){
+            Crips::where('id_criteria', $criteria->id_criteria)->delete();
+            Input::where('id_criteria', $criteria->id_criteria)->delete();
+        }
+        Criteria::where('id_category', $category->id_category)->delete();
         $category->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.criterias.index')->with('success','Hapus Kategori Berhasil')->with('code_alert', 1);
+        if(!empty($latest_per) && $latest_per->progress_status == 'Scoring'){
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->with('success','Hapus Kategori Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
+            ->with('code_alert', 1);
+        }else{
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->with('success','Hapus Kategori Berhasil')
+            ->with('code_alert', 1);
+        }
     }
 }

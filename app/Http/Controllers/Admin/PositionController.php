@@ -46,18 +46,18 @@ class PositionController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create');
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create')->with('code_alert', 3);
         }
 
         //STORE DATA
         Position::insert([
             'id_position'=>$id_position,
             'name'=>$request->name,
-            'description'=>$request->description,
+            //'description'=>$request->description,
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Tambah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Tambah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view')->with('code_alert', 2);
     }
 
     /**
@@ -79,17 +79,17 @@ class PositionController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $position->id_position);
+            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $position->id_position)->with('code_alert', 3);
         }
 
         //UPDATE DATA
         $position->update([
             'name'=>$request->name,
-            'description'=>$request->description,
+            //'description'=>$request->description,
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view')->with('code_alert', 2);
     }
 
     /**
@@ -99,7 +99,7 @@ class PositionController extends Controller
     {
         //CHECK DATA
         if(Officer::where('id_position', $position->id_position)->exists()) {
-            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view');
+            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view')->with('code_alert', 2);
         }else{
             //CLEAR
         }
@@ -108,6 +108,6 @@ class PositionController extends Controller
         $position->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view');
+        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view')->with('code_alert', 2);
     }
 }

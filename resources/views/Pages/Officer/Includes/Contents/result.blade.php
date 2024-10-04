@@ -42,7 +42,7 @@
                             @endforeach
                         </table>
                         @foreach ($voteresults->where('id_period', $period->id_period)->where('id_vote_criteria', $criteria->id_vote_criteria) as $result)
-                        <p>Pegawai yang bernama <b>{{ $result->officer->name }}</b> merupakan pegawai terbaik di kriteria {{ $criteria->name }}</p>
+                        <p>Pegawai yang bernama <b>{{ $result->officer->name }}</b> merupakan karyawan terbaik di kriteria {{ $criteria->name }}</p>
                         @endforeach
                     </div>
                 </div>

@@ -42,6 +42,7 @@
     </div>
     <!--MAIN CONTENT-->
     <div class="col-md-9">
+        @if (count($periods) >= 1)
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
@@ -325,5 +326,11 @@
             </div>
             @endforeach
         </div>
+        @else
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+            Tidak ada Periode yang sedang berjalan atau memiliki riwayat Periode sebelumnya. Hubungi bagian <strong>Kepegawaian</strong> untuk memulai proses.
+        </div>
+        @endif
     </div>
 </div>

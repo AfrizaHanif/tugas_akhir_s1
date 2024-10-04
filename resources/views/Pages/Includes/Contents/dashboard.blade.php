@@ -1,8 +1,8 @@
-<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->officer->name }}</h1>
+<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->username }}</h1>
 <!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
     @if (!empty($latest_per->progress_status))
-        @if ($latest_per->progress_status == 'Scoring' || $latest_per->progress_status == 'Validating')
+        @if ($latest_per->progress_status == 'Scoring' || $latest_per->progress_status == 'Verifying')
         @elseif ($latest_per->progress_status == 'Voting')
             @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -126,7 +126,7 @@
                     @if (!empty($latest_per))
                         @if ($latest_per->progress_status == 'Scoring')
                         <h4 class="card-title">Status: Aktif</h4>
-                        @elseif ($latest_per->progress_status == 'Validating')
+                        @elseif ($latest_per->progress_status == 'Verifying')
                         <h4 class="card-title">Status: Verifikasi</h4>
                         @endif
                     @else
@@ -151,7 +151,7 @@
 @endif
 @if (Auth::user()->part == "KBPS")
 <div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
-    <!--DATA INPUT COUNTER CARD-->
+    <!--PROGRESS PENDING CARD-->
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
@@ -186,7 +186,7 @@
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
-                        <a href="{{ route('admin.inputs.validate.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
                         @else
                         <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                         @endif
@@ -195,7 +195,7 @@
             </div>
         </div>
     </div>
-    <!--PENDING CONFIRM-->
+    <!--SCORE CONFIRM PENDING CARD-->
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
@@ -230,7 +230,7 @@
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
-                        <a href="{{ route('admin.inputs.validate.index') }}" type="button" class="btn btn-primary btn-sm">Cek</a>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-scr-view-{{ $latest_per->id_period }}">Cek</button>
                         @else
                         <button type="button" class="btn btn-secondary btn-sm" disabled>Cek</button>
                         @endif

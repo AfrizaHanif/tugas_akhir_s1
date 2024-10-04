@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>3 Pegawai Terbaik | Tugas Akhir</title>
+<title>Karyawan Terbaik | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->

@@ -35,6 +35,9 @@ class DashboardController extends Controller
         {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
         //->where('is_lead', 'No')
         ->get();
+        $input_lists = Input::with('officer')
+        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
+        {$query->where('is_lead', 'No');})->get();
         $scores = Score::with('officer')
         ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
         {$query->where('is_lead', 'No');})->get();
@@ -48,14 +51,14 @@ class DashboardController extends Controller
         //GET DATA PER PART OF ACCOUNT
         if(Auth::user()->part == 'Admin'){
             //LIST OF OFFICERS FOR INPUT
-            $input_off = Officer::with('position', 'user')
+            $input_off = Officer::with('position')
             ->whereDoesntHave('position', function($query)
             {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
             ->where('is_lead', 'No')
             ->get();
         }elseif(Auth::user()->part == 'KBPS'){
             //LIST OF OFFICERS FOR INPUT
-            $input_off = Officer::with('position', 'user')
+            $input_off = Officer::with('position')
             ->whereDoesntHave('position', function($query)
             {$query->where('name', 'Developer');})
             ->where('is_lead', 'No')
@@ -64,13 +67,34 @@ class DashboardController extends Controller
 
         //GET DATA FOR CARDS
         $reject_offs = Officer::with('position', 'score')
-        ->whereDoesntHave('position', function($query)
-        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
-        ->whereHas('score', function($query){$query->whereIn('status', ['Rejected', 'Revised']);})
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })
+        ->whereHas('score', function($query){
+            $query->whereIn('status', ['Rejected', 'Revised']);
+        })
+        ->where('is_lead', 'No')
+        ->get();
+        $progress_offs = Officer::with('position', 'input')
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })
+        ->whereHas('input', function($query){
+            $query->whereIn('status', ['Pending', 'Fixed']);
+        })
+        ->where('is_lead', 'No')
+        ->get();
+        $acc_offs = Officer::with('position', 'input')
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })
+        ->whereHas('input', function($query){
+            $query->whereIn('status', ['Pending', 'In Review', 'Fixed']);
+        })
         ->where('is_lead', 'No')
         ->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         $latest_best = HistoryResult::orderBy('id', 'DESC')->latest()->first();
         $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->latest()->get();
         $history_prd = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'DESC')->first();
@@ -79,12 +103,12 @@ class DashboardController extends Controller
         //dd($scoreresults);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults'));
+        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'progress_offs', 'acc_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults', 'input_lists'));
     }
 
     //OPTIONAL: DELETE
     public function officer(){
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         $periods = Period::get();
         $results = Result::with('officer', 'period')
         ->orderBy('count', 'DESC')

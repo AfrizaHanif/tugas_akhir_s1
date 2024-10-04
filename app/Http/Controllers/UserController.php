@@ -34,12 +34,13 @@ class UserController extends Controller
             });
         })
         ->get();
+        $count_kbps = User::where('part', 'KBPS')->count();
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
-            return view('Pages.Admin.user', compact('users', 'officers', 'subteams'));
+            return view('Pages.Admin.user', compact('users', 'officers', 'subteams', 'count_kbps'));
         }elseif(Auth::user()->part == "Dev"){
-            return view('Pages.Developer.user', compact('users', 'officers', 'subteams'));
+            return view('Pages.Developer.user', compact('users', 'officers', 'subteams', 'count_kbps'));
         }
     }
 
@@ -76,19 +77,50 @@ class UserController extends Controller
         ]);
         */
         $validator = Validator::make($request->all(), [
-            'id_officer' => 'unique:users',
-            'username' => 'unique:users',
-            'email' => 'unique:users',
+            //'id_officer' => 'unique:users',
+            'username' => 'regex:/^\S*$/u|unique:users',
+            //'email' => 'unique:users',
         ], [
-            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
-            'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
+            'username.regex' => 'Username tidak boleh mengandung spasi',
+            //'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         if ($validator->fails()) {
             if(Auth::user()->part == "Admin"){
-                return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
+                return redirect()
+                ->route('admin.masters.users.index')
+                ->withErrors($validator)
+                ->with('modal_redirect', 'modal-usr-create')
+                ->with('code_alert', 2);
             }elseif(Auth::user()->part == "Dev"){
-                return redirect()->route('developer.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-create');
+                return redirect()
+                ->route('developer.masters.users.index')
+                ->withErrors($validator)
+                ->with('modal_redirect', 'modal-usr-create')
+                ->with('code_alert', 2);
+            }
+        }
+
+        //CHECK LEAD MORE THAN 1
+        $count_kbps = User::where('part', 'KBPS')->count();
+        if($request->part == 'KBPS'){
+            if(!empty($count_kbps)){
+                if($count_kbps >= 1){
+                    if(Auth::user()->part == "Admin"){
+                        return redirect()
+                        ->route('admin.masters.users.index')
+                        ->with('fail','Tambah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                        ->with('modal_redirect', 'modal-usr-create')
+                        ->with('code_alert', 2);
+                    }elseif(Auth::user()->part == "Dev"){
+                        return redirect()
+                        ->route('developer.masters.users.index')
+                        ->with('fail','Tambah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                        ->with('modal_redirect', 'modal-usr-create')
+                        ->with('code_alert', 2);
+                    }
+                }
             }
         }
 
@@ -96,17 +128,23 @@ class UserController extends Controller
         User::insert([
             'id_user'=>$id_user,
             'username'=>$request->username,
-            'email'=>$request->email,
+            //'email'=>$request->email,
             'password'=>Hash::make($request->password),
             'part'=>$request->part,
-            'id_officer'=>$request->id_officer,
+            //'id_officer'=>$request->id_officer,
 		]);
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
-            return redirect()->route('admin.masters.users.index')->with('success','Tambah Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.users.index')
+            ->with('success','Tambah Pengguna Berhasil')
+            ->with('code_alert', 1);
         }elseif(Auth::user()->part == "Dev"){
-            return redirect()->route('developer.masters.users.index')->with('success','Tambah Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('developer.masters.users.index')
+            ->with('success','Tambah Pengguna Berhasil')
+            ->with('code_alert', 1);
         }
     }
 
@@ -128,19 +166,54 @@ class UserController extends Controller
         ]);
         */
         $validator = Validator::make($request->all(), [
-            'id_officer' => [Rule::unique('users')->ignore($user),],
-            'username' => [Rule::unique('users')->ignore($user),],
-            'email' => [Rule::unique('users')->ignore($user),],
+            //'id_officer' => [Rule::unique('users')->ignore($user),],
+            'username' => [Rule::unique('users')->ignore($user),'regex:/^\S*$/u'],
+            //'email' => [Rule::unique('users')->ignore($user),],
         ], [
-            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
-            'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
+            'username.regex' => 'Username tidak boleh mengandung spasi',
+            //'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         if ($validator->fails()) {
             if(Auth::user()->part == "Admin"){
-                return redirect()->route('admin.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);
+                return redirect()
+                ->route('admin.masters.users.index')
+                ->withErrors($validator)
+                ->with('modal_redirect', 'modal-usr-update')
+                ->with('id_redirect', $user->id_user)
+                ->with('code_alert', 2);
             }elseif(Auth::user()->part == "Dev"){
-                return redirect()->route('developer.masters.users.index')->withErrors($validator)->with('modal_redirect', 'modal-usr-update')->with('id_redirect', $user->id_user);
+                return redirect()
+                ->route('developer.masters.users.index')
+                ->withErrors($validator)
+                ->with('modal_redirect', 'modal-usr-update')
+                ->with('id_redirect', $user->id_user)
+                ->with('code_alert', 2);
+            }
+        }
+
+        //CHECK LEAD MORE THAN 1
+        $count_kbps = User::where('part', 'KBPS')->count();
+        if($request->part == 'KBPS'){
+            if(!empty($count_kbps)){
+                if($count_kbps >= 1){
+                    if(Auth::user()->part == "Admin"){
+                        return redirect()
+                        ->route('admin.masters.users.index')
+                        ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                        ->with('modal_redirect', 'modal-usr-update')
+                        ->with('id_redirect', $user->id_user)
+                        ->with('code_alert', 2);
+                    }elseif(Auth::user()->part == "Dev"){
+                        return redirect()
+                        ->route('developer.masters.users.index')
+                        ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                        ->with('modal_redirect', 'modal-usr-update')
+                        ->with('id_redirect', $user->id_user)
+                        ->with('code_alert', 2);
+                    }
+                }
             }
         }
 
@@ -148,25 +221,31 @@ class UserController extends Controller
         if($request->filled('password')) {
             $user->update([
                 'username'=>$request->username,
-                'email'=>$request->email,
+                //'email'=>$request->email,
                 'password'=>Hash::make($request->password),
                 'part'=>$request->part,
-                'id_officer'=>$request->id_officer,
+                //'id_officer'=>$request->id_officer,
             ]);
         } else {
             $user->update([
                 'username'=>$request->username,
-                'email'=>$request->email,
+                //'email'=>$request->email,
                 'part'=>$request->part,
-                'id_officer'=>$request->id_officer,
+                //'id_officer'=>$request->id_officer,
             ]);
         }
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
-            return redirect()->route('admin.masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.users.index')
+            ->with('success','Ubah Pengguna Berhasil')
+            ->with('code_alert', 1);
         }elseif(Auth::user()->part == "Dev"){
-            return redirect()->route('developer.masters.users.index')->with('success','Ubah Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('developer.masters.users.index')
+            ->with('success','Ubah Pengguna Berhasil')
+            ->with('code_alert', 1);
         }
     }
 
@@ -180,9 +259,15 @@ class UserController extends Controller
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
-            return redirect()->route('admin.masters.users.index')->with('success','Hapus Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.users.index')
+            ->with('success','Hapus Pengguna Berhasil')
+            ->with('code_alert', 1);
         }elseif(Auth::user()->part == "Dev"){
-            return redirect()->route('developer.masters.users.index')->with('success','Hapus Pengguna Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('developer.masters.users.index')
+            ->with('success','Hapus Pengguna Berhasil')
+            ->with('code_alert', 1);
         }
     }
 }

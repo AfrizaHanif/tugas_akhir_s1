@@ -25,7 +25,7 @@
                 </h2>
                 <div id="collapse-2" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
                     <div class="accordion-body">
-                        Pegawai hanya dapat mengakses halaman utama untuk melihat daftar pegawai, tiga pegawai terbaik, dan laporan.
+                        Pegawai hanya dapat mengakses halaman utama untuk melihat daftar pegawai, daftar nilai akhir, dan laporan.
                     </div>
                 </div>
             </div>

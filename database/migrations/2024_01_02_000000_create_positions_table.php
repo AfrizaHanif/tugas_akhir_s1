@@ -17,7 +17,7 @@ return new class extends Migration
             //$table->foreign('id_part')->references('id_part')->on('parts');
             $table->string('name', 50);
             //$table->char('part', 20);
-            $table->string('description', 100)->nullable();
+            //$table->string('description', 100)->nullable();
             $table->timestamps();
         });
     }

@@ -116,8 +116,8 @@
                     <thead>
                         <tr class="table-primary">
                             <th>Kode</th>
+                            <th>Nama Kategori</th>
                             <th>Nama Kriteria</th>
-                            <th>Nama Sub Kriteria</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,7 +136,7 @@
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="3">Total Data: <b>{{ count($subcriterias) }}</b> Sub Kriteria</td>
+                            <td colspan="3">Total Data: <b>{{ count($subcriterias) }}</b> Kriteria</td>
                         </tr>
                     </tfoot>
                 </table>

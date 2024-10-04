@@ -37,7 +37,7 @@ class ScoreController extends Controller
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->where('is_lead', 'No')
         ->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending'])->get();
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         $inputs = Input::get();
         //$input_raws = InputRAW::get();
@@ -71,7 +71,7 @@ class ScoreController extends Controller
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
-        $latest_per = Period::whereIn('progress_status', ['Scoring', 'Validating'])->latest()->first();
+        $latest_per = Period::whereIn('progress_status', ['Scoring', 'Verifying'])->latest()->first();
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -99,10 +99,13 @@ class ScoreController extends Controller
 
         //DELETE EXISTING DATA
         //$check = DB::table('scores')->where('id_period', $period)->where('status', 'Pending')->orWhere('status', 'Rejected')->orWhere('status', 'Revised');
-        $check = DB::table('scores')->where('id_period', $period)->where('status', 'Pending')->orWhere('status', 'Revised');
+        /* PREVIOUS CODE (DELETE IF REJECTED / REVISED)
+        $check = DB::table('scores')->where('id_period', $period)->whereIn('status', ['Pending', 'Accepted', 'Revised']);
         if($check->exists()){
             $check->delete();
         }
+        */
+        DB::table('scores')->delete();
 
         //GET CRITERIA
         $criterias = DB::table("inputs")
@@ -217,7 +220,7 @@ class ScoreController extends Controller
         //UPDATE STATUS
         Input::with('officer')
         ->where('id_period', $period)
-        ->whereIn('status', ['Pending', 'Need Fix', 'Fixed'])
+        ->whereIn('status', ['Pending', 'Final', 'Need Fix', 'Fixed'])
         ->whereHas('officer', function($query){
             $query->where('is_lead', 'No');
         })
@@ -237,7 +240,7 @@ class ScoreController extends Controller
         */
         Period::where('id_period', $period)
         ->update([
-            'progress_status'=>'Validating'
+            'progress_status'=>'Verifying'
         ]);
 
         //RETURN TO VIEW

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Criteria;
 use App\Models\Category;
 use App\Models\Crips;
+use App\Models\Input;
 use App\Models\Period;
 use App\Models\Setting;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -36,10 +37,15 @@ class CriteriaController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tidak dapat melakukan proses pembuatan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1)
+                ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
+                ->with('modal_redirect', 'modal-crt-create');
             }
         }
 
@@ -69,7 +75,12 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('modal_redirect', 'modal-crt-create');
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
+            ->with('modal_redirect', 'modal-crt-create')
+            ->with('code_alert', 2);
         }
 
         //CONVERT TO PERCENTAGE
@@ -96,10 +107,18 @@ class CriteriaController extends Controller
         //RETURN TO VIEW
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
-                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('success','Tambah Kriteria Berhasil. Jika diperlukan, segera lakukan import ulang.')->with('code_alert', 1);
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
+                ->with('success','Tambah Kriteria Berhasil. Jika diperlukan, silahkan lakukan import ulang.')
+                ->with('code_alert', 1);
             }
         }else{
-            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$request->id_category])->with('success','Tambah Kriteria Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
+            ->with('success','Tambah Kriteria Berhasil')
+            ->with('code_alert', 1);
         }
     }
 
@@ -109,10 +128,15 @@ class CriteriaController extends Controller
     public function update(Request $request, Criteria $criteria)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update');
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tidak dapat melakukan perubahan data kriteria dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1)
+                ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+                ->with('modal_redirect', 'modal-crt-update');
             }
         }
 
@@ -123,7 +147,13 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.criterias.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('modal_redirect', 'modal-crt-update')->with('id_redirect', $criteria->id_category);
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+            ->with('modal_redirect', 'modal-crt-update')
+            ->with('id_redirect', $criteria->id_category)
+            ->with('code_alert', 2);
         }
 
         //CONVERT TO PERCENTAGE
@@ -148,10 +178,18 @@ class CriteriaController extends Controller
         //RETURN TO VIEW
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
-                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Ubah Kriteria Berhasil. Jika diperlukan, segera lakukan import ulang')->with('code_alert', 1);
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+                ->with('success','Ubah Kriteria Berhasil. Jika diperlukan, silahkan lakukan import ulang')
+                ->with('code_alert', 1);
             }
         }else{
-            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Ubah Kriteria Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+            ->with('success','Ubah Kriteria Berhasil')
+            ->with('code_alert', 1);
         }
     }
 
@@ -161,23 +199,48 @@ class CriteriaController extends Controller
     public function destroy(Criteria $criteria)
     {
         //GET LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
 
-        //DESTROY DATA
-        $criteria->delete();
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tidak dapat melakukan penghapusan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
+                ->with('code_alert', 1)
+                ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+                ->with('modal_redirect', 'modal-crt-update');
+            }
+        }
 
         //CHANGE SETTING
-        Setting::where('id_setting', 'STG-001')->update([
-            'value'=>'None',
-        ]);
+        $check_setting = Setting::where('id_setting', 'STG-001')->first();
+        if($check_setting->value == $criteria->id_criteria){
+            Setting::where('id_setting', 'STG-001')->update([
+                'value'=>'None',
+            ]);
+        }
+
+        //DESTROY DATA
+        Crips::where('id_criteria', $criteria->id_criteria)->delete();
+        Input::where('id_criteria', $criteria->id_criteria)->delete();
+        $criteria->delete();
 
         //RETURN TO VIEW
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
-                return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Hapus Kriteria Berhasil. Jika diperlukan, segera ganti pengaturan dan lakukan import ulang')->with('code_alert', 1);
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+                ->with('success','Hapus Kriteria Berhasil. Jika diperlukan, silahkan lakukan import ulang')
+                ->with('code_alert', 1);
             }
         }else{
-            return redirect()->route('admin.masters.criterias.index')->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])->with('success','Hapus Kriteria Berhasil')->with('code_alert', 1);
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
+            ->with('success','Hapus Kriteria Berhasil')
+            ->with('code_alert', 1);
         }
     }
 }

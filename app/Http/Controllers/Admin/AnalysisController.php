@@ -26,10 +26,14 @@ class AnalysisController extends Controller
         //GET DATA
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         //$latest = Period::whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->latest()->first();
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //GET DATA FOR PERIOD PICKER
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('periods', 'latest_per', 'h_years', 'h_months'));
     }
 
     public function saw()
@@ -40,8 +44,12 @@ class AnalysisController extends Controller
         $subcriterias = Criteria::with('category')->get();
         $officers = Officer::where('is_lead', 'No')->get();
 
+        //GET DATA FOR PERIOD PICKER
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
+
         //LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
 
         //GET DATA FOR SORT
         $setting = Setting::where('id_setting', 'STG-002')->first()->value;
@@ -183,7 +191,7 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'set_crit','criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'set_crit','criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
     }
 
     public function history_saw($period)
@@ -197,7 +205,11 @@ class AnalysisController extends Controller
         $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first();
 
         //LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //GET DATA FOR PERIOD PICKER
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
 
         //GET DATA FOR SORT
         $setting = Setting::where('id_setting', 'STG-002')->first()->value;
@@ -299,6 +311,6 @@ class AnalysisController extends Controller
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('select_period', 'subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per'));
+        return view('Pages.Admin.analysis', compact('select_period', 'subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
     }
 }

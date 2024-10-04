@@ -25,9 +25,9 @@ class SettingController extends Controller
     public function update(Request $request) //MANUAL UNTUK DEVELOPER KARENA BERSIFAT UNIVERSAL
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Validating'){
+            if($latest_per->progress_status == 'Verifying'){
                 if(Auth::user()->part == "Dev"){
                     return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1);
                 }else{

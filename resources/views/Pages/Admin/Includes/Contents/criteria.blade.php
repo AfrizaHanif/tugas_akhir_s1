@@ -145,7 +145,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                            <td colspan="10">Tidak ada Kriteria yang terdaftar</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -25,10 +25,10 @@ class User extends Authenticatable
         'id_user',
         //'name',
         'username',
-        'email',
+        //'email',
         'password',
         'part',
-        'id_officer',
+        //'id_officer',
     ];
 
     /**
@@ -60,16 +60,4 @@ class User extends Authenticatable
         return false;
     }
     */
-
-    /*
-    public function officer()
-    {
-        return $this->hasMany(Officer::class, 'id_user', 'id_user');
-    }
-    */
-    //CONNECT TO ANOTHER TABLE
-    public function officer()
-    {
-        return $this->belongsTo(Officer::class, 'id_officer', 'id_officer');
-    }
 }

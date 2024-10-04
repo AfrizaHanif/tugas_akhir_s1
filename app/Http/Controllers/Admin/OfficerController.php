@@ -34,6 +34,7 @@ class OfficerController extends Controller
         $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get();
         $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
+        $team_lists = Team::with('part')->whereNotIn('name', ['Developer', 'Pimpinan BPS'])->get();
         $subteams = SubTeam::with('team')->get();
         $officers = Officer::with('position', 'subteam_1', 'subteam_2')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
@@ -41,7 +42,7 @@ class OfficerController extends Controller
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'positions', 'teams', 'subteams', 'officers'));
+        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'positions', 'teams', 'team_lists', 'subteams', 'officers'));
     }
 
     /**
@@ -50,10 +51,10 @@ class OfficerController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 2)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
             }
         }
 
@@ -78,25 +79,45 @@ class OfficerController extends Controller
         $validator = Validator::make($request->all(), [
             'nip' => 'unique:officers',
             'name' => 'unique:officers',
+            'email' => 'unique:officers',
+            'phone' => 'unique:officers',
         ], [
             'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
+            'email.unique' => 'E-Mail telah terdaftar',
+            'phone.unique' => 'Nomor telepon telah terdaftar',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            return redirect()
+            ->route('admin.masters.officers.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_part])
+            ->with('modal_redirect', 'modal-off-create')
+            ->with('id_redirect', $request->id_part)
+            ->with('code_alert', 2);
         }
 
         //CHECK LEAD MORE THAN 1
         $count_lead = Officer::with('position')->whereHas('position', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_position', $request->id_position)->count();
         if(!empty($count_lead)){
             if($count_lead > 0){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')
+                ->with('modal_redirect', 'modal-off-create')
+                ->withInput(['tab_redirect'=>'pills-'.$request->id_part])
+                ->with('code_alert', 2);
             }
         }
 
         //CHECK SAME TEAM
         if($request->id_sub_team_1 == $request->id_sub_team_2){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            return redirect()
+            ->route('admin.masters.officers.index')->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')
+            ->with('code_alert', 2)->withInput(['tab_redirect'=>'pills-'.$request->id_part])
+            ->with('modal_redirect', 'modal-off-create')
+            ->with('id_redirect', $request->id_part)
+            ->with('code_alert', 2);
         }
 
         //UPLOAD PHOTO
@@ -141,7 +162,11 @@ class OfficerController extends Controller
         ->whereHas('subteam', function($query) use($request){$query->where('id_sub_team', $request->id_sub_team_1);})->latest()->first();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'sub_tab_redirect'=>$request->id_part.'-'.$tab->id_team.'-tab-pane'])->with('success','Tambah Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'sub_tab_redirect'=>$request->id_part.'-'.$tab->id_team.'-tab-pane'])
+        ->with('success','Tambah Pegawai Berhasil')
+        ->with('code_alert', 1);
     }
 
     /**
@@ -149,14 +174,6 @@ class OfficerController extends Controller
      */
     public function update(Request $request, Officer $officer)
     {
-        //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Validating')->latest()->first();
-        if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Validating'){
-                return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-create');
-            }
-        }
-
         //GET FOR REDIRECT
         $redirect = Part::with('team')
         ->whereHas('team', function($query) use($request){
@@ -170,6 +187,20 @@ class OfficerController extends Controller
         })->latest()->first();
         //dd($redirect->id_part);
 
+        //CHECK STATUS
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses verifikasi nilai.')
+                ->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])
+                ->with('modal_redirect', 'modal-off-update')
+                ->with('id_redirect', $officer->id_officer)
+                ->with('code_alert', 2);
+            }
+        }
+
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
             'nip' => [Rule::unique('officers')->ignore($officer),],
@@ -179,7 +210,13 @@ class OfficerController extends Controller
             'name.unique' => 'Nama telah terdaftar',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$officer->id_part])->with('modal_redirect', 'modal-off-update')->with('id_redirect', $officer->id_officer);
+            return redirect()
+            ->route('admin.masters.officers.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])
+            ->with('modal_redirect', 'modal-off-update')
+            ->with('id_redirect', $officer->id_officer)
+            ->with('code_alert', 2);
         }
 
         //CHECK LEAD MORE THAN 1
@@ -188,14 +225,26 @@ class OfficerController extends Controller
             //dd($count_lead);
             if(!empty($count_lead)){
                 if($count_lead > 0){
-                    return redirect()->route('admin.masters.officers.index')->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+                    return redirect()
+                    ->route('admin.masters.officers.index')
+                    ->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')
+                    ->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])
+                    ->with('modal_redirect', 'modal-off-update')
+                    ->with('id_redirect', $officer->id_officer)
+                    ->with('code_alert', 2);
                 }
             }
         }
 
         //CHECK SAME TEAM
         if($request->id_sub_team_1 == $request->id_sub_team_2){
-            return redirect()->route('admin.masters.officers.index')->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')->with('code_alert', 1)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
+            return redirect()
+            ->route('admin.masters.officers.index')
+            ->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_part])
+            ->with('modal_redirect', 'modal-off-update')
+            ->with('id_redirect', $officer->id_officer)
+            ->with('code_alert', 2);
         }
 
         //UPDATE DATA
@@ -241,7 +290,11 @@ class OfficerController extends Controller
         }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Pegawai Berhasil')->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])->with('code_alert', 1);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->with('success','Ubah Pegawai Berhasil')
+        ->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])
+        ->with('code_alert', 1);
     }
 
     /**
@@ -249,6 +302,19 @@ class OfficerController extends Controller
      */
     public function destroy(Officer $officer)
     {
+        //LATEST PERIODE
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Hapus Pegawai Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('code_alert', 1);
+            }
+        }
+
         //GET FOR REDIRECT
         $redirect = Part::with('team')
         ->whereHas('team', function($query) use($officer){
@@ -261,15 +327,6 @@ class OfficerController extends Controller
             $query->where('id_sub_team', $officer->id_sub_team_1);
         })->latest()->first();
 
-        //CHECK DATA
-        if(Input::where('id_officer', $officer->id_officer)->exists()) {
-            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Input)')->with('code_alert', 1);
-        }elseif(User::where('id_officer', $officer->id_officer)->exists()){
-            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Pegawai Tidak Berhasil (Terhubung dengan tabel Pengguna / Akun)')->with('code_alert', 1);
-        }else{
-            //CLEAR
-        }
-
         //DESTROY IMAGE
         $id_officer = Officer::find($officer->id_officer);
         $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
@@ -278,10 +335,15 @@ class OfficerController extends Controller
         }
 
         //DESTROY DATA
+        Input::where('id_officer', $officer->id_officer)->delete();
         $officer->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])->with('success','Hapus Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->withInput(['tab_redirect'=>'pills-'.$redirect->id_part, 'sub_tab_redirect'=>$redirect->id_part.'-'.$tab->id_team.'-tab-pane'])
+        ->with('success','Hapus Pegawai Berhasil')
+        ->with('code_alert', 1);
     }
 
     public function search(Request $request)
@@ -309,7 +371,10 @@ class OfficerController extends Controller
         Excel::import(new OfficersImport, $request->file('file'));
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Import Pegawai Berhasil')->with('code_alert', 1);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->with('success','Import Pegawai Berhasil')
+        ->with('code_alert', 1);
     }
 
     public function export(Request $request)

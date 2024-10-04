@@ -8,8 +8,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMapping
+class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMapping, WithStrictNullComparison
 {
     use Exportable;
 
@@ -31,7 +32,8 @@ class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMappi
             'NIP',
             'Nama Pegawai',
             'Kriteria',
-            'Input',
+            'Nilai Asli',
+            'Nilai Konversi',
         ];
     }
 
@@ -41,6 +43,7 @@ class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMappi
             $data->officer->name,
             $data->criteria->name,
             $data->input,
+            $data->input_raw,
         ] ;
     }
 

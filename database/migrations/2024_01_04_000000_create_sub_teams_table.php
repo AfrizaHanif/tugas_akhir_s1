@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_sub_team', 20)->primary();
             $table->char('id_team', 20);
             $table->foreign('id_team')->references('id_team')->on('teams');
-            $table->string('name', 50);
+            $table->string('name', 50)->unique();
             //$table->string('description', 100)->nullable();
             $table->timestamps();
         });

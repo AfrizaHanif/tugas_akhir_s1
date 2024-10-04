@@ -1,4 +1,4 @@
-@if (Auth::user()->part != "Pegawai")
+@if (Request::is('admin/masters/officers'))
 <!--IMPORT PEGAWAI-->
 <div class="modal modal-lg fade" id="modal-off-import" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -328,7 +328,7 @@
                                             <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
                                             <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
                                                 <option selected disabled value="">---Pilih Tim Fungsi---</option>
-                                                @foreach ($teams->where('id_part', $part->id_part) as $team)
+                                                @foreach ($team_lists->where('id_part', $part->id_part) as $team)
                                                     <option disabled value="">---{{ $team->name }}---</option>
                                                     @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
                                                     <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_1') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
@@ -340,7 +340,7 @@
                                             <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
                                             <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
                                                 <option selected value="">Tidak Ada</option>
-                                                @foreach ($teams as $team)
+                                                @foreach ($team_lists as $team)
                                                     <option disabled value="">---{{ $team->name }}---</option>
                                                     @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
                                                     <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_2') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
@@ -385,7 +385,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Tim ({{ $part->id_part }})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Tim Bagian {{ $part->name }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -406,20 +406,23 @@
                         </div>
                     </div>
                     <div class="col-md-8">
+                        @if (Session::get('code_alert') == 2)
+                        @include('Templates.Includes.Components.alert')
+                        @endif
                         <div class="tab-content" id="teams-modal-tabContent">
                             @foreach ($teams->where('id_part', $part->id_part) as $team)
                             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $team->id_team }}" role="tabpanel" aria-labelledby="pills-{{ $team->id_team }}-tab" tabindex="0">
                                 <p>
                                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-stm-create-{{ $team->id_team }}">
-                                        <i class="bi bi-person-plus"></i>
+                                        <i class="bi bi-node-plus"></i>
                                         Tambah Sub Tim
                                     </button>
                                     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-update-{{ $team->id_team }}">
-                                        <i class="bi bi-person-plus"></i>
+                                        <i class="bi bi-pencil"></i>
                                         Ubah Tim
                                     </button>
                                     <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-delete-{{ $team->id_team }}">
-                                        <i class="bi bi-person-plus"></i>
+                                        <i class="bi bi-trash3"></i>
                                         Hapus Tim
                                     </button>
                                 </p>
@@ -493,7 +496,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.teams.store') }}" method="POST" enctype="multipart/form-data" id="form-tim-create">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Tim ({{ $part->id_part }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Tim Bagian {{ $part->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-tim-create"></button>
                 </div>
                 <div class="modal-body">
@@ -531,14 +534,14 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.teams.update', $team->id_team) }}" method="POST" enctype="multipart/form-data" id="form-tim-update">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Tim ({{ $part->id_part }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Tim Bagian {{ $part->name }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-tim-update"></button>
                     </div>
                     <div class="modal-body">
                         @if (Session::get('modal_redirect') == 'modal-tim-update')
                         @include('Templates.Includes.Components.alert')
                         @endif
-                        @csrf
+                        @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Tim</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $team->name }}" required>
@@ -573,14 +576,19 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.teams.destroy', $team->id_team) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Tim ({{ $team->id_team }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Tim</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda ingin menghapus Tim tersebut?
+                            Apakah anda ingin menghapus Tim <b>{{ $team->name }}</b> dari Bagian <b>{{ $team->part->name }}</b>?
+                            <ul>
+                                <li>Seluruh <strong>Data Nilai dari Pegawai</strong> yang tergabung dengan Tim ini akan terhapus.</li>
+                                <li>Seluruh <strong>Pegawai</strong> yang tergabung dengan Tim ini akan terhapus.</li>
+                                <li>Seluruh <strong>Sub Tim</strong> dari Tim ini akan terhapus.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -604,7 +612,7 @@
             <div class="modal-content">
                 <form action="{{ route('admin.masters.subteams.store') }}" method="POST" enctype="multipart/form-data" id="form-stm-create">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sub Tim ({{ $team->id_team }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sub Tim (Tim {{ $team->name }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-stm-create"></button>
                     </div>
                     <div class="modal-body">
@@ -612,6 +620,10 @@
                         @include('Templates.Includes.Components.alert')
                         @endif
                         @csrf
+                        <div class="mb-3" hidden>
+                            <label for="id_part" class="form-label" hidden>Kode Bagian</label>
+                            <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $team->part->id_part }}" readonly hidden>
+                        </div>
                         <div class="mb-3">
                             <label for="id_team" class="form-label">Kode Tim</label>
                             <input type="text" class="form-control" id="id_team" name="id_team" value="{{ $team->id_team }}" readonly>
@@ -642,7 +654,7 @@
                 <div class="modal-content">
                     <form action="{{ route('admin.masters.subteams.update', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data" id="form-stm-update">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Sub Tim ({{ $team->id_team }})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Sub Tim (Tim {{ $team->name }})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-stm-update"></button>
                         </div>
                         <div class="modal-body">
@@ -650,6 +662,10 @@
                             @include('Templates.Includes.Components.alert')
                             @endif
                             @csrf @method('PUT')
+                            <div class="mb-3" hidden>
+                                <label for="id_part" class="form-label" hidden>Kode Bagian</label>
+                                <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $subteam->team->part->id_part }}" readonly hidden>
+                            </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama Sub Tim</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $subteam->name }}" required>
@@ -687,14 +703,18 @@
                 <div class="modal-content">
                     <form action="{{ route('admin.masters.subteams.destroy', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Sub Tim ({{ $subteam->id_sub_team }})</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Sub Tim</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                                 <br/>
-                                Apakah anda ingin menghapus Sub Tim tersebut?
+                                Apakah anda ingin menghapus Sub Tim <b>{{ $subteam->name }}</b> dari Tim <b>{{ $subteam->team->name }}</b>?
+                                <ul>
+                                    <li>Seluruh <strong>Data Nilai dari Pegawai</strong> yang tergabung dengan Tim ini akan terhapus.</li>
+                                    <li>Seluruh <strong>Pegawai</strong> yang tergabung dengan Tim ini akan terhapus.</li>
+                                </ul>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -741,7 +761,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->id_officer }}) ({{ $officer->subteam_1->team->part->id_part }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->nip }}) ({{ $officer->subteam_1->team->part->id_part }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -844,7 +864,7 @@
                                             <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
                                             <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
                                                 <option selected disabled value="">---Pilih Tim Fungsi---</option>
-                                                @foreach ($teams as $team)
+                                                @foreach ($team_lists as $team)
                                                     <option disabled value="">---{{ $team->name }}---</option>
                                                     @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
                                                     <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_1 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
@@ -856,7 +876,7 @@
                                             <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
                                             <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
                                                 <option selected value="">Tidak Ada</option>
-                                                @foreach ($teams as $team)
+                                                @foreach ($team_lists as $team)
                                                     <option disabled value="">---{{ $team->name }}---</option>
                                                     @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
                                                     <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_2 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
@@ -903,18 +923,21 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Pegawai ({{ $officer->id_officer}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Pegawai</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
+                    <div class="mb-3" hidden>
                         <label for="id_part" class="form-label" hidden>Bagian</label>
                         <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->subteam_1->team->part->id_part }}" readonly hidden>
                     </div>
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menghapus Pegawai tersebut?
+                        Apakah anda ingin menghapus Pegawai dengan nama <b>{{ $officer->name }}</b>?
+                        <ul>
+                            <li>Data nilai yang dimiliki oleh Pegawai ini akan dihapus bersamaan.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -942,6 +965,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Session::get('code_alert') == 2)
+                @include('Templates.Includes.Components.alert')
+                @endif
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -1027,10 +1053,6 @@
                         <label for="name" class="form-label">Nama Jabatan</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="description">Deskripsi</label>
-                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
@@ -1053,7 +1075,7 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.positions.update', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan ({{ $position->id_position }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1064,10 +1086,6 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Jabatan</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ $position->name }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description">Deskripsi</label>
-                        <textarea class="form-control" name="description" id="description" rows="3">{{ $position->description }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1090,14 +1108,14 @@
         <div class="modal-content">
             <form action="{{ route('admin.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan ({{ $position->id_position}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin menghapus Jabatan tersebut?
+                        Apakah anda ingin menghapus Jabatan <b>{{ $position->name }}</b>?
                     </div>
                 </div>
                 <div class="modal-footer">

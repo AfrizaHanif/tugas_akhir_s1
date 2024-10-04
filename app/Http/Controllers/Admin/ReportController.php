@@ -37,9 +37,8 @@ class ReportController extends Controller
         $h_officers = HistoryInput::select('id_officer', 'officer_nip', 'officer_name')->groupBy('id_officer', 'officer_nip', 'officer_name')->get();
         $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
         /*
-        $officers = Officer::with('position', 'user')
+        $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->whereDoesntHave('user', function($query){$query->whereIn('part', ['KBU', 'KTT', 'KBPS']);})
         ->get();
         */
         //$check_teams = HistoryScore::get();

@@ -42,7 +42,7 @@
         <div class="container d-flex flex-wrap justify-content-center">
             <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
                 @if (Auth::check())
-                <button type="button" class="btn">{{Auth::user()->officer->name}}</button>
+                <button type="button" class="btn">{{Auth::user()->username}}</button>
                 @endif
             </div>
             <!--LOGIN / REGISTER-->

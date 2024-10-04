@@ -44,6 +44,7 @@
     </div>
     <!--MAIN CONTENT-->
     <div class="col-md-9">
+        @if (count($periods) >= 1)
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
@@ -60,10 +61,17 @@
                                     Import
                                 </button>
                                 @if (!$inputs->isEmpty())
-                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
-                                    <i class="bi bi-file-earmark-arrow-down"></i>
-                                    Export
-                                </button>
+                                    @if ($latest_per->import_status == 'Clear')
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
+                                        <i class="bi bi-file-earmark-arrow-down"></i>
+                                        Export
+                                    </button>
+                                    @else
+                                    <button type="button" class="btn btn-secondary" disabled>
+                                        <i class="bi bi-file-earmark-arrow-down"></i>
+                                        Export
+                                    </button>
+                                    @endif
                                 @else
                                 <button type="button" class="btn btn-secondary" disabled>
                                     <i class="bi bi-file-earmark-arrow-down"></i>
@@ -307,5 +315,15 @@
             </div>
             @endforeach
         </div>
+        @else
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+            Tidak ada Periode yang sedang berjalan atau memiliki riwayat Periode sebelumnya. Baca <strong><i class="bi bi-info-circle-fill"></i> INFO</strong> di bawah untuk mengetahui lebih lanjut.
+        </div>
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong></br>
+            Untuk menjalankan Periode pertama kali, kunjungi halaman <strong>Periode</strong>, lalu pilih salah satu Periode yang akan dijalankan dengan cara klik menu di bagian kanan tabel pada periode yang dipilih, lalu klik <strong>Mulai</strong>.
+        </div>
+        @endif
     </div>
 </div>

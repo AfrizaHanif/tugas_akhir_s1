@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Input;
+use App\Models\Officer;
 use App\Models\Part;
+use App\Models\Period;
+use App\Models\SubTeam;
 use App\Models\Team;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TeamsController extends Controller
 {
@@ -15,6 +20,22 @@ class TeamsController extends Controller
      */
     public function store(Request $request)
     {
+        //LATEST PERIODE
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->withInput(['tab_redirect'=>'pills-'.$request->id_part])
+                ->with('modal_redirect', 'modal-tim-view')
+                ->with('id_redirect', $request->id_part)
+                ->with('code_alert', 2);
+            }
+        }
+
         //COMBINE KODE
         /*
         $total_id = Team::count();
@@ -35,6 +56,22 @@ class TeamsController extends Controller
         //dd($id_team);
         //$id_team = "TIM-".$str_id;
 
+        //VALIDATE DATA
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:teams',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+        if ($validator->fails()) {
+            return redirect()
+            ->route('admin.masters.officers.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$id_team])
+            ->with('modal_redirect', 'modal-tim-create')
+            ->with('id_redirect', $request->id_part)
+            ->with('code_alert', 3);
+        }
+
         //STORE DATA
         Team::insert([
             'id_team'=>$id_team,
@@ -43,7 +80,13 @@ class TeamsController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Tambah Tim Berhasil')->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$id_team])->with('modal_redirect', 'modal-tim-view')->with('id_redirect', $request->id_part);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->with('success','Tambah Tim Berhasil')
+        ->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$id_team])
+        ->with('modal_redirect', 'modal-tim-view')
+        ->with('id_redirect', $request->id_part)
+        ->with('code_alert', 2);
     }
 
     /**
@@ -51,20 +94,9 @@ class TeamsController extends Controller
      */
     public function update(Request $request, Team $team)
     {
-        //UPDATE DATA
-        $team->update([
-            'name'=>$request->name,
-		]);
+        //LATEST PERIODE
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
 
-        //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Ubah Tim Berhasil')->withInput(['tab_redirect'=>'pills-'.$team->id_part, 'modal_tab_redirect'=>'pills-'.$team->id_team])->with('modal_redirect', 'modal-tim-view')->with('id_redirect', $team->id_part);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Team $team)
-    {
         //GET REDIRECT
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($team){
@@ -72,10 +104,123 @@ class TeamsController extends Controller
         })->latest()->first();
         $redirect_team = Team::where('id_team', $team->id_team)->first();
 
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->withInput(['tab_redirect'=>'pills-'.$team->id_part, 'modal_tab_redirect'=>'pills-'.$team->id_team])
+                ->with('modal_redirect', 'modal-tim-view')
+                ->with('id_redirect', $team->id_part)
+                ->with('code_alert', 2);
+            }
+        }
+
+        //VALIDATE DATA
+        $validator = Validator::make($request->all(), [
+            'name' => 'unique:teams',
+        ], [
+            'name.unique' => 'Nama telah terdaftar sebelumnya',
+        ]);
+        if ($validator->fails()) {
+            return redirect()
+            ->route('admin.masters.officers.index')
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
+            ->with('modal_redirect', 'modal-tim-update')
+            ->with('id_redirect', $redirect_team->id_team)
+            ->with('code_alert', 3);
+        }
+
+        //UPDATE DATA
+        $team->update([
+            'name'=>$request->name,
+		]);
+
+        //RETURN TO VIEW
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->with('success','Ubah Tim Berhasil')
+        ->withInput(['tab_redirect'=>'pills-'.$team->id_part, 'modal_tab_redirect'=>'pills-'.$team->id_team])
+        ->with('modal_redirect', 'modal-tim-view')
+        ->with('id_redirect', $team->id_part)
+        ->with('code_alert', 2);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Team $team)
+    {
+        //LATEST PERIODE
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //GET REDIRECT
+        $redirect_part = Part::with('team')
+        ->whereHas('team', function($query) use($team){
+            $query->where('id_team', $team->id_team);
+        })->latest()->first();
+        $redirect_team = Team::where('id_team', $team->id_team)->first();
+
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
+                ->with('modal_redirect', 'modal-tim-view')
+                ->with('id_redirect', $redirect_part->id_part)
+                ->with('code_alert', 2);
+            }
+        }
+
+        //GET TEAM FOR CHECK
+        //$check_team = Team::where('id_team', $team->id_team)->first();
+        $subteams = SubTeam::where('id_team', $team->id_team)->get();
+        //dd($check_sub_team);
+
+        //CHECK DATA
+        /*
+        foreach($subteams as $subteam){
+            if(Officer::where('id_sub_team_1', $subteam->id_sub_team)->orWhere('id_sub_team_2', $subteam->id_sub_team)->exists()){
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail', 'Hapus Tim Tidak Berhasil (Terhubung dengan tabel Pegawai)')
+                ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
+                ->with('modal_redirect', 'modal-tim-view')
+                ->with('id_redirect', $redirect_part->id_part)
+                ->with('code_alert', 2);
+            }else{
+                //CLEAR
+            }
+        }
+            */
+
         //DESTROY DATA
+        $loop_subteam = SubTeam::where('id_team', $team->id_team)->get();
+        foreach($loop_subteam as $subteam){
+            Input::with('officer')
+            ->whereHas('officer', function($query) use($subteam){
+                $query->where('id_sub_team_1', $subteam->id_sub_team);
+            })
+            ->delete();
+            Officer::where('id_sub_team_2', $subteam->id_sub_team)->update([
+                'id_sub_team_2'=>'',
+            ]);
+            Officer::where('id_sub_team_1', $subteam->id_sub_team)->delete();
+        }
+        SubTeam::where('id_team', $team->id_team)->delete();
         $team->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Tim Berhasil')->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])->with('modal_redirect', 'modal-tim-view')->with('id_redirect', $redirect_part->id_part);
+        return redirect()
+        ->route('admin.masters.officers.index')
+        ->with('success','Hapus Tim Berhasil')
+        ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
+        ->with('modal_redirect', 'modal-tim-view')
+        ->with('id_redirect', $redirect_part->id_part)
+        ->with('code_alert', 2);
     }
 }

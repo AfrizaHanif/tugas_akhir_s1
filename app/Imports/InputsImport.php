@@ -87,7 +87,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'status' => 'Not Converted',
                                 ]);
                                 */
-                            }elseif($this->per_status == 'Validating'){
+                            }elseif($this->per_status == 'Verifying'){
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,
@@ -134,7 +134,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                     'status' => 'Not Converted',
                                 ]);
                                 */
-                            }elseif($this->per_status == 'Validating'){
+                            }elseif($this->per_status == 'Verifying'){
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,

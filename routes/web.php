@@ -140,6 +140,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                         Route::post('/destroyall/{period}', 'destroyall')->name('destroyall');
                         Route::post('/convert/{period}', 'convert')->name('convert');
                         Route::post('/refresh/{period}', 'refresh')->name('refresh');
+                        Route::post('/reset/{period}', 'reset')->name('reset');
                     });
                 });
             });
