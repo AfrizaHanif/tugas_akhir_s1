@@ -20,26 +20,19 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $positions, $subteams;
+    protected $positions, $subteams, $import_method;
 
-    public function __construct()
+    public function __construct($import_method)
     {
         $this->positions = Position::get();
         $this->subteams = SubTeam::get();
+        $this->import_method = $import_method;
     }
 
     public function collection(Collection $rows)
     {
         foreach ($rows as $row)
         {
-            $id_officer = IdGenerator::generate([
-                'table'=>'officers',
-                'field'=>'id_officer',
-                'length'=>7,
-                'prefix'=>'OFF-',
-                'reset_on_prefix_change'=>true,
-            ]);
-
             $positions = $this->positions->where('name', $row['jabatan'])->first();
             $subteams1 = $this->subteams->where('name', $row['subtim1'])->first();
             $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
@@ -55,24 +48,49 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                 }
             }
 
-            //IMPORT DATA
-            Officer::updateOrCreate([
-                'nip'=>$row['nip'],
-            ],[
-                'id_officer' => $id_officer,
-                'name'=>$row['nama'],
-                'id_position'=>$positions->id_position,
-                'id_sub_team_1'=>$subteams1->id_sub_team,
-                'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
-                'place_birth'=>$row['tmplahir'],
-                'date_birth'=>$row['tgllahir'],
-                'email'=>$row['email'],
-                'phone'=>$row['telp'],
-                'gender'=>$row['jk'],
-                'religion'=>$row['agama'],
-                'is_lead'=>$is_lead,
-                'photo'=>$row['foto'],
-            ]);
+            if($this->import_method == 'create'){
+                $id_officer = IdGenerator::generate([
+                    'table'=>'officers',
+                    'field'=>'id_officer',
+                    'length'=>7,
+                    'prefix'=>'OFF-',
+                    'reset_on_prefix_change'=>true,
+                ]);
+
+                //IMPORT DATA
+                Officer::firstOrCreate([
+                    'nip'=>$row['nip'],
+                ],[
+                    'id_officer' => $id_officer,
+                    'name'=>$row['nama'],
+                    'id_position'=>$positions->id_position,
+                    'id_sub_team_1'=>$subteams1->id_sub_team,
+                    'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
+                    'place_birth'=>$row['tmplahir'],
+                    'date_birth'=>$row['tgllahir'],
+                    'email'=>$row['email'],
+                    'phone'=>$row['telp'],
+                    'gender'=>$row['jk'],
+                    'religion'=>$row['agama'],
+                    'is_lead'=>$is_lead,
+                    'photo'=>$row['foto'],
+                ]);
+            }elseif($this->import_method == 'update'){
+                Officer::where('nip', $row['nip'])->update([
+                    'name'=>$row['nama'],
+                    'id_position'=>$positions->id_position,
+                    'id_sub_team_1'=>$subteams1->id_sub_team,
+                    'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
+                    'place_birth'=>$row['tmplahir'],
+                    'date_birth'=>$row['tgllahir'],
+                    'email'=>$row['email'],
+                    'phone'=>$row['telp'],
+                    'gender'=>$row['jk'],
+                    'religion'=>$row['agama'],
+                    'is_lead'=>$is_lead,
+                    'photo'=>$row['foto'],
+                ]);
+            }
         }
     }
 }

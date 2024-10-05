@@ -24,11 +24,12 @@
                                 <div class="tab-content pt-2" id="myTabContent">
                                     <div class="tab-pane fade show active" id="upload-{{ $latest_per->id_period }}-tab-pane" role="tabpanel" aria-labelledby="upload-{{ $latest_per->id_period }}-tab" tabindex="0">
                                         <div class="alert alert-warning" role="alert">
-                                            <i class="bi bi-exclamation-triangle-fill"></i> <strong>WARNING</strong>
-                                            <br/>
-                                            1. Baca <b>Cara Import</b> sebelum melakukan import<br/>
-                                            2. Data yang telah terinput akan <b>dihapus</b> saat proses import berlangsung<br/>
-                                            3. <b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import
+                                            <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong>
+                                            <ol>
+                                                <li>Baca <b>Cara Import</b> sebelum melakukan import</li>
+                                                <li>Data yang telah terinput akan <b>dihapus</b> saat proses import berlangsung</li>
+                                                <li><b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import</li>
+                                            </ol>
                                         </div>
                                         <div class="mb-3">
                                             <label for="file" class="form-label">File Upload</label>

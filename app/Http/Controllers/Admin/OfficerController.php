@@ -17,6 +17,7 @@ use App\Models\Team;
 use App\Models\User;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -367,8 +368,15 @@ class OfficerController extends Controller
 
     public function import(Request $request)
     {
+        if($request->import_reset == 'reset'){
+            DB::statement("SET foreign_key_checks=0");
+            Input::truncate();
+            Officer::truncate();
+            DB::statement("SET foreign_key_checks=1");
+        }
+
         //IMPORT FILE
-        Excel::import(new OfficersImport, $request->file('file'));
+        Excel::import(new OfficersImport($request->import_method), $request->file('file'));
 
         //RETURN TO VIEW
         return redirect()

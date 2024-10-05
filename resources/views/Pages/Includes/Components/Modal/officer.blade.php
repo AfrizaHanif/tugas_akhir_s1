@@ -29,13 +29,43 @@
                             <div class="tab-content pt-2" id="myTabContent">
                                 <div class="tab-pane fade show active" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
                                     <div class="alert alert-warning" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>WARNING</strong>
-                                        <br/>
-                                        Data yang telah terinput secara import / manual akan dihapus saat proses import berlangsung. Pastikan anda cadangkan data pegawai sebelum melakukan import.
+                                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong>
+                                        <ol>
+                                            <li>Baca <b>Cara Import</b> sebelum melakukan import</li>
+                                            <li><b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import</li>
+                                        </ol>
                                     </div>
                                     <div class="mb-3">
                                         <label for="file" class="form-label">File Upload</label>
                                         <input class="form-control" type="file" id="file" name="file" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="import_method" class="form-label">Metode Import</label>
+                                        <div class="list-group">
+                                            <label class="list-group-item d-flex gap-2">
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_create" value="create" checked>
+                                                <span>
+                                                    Penambahan Data
+                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan penambahan Pegawai yang tidak ada di sistem ini.</small>
+                                                </span>
+                                            </label>
+                                            <label class="list-group-item d-flex gap-2">
+                                                <input class="form-check-input flex-shrink-0" type="checkbox" name="import_reset" id="import_reset" value="reset">
+                                                <span>
+                                                    Reset Data Pegawai
+                                                    <small class="d-block text-body-secondary"><strong>PERHATIAN: </strong>Pilihan ini akan menghapus seluruh data Pegawai dan Input sebelum melakukan import.</small>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="list-group pt-2">
+                                            <label class="list-group-item d-flex gap-2">
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_update" value="update">
+                                                <span>
+                                                    Perbaharui Data
+                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan perubahan Pegawai yang ada di sistem ini.</small>
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="positions-tab-pane" role="tabpanel" aria-labelledby="positions-tab" tabindex="0">

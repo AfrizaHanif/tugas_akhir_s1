@@ -13,3 +13,4 @@
 <link rel="stylesheet" href="{{asset('Sources/CSS/dropdown.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/carousel-overlay.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/modal.css')}}">
+<link rel="stylesheet" href="{{asset('Sources/CSS/list-groups.css')}}">
