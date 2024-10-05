@@ -20,6 +20,10 @@
                                     <input type="text" class="form-control" id="username" name="username" required>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="name" class="form-label">Nama Pengguna</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                </div>
+                                <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
@@ -86,6 +90,10 @@
                                 <div class="mb-3">
                                     <label for="username" class="form-label">User Name</label>
                                     <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nama Pengguna</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>

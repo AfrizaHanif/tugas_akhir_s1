@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->username }}</h1>
+<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->name }}</h1>
 <!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
     @if (!empty($latest_per->progress_status))

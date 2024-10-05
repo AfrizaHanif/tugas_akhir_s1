@@ -24,7 +24,7 @@
                         </div>
                         <div class="col">
                             <label for="officer_name" class="form-label" hidden>Nama Pegawai</label>
-                            <input type="text" class="form-control" id="officer_name" name="officer_name" value="{{ Auth::user()->username }}" hidden>
+                            <input type="text" class="form-control" id="officer_name" name="officer_name" value="{{ Auth::user()->name }}" hidden>
                         </div>
                     </div>
                     <div class="mb-3">

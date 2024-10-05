@@ -79,11 +79,13 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             //'id_officer' => 'unique:users',
             'username' => 'regex:/^\S*$/u|unique:users',
+            'name' => 'unique:users',
             //'email' => 'unique:users',
         ], [
             //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'username.regex' => 'Username tidak boleh mengandung spasi',
+            'name.unique' => 'Nama tidak boleh sama dengan yang terdaftar',
             //'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         if ($validator->fails()) {
@@ -128,6 +130,7 @@ class UserController extends Controller
         User::insert([
             'id_user'=>$id_user,
             'username'=>$request->username,
+            'name'=>$request->name,
             //'email'=>$request->email,
             'password'=>Hash::make($request->password),
             'part'=>$request->part,
@@ -168,11 +171,13 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             //'id_officer' => [Rule::unique('users')->ignore($user),],
             'username' => [Rule::unique('users')->ignore($user),'regex:/^\S*$/u'],
+            'name' => 'unique:users',
             //'email' => [Rule::unique('users')->ignore($user),],
         ], [
             //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'username.regex' => 'Username tidak boleh mengandung spasi',
+            'name.unique' => 'Nama tidak boleh sama dengan yang terdaftar',
             //'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         if ($validator->fails()) {
@@ -221,6 +226,7 @@ class UserController extends Controller
         if($request->filled('password')) {
             $user->update([
                 'username'=>$request->username,
+                'name'=>$request->name,
                 //'email'=>$request->email,
                 'password'=>Hash::make($request->password),
                 'part'=>$request->part,
@@ -229,6 +235,7 @@ class UserController extends Controller
         } else {
             $user->update([
                 'username'=>$request->username,
+                'name'=>$request->name,
                 //'email'=>$request->email,
                 'part'=>$request->part,
                 //'id_officer'=>$request->id_officer,

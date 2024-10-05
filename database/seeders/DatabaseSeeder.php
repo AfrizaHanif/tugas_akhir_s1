@@ -423,6 +423,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-000',
             'username' => 'developer',
+            'name' => 'Muhammad Afriza Hanif',
             //'email' => 'dev@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Dev',
@@ -432,6 +433,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-001',
             'username' => 'testadmin',
+            'name' => 'Administrator',
             //'email' => 'testadmin@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'Admin',
@@ -470,6 +472,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id_user' => 'USR-002',
             'username' => 'testkbps',
+            'name' => 'Zulkipli',
             //'email' => 'testkbps@bps.com',
             'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
             'part' => 'KBPS',
