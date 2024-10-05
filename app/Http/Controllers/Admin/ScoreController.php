@@ -126,14 +126,14 @@ class ScoreController extends Controller
         //$criterias = Criteria::get();
 
         //GET INPUT
-        $inputs = Input::with('criteria')
+        $inputs = Input::with('criteria', 'officer')
         ->where('id_period', $period)
         ->whereHas('criteria', function($query){
             $query->where('need', 'Ya');
         })
         ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->where('part', 'KBPS');
+            $query->with('position')->whereHas('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
         })
         ->getQuery()->get();
@@ -392,7 +392,7 @@ class ScoreController extends Controller
         $inputs = Input::where('id_period', $period)->get();
         foreach($inputs as $input){
             //GET DATA (2/2)
-            $getuser2 = User::where('id_officer', $input->id_officer)->first();
+            //$getuser2 = User::where('id_officer', $input->id_officer)->first();
             $getperiod2 = Period::where('id_period', $input->id_period)->first();
             $getofficer2 = Officer::where('id_officer', $input->id_officer)->first();
             $getposition2 = Position::with('officer')->whereHas('officer', function($query) use($input){
@@ -408,11 +408,13 @@ class ScoreController extends Controller
             $getsubcriteria2 = Criteria::where('id_criteria', $input->id_criteria)->first();
 
             //CHECK IF ADMIN (WILL BE REMOVED)
+            /*
             if(empty($getuser2->part) || $getuser2->part == 'Admin'){
                 $is_lead = 'No';
             }else{
                 $is_lead = 'Yes';
             }
+            */
 
             //INSERT DATA
             HistoryInput::insert([
@@ -435,7 +437,7 @@ class ScoreController extends Controller
                 'attribute'=>$getsubcriteria2->attribute,
                 'level'=>$getsubcriteria2->level,
                 'max'=>$getsubcriteria2->max,
-                'is_lead'=>$is_lead,
+                'is_lead'=>'No',
                 'input'=>$input->input,
                 'input_raw'=>$input->input_raw,
             ]);

@@ -71,10 +71,11 @@
         $("input[id='import_reset']").prop('disabled', true);
         $("input[id='import_reset']").prop('checked', false);
     });
-
     $("input[id='import_method_create']").change(function() {
         $("input[id='import_reset']").prop('disabled', false);
-        $("input[id='import_reset']").prop('checked', false);
+    });
+    $("input[id='import_method_updcre']").change(function() {
+        $("input[id='import_reset']").prop('disabled', false);
     });
 </script>
 <!--

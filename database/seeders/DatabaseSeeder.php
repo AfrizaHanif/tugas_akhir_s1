@@ -313,7 +313,7 @@ class DatabaseSeeder extends Seeder
         */
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-001',
+            'id_officer' => 'OFF-340014119',
             'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_position' => 'DPT-001',
@@ -327,8 +327,9 @@ class DatabaseSeeder extends Seeder
             'is_lead' => 'Yes',
         ]);
 
+        /*
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-002',
+            'id_officer' => 'OFF-340013834',
             'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_position' => 'DPT-002',
@@ -342,9 +343,10 @@ class DatabaseSeeder extends Seeder
             'religion' => 'Islam',
             'is_lead' => 'Yes',
         ]);
+        */
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-003',
+            'id_officer' => 'OFF-340056728',
             'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
             'id_position' => 'DPT-003',
@@ -359,7 +361,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-004',
+            'id_officer' => 'OFF-340012614',
             'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
             'id_position' => 'DPT-004',
@@ -374,7 +376,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-005',
+            'id_officer' => 'OFF-340020343',
             'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
             'id_position' => 'DPT-006',
@@ -390,7 +392,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-006',
+            'id_officer' => 'OFF-340018542',
             'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_position' => 'DPT-006',
@@ -405,7 +407,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-007',
+            'id_officer' => 'OFF-340015905',
             'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
             'id_position' => 'DPT-007',

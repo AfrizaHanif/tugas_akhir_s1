@@ -68,6 +68,7 @@ class OfficerController extends Controller
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
         $id_officer = "OFF-".$str_id;
         */
+        /*
         $id_officer = IdGenerator::generate([
             'table'=>'officers',
             'field'=>'id_officer',
@@ -75,6 +76,8 @@ class OfficerController extends Controller
             'prefix'=>'OFF-',
             'reset_on_prefix_change'=>true,
         ]);
+        */
+        $id_officer = 'OFF-'.$request->nip;
 
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
@@ -204,10 +207,10 @@ class OfficerController extends Controller
 
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
-            'nip' => [Rule::unique('officers')->ignore($officer),],
+            //'nip' => [Rule::unique('officers')->ignore($officer),],
             'name' => [Rule::unique('officers')->ignore($officer),]
         ], [
-            'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
+            //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
         ]);
         if ($validator->fails()) {
@@ -250,7 +253,7 @@ class OfficerController extends Controller
 
         //UPDATE DATA
         $officer->update([
-            'nip'=>$request->nip,
+            //'nip'=>$request->nip,
             'name'=>$request->name,
             'id_position'=>$request->id_position,
             'id_sub_team_1'=>$request->id_sub_team_1,

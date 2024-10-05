@@ -56,6 +56,7 @@ class DashboardController extends Controller
             {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
             ->where('is_lead', 'No')
             ->get();
+            //dd($input_off);
         }elseif(Auth::user()->part == 'KBPS'){
             //LIST OF OFFICERS FOR INPUT
             $input_off = Officer::with('position')

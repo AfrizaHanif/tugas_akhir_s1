@@ -43,7 +43,14 @@
                                         <label for="import_method" class="form-label">Metode Import</label>
                                         <div class="list-group">
                                             <label class="list-group-item d-flex gap-2">
-                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_create" value="create" checked>
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_updcre" value="updcre" checked>
+                                                <span>
+                                                    Penambahan dan Pembaharuan Data
+                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan kedua metode (Penambahan dan Pembaharuan Data Pegawai).</small>
+                                                </span>
+                                            </label>
+                                            <label class="list-group-item d-flex gap-2">
+                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_create" value="create">
                                                 <span>
                                                     Penambahan Data
                                                     <small class="d-block text-body-secondary">Metode ini akan melakukan penambahan Pegawai yang tidak ada di sistem ini.</small>
@@ -61,8 +68,8 @@
                                             <label class="list-group-item d-flex gap-2">
                                                 <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_update" value="update">
                                                 <span>
-                                                    Perbaharui Data
-                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan perubahan Pegawai yang ada di sistem ini.</small>
+                                                    Perbaharuan Data
+                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan pembaharuan data Pegawai yang ada di sistem ini.</small>
                                                 </span>
                                             </label>
                                         </div>

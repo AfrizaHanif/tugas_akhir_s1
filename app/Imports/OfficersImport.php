@@ -38,17 +38,16 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
             $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
 
             //IF LEAD
+            $is_lead = 'No';
             $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
-            $is_lead = '';
             if(!empty($check_lead->id_position)){
                 if($check_lead->id_position == $positions->id_position){
                     $is_lead = 'Yes';
-                }else{
-                    $is_lead = 'No';
                 }
             }
 
             if($this->import_method == 'create'){
+                /*
                 $id_officer = IdGenerator::generate([
                     'table'=>'officers',
                     'field'=>'id_officer',
@@ -56,12 +55,14 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                     'prefix'=>'OFF-',
                     'reset_on_prefix_change'=>true,
                 ]);
+                */
+                $id_officer = 'OFF-'.$row['nip'];
 
                 //IMPORT DATA
                 Officer::firstOrCreate([
+                    'id_officer' => $id_officer,
                     'nip'=>$row['nip'],
                 ],[
-                    'id_officer' => $id_officer,
                     'name'=>$row['nama'],
                     'id_position'=>$positions->id_position,
                     'id_sub_team_1'=>$subteams1->id_sub_team,
@@ -77,6 +78,27 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                 ]);
             }elseif($this->import_method == 'update'){
                 Officer::where('nip', $row['nip'])->update([
+                    'name'=>$row['nama'],
+                    'id_position'=>$positions->id_position,
+                    'id_sub_team_1'=>$subteams1->id_sub_team,
+                    'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
+                    'place_birth'=>$row['tmplahir'],
+                    'date_birth'=>$row['tgllahir'],
+                    'email'=>$row['email'],
+                    'phone'=>$row['telp'],
+                    'gender'=>$row['jk'],
+                    'religion'=>$row['agama'],
+                    'is_lead'=>$is_lead,
+                    'photo'=>$row['foto'],
+                ]);
+            }elseif($this->import_method == 'updcre'){
+                $id_officer = 'OFF-'.$row['nip'];
+
+                //IMPORT DATA
+                Officer::updateOrCreate([
+                    'id_officer' => $id_officer,
+                    'nip'=>$row['nip'],
+                ],[
                     'name'=>$row['nama'],
                     'id_position'=>$positions->id_position,
                     'id_sub_team_1'=>$subteams1->id_sub_team,
