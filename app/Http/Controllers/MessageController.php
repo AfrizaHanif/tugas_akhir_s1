@@ -27,12 +27,12 @@ class MessageController extends Controller
     public function store_in(Request $request)
     {
         //GET ID OFFICER
-        $id_officer = Officer::where('nip', $request->officer_nip)->first()->id_officer;
+        //$id_officer = Officer::where('id_officer', $request->id_officer)->first()->id_officer;
 
         //STORE DATA
         Message::insert([
-            'id_officer'=>$id_officer,
-            'officer_nip'=>$request->officer_nip,
+            //'id_officer'=>$id_officer,
+            //'officer_nip'=>$request->officer_nip,
             'officer_name'=>$request->officer_name,
             'message_in'=>$request->message_in,
             'type'=>$request->type,

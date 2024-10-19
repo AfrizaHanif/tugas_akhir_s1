@@ -20,7 +20,8 @@
     <thead>
         <tr class="table-primary">
             <th class="col-1" scope="col">#</th>
-            <th scope="col">User Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">NIP</th>
             <th scope="col">Nama Pengguna</th>
             <th scope="col">Bagian</th>
             <th class="col-1" scope="col">Action</th>
@@ -31,6 +32,7 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->username }}</td>
+            <td>{{ $user->nip }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->part }}</td>
             <td>

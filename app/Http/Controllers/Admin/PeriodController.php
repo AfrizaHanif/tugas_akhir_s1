@@ -88,7 +88,7 @@ class PeriodController extends Controller
             'year'=>$request->year,
             'active_days'=>$request->active_days,
             'progress_status'=>'Pending',
-            'import_status'=>'Clear',
+            'import_status'=>'No Data',
 		]);
 
         //RETURN TO VIEW
@@ -140,16 +140,5 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.masters.periods.index')->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
-    }
-
-    public function skip($period)
-    {
-        //UPDATE DATA
-        Period::where('id_period', $period)->update([
-            'progress_status'=>'Skipped',
-		]);
-
-        //RETURN TO VIEW
-        return redirect()->route('admin.masters.periods.index')->with('success','Proses Lewat Berhasil')->with('code_alert', 1);
     }
 }

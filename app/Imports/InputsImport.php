@@ -53,7 +53,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
         foreach($this->criterias as $criteria){
             foreach ($rows as $row){
                 //dd($row);
-                $officer = $this->officers->where('nip', $row['nip'])->first();
+                $officer = $this->officers->where('id_officer', $row['nip'])->first();
                 //dd(!is_null($officer));
                 if(!is_null($officer)){
                     $str_officer = substr($officer->id_officer, 4);
@@ -179,7 +179,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
     public function model(array $row)
     {
         foreach($this->criterias as $criteria){
-            $officer = $this->officers->where('nip', $row['nip'])->first();
+            $officer = $this->officers->where('id_officer', $row['nip'])->first();
             $str_officer = substr($officer->id_officer, 4);
             $str_year = substr($this->latest_per, -5);
             $str_sub = substr($criteria->id_criteria, 4);

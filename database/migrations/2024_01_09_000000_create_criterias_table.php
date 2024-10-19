@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 50);
             $table->double('weight');
             $table->char('attribute', 11);
-            $table->smallInteger('level');
+            //$table->smallInteger('level');
             $table->smallInteger('max');
             $table->char('need', 10);
             $table->char('source', 25);

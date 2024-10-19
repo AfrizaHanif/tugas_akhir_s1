@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_input', 25)->primary();
             $table->char('id_period', 11);
             $table->foreign('id_period')->references('id_period')->on('periods');
-            $table->char('id_officer', 15);
+            $table->char('id_officer', 11);
             $table->foreign('id_officer')->references('id_officer')->on('officers');
             $table->char('id_criteria', 11);
             $table->foreign('id_criteria')->references('id_criteria')->on('criterias');

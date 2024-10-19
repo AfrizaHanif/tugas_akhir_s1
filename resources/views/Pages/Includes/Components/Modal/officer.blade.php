@@ -1,230 +1,262 @@
-@if (Request::is('admin/masters/officers'))
+@if (Request::is('admin/masters/officers') || Request::is('developer/masters/officers'))
 <!--IMPORT PEGAWAI-->
 <div class="modal modal-lg fade" id="modal-off-import" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.officers.import') }}" method="post" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Import Data Pegawai</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Import Data Pegawai</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-off-import" action="{{ route('admin.masters.officers.import') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab" aria-controls="upload-tab-pane" aria-selected="true">Upload File</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="columns-tab" data-bs-toggle="tab" data-bs-target="#columns-tab-pane" type="button" role="tab" aria-controls="columns-tab-pane" aria-selected="false">Column</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="positions-tab" data-bs-toggle="tab" data-bs-target="#positions-tab-pane" type="button" role="tab" aria-controls="positions-tab-pane" aria-selected="false">Jabatan</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams-tab-pane" type="button" role="tab" aria-controls="teams-tab-pane" aria-selected="false">Tim</button>
-                                </li>
-                            </ul>
-                            <div class="tab-content pt-2" id="myTabContent">
-                                <div class="tab-pane fade show active" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
-                                    <div class="alert alert-warning" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong>
-                                        <ol>
-                                            <li>Baca <b>Cara Import</b> sebelum melakukan import</li>
-                                            <li><b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import</li>
-                                        </ol>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="file" class="form-label">File Upload</label>
-                                        <input class="form-control" type="file" id="file" name="file" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="import_method" class="form-label">Metode Import</label>
-                                        <div class="list-group">
-                                            <label class="list-group-item d-flex gap-2">
-                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_updcre" value="updcre" checked>
-                                                <span>
-                                                    Penambahan dan Pembaharuan Data
-                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan kedua metode (Penambahan dan Pembaharuan Data Pegawai).</small>
-                                                </span>
-                                            </label>
-                                            <label class="list-group-item d-flex gap-2">
-                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_create" value="create">
-                                                <span>
-                                                    Penambahan Data
-                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan penambahan Pegawai yang tidak ada di sistem ini.</small>
-                                                </span>
-                                            </label>
-                                            <label class="list-group-item d-flex gap-2">
-                                                <input class="form-check-input flex-shrink-0" type="checkbox" name="import_reset" id="import_reset" value="reset">
-                                                <span>
-                                                    Reset Data Pegawai
-                                                    <small class="d-block text-body-secondary"><strong>PERHATIAN: </strong>Pilihan ini akan menghapus seluruh data Pegawai dan Input sebelum melakukan import.</small>
-                                                </span>
-                                            </label>
+                            <div class="position-sticky" style="top: 0rem;">
+                                @if (Session::get('modal_redirect') == 'modal-off-import')
+                                @include('Templates.Includes.Components.alert')
+                                @endif
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab" aria-controls="upload-tab-pane" aria-selected="true">Upload File</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="columns-tab" data-bs-toggle="tab" data-bs-target="#columns-tab-pane" type="button" role="tab" aria-controls="columns-tab-pane" aria-selected="false">Sumber Kolom</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="datas-tab" data-bs-toggle="tab" data-bs-target="#datas-tab-pane" type="button" role="tab" aria-controls="datas-tab-pane" aria-selected="false">Sumber Data</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content pt-2" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
+                                        <div class="alert alert-warning" role="alert">
+                                            <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong>
+                                            <ol>
+                                                <li>Baca <b>Cara Import</b> sebelum melakukan import</li>
+                                                <li><b>Tutup file yang akan di import.</b> Jika dibiarkan dibuka, akan terjadi error dari browser saat import</li>
+                                            </ol>
                                         </div>
-                                        <div class="list-group pt-2">
-                                            <label class="list-group-item d-flex gap-2">
-                                                <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_update" value="update">
-                                                <span>
-                                                    Perbaharuan Data
-                                                    <small class="d-block text-body-secondary">Metode ini akan melakukan pembaharuan data Pegawai yang ada di sistem ini.</small>
-                                                </span>
-                                            </label>
+                                        <div class="mb-3">
+                                            <label for="file" class="form-label">File Upload</label>
+                                            <input class="form-control" type="file" id="file" name="file" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="import_method" class="form-label">Metode Import</label>
+                                            <div class="list-group">
+                                                <label class="list-group-item d-flex gap-2">
+                                                    <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_upcreate" value="upcreate" checked>
+                                                    <span>
+                                                        Penambahan dan Pembaharuan Data
+                                                        <small class="d-block text-body-secondary">
+                                                            Metode ini akan melakukan penambahan (Jika tidak terdaftar di sistem ini.) dan perubahan data pegawai dan pengguna (Jika terdaftar di sistem ini).
+                                                        </small>
+                                                    </span>
+                                                </label>
+                                                <label class="list-group-item d-flex gap-2">
+                                                    <input class="form-check-input flex-shrink-0" type="radio" name="import_method" id="import_method_reset" value="reset">
+                                                    <span>
+                                                        Reset Data Pegawai
+                                                        <small class="d-block text-body-secondary">
+                                                            <strong>PERHATIAN: </strong>Pilihan ini akan menghapus seluruh data Pegawai, Pengguna, dan Input sebelum melakukan import. Baca perhatian di <b>CARA IMPORT</b>.
+                                                        </small>
+                                                    </span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="positions-tab-pane" role="tabpanel" aria-labelledby="positions-tab" tabindex="0">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" scope="col">#</th>
-                                                <th scope="col">Nama</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($positions as $position)
-                                            <tr>
-                                                <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $position->name }}</td>
-                                            </tr>
-                                            @empty
-                                            <tr>
-                                                <td colspan="10">Tidak ada Jabatan yang terdaftar</td>
-                                            </tr>
-                                            @endforelse
-                                        </tbody>
-                                        <tfoot class="table-group-divider">
-                                            <tr>
-                                                <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="tab-pane fade" id="columns-tab-pane" role="tabpanel" aria-labelledby="columns-tab" tabindex="0">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th class="col-1" scope="col">#</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">Sumber Kolom</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">0</th>
-                                                <td>NIP</td>
-                                                <td>nip</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Nama Pegawai</td>
-                                                <td>nama</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jabatan</td>
-                                                <td>jabatan</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Tim</td>
-                                                <td>tim</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">4</th>
-                                                <td>Tim Utama</td>
-                                                <td>subtim1</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">5</th>
-                                                <td>Tim Cadangan</td>
-                                                <td>subtim2</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">6</th>
-                                                <td>Tempat Lahir</td>
-                                                <td>tmplahir</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">7</th>
-                                                <td>Tanggal Lahir</td>
-                                                <td>tgllahir</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">8</th>
-                                                <td>Jenis Kelamin</td>
-                                                <td>jk</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">9</th>
-                                                <td>Agama</td>
-                                                <td>agama</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot class="table-group-divider">
-                                            <tr>
-                                                <td colspan="7">Sesuaikan nama kolom di Excel dengan yang diatas agar proses Import akan berjalan dengan lancar.</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="tab-pane fade" id="teams-tab-pane" role="tabpanel" aria-labelledby="teams-tab" tabindex="0">
-                                    <div class="table-responsive">
+                                    <div class="tab-pane fade" id="columns-tab-pane" role="tabpanel" aria-labelledby="columns-tab" tabindex="0">
                                         <table class="table">
                                             <thead>
                                                 <tr>
                                                     <th class="col-1" scope="col">#</th>
-                                                    <th scope="col">Nama Bagian</th>
-                                                    <th scope="col">Nama Tim</th>
-                                                    <th scope="col">Nama Sub Tim</th>
+                                                    <th scope="col">Nama</th>
+                                                    <th scope="col">Kolom di Excel</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @forelse ($subteams as $subteam)
                                                 <tr>
-                                                    <th scope="row">{{ $loop->iteration }}</th>
-                                                    <td>{{ $subteam->team->part->name }}</td>
-                                                    <td>{{ $subteam->team->name }}</td>
-                                                    <td>{{ $subteam->name }}</td>
+                                                    <th scope="row">0</th>
+                                                    <td>NIP</td>
+                                                    <td>nip</td>
                                                 </tr>
-                                                @empty
                                                 <tr>
-                                                    <td colspan="10">Tidak ada Tim yang terdaftar</td>
+                                                    <th scope="row">1</th>
+                                                    <td>Nama Pegawai</td>
+                                                    <td>nama</td>
                                                 </tr>
-                                                @endforelse
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>Jabatan</td>
+                                                    <td>jabatan</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>Tim</td>
+                                                    <td>tim</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>Tim Utama</td>
+                                                    <td>subtim1</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">5</th>
+                                                    <td>Tim Cadangan</td>
+                                                    <td>subtim2</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">6</th>
+                                                    <td>Tempat Lahir</td>
+                                                    <td>tmplahir</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">7</th>
+                                                    <td>Tanggal Lahir</td>
+                                                    <td>tgllahir</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">8</th>
+                                                    <td>Jenis Kelamin</td>
+                                                    <td>jk</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">9</th>
+                                                    <td>Agama</td>
+                                                    <td>agama</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">10</th>
+                                                    <td>Foto</td>
+                                                    <td>foto</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">11</th>
+                                                    <td>Kepegawaian</td>
+                                                    <td>is_hr</td>
+                                                </tr>
                                             </tbody>
                                             <tfoot class="table-group-divider">
                                                 <tr>
-                                                    <td colspan="7">Total Data: <b>{{ $subteams->count() }}</b> Tim</td>
+                                                    <td colspan="7">Sesuaikan nama kolom di Excel dengan yang diatas agar proses Import dapat berjalan dengan lancar.</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="datas-tab-pane" role="tabpanel" aria-labelledby="datas-tab" tabindex="0">
+                                        <ul class="nav nav-pills" id="myTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="positions-tab" data-bs-toggle="tab" data-bs-target="#positions-tab-pane" type="button" role="tab" aria-controls="positions-tab-pane" aria-selected="true">Jabatan</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="teams-tab" data-bs-toggle="tab" data-bs-target="#teams-tab-pane" type="button" role="tab" aria-controls="teams-tab-pane" aria-selected="false">Tim</button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content pt-2" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="positions-tab-pane" role="tabpanel" aria-labelledby="positions-tab" tabindex="0">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="col-1" scope="col">#</th>
+                                                            <th scope="col">Nama</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($positions as $position)
+                                                        <tr>
+                                                            <th scope="row">{{ $loop->iteration }}</th>
+                                                            <td>{{ $position->name }}</td>
+                                                        </tr>
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="10">Tidak ada Jabatan yang terdaftar</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                    <tfoot class="table-group-divider">
+                                                        <tr>
+                                                            <td colspan="7">Total Data: <b>{{ $positions->count() }}</b> Jabatan</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="teams-tab-pane" role="tabpanel" aria-labelledby="teams-tab" tabindex="0">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="col-1" scope="col">#</th>
+                                                                <th scope="col">Nama Bagian</th>
+                                                                <th scope="col">Nama Tim</th>
+                                                                <th scope="col">Nama Sub Tim</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse ($subteams as $subteam)
+                                                            <tr>
+                                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                                <td>{{ $subteam->team->part->name }}</td>
+                                                                <td>{{ $subteam->team->name }}</td>
+                                                                <td>{{ $subteam->name }}</td>
+                                                            </tr>
+                                                            @empty
+                                                            <tr>
+                                                                <td colspan="10">Tidak ada Tim yang terdaftar</td>
+                                                            </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                        <tfoot class="table-group-divider">
+                                                            <tr>
+                                                                <td colspan="7">Total Data: <b>{{ $subteams->count() }}</b> Tim</td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 <div class="alert alert-info" role="alert">
                                     <i class="bi bi-info-circle-fill"></i> <strong>CARA IMPORT</strong>
+                                    <ol>
+                                        <li>Sebelum melakukan import, buatlah file Excel baru, dan pastikan file tersebut memenuhi ketentuan berikut:</li>
+                                        <ul>
+                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data pegawai.</li>
+                                            <li>Samakan nama kolom dengan ketentuan yang diberikan di tab <b>Sumber Kolom</b> agar proses Import Pegawai berjalan dengan lancar.</li>
+                                            <li>Jika ada penamaan jabatan dan tim (Utama dan cadangan) terdapat kata yang berbeda dengan sumber data, maka sesuaikan dengan sumber data yang ada.</li>
+                                            <li>Untuk pegawai yang tidak memiliki tim cadangan dan foto, bisa dikosongkan.</li>
+                                            <li>Untuk <b>is_hr</b>, isi kata "Ya" bagi pegawai yang tergabung dalam Kepegawaian. Jika tidak, isi kata "Tidak"</li>
+                                        </ul>
+                                        <li>Pilih file yang akan di import ke dalam sistem.</li>
+                                        <li>Pilih metode Import yang anda inginkan. Baca deskripsi metode sebelum melakukan Import.</li>
+                                        <li><b>KHUSUS METODE RESET</b></li>
+                                        <ul>
+                                            <li>Metode Reset akan menghapus semua data (Pegawai, Pengguna, dan Data Nilai).</li>
+                                            <li>Anda akan <b>otomatis keluar</b> dari sistem ini dan anda diperlukan masuk lagi sesuai dengan NIP anda (Password: bps3500)</li>
+                                            <li>Jika sebelumnya terdapat data nilai yang telah diisi, silahkan lakukan import ulang kembali.</li>
+                                        </ul>
+                                        <li>Setelah melakukan import, pastikan anda memeriksa data apakah sudah masuk atau belum.</li>
+                                    </ol>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tutup
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload"></i>
-                        Import
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tutup
+                </button>
+                <button type="submit" form="form-off-import" class="btn btn-primary">
+                    <i class="bi bi-upload"></i>
+                    Import
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -271,18 +303,18 @@
 </div>
 <!--CREATE OFFICER-->
 <div class="modal modal-lg fade" id="modal-off-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-off-create-{{ $part->id_part }}" action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
                     @csrf
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 @if (Session::get('modal_redirect') == 'modal-off-create')
                                 @include('Templates.Includes.Components.alert')
                                 @endif
@@ -341,8 +373,8 @@
                                     <div class="tab-pane fade" id="pegawai-{{ $part->id_part }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $part->id_part }}-tab" tabindex="0">
                                         <br/>
                                         <div class="mb-3">
-                                            <label for="nip" class="form-label">NIP</label>
-                                            <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ old('nip') }}">
+                                            <label for="id_officer" class="form-label">NIP (ID)</label>
+                                            <input type="number" class="form-control" id="id_officer" name="id_officer" min="10000000" max="999999999" value="{{ old('id_officer') }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">E-Mail</label>
@@ -372,6 +404,14 @@
                                                     @endforeach
                                                 @endforeach
                                             </select>
+                                            @if ($part->name == 'Umum')
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr">
+                                                <label class="form-check-label" for="is_hr">
+                                                    Apakah Merupakan Kepegawaian?
+                                                </label>
+                                            </div>
+                                            @endif
                                         </div>
                                         <div class="mb-3">
                                             <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
@@ -390,36 +430,40 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 <div class="alert alert-info" role="alert">
                                     <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
                                     <ol>
                                         <li>Isi sesuai dengan data pegawai yang ada di BPS Jawa Timur</li>
                                         <li>Untuk jabatan dan tim fungsi, pastikan data tersebut telah terdaftar di aplikasi ini. Jika tidak, silahkan tambahkan data jabatan dan tim fungsi</li>
+                                        @if ($part->name == 'Umum')
+                                        <li>Jika pegawai tersebut bergabung ke Kepegawaian, centangkan di bawah pilihan tim utama.</li>
+                                        @endif
+                                        <li>Proses ini juga dapat menambahkan pengguna oleh sistem.</li>
                                         <li>Periksa hasil kembali data pegawai sebelum ditambahkan ke aplikasi</li>
                                     </ol>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
-                        Tambah
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Batal
+                </button>
+                <button type="submit" form="form-off-create-{{ $part->id_part }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i>
+                    Tambah
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <!--VIEW TEAMS-->
 <div class="modal modal-lg fade" id="modal-tim-view-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Tim Bagian {{ $part->name }}</h1>
@@ -428,7 +472,7 @@
             <div class="modal-body">
                 <div class="row justify-content-center g-2">
                     <div class="col-md-4">
-                        <div class="position-sticky" style="top: 2rem;">
+                        <div class="position-sticky" style="top: 0rem;">
                             <div class="nav flex-column nav-pills me-3" id="teams-modal-tab" role="tablist" aria-orientation="vertical">
                                 @forelse ($teams->where('id_part', $part->id_part) as $team)
                                 <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="pills-{{ $team->id_team }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $team->id_team }}" type="button" role="tab" aria-controls="pills-{{ $team->id_team }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
@@ -609,14 +653,15 @@
     </div>
     <!--DELETE TEAM-->
     <div class="modal fade" id="modal-tim-delete-{{ $team->id_team }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
-                <form action="{{ route('admin.masters.teams.destroy', $team->id_team) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Tim</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Tim</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-tim-delete-{{ $team->id_team }}" action="{{ route('admin.masters.teams.destroy', $team->id_team) }}" method="POST" enctype="multipart/form-data">
+                        @csrf @method('DELETE')
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
@@ -627,19 +672,18 @@
                                 <li>Seluruh <strong>Sub Tim</strong> dari Tim ini akan terhapus.</li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $team->id_part }}">
-                            <i class="bi bi-x-lg"></i>
-                            Tidak
-                        </button>
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-check-lg"></i>
-                            Ya
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $team->id_part }}">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    <button type="submit" form="form-tim-delete-{{ $team->id_team }}" class="btn btn-danger">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -736,14 +780,15 @@
         </div>
         <!--DELETE SUB TEAM-->
         <div class="modal fade" id="modal-stm-delete-{{ $subteam->id_sub_team }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form action="{{ route('admin.masters.subteams.destroy', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Sub Tim</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Sub Tim</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-stm-delete-{{ $subteam->id_sub_team }}" action="{{ route('admin.masters.subteams.destroy', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data">
+                            @csrf @method('DELETE')
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                                 <br/>
@@ -753,19 +798,18 @@
                                     <li>Seluruh <strong>Pegawai</strong> yang tergabung dengan Tim ini akan terhapus.</li>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $subteam->team->id_part }}">
-                                <i class="bi bi-x-lg"></i>
-                                Tidak
-                            </button>
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-check-lg"></i>
-                                Ya
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $subteam->team->id_part }}">
+                            <i class="bi bi-x-lg"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" form="form-stm-delete-{{ $subteam->id_sub_team }}" class="btn btn-danger">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -794,18 +838,18 @@
 </div>
 <!--UPDATE OFFICER-->
 <div class="modal modal-lg fade" id="modal-off-update-{{ $officer->id_officer }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->nip }}) ({{ $officer->subteam_1->team->part->id_part }})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->id_officer }}) ({{ $officer->subteam_1->team->part->id_part }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-off-update-{{ $officer->id_officer }}" action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
                     @csrf @method('PUT')
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 @if (Session::get('modal_redirect') == 'modal-off-update')
                                 @include('Templates.Includes.Components.alert')
                                 @endif
@@ -877,8 +921,8 @@
                                     <div class="tab-pane fade" id="pegawai-{{ $officer->id_officer }}-tab-pane" role="tabpanel" aria-labelledby="pegawai-{{ $officer->id_officer }}-tab" tabindex="0">
                                         <br/>
                                         <div class="mb-3">
-                                            <label for="nip" class="form-label">NIP</label>
-                                            <input type="number" class="form-control" id="nip" name="nip" min="10000000" max="999999999" value="{{ $officer->nip }}">
+                                            <label for="id_officer" class="form-label">NIP (ID)</label>
+                                            <input type="number" class="form-control" id="id_officer" name="id_officer" min="10000000" max="999999999" value="{{ $officer->id_officer }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">E-Mail</label>
@@ -908,6 +952,21 @@
                                                     @endforeach
                                                 @endforeach
                                             </select>
+                                            @if ($officer->subteam_1->team->part->name == 'Umum')
+                                            <div class="form-check">
+                                                @if ($users->where('nip', $officer->id_officer)->first()->part == 'Admin')
+                                                <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr" checked>
+                                                <label class="form-check-label" for="is_hr">
+                                                    Apakah Merupakan Kepegawaian?
+                                                </label>
+                                                @else
+                                                <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr">
+                                                <label class="form-check-label" for="is_hr">
+                                                    Apakah Merupakan Kepegawaian?
+                                                </label>
+                                                @endif
+                                            </div>
+                                            @endif
                                         </div>
                                         <div class="mb-3">
                                             <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
@@ -926,7 +985,7 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 <div class="alert alert-info" role="alert">
                                     <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
                                     <ol>
@@ -938,32 +997,32 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-pencil"></i>
-                        Ubah
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Batal
+                </button>
+                <button type="submit" form="form-off-update-{{ $officer->id_officer }}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i>
+                    Ubah
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <!--DELETE OFFICER-->
 <div class="modal fade" id="modal-off-delete-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Pegawai</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Pegawai</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-off-delete-{{ $officer->id_officer }}" action="{{ route('admin.masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                    @csrf @method('DELETE')
                     <div class="mb-3" hidden>
                         <label for="id_part" class="form-label" hidden>Bagian</label>
                         <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->subteam_1->team->part->id_part }}" readonly hidden>
@@ -976,26 +1035,25 @@
                             <li>Data nilai yang dimiliki oleh Pegawai ini akan dihapus bersamaan.</li>
                         </ul>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-off-delete-{{ $officer->id_officer }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>
 @endforeach
 <!--VIEW POSITIONS-->
 <div class="modal fade" id="modal-dep-view" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Jabatan</h1>
@@ -1025,7 +1083,7 @@
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                         <i class="bi bi-menu-button-fill"></i>
                                     </button>
-                                    <span
+                                    </span>
                                     @else
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-menu-button-fill"></i>
@@ -1141,32 +1199,32 @@
 </div>
 <!--DELETE POSITIONS-->
 <div class="modal fade" id="modal-dep-delete-{{ $position->id_position }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Jabatan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-dep-delete-{{ $position->id_position }}" action="{{ route('admin.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
+                    @csrf @method('DELETE')
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
                         Apakah anda ingin menghapus Jabatan <b>{{ $position->name }}</b>?
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
-                        <i class="bi bi-backspace"></i>
-                        Tidak
-                    </button>
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <i class="bi bi-backspace"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-dep-delete-{{ $position->id_position }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>

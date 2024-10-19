@@ -1,5 +1,13 @@
 <script src="{{asset('Sources/JS/csrf.js')}}"></script>
 
+@if (Session::get('modal_redirect') == 'modal-dsh-first')
+<script>
+    $(function() {
+        $('#modal-dsh-first').modal('show');
+    });
+</script>
+@endif
+
 @if (Session::get('modal_redirect') == 'modal-prt-create')
 <script>
     $(function() {
@@ -12,6 +20,14 @@
 <script>
     $(function() {
         $('#modal-prt-update-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-off-import')
+<script>
+    $(function() {
+        $('#modal-off-import').modal('show');
     });
 </script>
 @endif

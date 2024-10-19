@@ -21,10 +21,13 @@ use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\Home\ReportController as HomeReportController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Developer\SettingController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController as AllReportController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Officer\OfficerController as OfficerOfficerController;
+use App\Http\Controllers\Officer\ReportController as OfficerReportController;
+use App\Http\Controllers\Officer\ScoreController as OfficerScoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,6 +72,7 @@ Route::middleware('auth')->group(function () {
 });
 
 //REPORTS
+/*
 Route::prefix('reports')->name('reports.')->group(function () {
     Route::controller(AllReportController::class)->group(function() {
         Route::get('/officers', 'officers')->name('officers');
@@ -82,8 +86,10 @@ Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/certificate/{month}/{year}', 'certificate')->name('certificate');
     });
 });
+*/
 
 //BACK END
+//ADMIN'S DASHBOARD
 Route::middleware(['auth', 'checkAdmin'])->group(function () {
     //Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin', [DashboardController::class, 'admin'])->name('admin');
@@ -116,7 +122,6 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::resource('/crips', CripsController::class);
                 Route::resource('/teams', TeamsController::class);
                 Route::resource('/subteams', SubTeamsController::class);
-
             });
         });
         //INPUTS
@@ -175,8 +180,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         });
         //Route::get('/results', [ResultController::class, 'index'])->name('results');
         //REPORTS
-        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-        /*
+        //Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::controller(ReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
@@ -185,11 +189,12 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                     Route::get('/{period}', 'inpall')->name('all');
                     Route::get('/{period}/{id}', 'inpsingle')->name('single');
                 });
-                Route::get('/analysis/{period}', 'analysis')->name('analysis');
-                Route::get('/result/{period}', 'result')->name('result');
+                Route::get('/analysis/{month}/{year}', 'analysis')->name('analysis');
+                Route::get('/result/{subteam}/{month}/{year}', 'team_result')->name('teamresult');
+                Route::get('/result/{month}/{year}', 'result')->name('result');
+                Route::get('/certificate/{month}/{year}', 'certificate')->name('certificate');
             });
         });
-        */
         //FEEDBACK
         Route::resource('/messages', MessageController::class, ['only' => ['index', 'destroy']]);
         Route::prefix('messages')->name('messages.')->group(function () {
@@ -198,14 +203,39 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
         //PENGATURAN
-        /*
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::controller(SettingController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::post('/update', 'update')->name('update');
             });
         });
-        */
+    });
+});
+
+//OFFICER'S DASHBOARD
+Route::middleware(['auth', 'checkOfficer'])->group(function () {
+    Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
+    Route::prefix('officer')->name('officer.')->group(function () {
+        Route::prefix('officers')->name('officers.')->group(function () {
+            Route::controller(OfficerOfficerController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::get('/search', 'search')->name('search');
+                Route::post('/export', 'export')->name('export');
+            });
+        });
+        Route::get('/eotm', [OfficerScoreController::class, 'index'])->name('eotm.index');
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::controller(OfficerReportController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::get('/score/{month}/{year}', 'score')->name('score');
+            });
+        });
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::controller(SettingController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/update', 'update')->name('update');
+            });
+        });
     });
 });
 
@@ -239,17 +269,3 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
     });
 });
 
-//OFFICER'S DASHBOARD
-Route::middleware(['auth', 'checkOfficer'])->group(function () {
-    Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
-    Route::prefix('officer')->name('officer.')->group(function () {
-        //Route::get('/officers', [OfficerOfficerController::class, 'index'])->name('index');
-        /*
-        Route::prefix('officers')->name('officers.')->group(function () {
-            Route::get('/search', [OfficerOfficerController::class, 'search'])->name('search');
-        });
-        */
-        //Route::get('/scores', [OfficerScoreController::class, 'index'])->name('index');
-        //Route::get('/results', [OfficerResultController::class, 'index'])->name('results');
-    });
-});

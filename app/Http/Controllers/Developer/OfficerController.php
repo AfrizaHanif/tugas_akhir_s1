@@ -16,8 +16,10 @@ class OfficerController extends Controller
     {
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
+        $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get();
         $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::with('part')->get();
+        $team_lists = Team::with('part')->whereNotIn('name', ['Developer', 'Pimpinan BPS'])->get();
         $subteams = SubTeam::with('team')->get();
         $officers = Officer::with('position', 'subteam_1', 'subteam_2')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
@@ -25,7 +27,7 @@ class OfficerController extends Controller
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Developer.officer', compact('parts', 'positions', 'teams', 'subteams', 'officers'));
+        return view('Pages.Developer.officer', compact('parts', 'parts_2', 'positions', 'teams', 'team_lists', 'subteams', 'officers'));
     }
 
     public function search(Request $request)

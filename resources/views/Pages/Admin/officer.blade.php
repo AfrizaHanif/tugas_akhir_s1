@@ -40,21 +40,24 @@
 
 <!--SCRIPTS-->
 @push('scripts')
+<!--AUTO SWITCH TAB (PART)-->
 <script>
     $(document).ready(function () {
         $('#parts-tab button[data-bs-target="#{{ old('tab_redirect') }}"]').trigger("click")
     });
-</script><!--AUTO SWITCH TAB (PART)-->
+</script>
+<!--AUTO SWITCH TAB (TEAMS)-->
 <script>
     $(document).ready(function () {
         $('#teams-tab button[data-bs-target="#{{ old('sub_tab_redirect') }}"]').trigger("click")
     });
-</script><!--AUTO SWITCH TAB (TEAMS)-->
+</script>
+<!--AUTO SWITCH TAB (VIEW TEAMS AND SUB TEAMS)-->
 <script>
     $(document).ready(function () {
         $('#teams-modal-tab button[data-bs-target="#{{ old('modal_tab_redirect') }}"]').trigger("click")
     });
-</script><!--AUTO SWITCH TAB (VIEW TEAMS AND SUB TEAMS)-->
+</script>
 <script>
     const toastTrigger = document.getElementById('exportToastBtn')
     const toastLiveExample = document.getElementById('exportToast')
@@ -66,6 +69,7 @@
         })
     }
 </script>
+<!--
 <script>
     $("input[id='import_method_update']").change(function() {
         $("input[id='import_reset']").prop('disabled', true);
@@ -75,9 +79,11 @@
         $("input[id='import_reset']").prop('disabled', false);
     });
     $("input[id='import_method_updcre']").change(function() {
-        $("input[id='import_reset']").prop('disabled', false);
+        $("input[id='import_reset']").prop('disabled', true);
+        $("input[id='import_reset']").prop('checked', false);
     });
 </script>
+-->
 <!--
 <script>
     document.getElementById("close-prt-create").addEventListener("click", function()

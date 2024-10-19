@@ -22,8 +22,8 @@
                 </div>
                 @endif
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="User Name" required>
-                    <label for="username">User Name</label>
+                    <input type="text" class="form-control" id="login" name="login" placeholder="Username / NIP" required>
+                    <label for="login">Username / NIP</label>
                 </div>
                 <div class="form-floating">
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>

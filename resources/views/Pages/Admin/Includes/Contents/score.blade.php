@@ -3,7 +3,7 @@
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <p>
                 <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
@@ -60,20 +60,32 @@
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
                                 <a class="btn btn-primary disabled">
                                     <i class="bi bi-database-down"></i>
-                                    Ambil data
+                                    Ambil Data
                                 </a>
                                 </span>
+                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')->count() >= 1)
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $latest_per->id_period }}">
+                                    <i class="bi bi-database-down"></i>
+                                    Ambil Data
+                                </a>
                                 @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')->count() >= 1)
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak. Pastikan nilai tersebut telah direvisi sebelum melakukan update data.">
                                     <a class="btn btn-primary disabled">
                                         <i class="bi bi-database-down"></i>
-                                        Ambil data
+                                        Ambil Data
                                     </a>
-                                    </span>
+                                </span>
+                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')->count() >= 1 || $scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() >= 1)
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses ini hanya dilakukan sekali saja. Lakukan pengambilan kembali jika ada nilai yang telah direvisi.">
+                                    <a class="btn btn-primary disabled">
+                                        <i class="bi bi-database-down"></i>
+                                        Ambil Data
+                                    </a>
+                                </span>
                                 @else
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $latest_per->id_period }}">
                                     <i class="bi bi-database-down"></i>
-                                    Ambil data
+                                    Ambil Data
                                 </a>
                                 @endif
                             </div>

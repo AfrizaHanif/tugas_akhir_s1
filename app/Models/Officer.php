@@ -17,7 +17,7 @@ class Officer extends Model
     protected $fillable = [
         'id_officer',
         //'nip_bps',
-        'nip',
+        //'nip',
         'name',
         'org_code',
         'id_position',

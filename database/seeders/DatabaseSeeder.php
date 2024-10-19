@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -298,7 +299,7 @@ class DatabaseSeeder extends Seeder
         /*
         DB::table('officers')->insert([
             'id_officer' => 'OFF-000',
-            'nip' => '100000000',
+            //'nip' => '100000000',
             'name' => 'Muhammad Afriza Hanif',
             'id_position' => 'DPT-000',
             'id_sub_team_1' => 'STM-001',
@@ -313,8 +314,8 @@ class DatabaseSeeder extends Seeder
         */
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340014119',
-            'nip' => '340014119',
+            'id_officer' => '340014119',
+            //'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
             'id_position' => 'DPT-001',
             'id_sub_team_1' => 'STM-001',
@@ -329,8 +330,8 @@ class DatabaseSeeder extends Seeder
 
         /*
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340013834',
-            'nip' => '340013834',
+            'id_officer' => 340013834',
+            //'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
             'id_position' => 'DPT-002',
             'id_sub_team_1' => 'STM-002',
@@ -346,8 +347,8 @@ class DatabaseSeeder extends Seeder
         */
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340056728',
-            'nip' => '340056728',
+            'id_officer' => '340056728',
+            //'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
             'id_position' => 'DPT-003',
             'id_sub_team_1' => 'STM-011',
@@ -361,8 +362,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340012614',
-            'nip' => '340012614',
+            'id_officer' => '340012614',
+            //'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
             'id_position' => 'DPT-004',
             'id_sub_team_1' => 'STM-014',
@@ -376,8 +377,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340020343',
-            'nip' => '340020343',
+            'id_officer' => '340020343',
+            //'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
             'id_position' => 'DPT-006',
             'id_sub_team_1' => 'STM-014',
@@ -392,8 +393,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340018542',
-            'nip' => '340018542',
+            'id_officer' => '340018542',
+            //'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_position' => 'DPT-006',
             'id_sub_team_1' => 'STM-009',
@@ -407,8 +408,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('officers')->insert([
-            'id_officer' => 'OFF-340015905',
-            'nip' => '340015905',
+            'id_officer' => '340015905',
+            //'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
             'id_position' => 'DPT-007',
             'id_sub_team_1' => 'STM-009',
@@ -424,22 +425,22 @@ class DatabaseSeeder extends Seeder
         //USERS: Pengguna
         DB::table('users')->insert([
             'id_user' => 'USR-000',
+            'nip' => '100000000',
             'username' => 'developer',
             'name' => 'Muhammad Afriza Hanif',
             //'email' => 'dev@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'Dev',
-            //'id_officer' => 'OFF-000',
         ]);
 
         DB::table('users')->insert([
             'id_user' => 'USR-001',
+            'nip' => '340013834',
             'username' => 'testadmin',
-            'name' => 'Administrator',
+            'name' => 'Satriyo Wibowo, SP, M.M',
             //'email' => 'testadmin@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'Admin',
-            //'id_officer' => 'OFF-002',
         ]);
 
         /*
@@ -447,7 +448,7 @@ class DatabaseSeeder extends Seeder
             'id_user' => 'USR-002',
             'username' => 'testkabag',
             //'email' => 'testkabag@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'KBU',
             'id_officer' => 'OFF-003',
         ]);
@@ -456,7 +457,7 @@ class DatabaseSeeder extends Seeder
             'id_user' => 'USR-003',
             'username' => 'testketim1',
             //'email' => 'testketim1@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'KTT',
             'id_officer' => 'OFF-006',
         ]);
@@ -465,7 +466,7 @@ class DatabaseSeeder extends Seeder
             'id_user' => 'USR-004',
             'username' => 'testketim2',
             //'email' => 'testketim2@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'KTT',
             'id_officer' => 'OFF-007',
         ]);
@@ -473,12 +474,21 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'id_user' => 'USR-002',
+            'nip' => '340014119',
             'username' => 'testkbps',
-            'name' => 'Zulkipli',
+            'name' => 'Dr. Ir. Zulkipli, M.Si',
             //'email' => 'testkbps@bps.com',
-            'password' => '$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+            'password' => Hash::make('bps3500'),
             'part' => 'KBPS',
-            //'id_officer' => 'OFF-001',
+        ]);
+
+        DB::table('users')->insert([
+            'id_user' => 'USR-003',
+            'nip' => '340020343',
+            'username' => 'testpegawai',
+            'name' => 'Widia Puspitasari SST, M.Stat,',
+            'password' => Hash::make('bps3500'),
+            'part' => 'Pegawai',
         ]);
 
         //PERIOODS: Periode
@@ -490,7 +500,7 @@ class DatabaseSeeder extends Seeder
             'year' => '2024',
             'active_days' => '23',
             'progress_status' => 'Pending',
-            'import_status' => 'Clear',
+            'import_status' => 'No Data',
         ]);
 
         DB::table('periods')->insert([
@@ -501,7 +511,7 @@ class DatabaseSeeder extends Seeder
             'year' => '2024',
             'active_days' => '17',
             'progress_status' => 'Pending',
-            'import_status' => 'Clear',
+            'import_status' => 'No Data',
         ]);
 
         //CRITERIAS: Kriteria
@@ -534,7 +544,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Kehadiran',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '7',
+            //'level' => '7',
             'max' => '23',
             'need' => 'Ya',
             'source' => 'tanpa_kabar',
@@ -546,7 +556,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Keterlambatan',
             'weight' => '0.05',
             'attribute' => 'Cost',
-            'level' => '5',
+            //'level' => '5',
             'max' => '10350',
             'need' => 'Ya',
             'source' => 'kjk',
@@ -559,7 +569,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Capaian Kinerja Pegawai',
             'weight' => '0.15',
             'attribute' => 'Benefit',
-            'level' => '9',
+            //'level' => '9',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'ckp',
@@ -572,7 +582,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Berorientasi Pelayanan',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'berorientasi_pelayanan',
@@ -584,7 +594,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Akuntabel',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'akuntabel',
@@ -596,7 +606,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Kompeten',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'kompeten',
@@ -608,7 +618,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Harmonis',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'harmonis',
@@ -620,7 +630,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Loyal',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'loyal',
@@ -632,7 +642,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Adaptif',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'adaptif',
@@ -644,7 +654,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Kolaboratif',
             'weight' => '0.10',
             'attribute' => 'Benefit',
-            'level' => '3',
+            //'level' => '3',
             'max' => '100',
             'need' => 'Ya',
             'source' => 'kolaboratif',

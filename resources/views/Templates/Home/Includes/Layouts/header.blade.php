@@ -27,12 +27,6 @@
                             Hasil
                         </a>
                     </li>
-                    <li>
-                        <a href="/reports" class="nav-link {{ (request()->is('reports')) ? 'text-secondary' : 'text-white' }}">
-                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#daftar"/></svg>
-                            Laporan
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>

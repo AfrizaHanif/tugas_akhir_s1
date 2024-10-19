@@ -59,7 +59,7 @@ class ScoreController extends Controller
         $histories = HistoryInput::get();
         $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
         $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
 
         //RETURN TO VIEW
         return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'set_crit', 'histories', 'hscore', 'hofficers', 'hcriterias'));
@@ -377,7 +377,7 @@ class ScoreController extends Controller
                 'period_num_month'=>$getperiod1->num_month,
                 'period_year'=>$getperiod1->year,
                 'id_officer'=>$getofficer1->id_officer,
-                'officer_nip'=>$getofficer1->nip,
+                //'officer_nip'=>$getofficer1->nip,
                 'officer_name'=>$getofficer1->name,
                 'officer_position'=>$getposition1->name,
                 'id_sub_team'=>$getteam1->id_sub_team,
@@ -424,7 +424,7 @@ class ScoreController extends Controller
                 'period_num_month'=>$getperiod2->num_month,
                 'period_year'=>$getperiod2->year,
                 'id_officer'=>$getofficer2->id_officer,
-                'officer_nip'=>$getofficer2->nip,
+                //'officer_nip'=>$getofficer2->nip,
                 'officer_name'=>$getofficer2->name,
                 'officer_position'=>$getposition2->name,
                 'id_sub_team'=>$getteam2->id_sub_team,
@@ -435,7 +435,7 @@ class ScoreController extends Controller
                 'criteria_name'=>$getsubcriteria2->name,
                 'weight'=>$getsubcriteria2->weight,
                 'attribute'=>$getsubcriteria2->attribute,
-                'level'=>$getsubcriteria2->level,
+                //'level'=>$getsubcriteria2->level,
                 'max'=>$getsubcriteria2->max,
                 'is_lead'=>'No',
                 'input'=>$input->input,
@@ -472,7 +472,7 @@ class ScoreController extends Controller
                 'id_period'=>$getperiod3->id_period,
                 'period_name'=>$getperiod3->name,
                 'id_officer'=>$getofficer3->id_officer,
-                'officer_nip'=>$getofficer3->nip,
+                //'officer_nip'=>$getofficer3->nip,
                 'officer_name'=>$getofficer3->name,
                 'officer_position'=>$getposition3->name,
                 'id_category'=>$getcriteria3->id_category,
@@ -481,7 +481,7 @@ class ScoreController extends Controller
                 'criteria_name'=>$getsubcriteria3->name,
                 'weight'=>$getsubcriteria3->weight,
                 'attribute'=>$getsubcriteria3->attribute,
-                'level'=>$getsubcriteria3->level,
+                //'level'=>$getsubcriteria3->level,
                 'max'=>$getsubcriteria3->max,
                 'is_lead'=>$is_lead,
                 'input'=>$raw->input,
@@ -513,8 +513,10 @@ class ScoreController extends Controller
         HistoryResult::insert([
             'id_period'=>$getperiod4->id_period,
             'period_name'=>$getperiod4->name,
+            'period_month'=>$getperiod4->month,
+            'period_year'=>$getperiod4->year,
             'id_officer'=>$getofficer4->id_officer,
-            'officer_nip'=>$getofficer4->nip,
+            //'officer_nip'=>$getofficer4->nip,
             'officer_name'=>$getofficer4->name,
             'officer_position'=>$getposition4->name,
             'officer_photo'=>$photo,

@@ -89,10 +89,8 @@ class AnalysisController extends Controller
         ->whereHas('criteria', function($query){
             $query->where('need', 'Ya');
         })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->where('part', 'KBPS');
-            });
+        ->whereHas('officer', function($query){
+            $query->where('is_lead', 'No');
         })
         ->getQuery()->get();
 
@@ -115,15 +113,13 @@ class AnalysisController extends Controller
         //$criterias = Criteria::get();
 
         //GET INPUT
-        $inputs = Input::with('criteria')
+        $inputs = Input::with('criteria', 'officer')
         ->where('id_period', $latest_per->id_period)
         ->whereHas('criteria', function($query){
             $query->where('need', 'Ya');
         })
-        ->whereDoesntHave('officer', function($query){
-            $query->with('user')->whereHas('user', function($query){
-                $query->where('part', 'KBPS');
-            });
+        ->whereHas('officer', function($query){
+            $query->where('is_lead', 'No');
         })
         ->getQuery()->get();
 

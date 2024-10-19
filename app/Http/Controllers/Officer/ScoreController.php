@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Officer;
 
 use App\Http\Controllers\Controller;
+use App\Models\HistoryScore;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -12,11 +13,10 @@ class ScoreController extends Controller
 {
     public function index()
     {
-        $periods = Period::orderBy('id_period', 'ASC')->where('progress_status', 'Voting')->orWhere('progress_status', 'Finished')->get();
-        $scores = Score::with('officer')->orderBy('final_score', 'DESC')->get();
-        $officers = Officer::with('position')->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})->get();
-        $check = Score::orderBy('final_score', 'DESC')->offset(0)->limit(3)->get();
+        $periods = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $scores = HistoryScore::orderBy('final_score', 'DESC')->get();
+        $officers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
 
-        return view('Pages.Officer.score', compact('periods', 'scores', 'officers', 'check'));
+        return view('Pages.Officer.score', compact('periods', 'scores', 'officers'));
     }
 }

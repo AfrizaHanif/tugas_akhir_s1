@@ -3,12 +3,12 @@
 
 <!--TITLE-->
 @section('title')
-<title>Top 3 Pegawai | Tugas Akhir</title>
+<title>Karyawan Pegawai | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Officer.Includes.Contents.score')
+@include('Pages.Includes.Contents.score')
 @endsection
 
 <!--MODALS-->

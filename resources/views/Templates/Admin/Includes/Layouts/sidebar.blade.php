@@ -91,11 +91,7 @@
     <div class="dropup">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <snap class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="{{ Auth::user()->name }}">
-                @if (Auth::user()->part == 'Admin')
                 <img src="{{ url('Images/User/'.Auth::user()->part.'.png') }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" alt="" width="32" height="32" style="object-fit:cover;" class="rounded me-2">
-                @elseif (Auth::user()->part == 'KBPS')
-                <img src="{{ url('Images/User/'.Auth::user()->part.'.png') }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" alt="" width="32" height="32" style="object-fit:cover;" class="rounded me-2">
-                @endif
                 </snap>
             <strong>{{ Auth::user()->part }}</strong>
         </a>
@@ -106,7 +102,19 @@
                     Halaman Utama
                 </a>
             </li>
+            <li>
+                <button class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#modal-dsh-first">
+                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#welcome"/></svg>
+                    Welcome (Test)
+                </button>
+            </li>
             <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/settings">
+                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#settings"/></svg>
+                    Pengaturan
+                </a>
+            </li>
             <li>
                 <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/messages">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#message"/></svg>

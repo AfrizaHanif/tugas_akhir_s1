@@ -23,7 +23,7 @@ class ReportController extends Controller
         $h_team_years = HistoryInput::select('id_sub_team', 'officer_team', 'period_year')->groupBy('id_sub_team', 'officer_team', 'period_year')->orderBy('period_year', 'ASC')->get();
         $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
         $h_subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->whereNotIn('officer_team', ['Pimpinan BPS', 'Developer'])->get();
-        $h_officers = HistoryInput::select('id_officer', 'officer_nip', 'officer_name')->groupBy('id_officer', 'officer_nip', 'officer_name')->get();
+        $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer',  'officer_name')->get();
         $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
 
         //RETURN TO VIEW

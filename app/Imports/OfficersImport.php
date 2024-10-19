@@ -5,8 +5,11 @@ namespace App\Imports;
 use App\Models\Position;
 use App\Models\Officer;
 use App\Models\SubTeam;
+use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
@@ -16,7 +19,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsOnFailure, WithHeadingRow
+class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, WithHeadingRow, SkipsOnFailure
 {
     use Importable, SkipsErrors, SkipsFailures;
 
@@ -31,8 +34,19 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
 
     public function collection(Collection $rows)
     {
+        //VALIDATE DATA
+        /*
+        Validator::make($rows->toArray(), [
+            '*.nip' => ['unique:officers,id_officer'],
+            '*.nama' => ['unique:officers,name'],
+            '*.email' => ['unique:officers,email'],
+            '*.telp' => ['unique:officers,phone'],
+        ])->validate();
+        */
+
         foreach ($rows as $row)
         {
+            //GET DATA
             $positions = $this->positions->where('name', $row['jabatan'])->first();
             $subteams1 = $this->subteams->where('name', $row['subtim1'])->first();
             $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
@@ -46,23 +60,10 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                 }
             }
 
-            if($this->import_method == 'create'){
-                /*
-                $id_officer = IdGenerator::generate([
-                    'table'=>'officers',
-                    'field'=>'id_officer',
-                    'length'=>7,
-                    'prefix'=>'OFF-',
-                    'reset_on_prefix_change'=>true,
-                ]);
-                */
-                $id_officer = 'OFF-'.$row['nip'];
-
+            if($this->import_method == 'reset'){
                 //IMPORT DATA
-                Officer::firstOrCreate([
-                    'id_officer' => $id_officer,
-                    'nip'=>$row['nip'],
-                ],[
+                Officer::insert([
+                    'id_officer' => $row['nip'],
                     'name'=>$row['nama'],
                     'id_position'=>$positions->id_position,
                     'id_sub_team_1'=>$subteams1->id_sub_team,
@@ -76,37 +77,23 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                     'is_lead'=>$is_lead,
                     'photo'=>$row['foto'],
                 ]);
-            }elseif($this->import_method == 'update'){
-                Officer::where('nip', $row['nip'])->update([
-                    'name'=>$row['nama'],
-                    'id_position'=>$positions->id_position,
-                    'id_sub_team_1'=>$subteams1->id_sub_team,
-                    'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
-                    'place_birth'=>$row['tmplahir'],
-                    'date_birth'=>$row['tgllahir'],
-                    'email'=>$row['email'],
-                    'phone'=>$row['telp'],
-                    'gender'=>$row['jk'],
-                    'religion'=>$row['agama'],
-                    'is_lead'=>$is_lead,
-                    'photo'=>$row['foto'],
-                ]);
-            }elseif($this->import_method == 'updcre'){
-                $id_officer = 'OFF-'.$row['nip'];
-
+            }else{
                 //IMPORT DATA
-                Officer::updateOrCreate([
-                    'id_officer' => $id_officer,
-                    'nip'=>$row['nip'],
+                Officer::updateOrInsert([
+                    'id_officer' => $row['nip'],
+                    'name'=>$row['nama'],
+                    'email'=>$row['email'],
+                    'phone'=>$row['telp'],
                 ],[
+                    'id_officer' => $row['nip'],
                     'name'=>$row['nama'],
                     'id_position'=>$positions->id_position,
                     'id_sub_team_1'=>$subteams1->id_sub_team,
                     'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
-                    'place_birth'=>$row['tmplahir'],
-                    'date_birth'=>$row['tgllahir'],
                     'email'=>$row['email'],
                     'phone'=>$row['telp'],
+                    'place_birth'=>$row['tmplahir'],
+                    'date_birth'=>$row['tgllahir'],
                     'gender'=>$row['jk'],
                     'religion'=>$row['agama'],
                     'is_lead'=>$is_lead,
@@ -114,5 +101,15 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                 ]);
             }
         }
+    }
+
+    public function rules(): array
+    {
+        return [
+            '*.nip' => ['unique:officers,id_officer'],
+            '*.nama' => ['unique:officers,name'],
+            '*.email' => ['unique:officers,email'],
+            '*.telp' => ['unique:officers,phone'],
+        ];
     }
 }

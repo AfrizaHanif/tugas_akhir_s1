@@ -6,6 +6,10 @@
 <title>Data Input | Tugas Akhir</title>
 @endsection
 
+<!--STYLE-->
+@section('style')
+@endsection
+
 <!--CONTENTS-->
 @section('contents')
 @include('Pages.Admin.Includes.Contents.input')

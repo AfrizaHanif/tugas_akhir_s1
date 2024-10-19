@@ -2,6 +2,7 @@
 <!--SIDEBAR-->
 <link rel="stylesheet" href="{{asset('Sources/CSS/sidebar.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/carousel-arrow-hide.css')}}">
+<link rel="stylesheet" href="{{asset('Sources/CSS/image-carousel.css')}}">
 
 <!--FOOTER-->
 <style type="text/css">

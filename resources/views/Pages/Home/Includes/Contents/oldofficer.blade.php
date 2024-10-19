@@ -66,7 +66,7 @@
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <div class="dropdown pb-3">
                 <div class="dropdown">

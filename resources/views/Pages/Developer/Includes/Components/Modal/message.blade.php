@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
+                            <div class="position-sticky" style="top: 0rem;">
                                 <div class="alert alert-info" role="alert">
                                     <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
                                 </div>
@@ -62,32 +62,32 @@
 </div>
 <!--DELETE MESSAGE-->
 <div class="modal fade" id="modal-msg-delete-{{ $message->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('developer.messages.destroy', $message->id) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Pesan ({{ $message->id}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Pesan ({{ $message->id}})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-msg-delete-{{ $message->id }}" action="{{ route('developer.messages.destroy', $message->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf @method('DELETE')
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
                         Apakah anda ingin menghapus Pesan tersebut?
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-msg-delete-{{ $message->id }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>

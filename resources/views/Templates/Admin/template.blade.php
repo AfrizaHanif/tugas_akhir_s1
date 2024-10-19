@@ -13,6 +13,8 @@
         @include('Templates.Includes.Sources.css')
         <!--CSS SOURCES IN ADMIN TEMPLATE ONLY-->
         @include('Templates.Admin.Includes.Sources.css')
+        <!--CSS SOURCES IN EACH PAGES-->
+        @yield('style')
     </head>
     <body>
         <!--SVG ICONS-->

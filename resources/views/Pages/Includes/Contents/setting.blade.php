@@ -9,7 +9,8 @@
     </a>
 </p>
 <div class="row align-items-md-stretch">
-    <div class="col-md-6">
+    @if (Auth::user()->part == 'Dev')
+    <div class="col-md-6 pb-4">
         <div class="h-100 p-5 text-bg-dark rounded-3">
             <h2>Perhitungan Kehadiran</h2>
             <p>Peraturan ini digunakan untuk menghitung jumlah hadir saat melakukan import. Peraturan ini dikhususkan untuk kriteria kehadiran yang memiliki kolom dari sumber yang berbeda (Misal: kriteria kehadiran, sumber kolom tanpa kabar).</p>
@@ -22,7 +23,7 @@
             </select>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 pb-4">
         <div class="h-100 p-5 bg-body-tertiary border rounded-3">
             <h2>Sorting Kedua (Verifikasi)</h2>
             <p>Apabila jumlah nilai akhir dari hasil sama saat mengambil data untuk kebutuhan verifikasi, maka dapat disortir lagi menggunakan peraturan ini. Pengaturan ini wajib diatur untuk menghindari duplikat nilai akhir pada peringkat pertama.</p>
@@ -32,6 +33,23 @@
                 <option value="{{ $criteria->id_criteria }}" {{ $settings->where('id_setting', 'STG-002')->first()->value ==  $criteria->id_criteria ? 'selected' : null }}>{{ $criteria->name }}</option>
                 @endforeach
             </select>
+        </div>
+    </div>
+    @endif
+    @if (Auth::user()->part != 'Dev')
+    <div class="col-md-6 pb-4">
+        <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+            <h2>Ganti Username</h2>
+            <p>Anda dapat mengubah username anda untuk memudahkan anda saat melakukan login jika anda lupa NIP.</p>
+            <input type="username" class="form-control" id="s_username" name="s_username" required>
+        </div>
+    </div>
+    @endif
+    <div class="col-md-6 pb-4">
+        <div class="h-100 p-5 text-bg-dark rounded-3">
+            <h2>Ganti Password</h2>
+            <p>Anda perlu menggantikan password setelah Kepegawaian memberikan password kepada anda untuk pertama kali.</p>
+            <input type="password" class="form-control" id="s_password" name="s_password" required>
         </div>
     </div>
 </div>

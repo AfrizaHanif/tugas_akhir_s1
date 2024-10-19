@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\OfficersExport;
 use App\Http\Controllers\Controller;
 use App\Imports\OfficersImport;
+use App\Imports\OfficersModalImport;
+use App\Imports\UserImport;
 use App\Models\Position;
 use App\Models\Input;
 use App\Models\Officer;
@@ -15,10 +17,14 @@ use App\Models\Presence;
 use App\Models\SubTeam;
 use App\Models\Team;
 use App\Models\User;
+use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -40,10 +46,11 @@ class OfficerController extends Controller
         $officers = Officer::with('position', 'subteam_1', 'subteam_2')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
+        $users = User::get();
         //dd($officers);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'positions', 'teams', 'team_lists', 'subteams', 'officers'));
+        return view('Pages.Admin.officer', compact('parts', 'parts_2', 'positions', 'teams', 'team_lists', 'subteams', 'officers', 'users'));
     }
 
     /**
@@ -60,6 +67,13 @@ class OfficerController extends Controller
         }
 
         //COMBINE KODE
+        $id_user = IdGenerator::generate([
+            'table'=>'users',
+            'field'=>'id_user',
+            'length'=>7,
+            'prefix'=>'USR-',
+            'reset_on_prefix_change'=>true,
+        ]);
         /*
         $total_id = Officer::
         whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
@@ -77,16 +91,16 @@ class OfficerController extends Controller
             'reset_on_prefix_change'=>true,
         ]);
         */
-        $id_officer = 'OFF-'.$request->nip;
+        //$id_officer = 'OFF-'.$request->nip;
 
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
-            'nip' => 'unique:officers',
+            'id_officer' => 'unique:officers',
             'name' => 'unique:officers',
             'email' => 'unique:officers',
             'phone' => 'unique:officers',
         ], [
-            'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
+            'id_officer.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
             'email.unique' => 'E-Mail telah terdaftar',
             'phone.unique' => 'Nomor telepon telah terdaftar',
@@ -124,6 +138,24 @@ class OfficerController extends Controller
             ->with('code_alert', 2);
         }
 
+        //CHECK IF LEAD
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead->id_position)){
+            if($check_lead->id_position == $request->id_position){
+                $part = 'KBPS';
+                $tim_1 = 'STM-001';
+                $tim_2 = null;
+            }
+        }else{
+            if($request->has('is_hr')){
+                $part = 'Admin';
+            }else{
+                $part = 'Pegawai';
+            }
+            $tim_1 = $request->id_sub_team_1;
+            $tim_2 = $request->id_sub_team_2;
+        }
+
         //UPLOAD PHOTO
         $photo = '';
         if($request->photo){
@@ -135,12 +167,12 @@ class OfficerController extends Controller
 
         //STORE DATA
         Officer::insert([
-            'id_officer'=>$id_officer,
-            'nip'=>$request->nip,
+            'id_officer'=>$request->id_officer,
+            //'nip'=>$request->nip,
             'name'=>$request->name,
             'id_position'=>$request->id_position,
-            'id_sub_team_1'=>$request->id_sub_team_1,
-            'id_sub_team_2'=>$request->id_sub_team_2,
+            'id_sub_team_1'=>$tim_1,
+            'id_sub_team_2'=>$tim_2,
             'email'=>$request->email,
             'phone'=>$request->phone,
             'place_birth'=>$request->place_birth,
@@ -150,12 +182,20 @@ class OfficerController extends Controller
             'photo'=>$photo,
             'is_lead'=>'No',
 		]);
+        User::insert([
+            'id_user'=>$id_user,
+            'username'=>$request->id_officer,
+            'name'=>$request->name,
+            'nip'=>$request->id_officer,
+            'password'=>Hash::make('bps3500'),
+            'part'=>$part,
+        ]);
 
         //IF LEAD
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $request->id_position){
-                Officer::where('id_officer', $id_officer)->update([
+                Officer::where('id_officer', $request->id_officer)->update([
                     'is_lead'=>'Yes',
                 ]);
             }
@@ -191,6 +231,15 @@ class OfficerController extends Controller
         })->latest()->first();
         //dd($redirect->id_part);
 
+        //COMBINE KODE
+        $id_user = IdGenerator::generate([
+            'table'=>'users',
+            'field'=>'id_user',
+            'length'=>7,
+            'prefix'=>'USR-',
+            'reset_on_prefix_change'=>true,
+        ]);
+
         //CHECK STATUS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
@@ -207,10 +256,10 @@ class OfficerController extends Controller
 
         //VALIDATE DATA
         $validator = Validator::make($request->all(), [
-            //'nip' => [Rule::unique('officers')->ignore($officer),],
+            'id_officer' => [Rule::unique('officers')->ignore($officer),],
             'name' => [Rule::unique('officers')->ignore($officer),]
         ], [
-            //'nip.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
+            'id_officer.unique' => 'NIP tidak boleh sama dengan yang terdaftar',
             'name.unique' => 'Nama telah terdaftar',
         ]);
         if ($validator->fails()) {
@@ -251,13 +300,31 @@ class OfficerController extends Controller
             ->with('code_alert', 2);
         }
 
+        //CHECK IF LEAD
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead->id_position)){
+            if($check_lead->id_position == $request->id_position){
+                $part = 'KBPS';
+                $tim_1 = 'STM-001';
+                $tim_2 = null;
+            }
+        }else{
+            if($request->has('is_hr')){
+                $part = 'Admin';
+            }else{
+                $part = 'Pegawai';
+            }
+            $tim_1 = $request->id_sub_team_1;
+            $tim_2 = $request->id_sub_team_2;
+        }
+
         //UPDATE DATA
         $officer->update([
-            //'nip'=>$request->nip,
+            'id_officer'=>$request->id_officer,
             'name'=>$request->name,
             'id_position'=>$request->id_position,
-            'id_sub_team_1'=>$request->id_sub_team_1,
-            'id_sub_team_2'=>$request->id_sub_team_2,
+            'id_sub_team_1'=>$tim_1,
+            'id_sub_team_2'=>$tim_2,
             'email'=>$request->email,
             'phone'=>$request->phone,
             'place_birth'=>$request->place_birth,
@@ -266,6 +333,22 @@ class OfficerController extends Controller
             'religion'=>$request->religion,
             'is_lead'=>'No',
 		]);
+        if(!empty(User::where('nip', $officer->id_officer)->first())){
+            User::where('nip', $officer->id_officer)->update([
+                'name'=>$request->name,
+                'nip'=>$request->id_officer,
+                'part'=>$part,
+            ]);
+        }else{
+            User::insert([
+                'id_user'=>$id_user,
+                'nip'=>$request->id_officer,
+                'name'=>$request->name,
+                'username'=>$request->id_officer,
+                'password'=>Hash::make('bps3500'),
+                'part'=>$part,
+            ]);
+        }
 
         //UPDATE IMAGE
         $photo = '';
@@ -339,6 +422,7 @@ class OfficerController extends Controller
         }
 
         //DESTROY DATA
+        User::where('nip', $officer->id_officer)->delete();
         Input::where('id_officer', $officer->id_officer)->delete();
         $officer->delete();
 
@@ -371,21 +455,116 @@ class OfficerController extends Controller
 
     public function import(Request $request)
     {
-        if($request->import_reset == 'reset'){
+        //ERASE ALL DATA (RESET ONLY)
+        if($request->import_method == 'reset'){
+            //DELETE ALL DATA (INPUTS AND OFFICERS)
             DB::statement("SET foreign_key_checks=0");
             Input::truncate();
+            //User::whereNot('id_user', 'USR-000')->delete();
             Officer::truncate();
             DB::statement("SET foreign_key_checks=1");
+
+            /*
+            //IMPORT FILE
+            $import = New OfficersModalImport();
+            $import->import($request->file('file'));
+
+            //CHECK IF DUPLICATE
+            if ($import->failures()->isNotEmpty()) {
+                return redirect()->route('admin.masters.officers.index')
+                ->withFailures($import->failures())
+                ->with('code_alert', 1);
+            }else{
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('success','Import Pegawai Berhasil')
+                ->with('code_alert', 1);
+            }
+            */
         }
 
-        //IMPORT FILE
-        Excel::import(new OfficersImport($request->import_method), $request->file('file'));
+        try{
+            //IMPORT FILE (OFFICERS)
+            $import_off = New OfficersImport($request->import_method);
+            $import_off->import($request->file('file'));
 
-        //RETURN TO VIEW
-        return redirect()
-        ->route('admin.masters.officers.index')
-        ->with('success','Import Pegawai Berhasil')
-        ->with('code_alert', 1);
+            //DELETE USER
+            if($request->import_method == 'reset'){
+                User::whereNot('id_user', 'USR-000')->delete();
+            }
+
+            //IMPORT FILE (USERS)
+            $import_usr = New UserImport($request->import_method);
+            $import_usr->import($request->file('file'));
+
+            //RETURN TO VIEW
+            if(Auth::user()->part == 'Dev'){
+                return redirect()
+                ->route('index')
+                ->with('success','Import Pegawai Berhasil')
+                ->with('code_alert', 1);
+            }else{
+                if($request->import_method == 'reset'){
+                    Auth::logout();
+                    request()->session()->invalidate();
+                    request()->session()->regenerateToken();
+
+                    return redirect()
+                    ->route('index')
+                    ->with('success','Import Pegawai Berhasil. Demi keamanan, silahkan lakukan login kembali dengan password "bps3500".')
+                    ->with('code_alert', 1);
+                }else{
+                    return redirect()
+                    ->route('admin.masters.officers.index')
+                    ->with('success','Import Pegawai Berhasil')
+                    ->with('code_alert', 1);
+                }
+            }
+        }catch (QueryException $ex){
+            //GET ERROR MESSAGE AND INFO
+            $message = $ex->getMessage();
+            $errorCode = $ex->errorInfo[1];
+
+            //RETURN TO VIEW
+            if($errorCode == 1062){
+                if(Auth::user()->part == 'Dev'){
+                    return redirect()
+                    ->route('developer.officers.index')
+                    ->with('fail', 'Import Pegawai Gagal. Terdapat duplikat data yang ada di Excel Import Pegawai. Silahkan cek file Excel kembali')
+                    ->with('code_alert', 1);
+                }else{
+                    return redirect()
+                    ->route('admin.masters.officers.index')
+                    ->with('fail', 'Import Pegawai Gagal. Terdapat duplikat data yang ada di Excel Import Pegawai. Silahkan cek file Excel kembali')
+                    ->with('code_alert', 1);
+                }
+            }elseif($errorCode == 1364){
+                if(Auth::user()->part == 'Dev'){
+                    return redirect()
+                    ->route('developer.officers.index')
+                    ->with('fail', 'Import Pegawai Gagal. Terdapat kolom yang tidak ada di Excel. Silahkan cek kebutuhan kolom di Modal Import atau hubungi Developer')
+                    ->with('code_alert', 1);
+                }else{
+                    return redirect()
+                    ->route('admin.masters.officers.index')
+                    ->with('fail', 'Import Pegawai Gagal. Terdapat kolom yang tidak ada di Excel. Silahkan cek kebutuhan kolom di Modal Import atau hubungi Developer')
+                    ->with('code_alert', 1);
+                }
+            }else{
+                if(Auth::user()->part == 'Dev'){
+                    return redirect()
+                    ->route('developer.officers.index')
+                    ->with('fail', $message)
+                    ->with('code_alert', 1);
+                }else{
+                    return redirect()
+                    ->route('admin.masters.officers.index')
+                    ->with('fail', $message)
+                    ->with('code_alert', 1);
+                }
+            }
+        }
     }
 
     public function export(Request $request)

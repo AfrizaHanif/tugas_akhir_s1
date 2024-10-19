@@ -18,8 +18,8 @@ return new class extends Migration
             $table->char('period_month', 10);
             $table->unsignedSmallInteger('period_num_month');
             $table->unsignedSmallInteger('period_year');
-            $table->char('id_officer', 15);
-            $table->bigInteger('officer_nip');
+            $table->char('id_officer', 11);
+            //$table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
             $table->string('officer_position', 50);
             $table->char('id_sub_team', 20);
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('criteria_name', 50);
             $table->double('weight');
             $table->char('attribute', 11);
-            $table->smallInteger('level');
+            //$table->smallInteger('level');
             $table->smallInteger('max');
             $table->char('is_lead', 10);
             $table->smallInteger('input');

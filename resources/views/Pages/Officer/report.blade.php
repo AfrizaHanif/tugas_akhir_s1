@@ -3,17 +3,24 @@
 
 <!--TITLE-->
 @section('title')
-<title>Karyawan Terbaik | Tugas Akhir</title>
+<title>Laporan | Tugas Akhir</title>
 @endsection
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Officer.Includes.Contents.result')
+@include('Pages.Includes.Contents.report')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Officer.Includes.Components.modal')
+@endsection
+
+<!--TOASTS-->
+@section('toasts')
+@endsection
+
+<!--OFFCANVAS-->
+@section('offcanvas')
 @endsection
 
 <!--SCRIPTS-->

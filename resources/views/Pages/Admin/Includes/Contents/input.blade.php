@@ -1,9 +1,22 @@
 <h1 class="text-center mb-4">Data Input Pegawai</h1>
 @include('Templates.Includes.Components.alert')
+@if ($allcriterias->sum('weight')*100 > 100)
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+    <br/>
+    Total Bobot melebihi 100%. Cek kembali bobot di halaman kriteria
+</div>
+@elseif ($allcriterias->sum('weight')*100 <= 99)
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+    <br/>
+    Total Bobot belum mencapai 100%. Cek kembali bobot di halaman kriteria
+</div>
+@endif
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <p>
                 <!--HELP-->
@@ -151,7 +164,7 @@
                         </div>
                     </div>
                 </p>
-                @if ($latest_per->import_status == 'Clear')
+                @if ($latest_per->import_status == 'Clear' || $latest_per->import_status == 'No Data')
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -190,7 +203,7 @@
                                     @if ($s->status == 'Pending')
                                     <span class="badge text-bg-primary">Belum Diperiksa</span>
                                     @elseif ($s->status == 'Not Converted')
-                                    <span class="badge text-bg-warning">Menunggu Konversi</span>
+                                    <span class="badge text-bg-warning">Belum Dikonversi</span>
                                     @elseif ($s->status == 'In Review')
                                     <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
                                     @elseif ($s->status == 'Final')

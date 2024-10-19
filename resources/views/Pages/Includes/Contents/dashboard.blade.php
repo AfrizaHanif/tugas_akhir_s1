@@ -24,6 +24,28 @@
     @endif
 @endif
 
+<!--OFFICER STATUS-->
+@if (Auth::user()->part == "Pegawai")
+    @if (!empty($latest_per))
+        @if ($latest_per->progress_status == 'Scoring')
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            Test Scoring.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @elseif ($latest_per->progress_status == 'Verifying')
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Test Verifying.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+    @else
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+        Test Blank.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+@endif
+
 <!--CARDS-->
 @if (Auth::user()->part == "Admin")
 <div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
@@ -37,7 +59,7 @@
                     </div>
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
                         @if (!empty($latest_per->id_period))
-                        <h4>{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) }}/{{ count($input_off) ?? '-' }}</h4>
+                        <h4>{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted', 'Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) }}/{{ count($input_off) ?? '-' }}</h4>
                         @else
                         <h4>-/{{ count($input_off) }}</h4>
                         @endif
@@ -46,6 +68,9 @@
             </div>
             @if (!empty($latest_per->id_period))
             <div class="progress-stacked" style="border-radius: 0px; height: 5px">
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted']))*100)/count($input_off) }}%">
+                    <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" ></div>
+                </div>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed']))*100)/count($input_off) }}%">
                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" ></div>
                 </div>
@@ -461,6 +486,162 @@
                         <a type="button" class="btn btn-secondary btn-sm disabled">Cek</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<!--OFFICER-->
+@if (Auth::user()->part == "Pegawai")
+<div>
+    <form action="" method="GET">
+        <div class="input-group input-group-sm mb-3">
+            <select class="form-select" id="year" name="year" aria-label="Small select example">
+                <option selected disabled>Pilih Tahun Periode Nilai Akhir</option>
+                @foreach ($hscore_year as $year)
+                <option value="{{ $year->period_year }}" {{ request('year') ==  $year->period_year ? 'selected' : '' }}>{{ $year->period_year }}</option>
+                @endforeach
+            </select>
+            <button id="editsaveBtn" class="btn btn-primary" type="submit">Pilih</button>
+        </div>
+    </form>
+    <div style="width: 90%; margin: auto;">
+        <canvas id="myChart" height="100px"></canvas>
+    </div>
+</div>
+<br/>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-9">
+                        <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                @if (!empty($latest_per))
+                                <button class="nav-link active" id="latest-tab" data-bs-toggle="tab" data-bs-target="#latest-tab-pane" type="button" role="tab" aria-controls="latest-tab-pane" aria-selected="true">Sekarang</button>
+                                @endif
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                @if (!empty($latest_per))
+                                <button class="nav-link" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous-tab-pane" type="button" role="tab" aria-controls="previous-tab-pane" aria-selected="false">Sebelumnya</button>
+                                @else
+                                <button class="nav-link active" id="previous-tab" data-bs-toggle="tab" data-bs-target="#previous-tab-pane" type="button" role="tab" aria-controls="previous-tab-pane" aria-selected="true">Sebelumnya</button>
+                                @endif
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-dsh-history">Riwayat</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    @if (!empty($latest_per))
+                    <div class="tab-pane fade show active" id="latest-tab-pane" role="tabpanel" aria-labelledby="latest-tab" tabindex="0">
+                    @else
+                    <div class="tab-pane fade" id="latest-tab-pane" role="tabpanel" aria-labelledby="latest-tab" tabindex="0">
+                    @endif
+                        <h5 class="card-title">{{ $latest_per->name ?? '' }}</h5>
+                        <p class="card-text">
+                            @if (!empty($latest_per))
+                            <table class="table">
+                                @foreach ($criterias->where('id_period', $hperiod->id_period) as $criteria)
+                                    @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $latest_per->id_period) as $input)
+                                    <tr>
+                                        <th scope="row">{{ $criteria->name }}</th>
+                                        <td>{{ $input->input_raw }}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <th scope="row">{{ $criteria->name }}</th>
+                                        <td>0</td>
+                                    </tr>
+                                    @endforelse
+                                @endforeach
+                            </table>
+                            @else
+                            <div class="alert alert-warning" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+                                Test.
+                            </div>
+                            @endif
+                        </p>
+                    </div>
+                    @if (!empty($latest_per))
+                    <div class="tab-pane fade" id="previous-tab-pane" role="tabpanel" aria-labelledby="previous-tab" tabindex="0">
+                    @else
+                    <div class="tab-pane fade show active" id="previous-tab-pane" role="tabpanel" aria-labelledby="previous-tab" tabindex="0">
+                    @endif
+                        <h5 class="card-title">{{ $hper_latest->period_name ?? '' }}</h5>
+                        <p class="card-text">
+                            @if (!empty($hper_latest))
+                            <table class="table">
+                                @foreach ($hcriterias->where('id_period', $hper_latest->id_period) as $criteria)
+                                    @foreach ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $hper_latest->id_period) as $input)
+                                    <tr>
+                                        <th scope="row">{{ $criteria->criteria_name }}</th>
+                                        <td>{{ $input->input_raw }}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endforeach
+                            </table>
+                            @else
+                            <div class="alert alert-warning" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+                                Test.
+                            </div>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-9">
+
+                    </div>
+                    <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-primary btn-sm">Riwayat</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                @if (!empty($hper_year))
+                <h5 class="card-title">Riwayat Nilai Akhir ({{ $hper_year->period_year }})</h5>
+                <p class="card-text">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-1" scope="col">#</th>
+                                <th>Periode</th>
+                                <th>Nilai Akhir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($hscores->where('id_officer', Auth::user()->nip)->where('period_year', $hper_year->period_year) as $score)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $score->period_name }}</td>
+                                <td>{{ $score->final_score }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </p>
+                @else
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+                    Test.
+                </div>
+                @endif
             </div>
         </div>
     </div>

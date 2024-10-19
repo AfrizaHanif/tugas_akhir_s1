@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Criteria;
+use App\Models\HistoryInput;
 use App\Models\HistoryResult;
 use App\Models\HistoryScore;
 use App\Models\Input;
@@ -20,6 +21,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -107,10 +109,33 @@ class DashboardController extends Controller
         return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'progress_offs', 'acc_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults', 'input_lists'));
     }
 
-    //OPTIONAL: DELETE
-    public function officer(){
+    public function officer(Request $request){
+        //GET PERIODS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $history_per = HistoryInput::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'DESC')->get();
+        $hper_latest = HistoryInput::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'DESC')->latest()->first();
+        $hper_year = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->orderBy('period_year', 'DESC')->latest()->first();
+        $hscore_year = HistoryScore::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->orderBy('period_year', 'DESC')->get();
+
+        //GET LATEST DATA
         $periods = Period::get();
+        $criterias = Criteria::get();
+        $inputs = Input::get();
+
+        //GET HISTORY DATA
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
+        $histories = HistoryInput::get();
+        $hscores = HistoryScore::orderBy('id_period', 'ASC')->get();
+        //dd($hresults);
+
+        //TEST DATA FOR CHART (BETA)
+        $search = $request->year;
+        $chart = HistoryScore::where('id_officer', Auth::user()->nip)->where('period_year','like',"%".$search."%")->select('period_name', 'final_score')->groupBy('period_name', 'final_score')->orderBy('period_num_month', 'ASC')->orderBy('period_year', 'ASC')->pluck('final_score', 'period_name');
+
+        $c_labels = $chart->keys();
+        $c_datas = $chart->values();
+
+        /*
         $results = Result::with('officer', 'period')
         ->orderBy('count', 'DESC')
         ->whereHas('officer', function ($query) {
@@ -120,8 +145,9 @@ class DashboardController extends Controller
             });
         })
         ->offset(0)->limit(1)->get();
+        */
 
-        return view('Pages.Officer.dashboard', compact('latest_per', 'periods', 'results'));
+        return view('Pages.Officer.dashboard', compact('latest_per', 'history_per', 'periods', 'criterias', 'inputs', 'histories', 'hcriterias', 'hscores', 'hper_latest', 'hper_year', 'c_labels', 'c_datas', 'hscore_year'));
     }
 
     public function developer(){

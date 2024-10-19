@@ -144,7 +144,7 @@
     </div>
     <!--INFO-->
     <div class="col-md-5">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                 <br/>

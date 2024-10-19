@@ -4,6 +4,12 @@
         <div class="spinner-border text-primary" role="status"></div>
     </div>
 </div>
+<!--ALERT-->
+<div class="container pt-1">
+    @if (Session::get('code_alert') == 1)
+    @include('Templates.Includes.Components.alert')
+    @endif
+</div>
 <!--RESULT JUMBOTRON-->
 @if (!empty($latest_best))
 <div class="container my-1 collapse show pt-1" id="collapseExample">

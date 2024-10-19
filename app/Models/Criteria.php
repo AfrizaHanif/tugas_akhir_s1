@@ -20,7 +20,7 @@ class Criteria extends Model
         'name',
         'weight',
         'attribute',
-        'level',
+        //'level',
         'max',
         'need',
         'source',

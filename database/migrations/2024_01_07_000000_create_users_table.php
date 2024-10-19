@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             //$table->id();
             $table->char('id_user', 11)->primary();
-            //$table->char('id_officer', 11)->unique();
+            $table->char('nip', 11)->unique();
             //$table->foreign('id_officer')->references('id_officer')->on('officers');
             $table->string('username', 20)->unique();
             $table->string('name', 50)->unique();
@@ -22,6 +22,7 @@ return new class extends Migration
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('part', 30);
+            $table->boolean('first_time_login')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

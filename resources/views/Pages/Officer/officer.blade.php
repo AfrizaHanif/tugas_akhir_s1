@@ -8,12 +8,13 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Officer.Includes.Contents.officer')
+@include('Pages.Includes.Contents.officer')
 @endsection
 
 <!--MODALS-->
 @section('modals')
-@include('Pages.Officer.Includes.Components.modal')
+@include('Templates.Includes.Components.Modal.officer')
+@include('Pages.Includes.Components.Modal.officer')
 @endsection
 
 <!--SCRIPTS-->

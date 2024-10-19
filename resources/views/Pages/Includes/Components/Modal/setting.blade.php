@@ -4,8 +4,10 @@
         <div class="modal-content">
             @if (Auth::user()->part == "Dev")
             <form action="{{ route('developer.settings.update') }}" method="POST" enctype="multipart/form-data">
-            @else
+            @elseif (Auth::user()->part != "Pegawai")
             <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+            @else
+            <form action="{{ route('officer.settings.update') }}" method="POST" enctype="multipart/form-data">
             @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Simpan Pengaturan</h1>
@@ -13,10 +15,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="col">
-                        <input type="text" class="form-control" id="presence_counter" name="presence_counter" value="" hidden>
+                        <input type="text" class="form-control" id="presence_counter" name="presence_counter" value="" readonly hidden>
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" id="second_sort" name="second_sort" value="" hidden>
+                        <input type="text" class="form-control" id="second_sort" name="second_sort" value="" readonly hidden>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" id="username" name="username" value="" readonly hidden>
+                    </div>
+                    <div class="col">
+                        <input type="password" class="form-control" id="password" name="password" value="" readonly hidden>
                     </div>
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>

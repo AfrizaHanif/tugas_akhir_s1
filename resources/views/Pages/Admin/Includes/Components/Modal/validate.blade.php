@@ -1,7 +1,7 @@
 @foreach ($periods as $period)
 <!--VIEW SCORES-->
 <div class="modal modal-lg fade" id="modal-stt-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Cek Status ({{ $period->name }})</h1>
@@ -65,56 +65,56 @@
 </div>
 <!--CLOSE SESSION-->
 <div class="modal fade" id="modal-scr-finish-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.inputs.validate.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Penutupan Proses ({{ $period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @csrf
-                    <div class="mb-3" hidden>
-                        <div class="col" hidden>
-                            <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" hidden>
+                    <form id="form-scr-finish-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.finish', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3" hidden>
+                            <div class="col" hidden>
+                                <input type="text" class="form-control" id="id_period" name="id_period" value="{{ $period->id_period }}" hidden>
+                            </div>
                         </div>
-                    </div>
-                    <div class="alert alert-warning" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
-                        <br/>
-                        Apakah anda telah selesai melakukan verifikasi?
-                        <ul>
-                            <li>Proses ini juga akan <strong>mengakhiri proses penentuan karyawan terbaik</strong>.</li>
-                            <li>Data Nilai, Data Nilai Akhir, dan pegawai terpilih sebagai karyawan terbaik akan dipindahkan ke <strong>riwayat</strong> yang tidak dapat diubah atau dihapus kembali <strong>(Permanen)</strong>.</li>
-                            <li>Kepegawaian dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong>.</li>
-                            <li><strong>Laporan</strong> akan tersedia secara langsung oleh sistem setelah proses ini selesai.</li>
-                        </ul>
-                    </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda telah selesai melakukan verifikasi?
+                            <ul>
+                                <li>Proses ini juga akan <strong>mengakhiri proses penentuan karyawan terbaik</strong>.</li>
+                                <li>Data Nilai, Data Nilai Akhir, dan pegawai terpilih sebagai karyawan terbaik akan dipindahkan ke <strong>riwayat</strong> yang tidak dapat diubah atau dihapus kembali <strong>(Permanen)</strong>.</li>
+                                <li>Kepegawaian dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong>.</li>
+                                <li><strong>Laporan</strong> akan tersedia secara langsung oleh sistem setelah proses ini selesai.</li>
+                            </ul>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" form="form-scr-finish-{{ $period->id_period }}" class="btn btn-primary">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>
                 </div>
-            </form>
         </div>
     </div>
 </div>
 <!--GET SCORE (ANALYSIS SAW)-->
 <div class="modal fade" id="modal-scr-get-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.inputs.validate.get', $period->id_period) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $period->name}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ambil Data ({{ $period->name}})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-scr-get-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.get', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3" hidden>
                         <div class="col" hidden>
@@ -126,36 +126,37 @@
                         <br/>
                         Apakah anda ingin mengambil data nilai akhir pada periode ini?
                         <ul>
-                            <li>Data nilai yang telah dimasukkan akan dilakukan <strong>Analisis SAW</strong> untuk mendapatkan nilai akhir.</li>
-                            <li>Data nilai akhir yang lama akan <strong>dihapus dan digantikan</strong> dengan nilai akhir yang baru.</li>
-                            <li>Setelah dilakukannya pengambilan data, kepegawaian tidak dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong> sampai seluruh proses ini selesai.</li>
+                            <li>Data nilai akhir yang lama akan <strong>digantikan</strong> dengan nilai akhir yang baru.</li>
+                            <li>Jika terdapat Revisi, seluruh status dari nilai akhir yang telah disetujui akan <strong>terhapus</strong> dan diperlukan <strong>verifikasi ulang</strong> yang dikarenakan terdapat <strong>perubahan</strong> data nilai akhir dari seluruh pegawai.</li>
+                            <li>Kepegawaian <strong>tidak dapat</strong> melakukan penambahan, perubahan, dan penghapusan <strong>data master</strong> selama proses verifikasi berlangsung.</li>
+                            <li>Tidak dapat mengambil <strong>ambil data</strong> kembali selama proses verifikasi berlangsung (Kecuali jika ada <strong>Revisi</strong>).</li>
                         </ul>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-scr-get-{{ $period->id_period }}" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <!--ACCEPT ALL-->
 <div class="modal fade" id="modal-scr-yesall-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.inputs.validate.yesall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $period->name}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $period->name}})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-scr-yesall-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.yesall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3" hidden>
                         <div class="col" hidden>
@@ -170,33 +171,33 @@
                             <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
                         </ul>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-scr-yesall-{{ $period->id_period }}" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <!--REJECT ALL-->
 <div class="modal fade" id="modal-scr-noall-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.inputs.validate.noall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $period->name}})</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $period->name}})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <form id="form-scr-noall-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.noall', $period->id_period) }}" method="POST" enctype="multipart/form-data">
                     <div class="mb-3" hidden>
+                        @csrf
                         <div class="col" hidden>
                             <input type="text" class="form-control" id="id" name="id" value="{{ $period->id_period }}" hidden>
                         </div>
@@ -211,32 +212,32 @@
                             <li>Segera lakukan pengambilan data <strong>nilai akhir</strong> setelah seluruh nilai akhir yang ditolak telah direvisi.</li>
                         </ul>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-scr-noall-{{ $period->id_period }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>
     @foreach ($scores as $score)
     <!--ACCEPT-->
     <div class="modal fade" id="modal-scr-yes-{{ $period->id_period }}-{{ $score->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
-                <form action="{{ route('admin.inputs.validate.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->officer->name}})</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->officer->name}})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-scr-yes-{{ $period->id_period }}-{{ $score->id }}" action="{{ route('admin.inputs.validate.yes', $score->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3" hidden>
                             <div class="col" hidden>
@@ -251,31 +252,31 @@
                                 <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-lg"></i>
-                            Tidak
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i>
-                            Ya
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    <button type="submit" form="form-scr-yes-{{ $period->id_period }}-{{ $score->id }}" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     <!--REJECT-->
     <div class="modal fade" id="modal-scr-no-{{ $period->id_period }}-{{ $score->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
-                <form action="{{ route('admin.inputs.validate.no', $score->id) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->officer->name}})</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->officer->name}})</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-scr-no-{{ $period->id_period }}-{{ $score->id }}" action="{{ route('admin.inputs.validate.no', $score->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3" hidden>
                             <div class="col" hidden>
@@ -292,18 +293,18 @@
                                 <li>Segera lakukan pengambilan data <strong>nilai akhir</strong> setelah seluruh nilai akhir yang ditolak telah direvisi.</li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-lg"></i>
-                            Tidak
-                        </button>
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-check-lg"></i>
-                            Ya
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    <button type="submit" form="form-scr-no-{{ $period->id_period }}-{{ $score->id }}" class="btn btn-danger">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
             </div>
         </div>
     </div>

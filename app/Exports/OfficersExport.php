@@ -3,6 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Officer;
+use App\Models\Part;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -29,18 +31,32 @@ class OfficersExport implements FromQuery, WithHeadings, WithMapping, WithStrict
             'jk',
             'agama',
             'foto',
+            'is_hr',
         ];
     }
 
     public function query()
     {
         return Officer::query()->with('position')
-        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');});
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer');
+        })
+        ->orderBy('id_officer', 'ASC');
     }
 
     public function map($data) : array {
+        if(!empty(User::where('nip', $data->id_officer)->first()->part)){
+            if(User::where('nip', $data->id_officer)->first()->part == 'Admin'){
+                $is_hr = 'Ya';
+            }else{
+                $is_hr = 'Tidak';
+            }
+        }else{
+            $is_hr = 'Tidak';
+        }
+
         return [
-            $data->nip,
+            $data->id_officer,
             $data->name,
             $data->position->name,
             $data->subteam_1->name,
@@ -52,6 +68,7 @@ class OfficersExport implements FromQuery, WithHeadings, WithMapping, WithStrict
             $data->gender,
             $data->religion,
             $data->photo,
+            $is_hr,
         ] ;
     }
 }

@@ -1,7 +1,7 @@
 @if (Auth::user()->part == "Admin")
 <!--INPUT CHECKER PER PERIOD-->
 <div class="modal modal-lg fade" id="modal-inp-view-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Nilai Terinput ({{ $latest_per->name ?? '' }})</h1>
@@ -27,15 +27,23 @@
                                 @if ($countsub != 0)
                                 <td>
                                     @if ($officer->is_lead == 'No')
-                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
-                                        <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
-                                        <span class="badge text-bg-danger">Tidak Terisi</span>
+                                        @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->first()->status))
+                                            @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->first()->status != 'Not Converted')
+                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
+                                                <span class="badge text-bg-primary">Terisi Semua</span>
+                                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
+                                                <span class="badge text-bg-danger">Tidak Terisi</span>
+                                                @else
+                                                <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                                @endif
+                                            @else
+                                            <span class="badge text-bg-warning">Belum Dikonversi</span>
+                                            @endif
                                         @else
-                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
+                                        <span class="badge text-bg-danger">Tidak Terisi</span>
                                         @endif
                                     @else
-                                        <span class="badge text-bg-secondary">Excluded</span>
+                                    <span class="badge text-bg-secondary">Excluded</span>
                                     @endif
                                 </td>
                                 @endif
@@ -71,7 +79,7 @@
 @if (Auth::user()->part == "KBPS")
 <!--PROGRESS PENDING PER PERIOD-->
 <div class="modal modal-lg fade" id="modal-prg-view-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Pending Proses Penilaian ({{ $latest_per->name ?? '' }})</h1>
@@ -137,7 +145,7 @@
 </div>
 <!--SCORE CONFIRM PENDING PER PERIOD-->
 <div class="modal modal-lg fade" id="modal-scr-view-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Pending Persetujuan Penilaian ({{ $latest_per->name ?? '' }})</h1>
@@ -207,7 +215,7 @@
 @if (Auth::user()->part == "Admin" || Auth::user()->part == "KBPS")
 <!--REJECTED INPUT CHECKER PER PERIOD-->
 <div class="modal modal-lg fade" id="modal-inp-reject-{{ $latest_per->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Nilai Ditolak ({{ $latest_per->name ?? '' }})</h1>
@@ -272,7 +280,7 @@
 @endif
 <!--LATEST EMPLOYEE OF THE MONTH-->
 <div class="modal modal-lg fade" id="modal-best" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Riwayat Karyawan Terbaik</h1>
@@ -326,7 +334,7 @@
 </div>
 <!--TOP 3 EMPLOYEES-->
 <div class="modal modal-lg fade" id="modal-score-{{ $history_prd->id_period ?? '' }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Nilai Akhir Terbaik Saat Ini ({{ $history_prd->period_name ?? ''}})</h1>

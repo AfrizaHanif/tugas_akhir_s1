@@ -56,7 +56,7 @@ class InputController extends Controller
         $histories = HistoryInput::get();
         //$hraws = HistoryInputRAW::get();
         $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
@@ -191,7 +191,7 @@ class InputController extends Controller
 
         //UPDATE IMPORT STATUS
         Period::where('id_period', $period)->update([
-            'import_status'=>'Clear',
+            'import_status'=>'No Data',
         ]);
 
         //RETURN TO VIEW
@@ -206,6 +206,13 @@ class InputController extends Controller
         $allcriterias = Criteria::get();
         //$inp_rejects = Input::where('id_period', $period)->where('status', 'Need Fix')->get();
         //dd($inp_rejects);
+
+        //CHECK WEIGHTS
+        if($allcriterias->sum('weight')*100 > 100){
+            return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Total Bobot melebihi 100%. Cek kembali bobot di setiap kriteria')->with('code_alert', 1);
+        }elseif($allcriterias->sum('weight')*100 <= 99){
+            return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Total Bobot belum mencapai 100%. Cek kembali bobot di setiap kriteria')->with('code_alert', 1);
+        }
 
         //CHECK CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
         foreach($allcriterias as $criteria){
@@ -253,7 +260,7 @@ class InputController extends Controller
                                 $query->where('source', 'Presensi');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         /*
                         InputRAW::with('criteria')
@@ -263,7 +270,7 @@ class InputController extends Controller
                                 $query->where('source', 'Presensi');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         */
                     }
@@ -296,7 +303,7 @@ class InputController extends Controller
                                 $query->where('source', 'SKP');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         /*
                         InputRAW::with('criteria')
@@ -306,7 +313,7 @@ class InputController extends Controller
                                 $query->where('source', 'SKP');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         */
                     }
@@ -339,7 +346,7 @@ class InputController extends Controller
                                 $query->where('source', 'CKP');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         /*
                         InputRAW::with('criteria')
@@ -349,7 +356,7 @@ class InputController extends Controller
                                 $query->where('source', 'CKP');
                             });
                         })
-                        ->where('status', 'Need Fix')
+                        ->whereIn('status', ['Need Fix', 'Fixed'])
                         ->delete();
                         */
                     }
@@ -357,10 +364,10 @@ class InputController extends Controller
                     //OPTIONAL: USE RETURN IF FILE NAME NOT CONTAIN PRESENSI, SKP, OR CKP.
                     //DB::table('inputs')->delete();
                     //$criterias = Criteria::get();
-                    return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Presensi, CKP, atau SKP).')->with('modal_redirect', 'modal-inp-import');
+                    return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Presensi, CKP, atau SKP).')->with('modal_redirect', 'modal-inp-import')->with('code_alert', 2);
                 }
             }else{
-                return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Bulan dan Tahun).')->with('modal_redirect', 'modal-inp-import');
+                return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Bulan dan Tahun).')->with('modal_redirect', 'modal-inp-import')->with('code_alert', 2);
             }
 
             //IMPORT FILE (USING LARAVEL EXCEL)
@@ -508,9 +515,11 @@ class InputController extends Controller
                 Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
                     'status'=>'Revised',
                 ]);
+                /*
                 Input::where('id_officer', $officer->id_officer)->where('status', 'Need Fix')->update([
                     'status'=>'Fixed',
                 ]);
+                */
             }
         }
 

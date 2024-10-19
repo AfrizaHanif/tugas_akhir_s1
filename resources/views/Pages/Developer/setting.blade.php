@@ -38,4 +38,22 @@
     document.getElementById('second_sort').value = dropboxvalue2;
     }
 </script>
+<script>
+    window.onload = function() {
+        var src = document.getElementById("s_password"),
+            dst = document.getElementById("password");
+        src.addEventListener('input', function() {
+            dst.value = src.value;
+        });
+    };
+</script>
+<script>
+    window.onload = function() {
+        var src = document.getElementById("s_username"),
+            dst = document.getElementById("username");
+        src.addEventListener('input', function() {
+            dst.value = src.value;
+        });
+    };
+</script>
 @endpush

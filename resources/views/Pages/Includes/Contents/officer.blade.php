@@ -11,6 +11,8 @@
         <form action="{{ route('developer.masters.officers.search') }}" method="GET">
         @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
         <form action="{{ route('admin.masters.officers.search') }}" method="GET">
+        @elseif (Request::is('officer/officers*') && Auth::user()->part == "Pegawai")
+        <form action="{{ route('officer.officers.search') }}" method="GET">
         @endif
     @else
     <form action="{{ route('officers.search') }}" method="GET">
@@ -26,6 +28,8 @@
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('developer.masters.officers.index') }}">Kembali</a>
                     @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('admin.masters.officers.index') }}">Kembali</a>
+                    @elseif (Request::is('officer/officers*') && Auth::user()->part == "Pegawai")
+                    <a class="btn btn-outline-secondary" type="button" href="{{ route('officer.officers.index') }}">Kembali</a>
                     @endif
                 @else
                 <a class="btn btn-outline-secondary" type="button" href="{{ route('officers.index') }}">Kembali</a>
@@ -68,7 +72,7 @@
                             </a>
                         </li>
                         @if (!empty(Auth::user()->part))
-                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-preupd-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>
@@ -104,12 +108,12 @@
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <div class="dropdown pb-3">
                 <div class="dropdown">
                     @if (!empty(Auth::user()->part))
-                        @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+                        @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-menu-button-fill"></i>
                         </button>
@@ -169,7 +173,7 @@
                     <div class="col-6 d-grid gap-2 d-md-flex justify-content-md-end">
                         <!--MENU-->
                         @if (!empty(Auth::user()->part))
-                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                                 @if ($part->id_part == 'PRT-001')
                                 <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}" hidden>
                                     <i class="bi bi-person-plus"></i>
@@ -240,8 +244,8 @@
                                                         Detail
                                                     </a>
                                                 </li>
-                                                @if (Request::is('admin/masters/officers*') && !empty(Auth::user()->part))
-                                                    @if (Auth::user()->part == "Admin")
+                                                @if (Request::is('admin/masters/officers*') || Request::is('developer/masters/officers*') && !empty(Auth::user()->part))
+                                                    @if (Auth::user()->part == "Admin" || Auth::user()->part == "Dev")
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-preupd-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>

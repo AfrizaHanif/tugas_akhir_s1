@@ -14,8 +14,10 @@ class HistoryResult extends Model
     protected $fillable = [
         'id_period',
         'period_name',
+        'period_month',
+        'period_year',
         'id_officer',
-        'officer_nip',
+        //'officer_nip',
         'officer_name',
         'officer_position',
         'officer_photo',

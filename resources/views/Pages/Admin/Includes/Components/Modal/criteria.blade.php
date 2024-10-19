@@ -104,14 +104,15 @@
 </div>
 <!--DELETE CATEGORY-->
 <div class="modal fade" id="modal-cat-delete-{{ $category->id_category }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.categories.destroy', $category->id_category) }}" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kategori</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kategori</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cat-delete-{{ $category->id_category }}" action="{{ route('admin.masters.categories.destroy', $category->id_category) }}" method="POST" enctype="multipart/form-data">
+                    @csrf @method('DELETE')
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
@@ -123,186 +124,78 @@
                             <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Kategori ini.</li>
                         </ul>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Tidak
-                    </button>
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-check-lg"></i>
-                        Ya
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-cat-delete-{{ $category->id_category }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <!--CREATE CRITERIA-->
 <div class="modal modal-lg fade" id="modal-crt-create-{{ $category->id_category }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('admin.masters.criterias.store') }}" method="POST" enctype="multipart/form-data" id="form-sub-create-{{ $category->id_category }}">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kriteria dari Kategori {{ $category->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-sub-create-{{ $category->id_category }}"></button>
                 </div>
                 <div class="modal-body">
-                    @csrf
-                    <div class="row justify-content-center g-4">
-                        <div class="col-md-7">
-                            <div class="position-sticky" style="top: 2rem;">
-                                @if (Session::get('modal_redirect') == 'modal-crt-create')
-                                @include('Templates.Includes.Components.alert')
-                                @endif
-                                <div class="mb-3">
-                                    <label for="id_category" class="form-label">Kode Kategori</label>
-                                    <input type="text" class="form-control" id="id_category" name="id_category" value="{{ $category->id_category }}" readonly>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Nama Kriteria</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="weight" class="form-label">Bobot</label>
-                                    <input type="text" class="form-control" id="weight" name="weight" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="attribute" class="form-label">Atribut</label>
-                                    <select class="form-select" id="attribute" name="attribute" required>
-                                        <option selected disabled value="">---Pilih Atribut---</option>
-                                        <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
-                                        <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="level" class="form-label">Tingkat Kepentingan</label>
-                                    <select class="form-select" id="level" name="level" required>
-                                        <option selected disabled value="">---Pilih Atribut---</option>
-                                        <option value="1" {{ old('level') == '1' ? 'selected' : null }}>1. Sama Penting</option>
-                                        <option value="3" {{ old('level') == '3' ? 'selected' : null }}>3. Cukup Penting</option>
-                                        <option value="5" {{ old('level') == '5' ? 'selected' : null }}>5. Lebih Penting</option>
-                                        <option value="7" {{ old('level') == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
-                                        <option value="9" {{ old('level') == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="max" class="form-label">Maksimum Nilai Asli</label>
-                                    <input type="number" class="form-control" id="max" name="max" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
-                                    <select class="form-select" id="need" name="need" required>
-                                        <option selected disabled value="">---Pilih---</option>
-                                        <option value="Ya" {{ old('attribute') == 'Ya' ? 'selected' : null }}>Ya</option>
-                                        <option value="Tidak" {{ old('attribute') == 'Tidak' ? 'selected' : null }}>Tidak</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="source" class="form-label">Sumber Kolom (Untuk Import)</label>
-                                    <input type="text" class="form-control" id="source" name="source" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="position-sticky" style="top: 2rem;">
-                                <div class="alert alert-info" role="alert">
-                                    <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
-                                    <ol>
-                                        <li>Isi data sesuai dengan form yang tersedia</li>
-                                        <li>Bobot dan Tingkat Kepentingan:</li>
-                                        <ol>
-                                            <li>Khusus <b>Cost</b>, disarankan tidak menggunakan bobot yang berat / tingkat yang tinggi</li>
-                                            <li>Pastikan total bobot dari semua kriteria mencapai <b>100% (Tidak kurang dan lebih)</b> (Khusus bobot)</li>
-                                        </ol>
-                                        <li>Isi maksimum nilai dari data asli untuk kebutuhan konversi</li>
-                                        <li>Isi sumber kolom sesuai dengan Excel yang akan di import ke aplikasi</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i>
-                        Tambah
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-    @foreach ($criterias->where('id_category', $category->id_category) as $criteria)
-    <!--UPDATE CRITERIA-->
-    <div class="modal modal-lg fade" id="modal-crt-update-{{ $criteria->id_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('admin.masters.criterias.update', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kriteria dari Kategori {{ $category->name }}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        @csrf @method('PUT')
+                    <form id="form-crt-create-{{ $category->id_category }}" action="{{ route('admin.masters.criterias.store') }}" method="POST" enctype="multipart/form-data" id="form-sub-create-{{ $category->id_category }}">
+                        @csrf
                         <div class="row justify-content-center g-4">
                             <div class="col-md-7">
-                                <div class="position-sticky" style="top: 2rem;">
-                                    @if (Session::get('modal_redirect') == 'modal-crt-update')
+                                <div class="position-sticky" style="top: 0rem;">
+                                    @if (Session::get('modal_redirect') == 'modal-crt-create')
                                     @include('Templates.Includes.Components.alert')
                                     @endif
                                     <div class="mb-3">
+                                        <label for="id_category" class="form-label">Kode Kategori</label>
+                                        <input type="text" class="form-control" id="id_category" name="id_category" value="{{ $category->id_category }}" readonly>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="name" class="form-label">Nama Kriteria</label>
-                                        <input type="text" class="form-control" id="name" name="name" value="{{ $criteria->name }}" required>
+                                        <input type="text" class="form-control" id="name" name="name" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="weight" class="form-label">Bobot</label>
-                                        <input type="text" class="form-control" id="weight" name="weight" value="{{ $criteria->weight*100 }}" required>
+                                        <input type="text" class="form-control" id="weight" name="weight" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="attribute" class="form-label">Atribut</label>
                                         <select class="form-select" id="attribute" name="attribute" required>
                                             <option selected disabled value="">---Pilih Atribut---</option>
-                                            <option value="Benefit" {{ $criteria->attribute == 'Benefit' ? 'selected' : null }}>Benefit</option>
-                                            <option value="Cost" {{ $criteria->attribute == 'Cost' ? 'selected' : null }}>Cost</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="level" class="form-label">Tingkat Kepentingan</label>
-                                        <select class="form-select" id="level" name="level" required>
-                                            <option selected disabled value="">---Pilih Atribut---</option>
-                                            <option value="1" {{ $criteria->level == '1' ? 'selected' : null }}>1. Sama Penting</option>
-                                            <option value="3" {{ $criteria->level == '3' ? 'selected' : null }}>3. Cukup Penting</option>
-                                            <option value="5" {{ $criteria->level == '5' ? 'selected' : null }}>5. Lebih Penting</option>
-                                            <option value="7" {{ $criteria->level == '7' ? 'selected' : null }}>7. Sangat Lebih Penting</option>
-                                            <option value="9" {{ $criteria->level == '9' ? 'selected' : null }}>9. Mutlak Lebih Penting</option>
+                                            <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
+                                            <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="max" class="form-label">Maksimum Nilai Asli</label>
-                                        <input type="number" class="form-control" id="max" name="max" value="{{ $criteria->max }}" required>
+                                        <input type="number" class="form-control" id="max" name="max" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
                                         <select class="form-select" id="need" name="need" required>
                                             <option selected disabled value="">---Pilih---</option>
-                                            <option value="Ya" {{ $criteria->need == 'Ya' ? 'selected' : null }}>Ya</option>
-                                            <option value="Tidak" {{ $criteria->need == 'Tidak' ? 'selected' : null }}>Tidak</option>
+                                            <option value="Ya" {{ old('attribute') == 'Ya' ? 'selected' : null }}>Ya</option>
+                                            <option value="Tidak" {{ old('attribute') == 'Tidak' ? 'selected' : null }}>Tidak</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="source" class="form-label">Sumber Kolom (Untuk Import)</label>
-                                        <input type="text" class="form-control" id="source" name="source" value="{{ $criteria->source }}" required>
+                                        <input type="text" class="form-control" id="source" name="source" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <div class="position-sticky" style="top: 2rem;">
+                                <div class="position-sticky" style="top: 0rem;">
                                     <div class="alert alert-info" role="alert">
                                         <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
                                         <ol>
@@ -319,31 +212,117 @@
                                 </div>
                             </div>
                         </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Batal
+                    </button>
+                    <button type="submit" form="form-crt-create-{{ $category->id_category }}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i>
+                        Tambah
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>
+    @foreach ($criterias->where('id_category', $category->id_category) as $criteria)
+    <!--UPDATE CRITERIA-->
+    <div class="modal modal-lg fade" id="modal-crt-update-{{ $criteria->id_criteria }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Kriteria dari Kategori {{ $category->name }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-crt-update-{{ $criteria->id_criteria }}" action="{{ route('admin.masters.criterias.update', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
+                            @csrf @method('PUT')
+                            <div class="row justify-content-center g-4">
+                                <div class="col-md-7">
+                                    <div class="position-sticky" style="top: 0rem;">
+                                        @if (Session::get('modal_redirect') == 'modal-crt-update')
+                                        @include('Templates.Includes.Components.alert')
+                                        @endif
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Nama Kriteria</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="{{ $criteria->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="weight" class="form-label">Bobot</label>
+                                            <input type="text" class="form-control" id="weight" name="weight" value="{{ $criteria->weight*100 }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="attribute" class="form-label">Atribut</label>
+                                            <select class="form-select" id="attribute" name="attribute" required>
+                                                <option selected disabled value="">---Pilih Atribut---</option>
+                                                <option value="Benefit" {{ $criteria->attribute == 'Benefit' ? 'selected' : null }}>Benefit</option>
+                                                <option value="Cost" {{ $criteria->attribute == 'Cost' ? 'selected' : null }}>Cost</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="max" class="form-label">Maksimum Nilai Asli</label>
+                                            <input type="number" class="form-control" id="max" name="max" value="{{ $criteria->max }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="need" class="form-label">Apakah Dibutuhkan untuk Proses Karyawan Terbaik?</label>
+                                            <select class="form-select" id="need" name="need" required>
+                                                <option selected disabled value="">---Pilih---</option>
+                                                <option value="Ya" {{ $criteria->need == 'Ya' ? 'selected' : null }}>Ya</option>
+                                                <option value="Tidak" {{ $criteria->need == 'Tidak' ? 'selected' : null }}>Tidak</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="source" class="form-label">Sumber Kolom (Untuk Import)</label>
+                                            <input type="text" class="form-control" id="source" name="source" value="{{ $criteria->source }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="position-sticky" style="top: 0rem;">
+                                        <div class="alert alert-info" role="alert">
+                                            <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
+                                            <ol>
+                                                <li>Isi data sesuai dengan form yang tersedia</li>
+                                                <li>Bobot dan Tingkat Kepentingan:</li>
+                                                <ol>
+                                                    <li>Khusus <b>Cost</b>, disarankan tidak menggunakan bobot yang berat / tingkat yang tinggi</li>
+                                                    <li>Pastikan total bobot dari semua kriteria mencapai <b>100% (Tidak kurang dan lebih)</b> (Khusus bobot)</li>
+                                                </ol>
+                                                <li>Isi maksimum nilai dari data asli untuk kebutuhan konversi</li>
+                                                <li>Isi sumber kolom sesuai dengan Excel yang akan di import ke aplikasi</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                             <i class="bi bi-x-lg"></i>
                             Batal
                         </button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" form="form-crt-update-{{ $criteria->id_criteria }}" class="btn btn-primary">
                             <i class="bi bi-pencil"></i>
                             Ubah
                         </button>
                     </div>
-                </form>
             </div>
         </div>
     </div>
     <!--DELETE CRITERIA-->
     <div class="modal fade" id="modal-crt-delete-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
-                <form action="{{ route('admin.masters.criterias.destroy', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kriteria</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Kriteria</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-crt-delete-{{ $criteria->id_criteria }}" action="{{ route('admin.masters.criterias.destroy', $criteria->id_criteria) }}" method="POST" enctype="multipart/form-data">
+                        @csrf @method('DELETE')
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
@@ -355,25 +334,24 @@
                                 <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Kriteria ini.</li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-lg"></i>
-                            Tidak
-                        </button>
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-check-lg"></i>
-                            Ya
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    <button type="submit" form="form-crt-delete-{{ $criteria->id_criteria }}" class="btn btn-danger">
+                        <i class="bi bi-check-lg"></i>
+                        Ya
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     <!--VIEW CRIPS-->
     <div class="modal fade" id="modal-crp-view-{{ $criteria->id_criteria }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Daftar Data Crips pada Kriteria {{ $criteria->name }}</h1>
@@ -572,14 +550,15 @@
         </div>
         <!--DELETE CRIPS-->
         <div class="modal fade" id="modal-crp-delete-{{ $crip->id_crips }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form action="{{ route('admin.masters.crips.destroy', $crip->id_crips) }}" method="POST" enctype="multipart/form-data">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Crips ({{ $crip->id_crips}})</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Crips ({{ $crip->id_crips}})</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-crp-delete-{{ $crip->id_crips }}" action="{{ route('admin.masters.crips.destroy', $crip->id_crips) }}" method="POST" enctype="multipart/form-data">
+                            @csrf @method('DELETE')
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                                 <br/>
@@ -588,19 +567,18 @@
                                     <li>Segera lakukan <strong>Import Ulang / Konversi Ulang</strong> setelah melakukan penghapusan Data Crips ini.</li>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-crp-view-{{ $criteria->id_criteria }}">
-                                <i class="bi bi-x-lg"></i>
-                                Tidak
-                            </button>
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-check-lg"></i>
-                                Ya
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-crp-view-{{ $criteria->id_criteria }}">
+                            <i class="bi bi-x-lg"></i>
+                            Tidak
+                        </button>
+                        <button type="submit" form="form-crp-delete-{{ $crip->id_crips }}" class="btn btn-danger">
+                            <i class="bi bi-check-lg"></i>
+                            Ya
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

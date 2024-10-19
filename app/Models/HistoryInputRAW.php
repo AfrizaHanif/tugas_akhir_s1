@@ -15,7 +15,7 @@ class HistoryInputRAW extends Model
         'id_period',
         'period_name',
         'id_officer',
-        'officer_nip',
+        //'officer_nip',
         'officer_name',
         'officer_position',
         'id_category',

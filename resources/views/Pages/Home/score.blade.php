@@ -8,7 +8,7 @@
 
 <!--CONTENTS-->
 @section('contents')
-@include('Pages.Home.Includes.Contents.score')
+@include('Pages.Includes.Contents.score')
 @endsection
 
 <!--MODALS-->

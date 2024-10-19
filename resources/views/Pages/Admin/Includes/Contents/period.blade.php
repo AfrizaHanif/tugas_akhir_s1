@@ -51,9 +51,11 @@
             </td>
             <td>
                 @if ($period->import_status == "Clear")
-                <span class="badge text-bg-primary">Sudah Dikonversi</span>
+                <span class="badge text-bg-success">Sudah Dikonversi</span>
                 @elseif ($period->import_status == "Not Clear")
-                <span class="badge text-bg-danger">Belum Dikonversi</span>
+                <span class="badge text-bg-warning">Belum Dikonversi</span>
+                @elseif ($period->import_status == "No Data")
+                <span class="badge text-bg-danger">Belum Ada Data</span>
                 @endif
             </td>
             <td>
@@ -86,9 +88,6 @@
                             <li><hr class="dropdown-divider"></li>
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-start-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#start"/></svg>
                                 Mulai
-                            </a>
-                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-skip-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#skip"/></svg>
-                                Lewati
                             </a>
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-delete-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                 Delete

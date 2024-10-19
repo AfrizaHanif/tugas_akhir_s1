@@ -18,7 +18,7 @@
 <div class="row g-2">
     <!--SIDEBAR-->
     <div class="col-md-3">
-        <div class="position-sticky" style="top: 2rem;">
+        <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <p>
                 <!--CATEGORY-->
@@ -100,7 +100,7 @@
                             <th scope="col">Nama</th>
                             <th class="col-1" scope="col">Bobot</th>
                             <th class="col-1" scope="col">Atribut</th>
-                            <th class="col-1" scope="col">Tingkat</th>
+                            <th class="col-1" scope="col">Max</th>
                             <th class="col-1" scope="col">Crips</th>
                             <th class="col-1" scope="col">Butuh?</th>
                             <th class="col-1" scope="col">Action</th>
@@ -113,7 +113,7 @@
                             <td>{{ $criteria->name }}</td>
                             <td>{{ ($criteria->weight * 100 ) }}%</td>
                             <td>{{ $criteria->attribute }}</td>
-                            <td>{{ $criteria->level }}</td>
+                            <td>{{ $criteria->max }}</td>
                             <td>{{ count($crips->where('id_criteria', $criteria->id_criteria)) }}</td>
                             <td>{{ $criteria->need }}</td>
                             <td>

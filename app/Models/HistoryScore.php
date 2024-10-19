@@ -18,7 +18,7 @@ class HistoryScore extends Model
         'period_num_month',
         'period_year',
         'id_officer',
-        'officer_nip',
+        //'officer_nip',
         'officer_name',
         'officer_position',
         'id_sub_team',

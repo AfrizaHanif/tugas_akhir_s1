@@ -1,7 +1,7 @@
 @foreach ($periods as $period)
 <!--VIEW INPUTS PER PERIOD-->
 <div class="modal modal-xl fade" id="modal-inp-view-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Nilai ({{ $period->name }})</h1>
@@ -115,7 +115,7 @@
     @if (!empty($latest_per))
     <!--VIEW INPUT PER OFFICER-->
     <div class="modal fade" id="modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $officer->name }})</h1>
@@ -166,7 +166,7 @@
 @foreach ($history_per as $hperiod)
 <!--VIEW OLD INPUTS-->
 <div class="modal modal-xl fade" id="modal-old-all-view-{{ $hperiod->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $hperiod->period_name }})</h1>
@@ -198,7 +198,7 @@
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $hofficer->officer_name }}</td>
                                 <td>{{ $hofficer->officer_position }}</td>
-                                @foreach ($hcriterias as $criteria)
+                                @foreach ($hcriterias->where('id_period', $hperiod->id_period) as $criteria)
                                     @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
                                         <td>{{ $history->input }} ({{ $history->input_raw }})</td>
                                     @empty
@@ -232,7 +232,7 @@
     <!--ARCHIVED PERIOD-->
     @foreach ($hofficers as $officer)
     <div class="modal fade" id="modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $officer->officer_name }})</h1>
@@ -240,19 +240,19 @@
                 </div>
                 <div class="modal-body">
                     <table class="table">
-                        @foreach ($hcriterias as $criteria)
-                        @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
-                        <tr>
-                            <th scope="row">{{ $criteria->criteria_name }}</th>
-                            <td>{{ $history->input }} ({{ $history->input_raw }})</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <th scope="row">{{ $criteria->criteria_name }}</th>
-                            <td>0</td>
-                        </tr>
-                        @endforelse
-                    @endforeach
+                        @foreach ($hcriterias->where('id_period', $hperiod->id_period) as $criteria)
+                            @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
+                            <tr>
+                                <th scope="row">{{ $criteria->criteria_name }}</th>
+                                <td>{{ $history->input }} ({{ $history->input_raw }})</td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <th scope="row">{{ $criteria->criteria_name }}</th>
+                                <td>0</td>
+                            </tr>
+                            @endforelse
+                        @endforeach
                     </table>
                 </div>
                 <div class="modal-footer">

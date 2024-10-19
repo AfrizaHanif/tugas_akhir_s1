@@ -39,7 +39,7 @@ class InputsExport implements FromQuery, FromCollection, WithHeadings, WithMappi
 
     public function map($data) : array {
         return [
-            $data->officer->nip,
+            $data->officer->id_officer,
             $data->officer->name,
             $data->criteria->name,
             $data->input,

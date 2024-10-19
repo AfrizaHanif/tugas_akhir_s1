@@ -19,8 +19,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="officer_nip" class="form-label" hidden>NIP</label>
-                            <input type="text" class="form-control" id="officer_nip" name="officer_nip" value="{{ Auth::user()->officer->nip }}" hidden>
+                            <label for="id_officer" class="form-label" hidden>ID</label>
+                            <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ Auth::user()->id_user }}" hidden>
                         </div>
                         <div class="col">
                             <label for="officer_name" class="form-label" hidden>Nama Pegawai</label>
@@ -137,37 +137,37 @@
 </div>
 <!--DELETE MESSAGE-->
 <div class="modal fade" id="modal-msg-delete-{{ $message->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <form action="{{ route('developer.messages.destroy', $message->id) }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Pesan ({{ $message->id}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @csrf @method('DELETE')
-                    <div class="mb-3">
-                        <div class="col">
-                            <input type="text" class="form-control" id="id" name="id" value="{{ $message->id }}" hidden>
+                    <form id="form-msg-delete-{{ $message->id }}" action="{{ route('developer.messages.destroy', $message->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf @method('DELETE')
+                        <div class="mb-3">
+                            <div class="col">
+                                <input type="text" class="form-control" id="id" name="id" value="{{ $message->id }}" hidden>
+                            </div>
                         </div>
-                    </div>
-                    <div class="alert alert-warning" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
-                        <br/>
-                        Apakah anda ingin menghapus pesan anda?
-                    </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                            <br/>
+                            Apakah anda ingin menghapus pesan anda?
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" form="form-msg-delete-{{ $message->id }}" class="btn btn-primary">
                         <i class="bi bi-check-lg"></i>
                         Ya
                     </button>
                 </div>
-            </form>
         </div>
     </div>
 </div>

@@ -6,3 +6,9 @@
 
 <!--SOURCES-->
 <script src="{{asset('Sources/JS/tooltips.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!--MANUAL SCRIPT-->
+<script>
+
+</script>
