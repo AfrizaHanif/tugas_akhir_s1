@@ -337,31 +337,35 @@
                                             <label for="phone" class="form-label">Nomor Telepon</label>
                                             <input type="tel" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
-                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="place_birth" class="form-label">Tempat Lahir</label>
+                                                <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ old('place_birth') }}" required>
+                                            </div>
+                                            <div class="col">
+                                                <label for="date_birth" class="form-label">Tanggal Lahir</label>
+                                                <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ old('date_birth') }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                                            <select class="form-select" id="gender" name="gender" required>
-                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
-                                                <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                                <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="religion" class="form-label">Agama</label>
-                                            <select class="form-select" id="religion" name="religion" required>
-                                                <option selected disabled value="">---Pilih Agama---</option>
-                                                <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
-                                                <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                                <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
-                                                <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
-                                            </select>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="gender" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-select" id="gender" name="gender" required>
+                                                    <option selected disabled value="">---Pilih Jenis Kelamin---</option>
+                                                    <option value="Laki-Laki" {{ old('gender') == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                                    <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="religion" class="form-label">Agama</label>
+                                                <select class="form-select" id="religion" name="religion" required>
+                                                    <option selected disabled value="">---Pilih Agama---</option>
+                                                    <option value="Islam" {{ old('religion') == 'Islam' ? 'selected' : null }}>Islam</option>
+                                                    <option value="Kristen" {{ old('religion') == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                                    <option value="Budha" {{ old('religion') == 'Budha' ? 'selected' : null }}>Budha</option>
+                                                    <option value="Hindu" {{ old('religion') == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="photo" class="form-label">Foto (Pas Foto)</label>
@@ -377,10 +381,10 @@
                                             <input type="number" class="form-control" id="id_officer" name="id_officer" min="10000000" max="999999999" value="{{ old('id_officer') }}">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">E-Mail</label>
+                                            <label for="email" class="form-label">E-Mail Pegawai</label>
                                             <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3" hidden>
                                             <label for="id_part" class="form-label" hidden>Bagian</label>
                                             <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
                                         </div>
@@ -393,17 +397,33 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
-                                            <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
-                                                <option selected disabled value="">---Pilih Tim Fungsi---</option>
-                                                @foreach ($team_lists->where('id_part', $part->id_part) as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_1') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
+                                                <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
+                                                    <option selected disabled value="">---Pilih Tim Fungsi---</option>
+                                                    @foreach ($team_lists->where('id_part', $part->id_part) as $team)
+                                                        <option disabled value="">---{{ $team->name }}---</option>
+                                                        @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                        <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_1') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                            </select>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
+                                                <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
+                                                    <option selected value="">Tidak Ada</option>
+                                                    @foreach ($team_lists as $team)
+                                                        <option disabled value="">---{{ $team->name }}---</option>
+                                                        @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                        <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_2') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                        @endforeach
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
                                             @if ($part->name == 'Umum')
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr">
@@ -412,18 +432,6 @@
                                                 </label>
                                             </div>
                                             @endif
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
-                                            <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
-                                                <option selected value="">Tidak Ada</option>
-                                                @foreach ($team_lists as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ old('id_sub_team_2') ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -585,9 +593,9 @@
                     @include('Templates.Includes.Components.alert')
                     @endif
                     @csrf
-                    <div class="mb-3">
-                        <label for="id_part" class="form-label">Kode Part</label>
-                        <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly>
+                    <div class="mb-3" hidden>
+                        <label for="id_part" class="form-label" hidden>Kode Part</label>
+                        <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $part->id_part }}" readonly hidden>
                     </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Tim</label>
@@ -705,9 +713,9 @@
                             <label for="id_part" class="form-label" hidden>Kode Bagian</label>
                             <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $team->part->id_part }}" readonly hidden>
                         </div>
-                        <div class="mb-3">
-                            <label for="id_team" class="form-label">Kode Tim</label>
-                            <input type="text" class="form-control" id="id_team" name="id_team" value="{{ $team->id_team }}" readonly>
+                        <div class="mb-3" hidden>
+                            <label for="id_team" class="form-label" hidden>Kode Tim</label>
+                            <input type="text" class="form-control" id="id_team" name="id_team" value="{{ $team->id_team }}" readonly hidden>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama Sub Tim</label>
@@ -872,31 +880,35 @@
                                             <label for="phone" class="form-label">Nomor Telepon</label>
                                             <input type="tel" class="form-control" id="phone" name="phone" value="{{ $officer->phone }}" required>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="place_birth" class="form-label">Tempat Lahir</label>
-                                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="place_birth" class="form-label">Tempat Lahir</label>
+                                                <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
+                                            </div>
+                                            <div class="col">
+                                                <label for="date_birth" class="form-label">Tanggal Lahir</label>
+                                                <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $officer->date_birth }}" required>
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $officer->date_birth }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="gender" class="form-label">Jenis Kelamin</label>
-                                            <select class="form-select" id="gender" name="gender" required>
-                                                <option selected disabled value="">---Pilih Jenis Kelamin---</option>
-                                                <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                                <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="religion" class="form-label">Agama</label>
-                                            <select class="form-select" id="religion" name="religion" required>
-                                                <option selected disabled value="">---Pilih Agama---</option>
-                                                <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
-                                                <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                                <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
-                                                <option value="Hindu" {{ $officer->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
-                                            </select>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="gender" class="form-label">Jenis Kelamin</label>
+                                                <select class="form-select" id="gender" name="gender" required>
+                                                    <option selected disabled value="">---Pilih Jenis Kelamin---</option>
+                                                    <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                                    <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="religion" class="form-label">Agama</label>
+                                                <select class="form-select" id="religion" name="religion" required>
+                                                    <option selected disabled value="">---Pilih Agama---</option>
+                                                    <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
+                                                    <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                                    <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
+                                                    <option value="Hindu" {{ $officer->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="photo" class="form-label">Foto (Pas Foto)</label>
@@ -904,7 +916,7 @@
                                                 <input type="file" class="form-control" name="photo" id="photo" value="{{ $officer->photo }}">
                                             </div>
                                             <div class="form-check">
-                                                @if ($officer->photo == null)
+                                                @if ($officer->photo == '' || $officer->photo == null)
                                                 <input class="form-check-input" type="checkbox" value="" id="photo_erase" name="photo_erase" disabled>
                                                 <label class="form-check-label" for="photo_erase">
                                                     Hapus Gambar
@@ -925,10 +937,10 @@
                                             <input type="number" class="form-control" id="id_officer" name="id_officer" min="10000000" max="999999999" value="{{ $officer->id_officer }}">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">E-Mail</label>
+                                            <label for="email" class="form-label">E-Mail Pegawai</label>
                                             <input type="email" class="form-control" id="email" name="email" value="{{ $officer->email }}" required>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3" hidden>
                                             <label for="id_part" class="form-label" hidden>Bagian</label>
                                             <input type="text" class="form-control" id="id_part" name="id_part" value="{{ $officer->subteam_1->team->part->id_part }}" readonly hidden>
                                         </div>
@@ -941,17 +953,33 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
-                                            <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
-                                                <option selected disabled value="">---Pilih Tim Fungsi---</option>
-                                                @foreach ($team_lists as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_1 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
+                                                <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
+                                                    <option selected disabled value="">---Pilih Tim Fungsi---</option>
+                                                    @foreach ($team_lists as $team)
+                                                        <option disabled value="">---{{ $team->name }}---</option>
+                                                        @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                        <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_1 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                            </select>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
+                                                <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
+                                                    <option selected value="">Tidak Ada</option>
+                                                    @foreach ($team_lists as $team)
+                                                        <option disabled value="">---{{ $team->name }}---</option>
+                                                        @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
+                                                        <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_2 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
+                                                        @endforeach
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
                                             @if ($officer->subteam_1->team->part->name == 'Umum')
                                             <div class="form-check">
                                                 @if ($users->where('nip', $officer->id_officer)->first()->part == 'Admin')
@@ -967,18 +995,6 @@
                                                 @endif
                                             </div>
                                             @endif
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
-                                            <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
-                                                <option selected value="">Tidak Ada</option>
-                                                @foreach ($team_lists as $team)
-                                                    <option disabled value="">---{{ $team->name }}---</option>
-                                                    @foreach ($subteams->where('id_team', $team->id_team) as $subteam)
-                                                    <option value="{{ $subteam->id_sub_team }}" {{ $officer->id_sub_team_2 ==  $subteam->id_sub_team ? 'selected' : null }}>{{ $subteam->name }}</option>
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
                                         </div>
                                     </div>
                                 </div>

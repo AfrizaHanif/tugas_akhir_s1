@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -24,7 +26,7 @@ class AuthController extends Controller
         }
     }
 
-    public function auth(Request $request)
+    public function auth(Request $request): RedirectResponse
     {
         //GET AND VALIDATE LOGIN INFO
         $this->validate($request, [
@@ -88,15 +90,21 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(){
+    public function logout(Request $request): RedirectResponse{
         //LOGOUT ACCOUNT
-        //auth()->logout();
+        Session::flush();
         Auth::logout();
-        //request()->session()->flush();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        //request()->session()->invalidate();
+        //request()->session()->regenerateToken();
 
         //RETURN TO VIEW
-        return redirect()->route('index')->withSuccess('Keluar Berhasil.');
+        return redirect()
+        ->route('index')
+        ->with('success','Keluar Berhasil. Terima kasih anda telah menggunakan aplikasi ini.')
+        ->with('code_alert', 1);
     }
 }

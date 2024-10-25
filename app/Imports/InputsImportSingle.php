@@ -33,9 +33,9 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
         $this->active_days = Period::where('id_period', $period)->first()->active_days;
         $this->officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){
-            $query->where('name', 'Developer');
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
         })
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->where('id_officer', $officer)
         ->orderBy('name', 'ASC')->get();
         $this->criterias = Criteria::with('category')->get();

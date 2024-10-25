@@ -41,21 +41,17 @@
                         </thead>
                         <tbody>
                             @forelse ($officers as $officer)
-                            @if ($officer->is_lead == 'Yes')
-                            <tr class="table-secondary">
-                            @else
                             <tr>
-                            @endif
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $officer->name }}</td>
                                 <td>{{ $officer->position->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
                                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)
-                                            @if ($input->status == 'Not Converted')
-                                            <td class="table-warning">{{ $input->input }}</td>
+                                            @if ($input->status == 'Not Converted' || $input->input == $input->input_raw)
+                                            <td class="table-warning">{{ $input->input }} {{ $criteria->unit }}</td>
                                             @else
-                                            <td>{{ $input->input }} ({{ $input->input_raw }})</td>
+                                            <td>{{ $input->input }} ({{ $input->input_raw }} {{ $criteria->unit }})</td>
                                             @endif
                                         @empty
                                             <td>0</td>
@@ -126,24 +122,23 @@
                     @foreach ($criterias as $criteria)
                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $input)
                         <tr>
+                            @if ($input->status == 'Not Converted' || $input->input == $input->input_raw)
+                            <th class="table-warning" scope="row">{{ $criteria->name }}</th>
+                            <td class="table-warning">
+                                {{ $input->input }} {{ $criteria->unit }}
+                            </td>
+                            @else
                             <th scope="row">{{ $criteria->name }}</th>
                             <td>
-                                @if ($criteria->need == 'Ya')
-                                <b>{{ $input->input }} ({{ $input->input_raw }})</b>
-                                @else
-                                {{ $input->input }} ({{ $input->input_raw }})
-                                @endif
+                                {{ $input->input }} ({{ $input->input_raw }} {{ $criteria->unit }})
                             </td>
+                            @endif
                         </tr>
                         @empty
                         <tr>
                             <th scope="row">{{ $criteria->name }}</th>
                             <td>
-                                @if ($criteria->need == 'Ya')
-                                <b>0</b>
-                                @else
-                                0
-                                @endif
+                                0 {{ $criteria->unit }}
                             </td>
                         </tr>
                         @endforelse
@@ -200,7 +195,7 @@
                                 <td>{{ $hofficer->officer_position }}</td>
                                 @foreach ($hcriterias->where('id_period', $hperiod->id_period) as $criteria)
                                     @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
-                                        <td>{{ $history->input }} ({{ $history->input_raw }})</td>
+                                        <td>{{ $history->input }} ({{ $history->input_raw }} {{ $criteria->unit }})</td>
                                     @empty
                                         <td>0</td>
                                     @endforelse
@@ -244,7 +239,7 @@
                             @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
                             <tr>
                                 <th scope="row">{{ $criteria->criteria_name }}</th>
-                                <td>{{ $history->input }} ({{ $history->input_raw }})</td>
+                                <td>{{ $history->input }} ({{ $history->input_raw }} {{ $criteria->unit }})</td>
                             </tr>
                             @empty
                             <tr>

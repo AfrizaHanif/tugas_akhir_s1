@@ -59,13 +59,75 @@ class CripsController extends Controller
             }
         }
 
+        //CHECK RANGE ABNORMAL
+        $check_range = Criteria::where('id_criteria', $request->id_criteria)->first();
+        if($request->value_from > $check_range->max){ //IF FROM EXCEED MAXIMUM
+            return redirect()
+            ->route('admin.masters.criterias.index')
+            ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama lebih besar daripada Nilai Maximum)')
+            ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+            ->with('modal_redirect', 'modal-crp-view')
+            ->with('id_redirect', $request->id_criteria)
+            ->with('code_alert', 2);
+        }elseif($request->value_type == 'Between'){
+            if($request->value_to > $check_range->max){ //IF TO EXCEED MAXIMUM
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Nilai Maximum)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif($request->value_from > $request->value_to){ //IF FROM MORE THAN TO
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }
+
         //IF CRIPS SCORE SIMILAR
-        $loop_crips = Crips::whereNot('id_crips', $id_crips)->where('id_criteria', $request->id_criteria)->get();
+        $loop_crips = Crips::where('id_criteria', $request->id_criteria)->get();
         foreach($loop_crips as $crips){
             if($request->score == $crips->score){
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from <= $crips->value_from) && ($crips->value_type == 'Less')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from >= $crips->value_from) && ($request->value_from < $crips->value_to) && ($crips->value_type == 'Between')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_to >= $crips->value_from) && ($request->value_to < $crips->value_to) && ($crips->value_type == 'Between')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->criteria->max) && ($crips->value_type == 'More')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $request->id_criteria)
@@ -85,14 +147,16 @@ class CripsController extends Controller
 		]);
 
         //RETURN TO VIEW
-        if($latest_per->progress_status == 'Scoring'){
-            return redirect()
-            ->route('admin.masters.criterias.index')
-            ->with('success','Tambah Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
-            ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
-            ->with('modal_redirect', 'modal-crp-view')
-            ->with('id_redirect', $request->id_criteria)
-            ->with('code_alert', 2);
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Scoring'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('success','Tambah Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }
         }else{
             return redirect()
             ->route('admin.masters.criterias.index')
@@ -129,6 +193,30 @@ class CripsController extends Controller
             }
         }
 
+        //CHECK RANGE ABNORMAL
+        $check_range = Criteria::where('id_criteria', $crip->id_criteria)->first();
+        if($request->value_type == 'Between'){
+            if($request->value_from > $request->value_to){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }elseif($request->value_type == 'More'){
+            if($request->value_from > $check_range->max){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range lebih besar daripada Nilai Maximum)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }
+
         //IF CRIPS SCORE SIMILAR
         $loop_crips = Crips::whereNot('id_crips', $crip->id_crips)->where('id_criteria', $crip->id_criteria)->get();
         foreach($loop_crips as $crips){
@@ -136,6 +224,38 @@ class CripsController extends Controller
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from <= $crips->value_from) && ($crips->value_type == 'Less')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->value_to) && ($crips->value_type == 'Between')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_to >= $crips->value_from) && ($request->value_to <= $crips->value_to) && ($crips->value_type == 'Between')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->criteria->max) && ($crips->value_type == 'More')){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $crip->id_criteria)
@@ -153,14 +273,16 @@ class CripsController extends Controller
 		]);
 
         //RETURN TO VIEW
-        if($latest_per->progress_status == 'Scoring'){
-            return redirect()
-            ->route('admin.masters.criterias.index')
-            ->with('success','Ubah Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
-            ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
-            ->with('modal_redirect', 'modal-crp-view')
-            ->with('id_redirect', $crip->id_criteria)
-            ->with('code_alert', 2);
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Scoring'){
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('success','Ubah Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
         }else{
             return redirect()
             ->route('admin.masters.criterias.index')
@@ -201,13 +323,15 @@ class CripsController extends Controller
         $crip->delete();
 
         //RETURN TO VIEW
-        if($latest_per->progress_status == 'Scoring'){
-            return redirect()
-            ->route('admin.masters.criterias.index')->with('success','Hapus Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
-            ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
-            ->with('modal_redirect', 'modal-crp-view')
-            ->with('id_redirect', $crip->id_criteria)
-            ->with('code_alert', 2);
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Scoring'){
+                return redirect()
+                ->route('admin.masters.criterias.index')->with('success','Hapus Data Crips Berhasil. Jika diperlukan, silahkan lakukan Import ulang')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
         }else{
             return redirect()
             ->route('admin.masters.criterias.index')->with('success','Hapus Data Crips Berhasil')

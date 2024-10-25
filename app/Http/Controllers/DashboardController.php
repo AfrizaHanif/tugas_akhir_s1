@@ -33,38 +33,54 @@ class DashboardController extends Controller
         $periods = Period::get();
         $inputs = Input::get();
         $officers = Officer::with('position')
-        ->whereDoesntHave('position', function($query)
-        {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })
         //->where('is_lead', 'No')
         ->get();
         $input_lists = Input::with('officer')
-        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
-        {$query->where('is_lead', 'No');})->get();
+        ->select('id_period', 'id_officer', 'status')
+        ->groupBy('id_period', 'id_officer', 'status')
+        ->whereHas('officer', function($query){
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
+        })
+        ->get();
         $scores = Score::with('officer')
-        ->select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->whereHas('officer', function($query)
-        {$query->where('is_lead', 'No');})->get();
+        ->select('id_period', 'id_officer', 'status')
+        ->groupBy('id_period', 'id_officer', 'status')
+        ->whereHas('officer', function($query){
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
+        })
+        ->get();
         $count = Input::with('officer')
         ->select('id_period', 'id_officer', 'status')
         ->groupBy('id_period', 'id_officer', 'status')
         ->get();
         $countsub = Criteria::count();
         $subcriterias = Criteria::get();
+        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
 
         //GET DATA PER PART OF ACCOUNT
         if(Auth::user()->part == 'Admin'){
             //LIST OF OFFICERS FOR INPUT
             $input_off = Officer::with('position')
-            ->whereDoesntHave('position', function($query)
-            {$query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');})
-            ->where('is_lead', 'No')
+            ->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            })
+            //->where('is_lead', 'No')
             ->get();
             //dd($input_off);
         }elseif(Auth::user()->part == 'KBPS'){
             //LIST OF OFFICERS FOR INPUT
             $input_off = Officer::with('position')
-            ->whereDoesntHave('position', function($query)
-            {$query->where('name', 'Developer');})
-            ->where('is_lead', 'No')
+            ->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            })
+            //->where('is_lead', 'No')
             ->get();
         }
 
@@ -76,7 +92,7 @@ class DashboardController extends Controller
         ->whereHas('score', function($query){
             $query->whereIn('status', ['Rejected', 'Revised']);
         })
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->get();
         $progress_offs = Officer::with('position', 'input')
         ->whereDoesntHave('position', function($query){
@@ -85,7 +101,7 @@ class DashboardController extends Controller
         ->whereHas('input', function($query){
             $query->whereIn('status', ['Pending', 'Fixed']);
         })
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->get();
         $acc_offs = Officer::with('position', 'input')
         ->whereDoesntHave('position', function($query){
@@ -94,7 +110,7 @@ class DashboardController extends Controller
         ->whereHas('input', function($query){
             $query->whereIn('status', ['Pending', 'In Review', 'Fixed']);
         })
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->get();
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
@@ -106,7 +122,7 @@ class DashboardController extends Controller
         //dd($scoreresults);
 
         //RETURN TO VIEW
-        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'progress_offs', 'acc_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults', 'input_lists'));
+        return view('Pages.Admin.dashboard', compact('officers', 'reject_offs', 'progress_offs', 'acc_offs', 'input_off', 'count', 'inputs', 'scores', 'check_score', 'latest_per', 'latest_best', 'latest_top3', 'history_prd', 'countsub', 'subcriterias', 'periods', 'voteresults', 'scoreresults', 'input_lists', 'status'));
     }
 
     public function officer(Request $request){
@@ -123,14 +139,14 @@ class DashboardController extends Controller
         $inputs = Input::get();
 
         //GET HISTORY DATA
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
         $histories = HistoryInput::get();
         $hscores = HistoryScore::orderBy('id_period', 'ASC')->get();
         //dd($hresults);
 
-        //TEST DATA FOR CHART (BETA)
+        //TEST DATA FOR CHART
         $search = $request->year;
-        $chart = HistoryScore::where('id_officer', Auth::user()->nip)->where('period_year','like',"%".$search."%")->select('period_name', 'final_score')->groupBy('period_name', 'final_score')->orderBy('period_num_month', 'ASC')->orderBy('period_year', 'ASC')->pluck('final_score', 'period_name');
+        $chart = HistoryScore::where('id_officer', Auth::user()->nip)->where('period_year','like',"%".$search."%")->select('period_name', 'final_score')->groupBy('period_name', 'final_score')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->pluck('final_score', 'period_name');
 
         $c_labels = $chart->keys();
         $c_datas = $chart->values();

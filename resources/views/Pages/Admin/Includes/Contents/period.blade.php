@@ -52,6 +52,8 @@
             <td>
                 @if ($period->import_status == "Clear")
                 <span class="badge text-bg-success">Sudah Dikonversi</span>
+                @elseif ($period->import_status == "Few Clear")
+                <span class="badge text-bg-warning">Beberapa Dikonversi</span>
                 @elseif ($period->import_status == "Not Clear")
                 <span class="badge text-bg-warning">Belum Dikonversi</span>
                 @elseif ($period->import_status == "No Data")

@@ -175,14 +175,25 @@
                         @if (!empty(Auth::user()->part))
                             @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                                 @if ($part->id_part == 'PRT-001')
-                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}" hidden>
-                                    <i class="bi bi-person-plus"></i>
-                                    Tambah Pegawai
-                                </button>
-                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}" hidden>
-                                    <i class="bi bi-gear"></i>
-                                    Kelola Tim
-                                </button>
+                                    @if (count($officers->where('id_position', 'DPT-001')) > 0)
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kepala BPS Jawa Timur telah terdaftar.">
+                                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}" disabled>
+                                            <i class="bi bi-person-plus"></i>
+                                            Tambah Pegawai
+                                        </button>
+                                    </span>
+                                    @else
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}">
+                                        <i class="bi bi-person-plus"></i>
+                                        Tambah Pegawai
+                                    </button>
+                                    @endif
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bagian ini tidak hanya memiliki satu tim saja.">
+                                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}" disabled>
+                                            <i class="bi bi-gear"></i>
+                                            Kelola Tim
+                                        </button>
+                                    </span>
                                 @else
                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}">
                                     <i class="bi bi-person-plus"></i>

@@ -56,7 +56,7 @@ class InputController extends Controller
         $histories = HistoryInput::get();
         //$hraws = HistoryInputRAW::get();
         $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
 
@@ -185,8 +185,15 @@ class InputController extends Controller
 
     public function destroyall($period)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $period)->first();
+
         //DELETE ALL DATA
-        Input::where('id_period', $period)->delete();
+        if($latest_per->progress_status == 'Verifying'){
+            Input::where('id_period', $period)->where('status', 'Fixed')->orWhere('status', 'Not Converted')->delete();
+        }else{
+            Input::where('id_period', $period)->delete();
+        }
         //InputRAW::where('id_period', $period)->delete();
 
         //UPDATE IMPORT STATUS
@@ -498,6 +505,20 @@ class InputController extends Controller
         }
 
         //UPDATE STATUS IN INPUTS
+        foreach(Input::where('id_period', $period)->where('status', 'Not Converted')->get() as $input){
+            if($input->input != $input->input_raw){
+                if($latest_per->progress_status == 'Scoring'){
+                    $input->update([
+                        'status' => 'Pending',
+                    ]);
+                }elseif($latest_per->progress_status == 'Verifying'){
+                    $input->update([
+                        'status' => 'Fixed',
+                    ]);
+                }
+            }
+        }
+        /*
         if($latest_per->progress_status == 'Scoring'){
             Input::where('status', 'Not Converted')->update([
                 'status' => 'Pending',
@@ -507,6 +528,7 @@ class InputController extends Controller
                 'status' => 'Fixed',
             ]);
         }
+        */
 
         //UPDATE STATUS IN SCORES
         foreach($officers as $officer){
@@ -524,11 +546,28 @@ class InputController extends Controller
         }
 
         //UPDATE IMPORT STATUS
-        Period::where('id_period', $period)->update([
-            'import_status'=>'Clear',
-        ]);
+        if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            Period::where('id_period', $period)->update([
+                'import_status'=>'Few Clear',
+            ]);
+        }else{
+            Period::where('id_period', $period)->update([
+                'import_status'=>'Clear',
+            ]);
+        }
 
         //RETURN TO VIEW
+        //IF NOT CONVERTED
+        foreach(Input::where('id_period', $period)->get() as $input){
+            if($input->input == $input->input_raw){
+                return redirect()
+                ->route('admin.inputs.data.index')
+                ->withInput(['tab_redirect'=>'pills-'.$period])
+                ->with('warning','Konversi Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
+                ->with('code_alert', 1);
+            }
+        }
+        //IF ALL CONVERTED
         return redirect()
         ->route('admin.inputs.data.index')
         ->withInput(['tab_redirect'=>'pills-'.$period])
@@ -538,20 +577,25 @@ class InputController extends Controller
 
     public function refresh($period)
     {
-        //CHECK STATUS
-
+        //GET DATA
+        $latest_per = Period::where('id_period', $period)->first();
 
         //MOVE INPUT RAW TO INPUT
-        $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        if($latest_per->progress_status == 'Verifying'){
+            $move = Input::where('id_period', $period)->where('status', 'Fixed')->get();
+        }else{
+            $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        }
         foreach($move as $m){
             $m->update([
                 'input' => $m->input_raw,
+                'status' => 'Not Converted',
             ]);
         }
 
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
         //GET INPUT DATA AND CRITERIA
-        $inputs = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        $inputs = Input::where('id_period', $period)->where('status', 'Not Converted')->get();
         $criterias = Criteria::get();
         $crips = Crips::with('criteria')->get();
         //UPDATE DATA
@@ -580,23 +624,67 @@ class InputController extends Controller
         }
 
         //UPDATE STATUS IN INPUTS
+        foreach(Input::where('id_period', $period)->where('status', 'Not Converted')->get() as $input){
+            if($input->input != $input->input_raw){
+                if($latest_per->progress_status == 'Verifying'){
+                    $input->update([
+                        'status' => 'Fixed',
+                    ]);
+                }else{
+                    $input->update([
+                        'status' => 'Pending',
+                    ]);
+                }
+            }
+        }
+        /*
         Input::where('status', 'Not Converted')->update([
             'status' => 'Pending',
         ]);
+        */
 
+        //dd(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1);
         //UPDATE IMPORT STATUS
-        Period::where('id_period', $period)->update([
-            'import_status'=>'Clear',
-        ]);
+        if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            Period::where('id_period', $period)->update([
+                'import_status'=>'Few Clear',
+            ]);
+        }else{
+            Period::where('id_period', $period)->update([
+                'import_status'=>'Clear',
+            ]);
+        }
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Refresh Data Berhasil')->with('code_alert', 1);
+        //IF NOT CONVERTED
+        foreach(Input::where('id_period', $period)->get() as $input){
+            if($input->input == $input->input_raw){
+                return redirect()
+                ->route('admin.inputs.data.index')
+                ->withInput(['tab_redirect'=>'pills-'.$period])
+                ->with('warning','Refresh Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
+                ->with('code_alert', 1);
+            }
+        }
+        //IF ALL CONVERTED
+        return redirect()
+        ->route('admin.inputs.data.index')
+        ->withInput(['tab_redirect'=>'pills-'.$period])
+        ->with('success','Refresh Data Berhasil')
+        ->with('code_alert', 1);
     }
 
     public function reset($period)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $period)->first();
+
         //MOVE INPUT RAW TO INPUT
-        $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        if($latest_per->progress_status == 'Verifying'){
+            $move = Input::where('id_period', $period)->where('status', 'Fixed')->get();
+        }else{
+            $move = Input::where('id_period', $period)->where('status', 'Pending')->get();
+        }
         foreach($move as $m){
             $m->update([
                 'input' => $m->input_raw,
@@ -612,7 +700,6 @@ class InputController extends Controller
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Reset Data Berhasil')->with('code_alert', 1);
     }
-
 
     public function export_latest()
     {

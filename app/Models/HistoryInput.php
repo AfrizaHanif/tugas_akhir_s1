@@ -31,7 +31,8 @@ class HistoryInput extends Model
         'attribute',
         //'level',
         'max',
-        'is_lead',
+        'unit',
+        //'is_lead',
         'input',
         'input_raw',
     ];

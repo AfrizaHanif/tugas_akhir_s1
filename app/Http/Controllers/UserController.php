@@ -244,12 +244,12 @@ class UserController extends Controller
         }
 
         //UPDATE DATA
-        if($request->filled('password')) {
+        if($request->password == 'yes') {
             $user->update([
                 //'username'=>$request->username,
                 //'name'=>$request->name,
                 //'email'=>$request->email,
-                'password'=>Hash::make($request->password),
+                'password'=>Hash::make('bps3500'),
                 'part'=>$request->part,
                 //'id_officer'=>$request->id_officer,
             ]);

@@ -5,10 +5,19 @@
 <!--MENU-->
 <p>
     <!--ADD USER-->
+    @if (count($users) == count($officers))
+    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua pegawai telah memiliki pengguna">
+        <a class="btn btn-secondary disabled">
+            <i class="bi bi-person-add"></i>
+            Tambah Pengguna
+        </a>
+    </span>
+    @else
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-usr-create">
         <i class="bi bi-person-add"></i>
         Tambah Pengguna
     </a>
+    @endif
     <!--HELP-->
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
         <i class="bi bi-question-lg"></i>

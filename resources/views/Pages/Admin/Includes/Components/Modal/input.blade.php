@@ -212,7 +212,7 @@
             </div>
             <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
                 <button type="button" class="btn btn-lg btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-convert-{{ $latest_per->id_period }}">Convert Ulang (Refresh)</button>
-                <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-reset-{{ $latest_per->id_period }}">Reset ke RAW</button>
+                <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-reset-{{ $latest_per->id_period }}">Reset ke Nilai Asli</button>
                 <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>

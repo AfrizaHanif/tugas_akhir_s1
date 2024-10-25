@@ -90,8 +90,14 @@
                                     @include('Templates.Includes.Components.alert')
                                     @endif
                                     <div class="mb-3">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password">
+                                        <label for="password" class="form-label">Reset Password?</label>
+                                        <br/>
+                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="display: flex;">
+                                            <input type="radio" class="btn-check" name="password" id="password_no" value="no" autocomplete="off" checked>
+                                            <label class="btn btn-outline-primary" for="password_no" style="flex: 1">Tidak</label>
+                                            <input type="radio" class="btn-check" name="password" id="password_yes" value="yes" autocomplete="off">
+                                            <label class="btn btn-outline-danger" for="password_yes" style="flex: 1">Ya</label>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="part" class="form-label">Bagian / Jenis Akun</label>

@@ -52,13 +52,15 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
             $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
 
             //IF LEAD
-            $is_lead = 'No';
+            /*
+            //$is_lead = 'No';
             $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
             if(!empty($check_lead->id_position)){
                 if($check_lead->id_position == $positions->id_position){
-                    $is_lead = 'Yes';
+                    //$is_lead = 'Yes';
                 }
             }
+            */
 
             if($this->import_method == 'reset'){
                 //IMPORT DATA
@@ -74,7 +76,7 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
                     'phone'=>$row['telp'],
                     'gender'=>$row['jk'],
                     'religion'=>$row['agama'],
-                    'is_lead'=>$is_lead,
+                    //'is_lead'=>$is_lead,
                     'photo'=>$row['foto'],
                 ]);
             }else{
@@ -96,7 +98,7 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
                     'date_birth'=>$row['tgllahir'],
                     'gender'=>$row['jk'],
                     'religion'=>$row['agama'],
-                    'is_lead'=>$is_lead,
+                    //'is_lead'=>$is_lead,
                     'photo'=>$row['foto'],
                 ]);
             }

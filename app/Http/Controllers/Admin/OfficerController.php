@@ -20,11 +20,13 @@ use App\Models\User;
 use Exception;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -180,7 +182,7 @@ class OfficerController extends Controller
             'gender'=>$request->gender,
             'religion'=>$request->religion,
             'photo'=>$photo,
-            'is_lead'=>'No',
+            //'is_lead'=>'No',
 		]);
         User::insert([
             'id_user'=>$id_user,
@@ -192,14 +194,16 @@ class OfficerController extends Controller
         ]);
 
         //IF LEAD
+        /*
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $request->id_position){
                 Officer::where('id_officer', $request->id_officer)->update([
-                    'is_lead'=>'Yes',
+                    //'is_lead'=>'Yes',
                 ]);
             }
         }
+        */
 
         //GET FOR REDIRECT
         $tab = Team::with('subteam')
@@ -318,6 +322,23 @@ class OfficerController extends Controller
             $tim_2 = $request->id_sub_team_2;
         }
 
+        //UPDATE IMAGE
+        $photo = '';
+        $id_officer = Officer::find($officer->id_officer);
+        $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
+        //dd($path_photo);
+        if($request->hasFile('photo')){
+            File::delete($path_photo);
+            $photo = 'IMG-'.$officer->id_officer.'.'.$request->photo->extension();
+            $request->photo->move(public_path('Images/Portrait/'), $photo);
+            $officer->update([
+                'photo'=>$request['image'] = $photo,
+            ]);
+        }
+        if($request->has('photo_erase')){
+            File::delete($path_photo);
+        }
+
         //UPDATE DATA
         $officer->update([
             'id_officer'=>$request->id_officer,
@@ -331,7 +352,8 @@ class OfficerController extends Controller
             'date_birth'=>$request->date_birth,
             'gender'=>$request->gender,
             'religion'=>$request->religion,
-            'is_lead'=>'No',
+            'photo'=>$request->photo,
+            //'is_lead'=>'No',
 		]);
         if(!empty(User::where('nip', $officer->id_officer)->first())){
             User::where('nip', $officer->id_officer)->update([
@@ -350,31 +372,17 @@ class OfficerController extends Controller
             ]);
         }
 
-        //UPDATE IMAGE
-        $photo = '';
-        $id_officer = Officer::find($officer->id_officer);
-        $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
-        if($request->hasFile('photo')){
-            File::delete($path_photo);
-            $photo = 'IMG-'.$officer->id_officer.'.'.$request->photo->extension();
-            $request->photo->move(public_path('Images/Portrait/'), $photo);
-            $officer->update([
-                'photo'=>$request['image'] = $photo,
-            ]);
-        }
-        if($request->has('photo_erase')){
-            File::delete($path_photo);
-        }
-
         //IF LEAD
+        /*
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $request->id_position){
                 Officer::where('id_officer', $officer->id_officer)->update([
-                    'is_lead'=>'Yes',
+                    //'is_lead'=>'Yes',
                 ]);
             }
         }
+        */
 
         //RETURN TO VIEW
         return redirect()
@@ -453,7 +461,7 @@ class OfficerController extends Controller
         return view('Pages.Admin.officer', compact('parts', 'positions', 'teams', 'subteams', 'officers', 'search'));
     }
 
-    public function import(Request $request)
+    public function import(Request $request): RedirectResponse
     {
         //ERASE ALL DATA (RESET ONLY)
         if($request->import_method == 'reset'){
@@ -506,9 +514,12 @@ class OfficerController extends Controller
                 ->with('code_alert', 1);
             }else{
                 if($request->import_method == 'reset'){
+                    Session::flush();
                     Auth::logout();
-                    request()->session()->invalidate();
-                    request()->session()->regenerateToken();
+                    //request()->session()->invalidate();
+                    //request()->session()->regenerateToken();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
 
                     return redirect()
                     ->route('index')

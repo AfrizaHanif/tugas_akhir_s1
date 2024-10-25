@@ -35,13 +35,15 @@ class OfficersModalImport implements ToModel, WithHeadingRow, WithValidation, Sk
         $subteams2 = $this->subteams->where('name', $row['subtim2'])->first();
 
         //IF LEAD
-        $is_lead = 'No';
+        /*
+        //$is_lead = 'No';
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $positions->id_position){
-                $is_lead = 'Yes';
+                //$is_lead = 'Yes';
             }
         }
+        */
 
         return new Officer([
             'id_officer' => $row['nip'],
@@ -55,7 +57,7 @@ class OfficersModalImport implements ToModel, WithHeadingRow, WithValidation, Sk
             'phone'=>$row['telp'],
             'gender'=>$row['jk'],
             'religion'=>$row['agama'],
-            'is_lead'=>$is_lead,
+            //'is_lead'=>$is_lead,
             'photo'=>$row['foto'],
         ]);
     }

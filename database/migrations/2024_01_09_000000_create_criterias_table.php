@@ -20,7 +20,8 @@ return new class extends Migration
             $table->char('attribute', 11);
             //$table->smallInteger('level');
             $table->smallInteger('max');
-            $table->char('need', 10);
+            $table->char('unit', 10)->nullable();
+            //$table->char('need', 10);
             $table->char('source', 25);
             $table->timestamps();
         });

@@ -15,7 +15,11 @@
                                 <th rowspan="2" class="col-1" scope="col">#</th>
                                 <th rowspan="2" scope="col">Nama</th>
                                 <th rowspan="2" scope="col">Jabatan</th>
-                                <th rowspan="2" scope="col">Status</th>
+                                <th colspan="2" scope="col">Status</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th scope="col">Isi</th>
+                                <th scope="col">Proses</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,24 +30,47 @@
                                 <td>{{ $officer->position->name }}</td>
                                 @if ($countsub != 0)
                                 <td>
-                                    @if ($officer->is_lead == 'No')
-                                        @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->first()->status))
-                                            @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->first()->status != 'Not Converted')
-                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
-                                                <span class="badge text-bg-primary">Terisi Semua</span>
-                                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
-                                                <span class="badge text-bg-danger">Tidak Terisi</span>
-                                                @else
-                                                <span class="badge text-bg-warning">Terisi Sebagian</span>
-                                                @endif
-                                            @else
-                                            <span class="badge text-bg-warning">Belum Dikonversi</span>
-                                            @endif
-                                        @else
+                                    @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
+                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
+                                        <span class="badge text-bg-primary">Terisi Semua</span>
+                                        @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
                                         <span class="badge text-bg-danger">Tidak Terisi</span>
+                                        @else
+                                        <span class="badge text-bg-warning">Terisi Sebagian</span>
                                         @endif
                                     @else
-                                    <span class="badge text-bg-secondary">Excluded</span>
+                                    <span class="badge text-bg-danger">Tidak Terisi</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
+                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                        <span class="badge text-bg-warning">Perlu Perhatian</span>
+                                        @else
+                                            @if (!empty($latest_per))
+                                                @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                                    @if ($s->status == 'Pending')
+                                                    <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                                    @elseif ($s->status == 'Not Converted')
+                                                    <span class="badge text-bg-warning">Belum Dikonversi</span>
+                                                    @elseif ($s->status == 'In Review')
+                                                    <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
+                                                    @elseif ($s->status == 'Final')
+                                                    <span class="badge text-bg-success">Nilai Akhir</span>
+                                                    @elseif ($s->status == 'Need Fix')
+                                                    <span class="badge text-bg-danger">Perlu Perbaikan</span>
+                                                    @elseif ($s->status == 'Fixed')
+                                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                                    @endif
+                                                @empty
+                                                <span class="badge text-bg-secondary">Blank</span>
+                                                @endforelse
+                                            @else
+                                            <span class="badge text-bg-secondary">Blank</span>
+                                            @endif
+                                        @endif
+                                    @else
+                                    <span class="badge text-bg-secondary">Tidak Ada Data</span>
                                     @endif
                                 </td>
                                 @endif
@@ -103,17 +130,25 @@
                                 <td>{{ $officer->name }}</td>
                                 <td>{{ $officer->position->name }}</td>
                                 <td>
-                                    @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
-                                        @if ($input->status == 'Fixed')
-                                        <span class="badge text-bg-primary">Telah Diperbaiki</span>
-                                        @elseif ($input->status == 'Pending')
-                                        <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                    @if (!empty($latest_per))
+                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                        <span class="badge text-bg-warning">Perlu Perhatian</span>
                                         @else
-                                        <span class="badge text-bg-secondary">Blank</span>
+                                            @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                                @if ($input->status == 'Fixed')
+                                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                                @elseif ($input->status == 'Pending')
+                                                <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                                @else
+                                                <span class="badge text-bg-secondary">Blank</span>
+                                                @endif
+                                            @empty
+                                            <span class="badge text-bg-secondary">Blank</span>
+                                            @endforelse
                                         @endif
-                                    @empty
+                                    @else
                                     <span class="badge text-bg-secondary">Blank</span>
-                                    @endforelse
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -169,19 +204,28 @@
                                 <td>{{ $officer->name }}</td>
                                 <td>{{ $officer->position->name }}</td>
                                 <td>
-                                    @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
-                                    @if ($input->status == 'Pending')
-                                    <span class="badge text-bg-primary">Dalam Pemeriksaan</span>
-                                    @elseif ($input->status == 'In Review')
-                                    <span class="badge text-bg-warning">Belum Diperiksa</span>
-                                    @elseif ($input->status == 'Fixed')
-                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                    @if (!empty($latest_per))
+                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                        <span class="badge text-bg-warning">Perlu Perhatian</span>
+                                        @else
+                                            @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                                @if ($input->status == 'Pending')
+                                                <span class="badge text-bg-primary">Dalam Pemeriksaan</span>
+                                                @elseif ($input->status == 'In Review')
+                                                <span class="badge text-bg-warning">Belum Diperiksa</span>
+                                                @elseif ($input->status == 'Fixed')
+                                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                                @else
+                                                <span class="badge text-bg-secondary">Blank</span>
+                                                @endif
+                                            @empty
+                                            <span class="badge text-bg-secondary">Blank</span>
+                                            @endforelse
+                                        @endif
                                     @else
                                     <span class="badge text-bg-secondary">Blank</span>
                                     @endif
-                                    @empty
-                                    <span class="badge text-bg-secondary">Blank</span>
-                                    @endforelse
+
                                 </td>
                             </tr>
                             @empty

@@ -100,7 +100,8 @@ class CriteriaController extends Controller
             'attribute'=>$request->attribute,
             //'level'=>$request->level,
             'max'=>$request->max,
-            'need'=>$request->need,
+            'unit'=>$request->unit,
+            //'need'=>$request->need,
             'source'=>$source,
 		]);
 
@@ -171,7 +172,8 @@ class CriteriaController extends Controller
             'attribute'=>$request->attribute,
             //'level'=>$request->level,
             'max'=>$request->max,
-            'need'=>$request->need,
+            'unit'=>$request->unit,
+            //'need'=>$request->need,
             'source'=>$source,
 		]);
 

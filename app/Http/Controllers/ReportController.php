@@ -44,14 +44,18 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
         $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $periods->id_period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $periods->id_period)->where('is_lead', 'No')->get();
+        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')
+        ->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')
+        ->where('id_period', $periods->id_period)
+        //->where('is_lead', 'No')
+        ->get();
         //$prd_name = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first()->period_name;
 
         $alternatives = HistoryInput::with('criteria', 'officer')
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $periods->id_period)
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->getQuery()->get();
 
         $criterias = DB::table("history_inputs")
@@ -70,7 +74,7 @@ class ReportController extends Controller
 
         $inputs = HistoryInput::with('criteria')
         ->where('id_period', $periods->id_period)
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->getQuery()->get();
 
         //FIND MIN DAN MAX

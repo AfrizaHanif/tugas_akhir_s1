@@ -156,8 +156,10 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                         Route::post('/get/{period}', 'get')->name('get');
                         Route::post('/yes/{id}', 'yes')->name('yes');
                         Route::post('/yesall/{id}', 'yesall')->name('yesall');
+                        Route::post('/yesall/remain/{id}', 'yesall_remain')->name('yesall.remain');
                         Route::post('/no/{id}', 'no')->name('no');
                         Route::post('/noall/{id}', 'noall')->name('noall');
+                        Route::post('/noall/remain/{id}', 'noall_remain')->name('noall.remain');
                         Route::post('/finish/{period}', 'finish')->name('finish');
                     });
                 });

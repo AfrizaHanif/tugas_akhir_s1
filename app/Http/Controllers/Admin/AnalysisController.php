@@ -42,7 +42,10 @@ class AnalysisController extends Controller
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->get();
         $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $subcriterias = Criteria::with('category')->get();
-        $officers = Officer::where('is_lead', 'No')->get();
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })->get();
 
         //GET DATA FOR PERIOD PICKER
         $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
@@ -62,15 +65,21 @@ class AnalysisController extends Controller
             if(Input::where('id_period', $latest_per->id_period)->count() == 0){
                 return redirect()->route('admin.analysis.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
             }else{
-                foreach ($officers as $officer) {
-                    if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
-                        return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
-                    }else{ //IF OFFICER HAS A FEW DATA
-                        foreach ($subcriterias as $subcriteria) {
-                            if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
-                                return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
-                            }else{
-                                //CLEAR
+                if($latest_per->import_status == 'Not Clear'){
+                    return redirect()->route('admin.analysis.index')->with('fail','Terdapat nilai yang belum dikonversi. Silahkan lakukan konversi data nilai terlebih dahulu.');
+                }elseif($latest_per->import_status == 'Few Clear'){
+                    return redirect()->route('admin.analysis.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria.');
+                }else{
+                    foreach ($officers as $officer) {
+                        if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
+                            return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
+                        }else{ //IF OFFICER HAS A FEW DATA
+                            foreach ($subcriterias as $subcriteria) {
+                                if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
+                                    return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
+                                }else{
+                                    //CLEAR
+                                }
                             }
                         }
                     }
@@ -86,11 +95,10 @@ class AnalysisController extends Controller
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $latest_per->id_period)
-        ->whereHas('criteria', function($query){
-            $query->where('need', 'Ya');
-        })
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->getQuery()->get();
 
@@ -108,18 +116,17 @@ class AnalysisController extends Controller
             'attribute'
             )
         ->where('id_period', $latest_per->id_period)
-        ->where('criterias.need', 'Ya')
+        //->where('criterias.need', 'Ya')
         ->get();
         //$criterias = Criteria::get();
 
         //GET INPUT
         $inputs = Input::with('criteria', 'officer')
         ->where('id_period', $latest_per->id_period)
-        ->whereHas('criteria', function($query){
-            $query->where('need', 'Ya');
-        })
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->getQuery()->get();
 
@@ -218,7 +225,7 @@ class AnalysisController extends Controller
         ->select('id_officer')
         ->groupBy('id_officer')
         ->where('id_period', $period)
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->getQuery()->get();
 
         //GET CRITERIA
@@ -240,7 +247,7 @@ class AnalysisController extends Controller
         //GET INPUT
         $inputs = HistoryInput::with('criteria')
         ->where('id_period', $period)
-        ->where('is_lead', 'No')
+        //->where('is_lead', 'No')
         ->getQuery()->get();
 
         //FIND MIN DAN MAX

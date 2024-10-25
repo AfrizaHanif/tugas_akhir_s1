@@ -136,39 +136,18 @@
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <!--QUICK VERIFY-->
-                                        @if ($latest_per->progress_status == "Finished" || $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0 || $scores->where('id_period', $latest_per->id_period)->count() == 0)
-                                            @if ($latest_per->progress_status == "Finished")
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
-                                            @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() != 0)
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak / direvisi.">
-                                            @elseif ($scores->where('id_period', $latest_per->id_period)->count() == 0)
-                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Data belum diambil. Silahkan ambil terlebih dahulu.">
-                                            @endif
-                                                <li>
-                                                    <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
-                                                        <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
-                                                        Setuju Semua
-                                                    </a>
-                                                </li><li>
-                                                    <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $latest_per->id_period }}">
-                                                        <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
-                                                        Tolak Semua
-                                                    </a>
-                                                </li>
-                                            </span>
-                                        @else
                                         <li>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
                                                 <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
                                                 Setuju Semua
                                             </a>
-                                        </li><li>
+                                        </li>
+                                        <li>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-noall-{{ $latest_per->id_period }}">
                                                 <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
                                                 Tolak Semua
                                             </a>
                                         </li>
-                                        @endif
                                     </ul>
                                 </div>
                             </div>

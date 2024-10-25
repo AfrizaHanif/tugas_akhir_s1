@@ -28,7 +28,7 @@
                                         @forelse ($histories->where('id_criteria', $hcriteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $hperiod->id_period) as $history)
                                         <tr>
                                             <th scope="row">{{ $hcriteria->criteria_name }}</th>
-                                            <td>{{ $history->input }} ({{ $history->input_raw }})</td>
+                                            <td>{{ $history->input_raw }} {{ $hcriteria->unit }}</td>
                                         </tr>
                                         @empty
                                         <tr>

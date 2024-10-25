@@ -309,7 +309,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '1996/04/08',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            //'is_lead' => 'Yes',
         ]);
         */
 
@@ -325,7 +325,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            //'is_lead' => 'Yes',
         ]);
 
         /*
@@ -342,7 +342,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'Yes',
+            //'is_lead' => 'Yes',
         ]);
         */
 
@@ -358,7 +358,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            //'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -373,7 +373,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            //'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -389,7 +389,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            //'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -404,7 +404,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Perempuan',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            //'is_lead' => 'No',
         ]);
 
         DB::table('officers')->insert([
@@ -419,7 +419,7 @@ class DatabaseSeeder extends Seeder
             'date_birth' => '2000/01/01',
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
-            'is_lead' => 'No',
+            //'is_lead' => 'No',
         ]);
 
         //USERS: Pengguna
@@ -546,7 +546,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '7',
             'max' => '23',
-            'need' => 'Ya',
+            'unit' => 'Hari',
+            //'need' => 'Ya',
             'source' => 'tanpa_kabar',
         ]);
 
@@ -558,7 +559,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Cost',
             //'level' => '5',
             'max' => '10350',
-            'need' => 'Ya',
+            'unit' => 'Menit',
+            //'need' => 'Ya',
             'source' => 'kjk',
         ]);
 
@@ -571,7 +573,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '9',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'ckp',
         ]);
 
@@ -584,7 +587,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'berorientasi_pelayanan',
         ]);
 
@@ -596,7 +600,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'akuntabel',
         ]);
 
@@ -608,7 +613,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'kompeten',
         ]);
 
@@ -620,7 +626,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'harmonis',
         ]);
 
@@ -632,7 +639,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'loyal',
         ]);
 
@@ -644,7 +652,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'adaptif',
         ]);
 
@@ -656,7 +665,8 @@ class DatabaseSeeder extends Seeder
             'attribute' => 'Benefit',
             //'level' => '3',
             'max' => '100',
-            'need' => 'Ya',
+            'unit' => 'Poin',
+            //'need' => 'Ya',
             'source' => 'kolaboratif',
         ]);
 

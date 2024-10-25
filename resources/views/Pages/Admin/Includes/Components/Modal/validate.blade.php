@@ -172,16 +172,78 @@
                         </ul>
                     </div>
                 </form>
+                <form id="form-scr-yesall-remain-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.yesall.remain', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg"></i>
-                    Tidak
-                </button>
-                <button type="submit" form="form-scr-yesall-{{ $period->id_period }}" class="btn btn-primary">
-                    <i class="bi bi-check-lg"></i>
-                    Ya
-                </button>
+                @if (!empty($latest_per))
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', [ 'Revised'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan revisi.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() >= 1 && $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1 && $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])->count() == 0)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan pemeriksaan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @else
+                    <button type="submit" form="form-scr-yesall-remain-{{ $period->id_period }}" class="btn btn-warning">
+                        <i class="bi bi-check-lg"></i>
+                        Ya (Sebagian)
+                    </button>
+                    @endif
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Semua)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() >= 1)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Beberapa nilai telah dilakukan penolakan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Semua)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Beberapa nilai telah dilakukan revisi.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Semua)
+                        </button>
+                    </span>
+                    @else
+                    <button type="submit" form="form-scr-yesall-{{ $period->id_period }}" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Ya (Semua)
+                    </button>
+                    @endif
+                @endif
             </div>
         </div>
     </div>
@@ -213,16 +275,71 @@
                         </ul>
                     </div>
                 </form>
+                <form id="form-scr-noall-remain-{{ $period->id_period }}" action="{{ route('admin.inputs.validate.noall.remain', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg"></i>
-                    Tidak
-                </button>
-                <button type="submit" form="form-scr-noall-{{ $period->id_period }}" class="btn btn-danger">
-                    <i class="bi bi-check-lg"></i>
-                    Ya
-                </button>
+                @if (!empty($latest_per))
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                        Tidak
+                    </button>
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan revisi.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() >= 1 && $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected', 'Revised'])->count() >= 1 && $scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])->count() == 0)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan pemeriksaan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Sebagian)
+                        </button>
+                    </span>
+                    @else
+                    <button type="submit" form="form-scr-noall-remain-{{ $period->id_period }}" class="btn btn-warning">
+                        <i class="bi bi-check-lg"></i>
+                        Ya (Sebagian)
+                    </button>
+                    @endif
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Semua)
+                        </button>
+                    </span>
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Beberapa nilai telah dilakukan revisi.">
+                        <button type="submit" class="btn btn-secondary" disabled>
+                            <i class="bi bi-check-lg"></i>
+                            Ya (Semua)
+                        </button>
+                    </span>
+                    @else
+                    <button type="submit" form="form-scr-noall-{{ $period->id_period }}" class="btn btn-danger">
+                        <i class="bi bi-check-lg"></i>
+                        Ya (Semua)
+                    </button>
+                    @endif
+                @endif
             </div>
         </div>
     </div>

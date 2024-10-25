@@ -6,6 +6,7 @@ use App\Models\Position;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
@@ -63,7 +64,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                     'username'=>$row['nip'],
                     'name'=>$row['nama'],
                     'nip'=>$row['nip'],
-                    'password'=>'$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+                    'password'=>Hash::make('bps3500'),
                     'part'=>$part,
                 ]);
             }else{
@@ -73,7 +74,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                     'id_user'=>$id_user,
                     'username'=>$row['nip'],
                     'name'=>$row['nama'],
-                    'password'=>'$2y$10$0fQtK9jo.PjQwCItVUlOaevSTelCFz1Lc/Z8dIuFeK/3u5BmkXZzS',
+                    'password'=>Hash::make('bps3500'),
                     'part'=>$part,
                 ]);
             }

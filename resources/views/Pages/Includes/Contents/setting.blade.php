@@ -41,7 +41,11 @@
         <div class="h-100 p-5 bg-body-tertiary border rounded-3">
             <h2>Ganti Username</h2>
             <p>Anda dapat mengubah username anda untuk memudahkan anda saat melakukan login jika anda lupa NIP.</p>
+            @if (Auth::user()->username == Auth::user()->nip)
             <input type="username" class="form-control" id="s_username" name="s_username" required>
+            @else
+            <input type="username" class="form-control" id="s_username" name="s_username" value="{{ Auth::user()->username }}" required>
+            @endif
         </div>
     </div>
     @endif

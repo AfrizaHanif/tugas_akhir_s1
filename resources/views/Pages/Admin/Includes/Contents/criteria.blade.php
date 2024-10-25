@@ -100,9 +100,8 @@
                             <th scope="col">Nama</th>
                             <th class="col-1" scope="col">Bobot</th>
                             <th class="col-1" scope="col">Atribut</th>
-                            <th class="col-1" scope="col">Max</th>
+                            <th class="col-2" scope="col">Max</th>
                             <th class="col-1" scope="col">Crips</th>
-                            <th class="col-1" scope="col">Butuh?</th>
                             <th class="col-1" scope="col">Action</th>
                         </tr>
                     </thead>
@@ -113,9 +112,8 @@
                             <td>{{ $criteria->name }}</td>
                             <td>{{ ($criteria->weight * 100 ) }}%</td>
                             <td>{{ $criteria->attribute }}</td>
-                            <td>{{ $criteria->max }}</td>
+                            <td>{{ $criteria->max }} {{ $criteria->unit }}</td>
                             <td>{{ count($crips->where('id_criteria', $criteria->id_criteria)) }}</td>
-                            <td>{{ $criteria->need }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

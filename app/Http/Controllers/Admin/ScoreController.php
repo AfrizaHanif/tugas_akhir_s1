@@ -34,8 +34,10 @@ class ScoreController extends Controller
     {
         //GET DATA
         $officers = Officer::with('position')
-        ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->where('is_lead', 'No')
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })
+        //->where('is_lead', 'No')
         ->get();
         $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get();
         $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
@@ -59,7 +61,7 @@ class ScoreController extends Controller
         $histories = HistoryInput::get();
         $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
         $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period')->groupBy('id_criteria', 'criteria_name', 'id_period')->get();
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
 
         //RETURN TO VIEW
         return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'set_crit', 'histories', 'hscore', 'hofficers', 'hcriterias'));
@@ -70,7 +72,10 @@ class ScoreController extends Controller
         //GET DATA
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('status', 'Pending')->get();
         $subcriterias = Criteria::with('category')->get();
-        $officers = Officer::where('is_lead', 'No')->get();
+        $officers = Officer::with('position')
+        ->whereDoesntHave('position', function($query){
+            $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+        })->get();
         $latest_per = Period::whereIn('progress_status', ['Scoring', 'Verifying'])->latest()->first();
 
         //VERIFICATION
@@ -80,6 +85,8 @@ class ScoreController extends Controller
         }else{
             if($latest_per->import_status == 'Not Clear'){
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat nilai yang belum dikonversi. Hubungi kepegawaian untuk melakukan konversi nilai.');
+            }elseif($latest_per->import_status == 'Few Clear'){
+                return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Hubungi kepegawaian untuk melakukan perbaikan konversi.');
             }else{
                 foreach ($officers as $officer) {
                     if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
@@ -121,16 +128,13 @@ class ScoreController extends Controller
             'attribute'
             )
         ->where('id_period', $period)
-        ->where('criterias.need', 'Ya')
+        //->where('criterias.need', 'Ya')
         ->get();
         //$criterias = Criteria::get();
 
         //GET INPUT
         $inputs = Input::with('criteria', 'officer')
         ->where('id_period', $period)
-        ->whereHas('criteria', function($query){
-            $query->where('need', 'Ya');
-        })
         ->whereDoesntHave('officer', function($query){
             $query->with('position')->whereHas('position', function($query){
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
@@ -222,7 +226,9 @@ class ScoreController extends Controller
         ->where('id_period', $period)
         ->whereIn('status', ['Pending', 'Final', 'Need Fix', 'Fixed'])
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'In Review'
@@ -232,7 +238,9 @@ class ScoreController extends Controller
         ->where('id_period', $period)
         ->whereIn('status', ['Pending', 'Need Fix', 'Fixed'])
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'In Review'
@@ -280,7 +288,9 @@ class ScoreController extends Controller
         ]);
         Input::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'Final'
@@ -288,7 +298,9 @@ class ScoreController extends Controller
         /*
         InputRAW::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'Final'
@@ -297,6 +309,26 @@ class ScoreController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari seluruh pegawai telah disetujui')->with('code_alert', 1);
+    }
+
+    public function yesall_remain($id)
+    {
+        //UPDATE STATUS
+        Score::where('id_period', $id)->where('status', 'Pending')->update([
+            'status'=>'Accepted'
+        ]);
+        Input::with('officer')->where('id_period', $id)->where('status', 'In Review')
+        ->whereHas('officer', function($query){
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
+        })
+        ->update([
+            'status'=>'Final'
+        ]);
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari beberapa pegawai yang belum diperiksa telah disetujui')->with('code_alert', 1);
     }
 
     public function no($id)
@@ -332,7 +364,9 @@ class ScoreController extends Controller
         ]);
         Input::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'Need Fix'
@@ -340,7 +374,9 @@ class ScoreController extends Controller
         /*
         InputRAW::with('officer')->where('id_period', $id)
         ->whereHas('officer', function($query){
-            $query->where('is_lead', 'No');
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
         })
         ->update([
             'status'=>'Need Fix'
@@ -349,6 +385,26 @@ class ScoreController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari seluruh pegawai telah dikembalikan')->with('code_alert', 1);
+    }
+
+    public function noall_remain($id)
+    {
+        //UPDATE STATUS
+        Score::where('id_period', $id)->where('status', 'Pending')->update([
+            'status'=>'Rejected'
+        ]);
+        Input::with('officer')->where('id_period', $id)->where('status', 'In Review')
+        ->whereHas('officer', function($query){
+            $query->with('position')->whereDoesntHave('position', function($query){
+                $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
+            });
+        })
+        ->update([
+            'status'=>'Need Fix'
+        ]);
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari beberapa pegawai yang belum diperiksa telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)
@@ -410,9 +466,9 @@ class ScoreController extends Controller
             //CHECK IF ADMIN (WILL BE REMOVED)
             /*
             if(empty($getuser2->part) || $getuser2->part == 'Admin'){
-                $is_lead = 'No';
+                //$is_lead = 'No';
             }else{
-                $is_lead = 'Yes';
+                //$is_lead = 'Yes';
             }
             */
 
@@ -437,7 +493,8 @@ class ScoreController extends Controller
                 'attribute'=>$getsubcriteria2->attribute,
                 //'level'=>$getsubcriteria2->level,
                 'max'=>$getsubcriteria2->max,
-                'is_lead'=>'No',
+                'unit'=>$getsubcriteria2->unit,
+                //'is_lead'=>'No',
                 'input'=>$input->input,
                 'input_raw'=>$input->input_raw,
             ]);
@@ -462,9 +519,9 @@ class ScoreController extends Controller
 
             //CHECK IF ADMIN (WILL BE REMOVED)
             if(empty($getuser3->part) || $getuser3->part == 'Admin'){
-                $is_lead = 'No';
+                //$is_lead = 'No';
             }else{
-                $is_lead = 'Yes';
+                //$is_lead = 'Yes';
             }
 
             //INSERT DATA
@@ -483,7 +540,7 @@ class ScoreController extends Controller
                 'attribute'=>$getsubcriteria3->attribute,
                 //'level'=>$getsubcriteria3->level,
                 'max'=>$getsubcriteria3->max,
-                'is_lead'=>$is_lead,
+                //'is_lead'=>$is_lead,
                 'input'=>$raw->input,
             ]);
         }
@@ -495,6 +552,10 @@ class ScoreController extends Controller
         $getperiod4 = Period::where('id_period', $scores2->id_period)->first();
         $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first();
         $getposition4 = Position::with('officer')->whereHas('officer', function($query) use($scores2){
+            $query->where('id_officer', $scores2->id_officer);
+        })->first();
+        $getteam4 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($scores2)
+        {
             $query->where('id_officer', $scores2->id_officer);
         })->first();
 
@@ -514,11 +575,14 @@ class ScoreController extends Controller
             'id_period'=>$getperiod4->id_period,
             'period_name'=>$getperiod4->name,
             'period_month'=>$getperiod4->month,
+            'period_num_month'=>$getperiod4->num_month,
             'period_year'=>$getperiod4->year,
             'id_officer'=>$getofficer4->id_officer,
             //'officer_nip'=>$getofficer4->nip,
             'officer_name'=>$getofficer4->name,
             'officer_position'=>$getposition4->name,
+            'id_sub_team'=>$getteam4->id_sub_team,
+            'officer_team'=>$getteam4->name,
             'officer_photo'=>$photo,
             'final_score'=>$scores2->final_score,
             //'second_score'=>$scores2->second_score,

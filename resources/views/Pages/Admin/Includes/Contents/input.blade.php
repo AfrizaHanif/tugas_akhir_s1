@@ -68,65 +68,77 @@
                     <div class="row g-3 align-items-center pb-0">
                         <!--IMPORT DATA-->
                         <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">
-                                    <i class="bi bi-file-earmark-arrow-up"></i>
+                            <div class="btn-group">
+                                @if ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')) == count($officers) || count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) >= 1)
+                                    <a href="#" class="btn btn-primary disabled">
+                                @else
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">
+                                @endif
+                                <i class="bi bi-file-earmark-arrow-up"></i>
                                     Import
-                                </button>
+                                </a>
                                 @if (!$inputs->isEmpty())
                                     @if ($latest_per->import_status == 'Clear')
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
+                                    <a href="#" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-inp-export-{{ $latest_per->id_period }}">
                                         <i class="bi bi-file-earmark-arrow-down"></i>
                                         Export
-                                    </button>
+                                    </a>
                                     @else
-                                    <button type="button" class="btn btn-secondary" disabled>
+                                    <a href="#" class="btn btn-secondary disabled" >
                                         <i class="bi bi-file-earmark-arrow-down"></i>
                                         Export
-                                    </button>
+                                    </a>
                                     @endif
                                 @else
-                                <button type="button" class="btn btn-secondary" disabled>
+                                <a href="#" class="btn btn-secondary disabled">
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export
-                                </button>
+                                </a>
                                 @endif
                             </div>
                         </div>
                         <!--MODIFY IMPORT DATA-->
                         <div class="col-auto">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <!--CONVERT DATA-->
-                                @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
-                                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-inp-convert-{{ $latest_per->id_period }}">
-                                @else
+                            <!--CONVERT DATA-->
+                            @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
+                            <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-inp-convert-{{ $latest_per->id_period }}">
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Convert
+                            </a>
+                            @elseif ($latest_per->progress_status == 'Scoring' && !$inputs->isEmpty() && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $latest_per->import_status == 'Clear')
+                            <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
+                                <i class="bi bi-arrow-repeat"></i>
+                                Refresh
+                            </a>
+                            @elseif ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) != count($officers) && count($inputs->where('id_period', $latest_per->id_period)->where('status', 'Fixed')) >= 1)
+                            <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
+                                <i class="bi bi-arrow-repeat"></i>
+                                Refresh
+                            </a>
+                            @else
+                            @if ($latest_per->progress_status == 'Scoring' && !empty($inputs))
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada data nilai yang terdaftar untuk dilakukan konversi nilai.">
+                            @else
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan konversi nilai karena tidak ada nilai revisi yang terdaftar.">
+                            @endif
                                 <a class="btn btn-success disabled">
-                                @endif
                                     <i class="bi bi-arrow-clockwise"></i>
                                     Convert
                                 </a>
-                                <!--REFRESH DATA-->
-                                @if ($latest_per->progress_status == 'Scoring' && !$inputs->isEmpty() && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0)
-                                <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
-                                @else
-                                <a class="btn btn-warning disabled">
-                                @endif
-                                    <i class="bi bi-arrow-repeat"></i>
-                                    Refresh
-                                </a>
-                            </div>
+                            </span>
+                            @endif
                         </div>
                         <!--DELETE ALL DATA-->
                         <div class="col-auto">
                             @if (!$inputs->isEmpty())
-                                @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Need Fix')->count() >= 1)
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena terdapat nilai yang ditolak.">
+                                @if ($latest_per->progress_period == 'Verifying' && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0)
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena tidak ada nilai revisi yang terdaftar.">
                                     <a class="btn btn-danger disabled">
                                         <i class="bi bi-trash3"></i>
                                         Hapus Semua
                                     </a>
                                 </span>
-                                @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1)
+                                @elseif ($latest_per->import_period == 'Clear' && $status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0)
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
                                     <a class="btn btn-danger disabled">
                                         <i class="bi bi-trash3"></i>
@@ -164,7 +176,7 @@
                         </div>
                     </div>
                 </p>
-                @if ($latest_per->import_status == 'Clear' || $latest_per->import_status == 'No Data')
+                @if ($latest_per->import_status == 'Clear' || $latest_per->import_status == 'No Data' || $latest_per->import_status == 'Few Clear')
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -198,40 +210,34 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($officer->is_lead == 'No')
-                                @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
-                                    @if ($s->status == 'Pending')
-                                    <span class="badge text-bg-primary">Belum Diperiksa</span>
-                                    @elseif ($s->status == 'Not Converted')
-                                    <span class="badge text-bg-warning">Belum Dikonversi</span>
-                                    @elseif ($s->status == 'In Review')
-                                    <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
-                                    @elseif ($s->status == 'Final')
-                                    <span class="badge text-bg-success">Nilai Akhir</span>
-                                    @elseif ($s->status == 'Need Fix')
-                                    <span class="badge text-bg-danger">Perlu Perbaikan</span>
-                                    @elseif ($s->status == 'Fixed')
-                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
-                                    @endif
-                                @empty
-                                <span class="badge text-bg-secondary">Blank</span>
-                                @endforelse
+                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                <span class="badge text-bg-warning">Perlu Perhatian</span>
                                 @else
-                                <span class="badge text-bg-secondary">Excluded</span>
+                                    @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                        @if ($s->status == 'Pending')
+                                        <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                        @elseif ($s->status == 'Not Converted')
+                                        <span class="badge text-bg-warning">Belum Dikonversi</span>
+                                        @elseif ($s->status == 'In Review')
+                                        <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
+                                        @elseif ($s->status == 'Final')
+                                        <span class="badge text-bg-success">Nilai Akhir</span>
+                                        @elseif ($s->status == 'Need Fix')
+                                        <span class="badge text-bg-danger">Perlu Perbaikan</span>
+                                        @elseif ($s->status == 'Fixed')
+                                        <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                        @endif
+                                    @empty
+                                    <span class="badge text-bg-secondary">Blank</span>
+                                    @endforelse
                                 @endif
                             </td>
                             <td>
-                                @if ($officer->is_lead == 'No')
-                                    @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
-                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
-                                    @else
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut belum memiliki data nilai.">
-                                    <button type="button" class="btn btn-info" disabled>
-                                    </span>
-                                    @endif
+                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
                                 @else
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut tidak terlibat dalam pemilihan Karyawan Terbaik.">
-                                <button type="button" class="btn btn-secondary" disabled>
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut belum memiliki data nilai.">
+                                <button type="button" class="btn btn-info" disabled>
                                 </span>
                                 @endif
                                     <i class="bi bi-info-circle"></i>
@@ -253,12 +259,13 @@
                 @elseif ($latest_per->import_status == 'Not Clear')
                 <div class="alert alert-warning" role="alert">
                     <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b> </br>
-                    Anda telah melakukan Import Data dan diperlukan pemeriksaan data yang telah dimasukkan ke dalam aplikasi ini.
+                    Anda telah melakukan Import Data dan diperlukan pemeriksaan data yang telah dimasukkan ke dalam aplikasi ini sebelum dilakukan konversi data nilai.
                     <ul>
                         <li>Periksa data yang telah anda masukkan melalui modal <strong>Lihat Data</strong>. Jika sudah, silahkan lalukan konversi data dengan menekan tombol <strong>Convert</strong>.</li>
                         <li>Apabila ada kesalahan saat melakukan import, anda dapat melakukan <strong> Import Ulang</strong>. Perlu diperhatikan bahwa data yang telah dilakukan Import atau Konversi akan terhapus saat melakukan <strong>Import Ulang</strong>.</li>
                     </ul>
                 </div>
+
                 @endif
             </div>
             @endif

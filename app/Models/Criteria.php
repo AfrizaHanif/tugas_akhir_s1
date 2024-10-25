@@ -22,7 +22,8 @@ class Criteria extends Model
         'attribute',
         //'level',
         'max',
-        'need',
+        'unit',
+        //'need',
         'source',
     ];
 
