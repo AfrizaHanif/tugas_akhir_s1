@@ -65,35 +65,35 @@ class DatabaseSeeder extends Seeder
             'id_position' => 'DPT-001',
             //'id_part' => 'PRT-002',
             'name' => 'Kepala BPS Jawa Timur',
-            //'part' => 'Kepala BPS',
+            //'part' => 'Kepala',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-002',
             //'id_part' => 'PRT-003',
             'name' => 'Kepala Bagian Umum',
-            //'part' => 'Bagian Umum',
+            //'part' => 'Kepala',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-003',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Keuangan APBN Penyelia',
-            //'part' => 'Bagian Umum',
+            //'part' => 'Keuangan',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-004',
             //'id_part' => 'PRT-003',
             'name' => 'Analis Kepegawaian Ahli Muda ',
-            //'part' => 'Bagian Umum',
+            //'part' => 'Kepegawaian',
         ]);
 
         DB::table('positions')->insert([
             'id_position' => 'DPT-005',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Pertama',
-            //'part' => 'Tim Teknis',
+            //'part' => 'Staf',
         ]);
 
         DB::table('positions')->insert([

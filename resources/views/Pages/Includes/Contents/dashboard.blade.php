@@ -909,6 +909,7 @@
 </div>
 <br/>
 <div class="row row-cols-1 row-cols-md-2 g-4">
+    <!--SCORES-->
     <div class="col">
         <div class="card h-100">
             <div class="card-header">
@@ -998,6 +999,7 @@
             </div>
         </div>
     </div>
+    <!--RESULTS-->
     <div class="col">
         <div class="card h-100">
             <div class="card-header">
@@ -1006,7 +1008,7 @@
 
                     </div>
                     <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-primary btn-sm">Riwayat</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-dsh-result">Riwayat</button>
                     </div>
                 </div>
             </div>

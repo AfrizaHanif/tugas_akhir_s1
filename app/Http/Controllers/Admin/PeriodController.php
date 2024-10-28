@@ -24,8 +24,9 @@ class PeriodController extends Controller
      */
     public function index()
     {
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
         $periods = Period::orderBy('year', 'ASC')->orderBy('num_month', 'ASC')->get();
-        return view('Pages.Admin.period', compact('periods'));
+        return view('Pages.Admin.period', compact('latest_per', 'periods'));
     }
 
     public function store(Request $request)
@@ -139,6 +140,6 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.periods.index')->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
     }
 }

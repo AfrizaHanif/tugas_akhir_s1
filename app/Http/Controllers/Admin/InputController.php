@@ -488,16 +488,19 @@ class InputController extends Controller
                         //($input->input <= $crip->value_from) && ($crip->value_type == 'Less')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }elseif(($input->input >= $crip->value_from) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')){
                         //($crip->value_from <= $input->input) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }elseif(($input->input >= $crip->value_from) && ($input->input <= $criteria->max) && ($crip->value_type == 'More')){
                         //($crip->value_from <= $input->input) && ($crip->value_type == 'More')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }
                 }
@@ -505,17 +508,15 @@ class InputController extends Controller
         }
 
         //UPDATE STATUS IN INPUTS
-        foreach(Input::where('id_period', $period)->where('status', 'Not Converted')->get() as $input){
-            if($input->input != $input->input_raw){
-                if($latest_per->progress_status == 'Scoring'){
-                    $input->update([
-                        'status' => 'Pending',
-                    ]);
-                }elseif($latest_per->progress_status == 'Verifying'){
-                    $input->update([
-                        'status' => 'Fixed',
-                    ]);
-                }
+        foreach(Input::where('id_period', $period)->where('status', 'Converted')->get() as $input){
+            if($latest_per->progress_status == 'Scoring'){
+                $input->update([
+                    'status' => 'Pending',
+                ]);
+            }elseif($latest_per->progress_status == 'Verifying'){
+                $input->update([
+                    'status' => 'Fixed',
+                ]);
             }
         }
         /*
@@ -558,14 +559,12 @@ class InputController extends Controller
 
         //RETURN TO VIEW
         //IF NOT CONVERTED
-        foreach(Input::where('id_period', $period)->get() as $input){
-            if($input->input == $input->input_raw){
-                return redirect()
-                ->route('admin.inputs.data.index')
-                ->withInput(['tab_redirect'=>'pills-'.$period])
-                ->with('warning','Konversi Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
-                ->with('code_alert', 1);
-            }
+        if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            return redirect()
+            ->route('admin.inputs.data.index')
+            ->withInput(['tab_redirect'=>'pills-'.$period])
+            ->with('warning','Konversi Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
+            ->with('code_alert', 1);
         }
         //IF ALL CONVERTED
         return redirect()
@@ -602,21 +601,24 @@ class InputController extends Controller
         foreach($criterias as $criteria){
             foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
                 foreach($crips->where('id_criteria', $criteria->id_criteria) as $crip){
-                    //dd($input->input.'<='.$crip->value_from);
+                    //dd(($input->input >= 0) && ($input->input <= $crip->value_from));
                     if(($input->input >= 0) && ($input->input <= $crip->value_from) && ($crip->value_type == 'Less')){
                         //($input->input <= $crip->value_from) && ($crip->value_type == 'Less')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }elseif(($input->input >= $crip->value_from) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')){
                         //($crip->value_from <= $input->input) && ($input->input <= $crip->value_to) && ($crip->value_type == 'Between')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }elseif(($input->input >= $crip->value_from) && ($input->input <= $criteria->max) && ($crip->value_type == 'More')){
                         //($crip->value_from <= $input->input) && ($crip->value_type == 'More')
                         Input::where('id_input', $input->id_input)->update([
                             'input'=>$crip->score,
+                            'status' => 'Converted',
                         ]);
                     }
                 }
@@ -624,17 +626,15 @@ class InputController extends Controller
         }
 
         //UPDATE STATUS IN INPUTS
-        foreach(Input::where('id_period', $period)->where('status', 'Not Converted')->get() as $input){
-            if($input->input != $input->input_raw){
-                if($latest_per->progress_status == 'Verifying'){
-                    $input->update([
-                        'status' => 'Fixed',
-                    ]);
-                }else{
-                    $input->update([
-                        'status' => 'Pending',
-                    ]);
-                }
+        foreach(Input::where('id_period', $period)->where('status', 'Converted')->get() as $input){
+            if($latest_per->progress_status == 'Scoring'){
+                $input->update([
+                    'status' => 'Pending',
+                ]);
+            }elseif($latest_per->progress_status == 'Verifying'){
+                $input->update([
+                    'status' => 'Fixed',
+                ]);
             }
         }
         /*
@@ -657,14 +657,12 @@ class InputController extends Controller
 
         //RETURN TO VIEW
         //IF NOT CONVERTED
-        foreach(Input::where('id_period', $period)->get() as $input){
-            if($input->input == $input->input_raw){
-                return redirect()
-                ->route('admin.inputs.data.index')
-                ->withInput(['tab_redirect'=>'pills-'.$period])
-                ->with('warning','Refresh Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
-                ->with('code_alert', 1);
-            }
+        if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            return redirect()
+            ->route('admin.inputs.data.index')
+            ->withInput(['tab_redirect'=>'pills-'.$period])
+            ->with('warning','Refresh Data Berhasil. Namun terdapat beberapa nilai yang belum berhasil dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria')
+            ->with('code_alert', 1);
         }
         //IF ALL CONVERTED
         return redirect()

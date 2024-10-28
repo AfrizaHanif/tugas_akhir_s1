@@ -35,7 +35,11 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Tim Cadangan</th>
+                                        @if (empty($officer->subteam_2->team->name))
+                                        <td>Tidak Ada</td>
+                                        @else
                                         <td>{{ $officer->subteam_2->team->name ?? 'Tidak Ada' }} ({{ $officer->subteam_2->name ?? 'Tidak Ada' }})</td>
+                                        @endif
                                     </tr>
                                     <tr>
                                         <th scope="row">E-Mail</th>

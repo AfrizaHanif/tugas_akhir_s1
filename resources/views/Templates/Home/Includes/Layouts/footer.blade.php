@@ -4,7 +4,7 @@
             <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
                 <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
             </a>
-            <span class="mb-3 mb-md-0 text-body-secondary">&copy; 2024 BPS Provinsi Jawa Timur</span>
+            <span class="mb-3 mb-md-0 text-body-secondary">&copy; 2023 BPS Provinsi Jawa Timur</span>
         </div>
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
             <li class="ms-3"><a class="text-body-secondary" href="https://jatim.bps.go.id/"><svg class="bi" width="24" height="24"><use xlink:href="#website"/></svg></a></li>

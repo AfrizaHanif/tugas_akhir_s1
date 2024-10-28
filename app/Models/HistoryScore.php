@@ -24,6 +24,6 @@ class HistoryScore extends Model
         'id_sub_team',
         'officer_team',
         'final_score',
-        'ckp',
+        'second_score',
     ];
 }

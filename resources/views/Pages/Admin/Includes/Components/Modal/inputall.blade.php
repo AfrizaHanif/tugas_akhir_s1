@@ -48,7 +48,7 @@
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
                                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)
-                                            @if ($input->status == 'Not Converted' || $input->input == $input->input_raw)
+                                            @if ($input->status == 'Not Converted' && $input->input == $input->input_raw)
                                             <td class="table-warning">{{ $input->input }} {{ $criteria->unit }}</td>
                                             @else
                                             <td>{{ $input->input }} ({{ $input->input_raw }} {{ $criteria->unit }})</td>
@@ -122,7 +122,7 @@
                     @foreach ($criterias as $criteria)
                         @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $input)
                         <tr>
-                            @if ($input->status == 'Not Converted' || $input->input == $input->input_raw)
+                            @if ($input->status == 'Not Converted' && $input->input == $input->input_raw)
                             <th class="table-warning" scope="row">{{ $criteria->name }}</th>
                             <td class="table-warning">
                                 {{ $input->input }} {{ $criteria->unit }}

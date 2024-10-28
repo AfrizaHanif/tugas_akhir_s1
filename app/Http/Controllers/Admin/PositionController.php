@@ -110,4 +110,9 @@ class PositionController extends Controller
         //RETURN TO VIEW
         return redirect()->route('admin.masters.officers.index')->with('success','Hapus Jabatan Berhasil')->with('modal_redirect', 'modal-dep-view')->with('code_alert', 2);
     }
+
+    public function import()
+    {
+
+    }
 }

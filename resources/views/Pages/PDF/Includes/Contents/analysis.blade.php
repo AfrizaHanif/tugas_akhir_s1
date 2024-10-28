@@ -6,7 +6,7 @@
 <table id="table-analysis">
     <thead>
         <tr>
-            <th>Kode</th>
+            <th>NIP</th>
             <th>Nama Pegawai</th>
         </tr>
     </thead>

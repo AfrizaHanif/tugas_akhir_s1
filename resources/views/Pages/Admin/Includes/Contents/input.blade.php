@@ -336,6 +336,12 @@
             @endforeach
         </div>
         @else
+        <p>
+            <a type="button" href="{{ route('admin.masters.periods.index') }}" class="btn btn-primary">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Ke Periode
+            </a>
+        </p>
         <div class="alert alert-warning" role="alert">
             <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
             Tidak ada Periode yang sedang berjalan atau memiliki riwayat Periode sebelumnya. Baca <strong><i class="bi bi-info-circle-fill"></i> INFO</strong> di bawah untuk mengetahui lebih lanjut.

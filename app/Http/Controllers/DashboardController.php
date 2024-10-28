@@ -115,10 +115,10 @@ class DashboardController extends Controller
         $check_score = Score::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->first('status');
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         $latest_best = HistoryResult::orderBy('id', 'DESC')->latest()->first();
-        $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->latest()->get();
+        $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->latest()->get();
         $history_prd = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'DESC')->first();
         $voteresults = HistoryResult::orderBy('id_period', 'ASC')->get();
-        $scoreresults = HistoryScore::orderBy('final_score', 'DESC')->get();
+        $scoreresults = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         //dd($scoreresults);
 
         //RETURN TO VIEW

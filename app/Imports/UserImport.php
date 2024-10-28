@@ -49,6 +49,27 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                 }
             }
 
+            /*
+            $check_lead1 = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
+            $check_lead2 = Position::where('name', 'LIKE', 'Kepala Bagian Umum%')->where('id_position', $positions->id_position)->first();
+            $check_sdm = Position::where('name', 'LIKE', '%SDM%')->where('id_position', $positions->id_position)->first();
+            if(!empty($check_lead1->id_position)){
+                if($check_lead1->id_position == $positions->id_position){
+                    $part = 'KBPS';
+                }
+            }elseif(!empty($check_lead2->id_position)){
+                if($check_lead2->id_position == $positions->id_position){
+                    $part = 'KBU';
+                }
+            }elseif(!empty($check_sdm->id_position)){
+                if($check_sdm->id_position == $positions->id_position){
+                    $part = 'Admin';
+                }
+            }else{
+                $part = 'Pegawai';
+            }
+            */
+
             //GENERATE ID
             $id_user = IdGenerator::generate([
                 'table'=>'users',

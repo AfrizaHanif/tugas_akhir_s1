@@ -2,6 +2,13 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
+<!--ALERT-->
+@if (empty($latest_per))
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    Untuk memulai proses penentuan karyawan terbaik, klik menu di periode yang terpilih dan pilih <b>Mulai</b>.
+</div>
+@endif
+
 <!--MENU-->
 <p>
     <!--ADD PERIOD-->

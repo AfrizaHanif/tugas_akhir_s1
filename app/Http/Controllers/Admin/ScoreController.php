@@ -112,7 +112,7 @@ class ScoreController extends Controller
             $check->delete();
         }
         */
-        DB::table('scores')->delete();
+        //DB::table('scores')->delete();
 
         //GET CRITERIA
         $criterias = DB::table("inputs")
@@ -215,13 +215,54 @@ class ScoreController extends Controller
                     'second_score'=>$second_score,
                     'status'=>'Pending'
                 ]);
+
+                //UPDATE STATUS
+                Input::with('officer')
+                ->where('id_period', $period)
+                ->where('id_officer', $n)
+                ->whereIn('status', ['Pending', 'Final', 'Need Fix', 'Fixed'])
+                ->update([
+                    'status'=>'In Review'
+                ]);
             }else{
-                //SKIP
+                //GET DATA FOR SECOND SORT
+                $setting = Setting::where('id_setting', 'STG-002')->first()->value;
+                $set_second = Criteria::where('id_criteria', $setting)->first();
+                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw;
+
+                //CHECK STATUS
+                if(Score::where('id_officer', $n)->where('id_period', $period)->first()->status == 'Accepted'){
+                    $stat_score = 'Accepted';
+                    $stat_input = 'Final';
+                }else{
+                    $stat_score = 'Pending';
+                    $stat_input = 'In Review';
+                }
+
+                //UPDATE DATA SCORES
+                DB::table('scores')->where('id_officer', $n)->where('id_period', $period)->update([
+                    //'id_score'=>$id_score,
+                    //'id_officer'=>$n,
+                    //'id_period'=>$period,
+                    'final_score'=>$matrix[$n],
+                    'second_score'=>$second_score,
+                    'status'=>$stat_score,
+                ]);
+
+                //UPDATE STATUS
+                Input::with('officer')
+                ->where('id_period', $period)
+                ->where('id_officer', $n)
+                ->whereIn('status', ['Pending', 'Final', 'Need Fix', 'Fixed'])
+                ->update([
+                    'status'=>$stat_input
+                ]);
             }
         }
         arsort($matrix);
 
         //UPDATE STATUS
+        /*
         Input::with('officer')
         ->where('id_period', $period)
         ->whereIn('status', ['Pending', 'Final', 'Need Fix', 'Fixed'])
@@ -233,6 +274,7 @@ class ScoreController extends Controller
         ->update([
             'status'=>'In Review'
         ]);
+        */
         /*
         InputRAW::with('officer')
         ->where('id_period', $period)

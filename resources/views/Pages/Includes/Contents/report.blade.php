@@ -104,7 +104,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-team-result" aria-expanded="false" aria-controls="collapse-team-result">
-                        Laporan Hasil (Per Tim Teknis)
+                        Laporan Nilai Akhir (Per Tim Teknis)
                     </button>
                 </h2>
                 <div id="collapse-team-result" class="accordion-collapse collapse" data-bs-parent="#accordionExample">

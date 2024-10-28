@@ -19,7 +19,7 @@
                             </tr>
                             <tr class="table-secondary">
                                 <th scope="col">Isi</th>
-                                <th scope="col">Proses</th>
+                                <th scope="col">Konversi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,32 +45,24 @@
                                 <td>
                                     @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
                                         @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
-                                        <span class="badge text-bg-warning">Perlu Perhatian</span>
+                                        <span class="badge text-bg-warning">Sebagian Dikonversi</span>
                                         @else
                                             @if (!empty($latest_per))
                                                 @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
-                                                    @if ($s->status == 'Pending')
-                                                    <span class="badge text-bg-primary">Belum Diperiksa</span>
-                                                    @elseif ($s->status == 'Not Converted')
+                                                    @if ($s->status == 'Not Converted')
                                                     <span class="badge text-bg-warning">Belum Dikonversi</span>
-                                                    @elseif ($s->status == 'In Review')
-                                                    <span class="badge text-bg-warning">Dalam Pemeriksaan</span>
-                                                    @elseif ($s->status == 'Final')
-                                                    <span class="badge text-bg-success">Nilai Akhir</span>
-                                                    @elseif ($s->status == 'Need Fix')
-                                                    <span class="badge text-bg-danger">Perlu Perbaikan</span>
-                                                    @elseif ($s->status == 'Fixed')
-                                                    <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                                    @else
+                                                    <span class="badge text-bg-success">Telah Dikonversi</span>
                                                     @endif
                                                 @empty
-                                                <span class="badge text-bg-secondary">Blank</span>
+                                                <span class="badge text-bg-secondary">Belum Ada Data</span>
                                                 @endforelse
                                             @else
-                                            <span class="badge text-bg-secondary">Blank</span>
+                                            <span class="badge text-bg-secondary">Belum Ada Data</span>
                                             @endif
                                         @endif
                                     @else
-                                    <span class="badge text-bg-secondary">Tidak Ada Data</span>
+                                    <span class="badge text-bg-secondary">Belum Ada Data</span>
                                     @endif
                                 </td>
                                 @endif

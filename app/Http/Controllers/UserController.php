@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Officer;
 use App\Models\Part;
+use App\Models\Position;
 use App\Models\SubTeam;
 use App\Models\User;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -54,6 +55,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //GET DATA
+        $officer = Officer::where('id_officer', $request->officer)->first();
+
         //COMBINE KODE
         /*
         $total_id = User::whereNot('id_user', 'USR-000')->count();
@@ -80,7 +84,6 @@ class UserController extends Controller
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
-        */
         $validator = Validator::make($request->all(), [
             //'id_officer' => 'unique:users',
             'username' => 'regex:/^\S*$/u|unique:users',
@@ -108,6 +111,7 @@ class UserController extends Controller
                 ->with('code_alert', 2);
             }
         }
+        */
 
         //CHECK LEAD MORE THAN 1
         $count_kbps = User::where('part', 'KBPS')->count();
@@ -131,9 +135,24 @@ class UserController extends Controller
             }
         }
 
-        //STORE DATA
-        $officer = Officer::where('id_officer', $request->officer)->first();
 
+        //CHECK IF LEAD
+        /*
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $officer->id_position)->first();
+        if(!empty($check_lead->id_position)){
+            if($check_lead->id_position == $officer->id_position){
+                $part = 'KBPS';
+            }
+        }else{
+            if($request->has('is_hr')){
+                $part = 'Admin';
+            }else{
+                $part = 'Pegawai';
+            }
+        }
+        */
+
+        //STORE DATA
         /*
         User::insert([
             'id_user'=>$id_user,

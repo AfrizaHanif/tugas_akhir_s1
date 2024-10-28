@@ -158,6 +158,40 @@ class OfficerController extends Controller
             $tim_2 = $request->id_sub_team_2;
         }
 
+        /*
+        $check_lead1 = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        $check_lead2 = Position::where('name', 'LIKE', 'Kepala Bagian Umum%')->where('id_position', $request->id_position)->first();
+        $check_sdm = Position::where('name', 'LIKE', '%SDM%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead1->id_position)){
+            if($check_lead1->id_position == $request->id_position){
+                $part = 'KBPS';
+                $tim_1 = 'STM-001';
+                $tim_2 = null;
+            }
+        }elseif(!empty($check_lead2->id_position)){
+            if($check_lead2->id_position == $request->id_position){
+                $part = 'KBU';
+                $tim_1 = 'STM-002';
+                $tim_2 = $request->id_sub_team_2;
+            }
+        }elseif(!empty($check_sdm->id_position)){
+            if($check_sdm->id_position == $request->id_position){
+                $part = 'Admin';
+                $tim_1 = $request->id_sub_team_1;
+                $tim_2 = $request->id_sub_team_2;
+            }
+        }else{
+            if($request->has('is_hr')){
+                $part = 'Admin';
+            }else{
+                $part = 'Pegawai';
+            }
+            $part = 'Pegawai';
+            $tim_1 = $request->id_sub_team_1;
+            $tim_2 = $request->id_sub_team_2;
+        }
+        */
+
         //UPLOAD PHOTO
         $photo = '';
         if($request->photo){
@@ -322,22 +356,39 @@ class OfficerController extends Controller
             $tim_2 = $request->id_sub_team_2;
         }
 
-        //UPDATE IMAGE
-        $photo = '';
-        $id_officer = Officer::find($officer->id_officer);
-        $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
-        //dd($path_photo);
-        if($request->hasFile('photo')){
-            File::delete($path_photo);
-            $photo = 'IMG-'.$officer->id_officer.'.'.$request->photo->extension();
-            $request->photo->move(public_path('Images/Portrait/'), $photo);
-            $officer->update([
-                'photo'=>$request['image'] = $photo,
-            ]);
+        /*
+        $check_lead1 = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
+        $check_lead2 = Position::where('name', 'LIKE', 'Kepala Bagian Umum%')->where('id_position', $request->id_position)->first();
+        $check_sdm = Position::where('name', 'LIKE', '%SDM%')->where('id_position', $request->id_position)->first();
+        if(!empty($check_lead1->id_position)){
+            if($check_lead1->id_position == $request->id_position){
+                $part = 'KBPS';
+                $tim_1 = 'STM-001';
+                $tim_2 = null;
+            }
+        }elseif(!empty($check_lead2->id_position)){
+            if($check_lead2->id_position == $request->id_position){
+                $part = 'KBU';
+                $tim_1 = 'STM-002';
+                $tim_2 = $request->id_sub_team_2;
+            }
+        }elseif(!empty($check_sdm->id_position)){
+            if($check_sdm->id_position == $request->id_position){
+                $part = 'Admin';
+                $tim_1 = $request->id_sub_team_1;
+                $tim_2 = $request->id_sub_team_2;
+            }
+        }else{
+            if($request->has('is_hr')){
+                $part = 'Admin';
+            }else{
+                $part = 'Pegawai';
+            }
+            $part = 'Pegawai';
+            $tim_1 = $request->id_sub_team_1;
+            $tim_2 = $request->id_sub_team_2;
         }
-        if($request->has('photo_erase')){
-            File::delete($path_photo);
-        }
+        */
 
         //UPDATE DATA
         $officer->update([
@@ -352,7 +403,7 @@ class OfficerController extends Controller
             'date_birth'=>$request->date_birth,
             'gender'=>$request->gender,
             'religion'=>$request->religion,
-            'photo'=>$request->photo,
+            //'photo'=>$request->photo,
             //'is_lead'=>'No',
 		]);
         if(!empty(User::where('nip', $officer->id_officer)->first())){
@@ -369,6 +420,26 @@ class OfficerController extends Controller
                 'username'=>$request->id_officer,
                 'password'=>Hash::make('bps3500'),
                 'part'=>$part,
+            ]);
+        }
+
+        //UPDATE IMAGE
+        $photo = '';
+        $id_officer = Officer::find($officer->id_officer);
+        $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
+        //dd($path_photo);
+        if($request->hasFile('photo')){
+            File::delete($path_photo);
+            $photo = 'IMG-'.$officer->id_officer.'.'.$request->photo->extension();
+            $request->photo->move(public_path('Images/Portrait/'), $photo);
+            $officer->update([
+                'photo'=>$request['image'] = $photo,
+            ]);
+        }
+        if($request->has('photo_erase')){
+            File::delete($path_photo);
+            $officer->update([
+                'photo'=>null,
             ]);
         }
 
