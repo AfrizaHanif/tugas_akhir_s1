@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_criteria', 20)->primary();
             $table->char('id_category', 11);
             $table->foreign('id_category')->references('id_category')->on('categories');
-            $table->string('name', 50);
+            $table->string('name', 50)->unique();
             $table->double('weight');
             $table->char('attribute', 11);
             //$table->smallInteger('level');

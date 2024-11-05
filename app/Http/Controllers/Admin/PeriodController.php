@@ -131,7 +131,7 @@ class PeriodController extends Controller
         //CHECK RUNNING
         $count = Period::where('progress_status', 'Scoring')->count();
         if($count != 0){
-            return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Pemilihan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
+            return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Penentuan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
         }
 
         //UPDATE DATA
@@ -140,6 +140,6 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Proses Pemilihan Karyawan Terbaik Dimulai')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Proses Penentuan Karyawan Terbaik Dimulai')->with('code_alert', 1);
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->char('id_crips', 20)->primary();
             $table->char('id_criteria', 20);
             $table->foreign('id_criteria')->references('id_criteria')->on('criterias');
-            $table->string('name', 50);
+            $table->string('name', 20);
             //$table->string('description', 50)->nullable();
             $table->char('value_type', 10);
             $table->smallInteger('value_from');

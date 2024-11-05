@@ -22,8 +22,11 @@ return new class extends Migration
             //$table->bigInteger('officer_nip');
             $table->string('officer_name', 50);
             $table->string('officer_position', 50);
+            $table->char('id_team', 20);
+            $table->string('team_name', 50);
             $table->char('id_sub_team', 20);
-            $table->string('officer_team', 50);
+            $table->string('sub_team_1_name', 50);
+            $table->string('sub_team_2_name', 50)->nullable();
             $table->string('officer_photo', 300)->nullable();
             $table->decimal('final_score', 8, 3);
             //$table->smallInteger('ckp');

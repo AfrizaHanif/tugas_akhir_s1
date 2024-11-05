@@ -116,6 +116,12 @@
                 </a>
             </li>
             <li>
+                <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/logs">
+                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#logs"/></svg>
+                    Logs
+                </a>
+            </li>
+            <li>
                 <a class="dropdown-item d-flex gap-2 align-items-center" href="/admin/messages">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#message"/></svg>
                     Feedback

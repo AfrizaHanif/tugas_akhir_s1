@@ -37,6 +37,11 @@
             </div>
         </li>
         <li class="nav-item">
+            <a href="/developer/logs/" class="{{ (request()->is('developer/logs*')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" aria-current="page" title="Logs" data-bs-toggle="tooltip" data-bs-placement="right">
+                <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Logs"><use xlink:href="#logs"/></svg>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="/developer/messages/" class="{{ (request()->is('developer/messages*')) ? 'nav-link active' : 'nav-link' }} py-3 border-bottom rounded-0" aria-current="page" title="Pesan" data-bs-toggle="tooltip" data-bs-placement="right">
                 <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Pesan"><use xlink:href="#message"/></svg>
             </a>

@@ -8,6 +8,7 @@
             </div>
             <div class="modal-body">
                 <div class="row g-2">
+                    @if (count($history_per) != 0)
                     <div class="col-md-4">
                         <div class="position-sticky" style="top: 0rem;">
                             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -43,6 +44,12 @@
                             @endforeach
                         </div>
                     </div>
+                    @else
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+                        Tidak ada data nilai dari periode yang telah dijalankan.
+                    </div>
+                    @endif
                 </div>
             </div>
             <div class="modal-footer">
@@ -62,7 +69,7 @@
             </div>
             <div class="modal-body">
                 <div class="row g-2">
-                    @if (!empty($hscore_year))
+                    @if (count($hscore_year) != 0)
                     <div class="col-md-4">
                         <div class="position-sticky" style="top: 0rem;">
                             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -102,7 +109,10 @@
                         </div>
                     </div>
                     @else
-
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
+                        Tidak ada nilai akhir yang anda dapatkan.
+                    </div>
                     @endif
                 </div>
             </div>

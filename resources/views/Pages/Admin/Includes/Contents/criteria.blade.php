@@ -27,9 +27,11 @@
                     Tambah Kategori
                 </a>
                 <!--HELP-->
-                <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-                    <i class="bi bi-question-lg"></i>
-                </a>
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bantuan">
+                    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                        <i class="bi bi-question-lg"></i>
+                    </a>
+                </span>
             </p>
             <!--LIST OF CRITERIA-->
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">

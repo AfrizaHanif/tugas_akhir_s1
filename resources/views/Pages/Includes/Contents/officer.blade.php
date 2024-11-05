@@ -115,7 +115,8 @@
                     @if (!empty(Auth::user()->part))
                         @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-menu-button-fill"></i>
+                            <i class="bi bi-gear"></i>
+                            Kelola
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -130,19 +131,21 @@
                                     Export
                                 </a>
                             </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
                                     <i class="bi bi-diagram-2"></i>
-                                    Jabatan
+                                    Kelola Jabatan
                                 </a>
                             </li>
                         </ul>
                         @endif
                     @endif
-                    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
-                        <i class="bi bi-question-lg"></i>
-                        Bantuan
-                    </a>
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bantuan">
+                        <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                            <i class="bi bi-question-lg"></i>
+                        </a>
+                    </span>
                 </div>
             </div>
             <!--PART NAV-->
@@ -188,7 +191,7 @@
                                         Tambah Pegawai
                                     </button>
                                     @endif
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bagian ini tidak hanya memiliki satu tim saja.">
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bagian ini hanya memiliki satu tim saja.">
                                         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-tim-view-{{ $part->id_part }}" disabled>
                                             <i class="bi bi-gear"></i>
                                             Kelola Tim

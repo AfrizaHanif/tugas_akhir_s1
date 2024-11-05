@@ -94,7 +94,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Mulai Proses Pemilihan Karyawan Terbaik ({{ $period->name }})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Mulai Proses Penentuan Karyawan Terbaik ({{ $period->name }})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -103,7 +103,7 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                         <br/>
-                        Apakah anda ingin memulai proses pemilihan karyawan terbaik? Anda tidak dapat melewatkan periode ini setelah proses tersebut dimulai.
+                        Apakah anda ingin memulai proses penentuan karyawan terbaik? Anda tidak dapat melewatkan periode ini setelah proses tersebut dimulai.
                     </div>
                 </form>
             </div>

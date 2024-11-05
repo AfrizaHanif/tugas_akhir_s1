@@ -126,17 +126,21 @@
                                         @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                         <span class="badge text-bg-warning">Perlu Perhatian</span>
                                         @else
-                                            @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
-                                                @if ($input->status == 'Fixed')
-                                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
-                                                @elseif ($input->status == 'Pending')
-                                                <span class="badge text-bg-primary">Belum Diperiksa</span>
+                                            @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
+                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub && $latest_per->import_status == 'Clear')
+                                                <span class="badge text-bg-success">Siap Diambil</span>
                                                 @else
-                                                <span class="badge text-bg-secondary">Blank</span>
+                                                    @foreach ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                                        @if ($input->status == 'Not Converted')
+                                                        <span class="badge text-bg-warning">Belum Dikonversi</span>
+                                                        @else
+                                                        <span class="badge text-bg-warning">Belum Siap Diambil</span>
+                                                        @endif
+                                                    @endforeach
                                                 @endif
-                                            @empty
+                                            @else
                                             <span class="badge text-bg-secondary">Blank</span>
-                                            @endforelse
+                                            @endif
                                         @endif
                                     @else
                                     <span class="badge text-bg-secondary">Blank</span>
@@ -200,19 +204,25 @@
                                         @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                         <span class="badge text-bg-warning">Perlu Perhatian</span>
                                         @else
-                                            @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
-                                                @if ($input->status == 'Pending')
-                                                <span class="badge text-bg-primary">Dalam Pemeriksaan</span>
-                                                @elseif ($input->status == 'In Review')
-                                                <span class="badge text-bg-warning">Belum Diperiksa</span>
-                                                @elseif ($input->status == 'Fixed')
-                                                <span class="badge text-bg-primary">Telah Diperbaiki</span>
+                                            @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
+                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
+                                                    @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                                        @if ($input->status == 'Pending' || $input->status == 'Fixed')
+                                                        <span class="badge text-bg-primary">Siap Diperiksa</span>
+                                                        @elseif ($input->status == 'In Review')
+                                                        <span class="badge text-bg-warning">Belum Diperiksa</span>
+                                                        @else
+                                                        <span class="badge text-bg-secondary">Blank</span>
+                                                        @endif
+                                                    @empty
+                                                    <span class="badge text-bg-secondary">Blank</span>
+                                                    @endforelse
                                                 @else
-                                                <span class="badge text-bg-secondary">Blank</span>
+                                                <span class="badge text-bg-warning">Belum Siap Diperiksa</span>
                                                 @endif
-                                            @empty
+                                            @else
                                             <span class="badge text-bg-secondary">Blank</span>
-                                            @endforelse
+                                            @endif
                                         @endif
                                     @else
                                     <span class="badge text-bg-secondary">Blank</span>

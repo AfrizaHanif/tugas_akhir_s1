@@ -84,7 +84,7 @@
                                         Export
                                     </a>
                                     @else
-                                    <a href="#" class="btn btn-secondary disabled" >
+                                    <a href="#" class="btn btn-secondary disabled">
                                         <i class="bi bi-file-earmark-arrow-down"></i>
                                         Export
                                     </a>

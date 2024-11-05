@@ -157,7 +157,7 @@
             </h2>
             <div id="collapse-hasil" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
-                        <div class="table-responsive">
+                    <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
@@ -366,7 +366,7 @@
                         <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                         <br/>
                         @if (Request::is('admin/analysis/latest'))
-                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $set_crit->name }}</strong>. Silahkan menunggu hasil dari pemilihan Karyawan Terbaik.
+                        Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $set_crit->name }}</strong>. Silahkan menunggu hasil dari penentuan Karyawan Terbaik.
                         @elseif (Request::is('admin/analysis/*'))
                         Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $h_set_crit->criteria_name }}</strong> yang dapat dilihat di halaman Karyawan Terbaik pada halaman utama dan dashboard.
                         @endif

@@ -11,7 +11,7 @@
         <table id="table-officer">
             <thead>
                 <tr>
-                    <th scope="col">Kode</th>
+                    <th scope="col">NIP</th>
                     <th scope="col">Nama</th>
                     <th scope="col">Tim Cadangan</th>
                     <th scope="col">Jenis Kelamin</th>

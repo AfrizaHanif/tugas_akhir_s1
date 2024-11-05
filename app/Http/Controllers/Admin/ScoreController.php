@@ -23,6 +23,7 @@ use App\Models\Score;
 use App\Models\Setting;
 use App\Models\SubCriteria;
 use App\Models\SubTeam;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,7 @@ class ScoreController extends Controller
 
         //GET HISTORY DATA
         $histories = HistoryInput::get();
-        $hscore = HistoryScore::orderBy('final_score', 'DESC')->get();
+        $hscore = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
         $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
 
@@ -87,6 +88,10 @@ class ScoreController extends Controller
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat nilai yang belum dikonversi. Hubungi kepegawaian untuk melakukan konversi nilai.');
             }elseif($latest_per->import_status == 'Few Clear'){
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Hubungi kepegawaian untuk melakukan perbaikan konversi.');
+            }elseif($subcriterias->sum('weight')*100 > 100){
+                return redirect()->route('admin.inputs.validate.index')->with('fail','Total Bobot melebihi 100%. Hubungi kepegawaian untuk melakukan perbaikan kriteria.');
+            }elseif($subcriterias->sum('weight')*100 <= 99){
+                return redirect()->route('admin.inputs.validate.index')->with('fail','Total Bobot belum mencapai 100%. Hubungi kepegawaian untuk melakukan perbaikan kriteria.');
             }else{
                 foreach ($officers as $officer) {
                     if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
@@ -462,7 +467,18 @@ class ScoreController extends Controller
                 $query->where('id_officer', $score->id_officer);
             })->first();
             //dd($score->id_officer);
-            $getteam1 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($score)
+            $getteam1 = Team::with('subteam')->whereHas('subteam', function($query) use($score)
+            {
+                $query->with('officer_1')->whereHas('officer_1', function($query) use($score)
+                {
+                    $query->where('id_officer', $score->id_officer);
+                });
+            })->first();
+            $getsubteam1a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($score)
+            {
+                $query->where('id_officer', $score->id_officer);
+            })->first();
+            $getsubteam1b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($score)
             {
                 $query->where('id_officer', $score->id_officer);
             })->first();
@@ -478,8 +494,11 @@ class ScoreController extends Controller
                 //'officer_nip'=>$getofficer1->nip,
                 'officer_name'=>$getofficer1->name,
                 'officer_position'=>$getposition1->name,
-                'id_sub_team'=>$getteam1->id_sub_team,
-                'officer_team'=>$getteam1->name,
+                'id_team'=>$getteam1->id_team,
+                'team_name'=>$getteam1->name,
+                'id_sub_team'=>$getsubteam1a->id_sub_team,
+                'sub_team_1_name'=>$getsubteam1a->name,
+                'sub_team_2_name'=>$getsubteam1b->name ?? '',
                 'final_score'=>$score->final_score,
                 'second_score'=>$score->second_score,
             ]);
@@ -496,7 +515,18 @@ class ScoreController extends Controller
             $getposition2 = Position::with('officer')->whereHas('officer', function($query) use($input){
                 $query->where('id_officer', $input->id_officer);
             })->first();
-            $getteam2 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($input)
+            $getteam2 = Team::with('subteam')->whereHas('subteam', function($query) use($input)
+            {
+                $query->with('officer_1')->whereHas('officer_1', function($query) use($input)
+                {
+                    $query->where('id_officer', $input->id_officer);
+                });
+            })->first();
+            $getsubteam2a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($input)
+            {
+                $query->where('id_officer', $input->id_officer);
+            })->first();
+            $getsubteam2b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($input)
             {
                 $query->where('id_officer', $input->id_officer);
             })->first();
@@ -525,8 +555,11 @@ class ScoreController extends Controller
                 //'officer_nip'=>$getofficer2->nip,
                 'officer_name'=>$getofficer2->name,
                 'officer_position'=>$getposition2->name,
-                'id_sub_team'=>$getteam2->id_sub_team,
-                'officer_team'=>$getteam2->name,
+                'id_team'=>$getteam2->id_team,
+                'team_name'=>$getteam2->name,
+                'id_sub_team'=>$getsubteam2a->id_sub_team,
+                'sub_team_1_name'=>$getsubteam2a->name,
+                'sub_team_2_name'=>$getsubteam2b->name ?? '',
                 'id_category'=>$getcriteria2->id_category,
                 'category_name'=>$getcriteria2->name,
                 'id_criteria'=>$getsubcriteria2->id_criteria,
@@ -596,7 +629,18 @@ class ScoreController extends Controller
         $getposition4 = Position::with('officer')->whereHas('officer', function($query) use($scores2){
             $query->where('id_officer', $scores2->id_officer);
         })->first();
-        $getteam4 = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($scores2)
+        $getteam4 = Team::with('subteam')->whereHas('subteam', function($query) use($scores2)
+            {
+                $query->with('officer_1')->whereHas('officer_1', function($query) use($scores2)
+                {
+                    $query->where('id_officer', $scores2->id_officer);
+                });
+            })->first();
+        $getsubteam4a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($scores2)
+        {
+            $query->where('id_officer', $scores2->id_officer);
+        })->first();
+        $getsubteam4b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($scores2)
         {
             $query->where('id_officer', $scores2->id_officer);
         })->first();
@@ -623,8 +667,11 @@ class ScoreController extends Controller
             //'officer_nip'=>$getofficer4->nip,
             'officer_name'=>$getofficer4->name,
             'officer_position'=>$getposition4->name,
-            'id_sub_team'=>$getteam4->id_sub_team,
-            'officer_team'=>$getteam4->name,
+            'id_team'=>$getteam4->id_team,
+            'team_name'=>$getteam4->name,
+            'id_sub_team'=>$getsubteam4a->id_sub_team,
+            'sub_team_1_name'=>$getsubteam4a->name,
+            'sub_team_2_name'=>$getsubteam4b->name ?? '',
             'officer_photo'=>$photo,
             'final_score'=>$scores2->final_score,
             //'second_score'=>$scores2->second_score,
@@ -641,6 +688,6 @@ class ScoreController extends Controller
         DB::table('scores')->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.inputs.validate.index')->with('success','Proses Pemilihan Karyawan Terbaik Selesai. Hasil tersebut dapat dilihat pada halaman Dashboard dan Utama')->with('code_alert', 1);
+        return redirect()->route('admin.inputs.validate.index')->with('success','Proses Penentuan Karyawan Terbaik Selesai. Hasil tersebut dapat dilihat pada halaman Dashboard dan Utama')->with('code_alert', 1);
     }
 }

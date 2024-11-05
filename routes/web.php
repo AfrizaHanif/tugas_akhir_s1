@@ -21,6 +21,7 @@ use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\Home\ReportController as HomeReportController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController as AllReportController;
@@ -53,7 +54,6 @@ Route::controller(HomeOfficerController::class)->group(function() {
 });
 Route::get('/eotm', [HomeScoreController::class, 'index']);
 Route::get('/reports', [HomeReportController::class, 'index']);
-Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
 Route::controller(JSONController::class)->group(function() {
     Route::get('/autocomplete', 'autocomplete')->name('json.autocomplete');
 });
@@ -211,6 +211,8 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                 Route::post('/update', 'update')->name('update');
             });
         });
+        //LOGS
+        Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 
@@ -238,6 +240,13 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
                 Route::post('/update', 'update')->name('update');
             });
         });
+        Route::resource('/messages', MessageController::class, ['only' => ['index', 'destroy']]);
+        Route::prefix('messages')->name('messages.')->group(function () {
+            Route::controller(MessageController::class)->group(function() {
+                Route::post('/in', 'store_in')->name('in');
+            });
+        });
+        Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 
@@ -256,7 +265,7 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
             });
             Route::resource('/users', UserController::class);
         });
-        Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        //Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::prefix('messages')->name('messages.')->group(function () {
             Route::controller(MessageController::class)->group(function() {
                 Route::post('/out/{id}', 'store_out')->name('out');
@@ -268,6 +277,7 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
                 Route::post('/update', 'update')->name('update');
             });
         });
+        Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 

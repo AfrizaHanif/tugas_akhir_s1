@@ -114,7 +114,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $h_subteam->id_sub_team }}" aria-expanded="true" aria-controls="collapse-{{ $h_subteam->id_sub_team }}">
-                                        {{ $h_subteam->officer_team }}
+                                        {{ $h_subteam->sub_team_1_name }}
                                     </button>
                                 </h2>
                                 <div id="collapse-{{ $h_subteam->id_sub_team }}" class="accordion-collapse collapse" data-bs-parent="#accordion-team-result">
@@ -330,13 +330,13 @@
                 <br/>
                 <ol>
                     <li>Laporan ini dapat dilihat oleh semua pegawai.</li>
-                    <li>Khusus hasil analisis dan karyawan terbaik, laporan tersebut dapat tersedia apabila proses pemilihan karyawan terbaik selesai.</li>
-                    @if (Auth::check())
+                    <li>Khusus hasil analisis dan karyawan terbaik, laporan tersebut dapat tersedia apabila proses penentuan karyawan terbaik selesai.</li>
+                    @if (Auth::user()->part == 'Admin' || Auth::user()->part == 'KBPS')
                     <li>Sertifikat hanya dapat diunduh oleh Kepemimpinan dan Kepala BPS Jawa Timur.</li>
                     <li>Untuk mengganti template sertifikat, hubungi bagian <strong>Developer</strong> untuk mengatur letak tulisan.</li>
                     @endif
                     <li>Laporan dapat berubah sewaktu-waktu secara otomatis.</li>
-                    <li>Perlu diingat, hasil pemilihan karyawan terbaik tidak dapat diganggu gugat.</li>
+                    <li>Perlu diingat, hasil penentuan karyawan terbaik tidak dapat diganggu gugat.</li>
                 </ol>
             </div>
         </div>

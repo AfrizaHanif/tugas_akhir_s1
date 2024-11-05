@@ -15,12 +15,12 @@ class MessageController extends Controller
         $messages = Message::get();
 
         //RETURN TO VIEW
-        if(Auth::user()->part == "Admin"){
+        if(Auth::user()->part == "Admin" || Auth::user()->part == "KBPS"){
             return view('Pages.Admin.message', compact('messages'));
         }elseif(Auth::user()->part == "Dev"){
             return view('Pages.Developer.message', compact('messages'));
         }else{
-            return view('Pages.Home.message', compact('messages'));
+            return view('Pages.Officer.message', compact('messages'));
         }
     }
 
@@ -39,7 +39,11 @@ class MessageController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
+        if(Auth::user()->part == "Admin"){
+            return redirect()->route('admin.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
+        }else{
+            return redirect()->route('officer.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
+        }
     }
 
     public function store_out(Request $request, $id)

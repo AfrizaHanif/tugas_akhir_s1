@@ -29,7 +29,7 @@
     <thead>
         <tr>
             <th>Kode</th>
-            <th>Nama Pegawai</th>
+            <th>Nama Kriteria</th>
         </tr>
     </thead>
     <tbody>
