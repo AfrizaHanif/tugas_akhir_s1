@@ -1,8 +1,13 @@
+@if (Auth::user()->part != 'Dev')
 <!--SEND MESSAGE-->
 <div class="modal fade" id="modal-msg-send" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            @if (Auth::user()->part == 'Admin')
             <form action="{{ route('admin.messages.in') }}" method="POST" enctype="multipart/form-data" id="form-msg-send">
+            @else
+            <form action="{{ route('officer.messages.in') }}" method="POST" enctype="multipart/form-data" id="form-msg-send">
+            @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Kirim Pesan Feedback</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-msg-send"></button>
@@ -56,6 +61,7 @@
         </div>
     </div>
 </div>
+@endif
 
 @foreach ($messages as $message)
 <!--VIEW MESSAGE-->
@@ -87,6 +93,7 @@
         </div>
     </div>
 </div>
+@if (Auth::user()->part == 'Dev')
 <!--REPLY MESSAGE-->
 <div class="modal modal-lg fade" id="modal-msg-reply-{{ $message->id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -171,4 +178,5 @@
         </div>
     </div>
 </div>
+@endif
 @endforeach

@@ -392,9 +392,19 @@
                                             <label for="id_position" class="form-label">Jabatan</label>
                                             <select class="form-select" id="id_position" name="id_position" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
-                                                @foreach ($positions as $position)
+                                                @if ($part->id_part == 'PRT-001')
+                                                @foreach ($kbps_positions as $position)
                                                 <option value="{{ $position->id_position }}" {{ old('id_position') ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                                 @endforeach
+                                                @elseif ($part->id_part == 'PRT-002')
+                                                @foreach ($umum_positions as $position)
+                                                <option value="{{ $position->id_position }}" {{ old('id_position') ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
+                                                @endforeach
+                                                @else
+                                                @foreach ($off_positions as $position)
+                                                <option value="{{ $position->id_position }}" {{ old('id_position') ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
+                                                @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                         <div class="row mb-3">
@@ -636,7 +646,7 @@
                             <input type="text" class="form-control" id="name" name="name" value="{{ $team->name }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="id_part" class="form-label">Bagian Tim</label>
+                            <label for="id_part" class="form-label">Bagian</label>
                             <select class="form-select" id="id_part" name="id_part" required>
                                 <option selected disabled value="">---Pilih Bagian---</option>
                                 @foreach ($parts as $part)

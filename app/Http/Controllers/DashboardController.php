@@ -99,7 +99,7 @@ class DashboardController extends Controller
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
         })
         ->whereHas('input', function($query){
-            $query->whereIn('status', ['Pending', 'Fixed']);
+            $query->whereIn('status', ['Pending', 'Fixed', 'Not Converted']);
         })
         //->where('is_lead', 'No')
         ->get();

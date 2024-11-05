@@ -38,6 +38,26 @@
             data: datas,
         }]
     };
+
+    const noData = {
+        id: 'noData',
+        afterDatasetsDraw: ((chart, args, plugins) => {
+            const { ctx, data, chartArea: {top, bottom, left, right, width, height}} = chart;
+            ctx.save();
+            console.log(data.datasets.length)
+
+            if(data.datasets.length === 0){
+                ctx.fillStyle = 'rgba(102, 102, 102, 0.5)';
+                ctx.fillRect(left, top, width, height);
+
+                ctx.font = 'bold, 20px, sans-serif';
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                ctx.fillText('Tidak Ada Data', left + width / 2, top + height / 2)
+            }
+        })
+    };
+
     const config = {
         type: 'line',
         data: data,
@@ -47,7 +67,8 @@
                     display: false
                 },
             }
-        }
+        },
+        plugins: [noData]
     };
     const myChart = new Chart(
         document.getElementById('myChart'),

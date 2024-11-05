@@ -435,9 +435,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'id_user' => 'USR-001',
-            'nip' => '340013834',
+            'nip' => '340018542',
             'username' => 'testadmin',
-            'name' => 'Satriyo Wibowo, SP, M.M',
+            'name' => 'Peni Meivita, S.Si., M.M.',
             //'email' => 'testadmin@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'Admin',
@@ -670,7 +670,7 @@ class DatabaseSeeder extends Seeder
             'source' => 'kolaboratif',
         ]);
 
-        //CRIPS: Pemilihan Nilai
+        //CRIPS: Penentuan Nilai
         //Presensi
         DB::table('crips')->insert([
             'id_crips' => 'CRP-001-001', //Criteria-Crips

@@ -79,7 +79,11 @@
             </div>
             @endif
         @else
-            @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
+            @if (($inputs->count()) != ($officers->count() * $subcriterias->count()))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Terdapat beberapa pegawai yang belum memiliki nilai yang lengkap. Silahkan hubungi <b>Kepegawaian</b> untuk memeriksa data nilai yang kurang.
+            </div>
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Seluruh data nilai telah dilakukan import dan konversi. Silahkan melakukan pengambilan data nilai akhir di halaman <b>Verifikasi Nilai</b>.
             </div>
@@ -944,9 +948,9 @@
                     @endif
                         <h5 class="card-title">{{ $latest_per->name ?? '' }}</h5>
                         <p class="card-text">
-                            @if (!empty($latest_per))
+                            @if (!empty($input))
                             <table class="table">
-                                @foreach ($criterias->where('id_period', $hperiod->id_period) as $criteria)
+                                @foreach ($criterias->where('id_period', $latest_per->id_period) as $criteria)
                                     @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $latest_per->id_period) as $input)
                                     <tr>
                                         <th scope="row">{{ $criteria->name }}</th>
@@ -963,7 +967,7 @@
                             @else
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
-                                Test.
+                                Tidak ada data nilai yang terdaftar pada periode ini.
                             </div>
                             @endif
                         </p>
@@ -990,7 +994,7 @@
                             @else
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
-                                Test.
+                                Tidak ada data nilai dari periode yang telah dijalankan.
                             </div>
                             @endif
                         </p>
@@ -1038,7 +1042,7 @@
                 @else
                 <div class="alert alert-warning" role="alert">
                     <i class="bi bi-exclamation-triangle-fill"></i> <strong>PERHATIAN</strong></br>
-                    Test.
+                    Tidak ada nilai akhir yang anda dapatkan.
                 </div>
                 @endif
             </div>

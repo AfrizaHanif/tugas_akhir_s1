@@ -24,11 +24,11 @@ class ReportController extends Controller
         //GET DATA
         $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
         $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_team_years = HistoryInput::select('id_sub_team', 'officer_team', 'period_year')->groupBy('id_sub_team', 'officer_team', 'period_year')->orderBy('period_year', 'ASC')->get();
+        $h_team_years = HistoryInput::select('id_sub_team', 'sub_team_1_name', 'period_year')->groupBy('id_sub_team', 'sub_team_1_name', 'period_year')->orderBy('period_year', 'ASC')->get();
         $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
-        $h_subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->whereNotIn('officer_team', ['Pimpinan BPS', 'Developer'])->get();
+        $h_subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->whereNotIn('sub_team_1_name', ['Pimpinan BPS', 'Developer'])->get();
         $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer', 'officer_name')->get();
-        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'officer_team')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
+        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
         /*
         $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
@@ -181,7 +181,7 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
         $results = HistoryScore::where('period_month', $month)->where('period_year', $year)->where('id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
-        $subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->where('id_sub_team', $subteam)->first();
+        $subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->where('id_sub_team', $subteam)->first();
 
         //CREATE A REPORT
         $file = 'RPT-Result-'.$subteams->id_sub_team.'-'.$periods->id_period.'.pdf';

@@ -18,7 +18,7 @@
             <th>{{ $loop->iteration }}</th>
             <td>{{ $result->officer_name }}</td>
             <td>{{ $result->officer_position }}</td>
-            <td>{{ $result->officer_team }}</td>
+            <td>{{ $result->sub_team_1_name }}</td>
             <td>{{ $result->final_score }}</td>
         </tr>
         @endforeach

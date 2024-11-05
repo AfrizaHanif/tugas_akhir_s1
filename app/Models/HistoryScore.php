@@ -22,7 +22,8 @@ class HistoryScore extends Model
         'officer_name',
         'officer_position',
         'id_sub_team',
-        'officer_team',
+        'sub_team_1_name',
+        'sub_team_2_name',
         'final_score',
         'second_score',
     ];

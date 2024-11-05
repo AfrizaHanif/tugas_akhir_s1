@@ -1,5 +1,5 @@
 <img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 40%;">
-<h1 style="text-align:center;">Laporan Hasil ({{ $subteams->officer_team }})</h1>
+<h1 style="text-align:center;">Laporan Nilai Akhir ({{ $subteams->sub_team_1_name }})</h1>
 <h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}
 <table id="table-result">
@@ -8,7 +8,7 @@
             <th>#</th>
             <th>Nama</th>
             <th>Jabatan</th>
-            <th>Tim Teknis Utama</th>
+            <th>Tim Teknis Cadangan</th>
             <th>Nilai Akhir</th>
         </tr>
     </thead>
@@ -18,7 +18,11 @@
             <th>{{ $loop->iteration }}</th>
             <td>{{ $result->officer_name }}</td>
             <td>{{ $result->officer_position }}</td>
-            <td>{{ $result->officer_team }}</td>
+            @if (empty($result->sub_team_2_name))
+            <td>Tidak Ada</td>
+            @else
+            <td>{{ $result->sub_team_2_name ?? 'Tidak Ada' }}</td>
+            @endif
             <td>{{ $result->final_score }}</td>
         </tr>
         @endforeach

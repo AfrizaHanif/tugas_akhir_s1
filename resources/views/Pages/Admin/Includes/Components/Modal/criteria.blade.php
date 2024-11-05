@@ -168,7 +168,7 @@
                                         <div class="col">
                                             <label for="weight" class="form-label">Bobot</label>
                                             <div class="input-group">
-                                                <input type="number" class="form-control" id="weight" name="weight" value="{{ old('weight') }}" aria-describedby="percent_weight" required>
+                                                <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" value="{{ old('weight') }}" aria-describedby="percent_weight" required>
                                                 <span class="input-group-text" id="percent_weight">%</span>
                                             </div>
                                         </div>
@@ -184,7 +184,7 @@
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="max" class="form-label">Maksimum Nilai Asli</label>
-                                            <input type="number" class="form-control" id="max" name="max" value="{{ old('max') }}" required>
+                                            <input type="number" class="form-control" id="max" name="max" min="0" value="{{ old('max') }}" required>
                                         </div>
                                         <div class="col">
                                             <label for="unit" class="form-label">Satuan Nilai</label>
@@ -256,7 +256,7 @@
                                             <div class="col">
                                                 <label for="weight" class="form-label">Bobot</label>
                                                 <div class="input-group">
-                                                    <input type="number" class="form-control" id="weight" name="weight" value="{{ $criteria->weight*100 }}" aria-describedby="percent_weight" required>
+                                                    <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" value="{{ $criteria->weight*100 }}" aria-describedby="percent_weight" required>
                                                     <span class="input-group-text" id="percent_weight">%</span>
                                                 </div>
                                             </div>
@@ -272,7 +272,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="max" class="form-label">Maksimum Nilai Asli</label>
-                                                <input type="number" class="form-control" id="max" name="max" value="{{ $criteria->max }}" required>
+                                                <input type="number" class="form-control" id="max" name="max" min="0" value="{{ $criteria->max }}" required>
                                             </div>
                                             <div class="col">
                                                 <label for="unit" class="form-label">Satuan Nilai</label>

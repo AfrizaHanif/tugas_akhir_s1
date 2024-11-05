@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parts', function (Blueprint $table) {
-            $table->char('id_part', 10)->primary();
-            $table->string('name', 20)->unique();
+        Schema::create('logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('page', 20);
+            $table->string('category', 15);
+            $table->string('details', 200)->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parts');
+        Schema::dropIfExists('logs');
     }
 };

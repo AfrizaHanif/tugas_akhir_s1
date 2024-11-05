@@ -153,7 +153,7 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
         $results = HistoryScore::where('period_month', $month)->where('period_year', $year)->where('id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
-        $subteams = HistoryScore::select('id_sub_team', 'officer_team')->groupBy('id_sub_team', 'officer_team')->where('id_sub_team', $subteam)->first();
+        $subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->where('id_sub_team', $subteam)->first();
 
         //CREATE A REPORT
         $file = 'RPT-Result-'.$subteams->id_sub_team.'-'.$periods->id_period.'.pdf';

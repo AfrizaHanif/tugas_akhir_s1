@@ -69,6 +69,10 @@ class AnalysisController extends Controller
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat nilai yang belum dikonversi. Silahkan lakukan konversi data nilai terlebih dahulu.');
                 }elseif($latest_per->import_status == 'Few Clear'){
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria.');
+                }elseif($subcriterias->sum('weight')*100 > 100){
+                    return redirect()->route('admin.analysis.index')->with('fail','Total Bobot melebihi 100%. Silahkan cek kembali Kriteria yang terdaftar.');
+                }elseif($subcriterias->sum('weight')*100 <= 99){
+                    return redirect()->route('admin.analysis.index')->with('fail','Total Bobot belum mencapai 100%. Silahkan cek kembali Kriteria yang terdaftar.');
                 }else{
                     foreach ($officers as $officer) {
                         if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
