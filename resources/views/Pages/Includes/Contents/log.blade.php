@@ -2,7 +2,6 @@
 @if (Session::get('code_alert') == 1)
 @include('Templates.Includes.Components.alert')
 @endif
-<<<<<<< HEAD
 <!--TABLE-->
 <table class="table table-hover table-bordered">
     <thead>
@@ -59,6 +58,3 @@
         </tr>
     </tfoot>
 </table>
-=======
-
->>>>>>> 72a5ec8aae76a27a257191e2b80824d87045dc00
