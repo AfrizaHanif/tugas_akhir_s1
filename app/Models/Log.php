@@ -15,10 +15,16 @@ class Log extends Model
     //protected $keyType = 'string';
 
     protected $fillable = [
+<<<<<<< HEAD
         'id_user',
         'page',
         'progress',
         'result',
         'descriptions',
+=======
+        'page',
+        'category',
+        'details',
+>>>>>>> 72a5ec8aae76a27a257191e2b80824d87045dc00
     ];
 }
