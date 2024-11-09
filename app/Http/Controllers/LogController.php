@@ -11,7 +11,7 @@ class LogController extends Controller
     public function index()
     {
         //GET DATA
-        $logs = Log::get();
+        $logs = Log::orderBy('created_at', 'DESC')->get();
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin" || Auth::user()->part == "KBPS"){

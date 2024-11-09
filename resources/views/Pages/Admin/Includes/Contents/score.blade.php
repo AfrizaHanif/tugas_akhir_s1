@@ -52,6 +52,7 @@
                         <h2>{{ $latest_per->name }}</h2>
                     </div>
                     <!--MENU-->
+                    @if (!empty($set_crit->name))
                     <div class="col-7 d-grid gap-2 d-md-flex justify-content-md-end">
                         <div class="row g-3 align-items-center">
                             <!--GET DATA-->
@@ -136,6 +137,24 @@
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <!--QUICK VERIFY-->
+                                        @if ($scores->where('id_period', $latest_per->id_period)->count() == 0)
+                                        <li>
+                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada data yang ada untuk melakukan persetujuan seluruh nilai akhir">
+                                                <a class="dropdown-item disabled" href="#">
+                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
+                                                    Setuju Semua
+                                                </a>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada data yang ada untuk melakukan penolakan seluruh nilai akhir">
+                                                <a class="dropdown-item disabled" href="#">
+                                                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#no"/></svg>
+                                                    Tolak Semua
+                                                </a>
+                                            </span>
+                                        </li>
+                                        @else
                                         <li>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-scr-yesall-{{ $latest_per->id_period }}">
                                                 <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#yes"/></svg>
@@ -148,13 +167,16 @@
                                                 Tolak Semua
                                             </a>
                                         </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
                 <!--TABLE-->
+                @if (!empty($set_crit->name))
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -254,6 +276,9 @@
                         </tfoot>
                     </tfoot>
                 </table>
+                @else
+
+                @endif
             </div>
             @endif
             <!--HISTORY-->

@@ -16,7 +16,7 @@ class Log extends Model
 
     protected $fillable = [
         'id_user',
-        'page',
+        'activity',
         'progress',
         'result',
         'descriptions',

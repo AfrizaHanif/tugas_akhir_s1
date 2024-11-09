@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Message;
 use App\Models\Officer;
 use Illuminate\Http\Request;
@@ -39,6 +40,14 @@ class MessageController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Feedback',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Kirim Pesan Berhasil',
+        ]);
+
         if(Auth::user()->part == "Admin"){
             return redirect()->route('admin.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
         }else{
@@ -54,6 +63,14 @@ class MessageController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Feedback',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Balas Pesan Berhasil',
+        ]);
+
         return redirect()->route('developer.messages.index')->with('success','Balas Pesan Berhasil')->with('code_alert', 1);
     }
 
@@ -63,6 +80,14 @@ class MessageController extends Controller
         $message->delete();
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Feedback',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Pesan Berhasil',
+        ]);
+
         return redirect()->route('developer.messages.index')->with('success','Hapus Pesan Berhasil')->with('code_alert', 1);
     }
 }

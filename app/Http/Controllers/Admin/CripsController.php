@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Crips;
 use App\Models\Criteria;
+use App\Models\Log;
 use App\Models\Period;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CripsController extends Controller
 {
@@ -19,6 +21,7 @@ class CripsController extends Controller
     {
         //LATEST PERIODE
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $criteria = Criteria::where('id_criteria', $request->id_criteria)->first();
 
         //COMBINE KODE
         /*
@@ -49,9 +52,17 @@ class CripsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Tambah Data Crips Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $request->id_criteria)
@@ -62,6 +73,14 @@ class CripsController extends Controller
         //CHECK RANGE ABNORMAL
         $check_range = Criteria::where('id_criteria', $request->id_criteria)->first();
         if($request->value_from > $check_range->max){ //IF FROM EXCEED MAXIMUM
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Data Crips',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Pertama lebih besar daripada Nilai Maximum) ('.$criteria->name.')',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama lebih besar daripada Nilai Maximum)')
@@ -71,6 +90,14 @@ class CripsController extends Controller
             ->with('code_alert', 2);
         }elseif($request->value_type == 'Between'){
             if($request->value_to > $check_range->max){ //IF TO EXCEED MAXIMUM
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Nilai Maximum) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Nilai Maximum)')
@@ -79,6 +106,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $request->id_criteria)
                 ->with('code_alert', 2);
             }elseif($request->value_from > $request->value_to){ //IF FROM MORE THAN TO
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama)')
@@ -93,6 +128,14 @@ class CripsController extends Controller
         $loop_crips = Crips::where('id_criteria', $request->id_criteria)->get();
         foreach($loop_crips as $crips){
             if($request->score == $crips->score){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama)')
@@ -101,6 +144,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $request->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from <= $crips->value_from) && ($crips->value_type == 'Less')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar)')
@@ -109,6 +160,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $request->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from >= $crips->value_from) && ($request->value_from < $crips->value_to) && ($crips->value_type == 'Between')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar)')
@@ -117,6 +176,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $request->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_to >= $crips->value_from) && ($request->value_to < $crips->value_to) && ($crips->value_type == 'Between')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar)')
@@ -125,6 +192,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $request->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->criteria->max) && ($crips->value_type == 'More')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
@@ -147,6 +222,14 @@ class CripsController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Data Crips',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Data Crips Berhasil ('.$criteria->name.')',
+        ]);
+
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
                 return redirect()
@@ -175,6 +258,7 @@ class CripsController extends Controller
     {
         //LATEST PERIODE
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first();
 
         //TAB FOR RETURN
         $tab = Category::with('criteria')
@@ -183,9 +267,17 @@ class CripsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Ubah Data Crips Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $crip->id_criteria)
@@ -221,6 +313,14 @@ class CripsController extends Controller
         $loop_crips = Crips::whereNot('id_crips', $crip->id_crips)->where('id_criteria', $crip->id_criteria)->get();
         foreach($loop_crips as $crips){
             if($request->score == $crips->score){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Nilai Crips tidak boleh sama)')
@@ -229,6 +329,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $crip->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from <= $crips->value_from) && ($crips->value_type == 'Less')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Kurang Dari) yang telah terdaftar)')
@@ -237,6 +345,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $crip->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->value_to) && ($crips->value_type == 'Between')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Antara) yang telah terdaftar)')
@@ -245,6 +361,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $crip->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_to >= $crips->value_from) && ($request->value_to <= $crips->value_to) && ($crips->value_type == 'Between')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Antara) yang telah terdaftar)')
@@ -253,6 +377,14 @@ class CripsController extends Controller
                 ->with('id_redirect', $crip->id_criteria)
                 ->with('code_alert', 2);
             }elseif(($request->value_from >= $crips->value_from) && ($request->value_from <= $crips->criteria->max) && ($crips->value_type == 'More')){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
@@ -273,6 +405,14 @@ class CripsController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Data Crips',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Data Crips Berhasil ('.$criteria->name.')',
+        ]);
+
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
                 return redirect()
@@ -301,6 +441,7 @@ class CripsController extends Controller
     {
         //LATEST PERIODE
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first();
 
         //TAB FOR RETURN
         $tab = Category::with('criteria')
@@ -309,9 +450,17 @@ class CripsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Delete',
+                    'result'=>'Error',
+                    'descriptions'=>'Hapus Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan) ('.$criteria->name.')',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Hapus Data Crips Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Hapus Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $crip->id_criteria)
@@ -323,6 +472,14 @@ class CripsController extends Controller
         $crip->delete();
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Data Crips',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Data Crips Berhasil ('.$criteria->name.')',
+        ]);
+
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
                 return redirect()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Position;
 use App\Models\HistoryResult;
+use App\Models\Log;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Result;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class PeriodController extends Controller
 {
@@ -77,6 +79,14 @@ class PeriodController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Periode',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Tambah Periode Tidak Berhasil (Nama '.$name_month.' '.$request->year.' Telah Terdaftar di Database)',
+            ]);
+
             return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create')->with('code_alert', 2);
         }
 
@@ -92,6 +102,14 @@ class PeriodController extends Controller
             'import_status'=>'No Data',
 		]);
 
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Periode',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Periode Berhasil ('.$name_month.' '.$request->year.')',
+        ]);
+
         //RETURN TO VIEW
         return redirect()->route('admin.masters.periods.index')->with('success','Tambah Periode Berhasil')->with('code_alert', 1);
     }
@@ -104,6 +122,14 @@ class PeriodController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Periode',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Periode Berhasil ('.$period->name.')',
+        ]);
+
         if($period->progress_status == 'Scoring'){
             return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil. Jika diperlukan, silahkan lakukan import ulang')->with('code_alert', 1);
         }else{
@@ -113,6 +139,14 @@ class PeriodController extends Controller
 
     public function destroy(Period $period)
     {
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Periode',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Periode Berhasil ('.$period->name.')',
+        ]);
+
         //DELETE DATA
         $period->delete();
 
@@ -128,9 +162,20 @@ class PeriodController extends Controller
 
     public function start($period)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $period)->first();
+
         //CHECK RUNNING
         $count = Period::where('progress_status', 'Scoring')->count();
         if($count != 0){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Periode',
+                'progress'=>'Other',
+                'result'=>'Error',
+                'descriptions'=>'Mulai Periode Tidak Berhasil (Sedang Berjalan)',
+            ]);
+
             return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Penentuan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
         }
 
@@ -138,6 +183,14 @@ class PeriodController extends Controller
         Period::where('id_period', $period)->update([
             'progress_status'=>'Scoring',
 		]);
+
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Periode',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Proses Dimulai ('.$latest_per->name.')',
+        ]);
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Proses Penentuan Karyawan Terbaik Dimulai')->with('code_alert', 1);

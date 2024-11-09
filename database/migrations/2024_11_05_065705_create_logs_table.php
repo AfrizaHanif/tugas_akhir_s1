@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->char('id_user', 11);
-            $table->char('page', 20);
+            $table->char('activity', 20);
             $table->char('progress', 15);
             $table->char('result', 15);
             $table->string('descriptions', 200)->nullable();

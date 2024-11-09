@@ -14,6 +14,7 @@ use App\Models\HistoryResult;
 use App\Models\HistoryScore;
 use App\Models\Input;
 use App\Models\InputRAW;
+use App\Models\Log;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Officer;
@@ -26,6 +27,7 @@ use App\Models\SubTeam;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
@@ -82,24 +84,80 @@ class ScoreController extends Controller
         //VERIFICATION
         //CHECK EMPTY DATA
         if(Input::where('id_period', $period)->count() == 0){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Ambil Nilai Akhir',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Tidak Ada Data) ('.$latest_per->name.')',
+            ]);
+
             return redirect()->route('admin.inputs.validate.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
         }else{
             if($latest_per->import_status == 'Not Clear'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Ambil Nilai Akhir',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Belum Dikonversi) ('.$latest_per->name.')',
+                ]);
+
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat nilai yang belum dikonversi. Hubungi kepegawaian untuk melakukan konversi nilai.');
             }elseif($latest_per->import_status == 'Few Clear'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Ambil Nilai Akhir',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Sebagian Dikonversi) ('.$latest_per->name.')',
+                ]);
+
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Hubungi kepegawaian untuk melakukan perbaikan konversi.');
             }elseif($subcriterias->sum('weight')*100 > 100){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Ambil Nilai Akhir',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Bobot Melebihi 100%) ('.$latest_per->name.')',
+                ]);
+
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Total Bobot melebihi 100%. Hubungi kepegawaian untuk melakukan perbaikan kriteria.');
             }elseif($subcriterias->sum('weight')*100 <= 99){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Ambil Nilai Akhir',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Bobot Belum Mencapat 100%) ('.$latest_per->name.')',
+                ]);
+
                 return redirect()->route('admin.inputs.validate.index')->with('fail','Total Bobot belum mencapai 100%. Hubungi kepegawaian untuk melakukan perbaikan kriteria.');
             }else{
                 foreach ($officers as $officer) {
                     if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA IN BOTH TABLE
+                        Log::create([
+                            'id_user'=>Auth::user()->id_user,
+                            'activity'=>'Ambil Nilai Akhir',
+                            'progress'=>'Create',
+                            'result'=>'Error',
+                            'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Belum Dinilai Sepenuhnya ('.$officer->name.') ('.$latest_per->name.'))',
+                        ]);
+
                         return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
                     }else{ //IF OFFICER HAS A FEW DATA IN BOTH TABLE
                         foreach ($subcriterias as $subcriteria) {
                             if(Input::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
-                                return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
+                                Log::create([
+                                    'id_user'=>Auth::user()->id_user,
+                                    'activity'=>'Ambil Nilai Akhir',
+                                    'progress'=>'Create',
+                                    'result'=>'Error',
+                                    'descriptions'=>'Ambil Nilai Akhir Tidak Berhasil (Hanya Dinilai Sebagian ('.$officer->name.') ('.$subcriteria->name.'))',
+                                ]);
+
+                                return redirect()->route('admin.inputs.validate.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.') ('.$latest_per->name.')');
                             }else{
                                 //CLEAR
                             }
@@ -299,6 +357,14 @@ class ScoreController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Ambil Nilai Akhir',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Ambil Nilai Akhir Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Ambil Data Berhasil')->with('code_alert', 1);
     }
 
@@ -324,11 +390,22 @@ class ScoreController extends Controller
         */
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Persetujuan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Persetujuan Berhasil ('.$name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari pegawai ('. $name .') telah disetujui')->with('code_alert', 1);
     }
 
     public function yesall($id)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $id)->first();
+
         //UPDATE STATUS
         Score::where('id_period', $id)->update([
             'status'=>'Accepted'
@@ -355,11 +432,22 @@ class ScoreController extends Controller
         */
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Persetujuan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Persetujuan Berhasil (Semua) ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari seluruh pegawai telah disetujui')->with('code_alert', 1);
     }
 
     public function yesall_remain($id)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $id)->first();
+
         //UPDATE STATUS
         Score::where('id_period', $id)->where('status', 'Pending')->update([
             'status'=>'Accepted'
@@ -375,6 +463,14 @@ class ScoreController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Persetujuan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Persetujuan Berhasil (Sebagian) ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Persetujuan Berhasil. Data dari beberapa pegawai yang belum diperiksa telah disetujui')->with('code_alert', 1);
     }
 
@@ -400,11 +496,22 @@ class ScoreController extends Controller
         */
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Penolakan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Penolakan Berhasil ('.$name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari pegawai ('. $name .') telah dikembalikan')->with('code_alert', 1);
     }
 
     public function noall($id)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $id)->first();
+
         //UPDATE STATUS
         Score::where('id_period', $id)->update([
             'status'=>'Rejected'
@@ -431,11 +538,22 @@ class ScoreController extends Controller
         */
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Penolakan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Penolakan Berhasil (Semua) ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari seluruh pegawai telah dikembalikan')->with('code_alert', 1);
     }
 
     public function noall_remain($id)
     {
+        //GET DATA
+        $latest_per = Period::where('id_period', $id)->first();
+
         //UPDATE STATUS
         Score::where('id_period', $id)->where('status', 'Pending')->update([
             'status'=>'Rejected'
@@ -451,11 +569,22 @@ class ScoreController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Penolakan Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Penolakan Berhasil (Sebagian) ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.validate.index')->with('success','Penolakan Berhasil. Data dari beberapa pegawai yang belum diperiksa telah dikembalikan')->with('code_alert', 1);
     }
 
     public function finish($period)
     {
+        //GET PERIOD DATA
+        $latest_per = Period::where('id_period', $period)->first();
+
         //HISTORY SCORE
         //GET DATA (1/2)
         $scores1 = Score::where('id_period', $period)->get();
@@ -680,6 +809,14 @@ class ScoreController extends Controller
         //UPDATE STATUS
         Period::where('id_period', $period)->update([
             'progress_status'=>'Finished',
+        ]);
+
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Proses Selesai',
+            'progress'=>'All',
+            'result'=>'Success',
+            'descriptions'=>'Proses Selesai ('.$latest_per->name.')',
         ]);
 
         //DELETE CURRENT DATA

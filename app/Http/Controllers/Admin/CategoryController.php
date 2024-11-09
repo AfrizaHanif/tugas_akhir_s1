@@ -7,10 +7,12 @@ use App\Models\Category;
 use App\Models\Crips;
 use App\Models\Criteria;
 use App\Models\Input;
+use App\Models\Log;
 use App\Models\Period;
 use App\Models\SubCriteria;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -40,6 +42,14 @@ class CategoryController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kategori',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Kategori Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan penambahan kategori dikarenakan sedang dalam proses verifikasi nilai.')
@@ -54,6 +64,14 @@ class CategoryController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Kategori',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Tambah Kategori Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -69,6 +87,14 @@ class CategoryController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Kategori',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Kategori Berhasil ('.$request->name.')',
+        ]);
+
         if(!empty($latest_per) && $latest_per->progress_status == 'Scoring'){
             return redirect()
             ->route('admin.masters.criterias.index')
@@ -93,6 +119,14 @@ class CategoryController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kategori',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Kategori Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
@@ -108,6 +142,14 @@ class CategoryController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Kategori',
+                'progress'=>'Update',
+                'result'=>'Error',
+                'descriptions'=>'Ubah Kategori Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -125,6 +167,14 @@ class CategoryController extends Controller
 
         //RETURN TO VIEW
         if(!empty($latest_per) && $latest_per->progress_status == 'Scoring'){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Kategori',
+                'progress'=>'Update',
+                'result'=>'Success',
+                'descriptions'=>'Ubah Kategori Berhasil ('.$request->name.')',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withInput(['tab_redirect'=>'pills-'.$category->id_category])
@@ -148,6 +198,14 @@ class CategoryController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kategori',
+                    'progress'=>'Delete',
+                    'result'=>'Error',
+                    'descriptions'=>'Hapus Kategori Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan penghapusan kategori dikarenakan sedang dalam proses verifikasi nilai.')
@@ -173,6 +231,15 @@ class CategoryController extends Controller
             Crips::where('id_criteria', $criteria->id_criteria)->delete();
             Input::where('id_criteria', $criteria->id_criteria)->delete();
         }
+
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Kriteria',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Kriteria Berhasil ('.$category->name.')',
+        ]);
+
         Criteria::where('id_category', $category->id_category)->delete();
         $category->delete();
 

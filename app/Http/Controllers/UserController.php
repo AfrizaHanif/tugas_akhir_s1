@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Position;
@@ -118,6 +119,14 @@ class UserController extends Controller
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Pengguna',
+                        'progress'=>'Create',
+                        'result'=>'Error',
+                        'descriptions'=>'Tambah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
+                    ]);
+
                     if(Auth::user()->part == "Admin"){
                         return redirect()
                         ->route('admin.masters.users.index')
@@ -176,6 +185,14 @@ class UserController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Pengguna',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Pengguna Berhasil ('.$officer->name.')',
+        ]);
+
         if(Auth::user()->part == "Admin"){
             return redirect()
             ->route('admin.masters.users.index')
@@ -243,6 +260,14 @@ class UserController extends Controller
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Pengguna',
+                        'progress'=>'Update',
+                        'result'=>'Error',
+                        'descriptions'=>'Ubah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
+                    ]);
+
                     if(Auth::user()->part == "Admin"){
                         return redirect()
                         ->route('admin.masters.users.index')
@@ -283,6 +308,14 @@ class UserController extends Controller
         }
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Pengguna',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Pengguna Berhasil ('.$user->name.')',
+        ]);
+
         if(Auth::user()->part == "Admin"){
             return redirect()
             ->route('admin.masters.users.index')
@@ -301,7 +334,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Pengguna',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Pengguna Berhasil ('.$user->name.')',
+        ]);
+
         //DELETE DATA
+        Log::where('id_user', $user->id_user)->delete();
         $user->delete();
 
         //RETURN TO VIEW

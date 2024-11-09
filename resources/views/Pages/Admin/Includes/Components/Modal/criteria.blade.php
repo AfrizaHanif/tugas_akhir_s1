@@ -429,10 +429,19 @@
                         <i class="bi bi-x-lg"></i>
                         Tutup
                     </button>
+                    @if ($crips->where('id_criteria', $criteria->id_criteria)->count() >= 5)
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Maksimum Data Crips pada Kriteria ini telah tercapai">
+                        <button type="button" class="btn btn-secondary" disabled>
+                            <i class="bi bi-node-plus"></i>
+                            Tambah
+                        </button>
+                    </span>
+                    @else
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-crp-create-{{ $criteria->id_criteria }}">
                         <i class="bi bi-node-plus"></i>
                         Tambah
                     </button>
+                    @endif
                 </div>
             </div>
         </div>

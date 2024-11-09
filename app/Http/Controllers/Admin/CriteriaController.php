@@ -7,10 +7,12 @@ use App\Models\Criteria;
 use App\Models\Category;
 use App\Models\Crips;
 use App\Models\Input;
+use App\Models\Log;
 use App\Models\Period;
 use App\Models\Setting;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -40,6 +42,14 @@ class CriteriaController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kriteria',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan proses pembuatan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -75,6 +85,14 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Kriteria',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Tambah Kriteria Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -106,6 +124,14 @@ class CriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Kriteria',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Kriteria Berhasil ('.$request->name.')',
+        ]);
+
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
                 return redirect()
@@ -132,6 +158,14 @@ class CriteriaController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kriteria',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan perubahan data kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -148,6 +182,14 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Kriteria',
+                'progress'=>'Update',
+                'result'=>'Error',
+                'descriptions'=>'Ubah Kriteria Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -178,6 +220,14 @@ class CriteriaController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Kriteria',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Kriteria Berhasil ('.$request->name.')',
+        ]);
+
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){
                 return redirect()
@@ -206,6 +256,14 @@ class CriteriaController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Kriteria',
+                    'progress'=>'Delete',
+                    'result'=>'Error',
+                    'descriptions'=>'Hapus Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan penghapusan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -222,6 +280,15 @@ class CriteriaController extends Controller
                 'value'=>'None',
             ]);
         }
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Kriteria',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Kriteria Berhasil ('.$criteria->name.')',
+        ]);
 
         //DESTROY DATA
         Crips::where('id_criteria', $criteria->id_criteria)->delete();

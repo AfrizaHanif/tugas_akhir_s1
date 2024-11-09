@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Input;
+use App\Models\Log;
 use App\Models\Officer;
 use App\Models\Part;
 use App\Models\Period;
@@ -11,6 +12,7 @@ use App\Models\SubTeam;
 use App\Models\Team;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TeamsController extends Controller
@@ -26,9 +28,17 @@ class TeamsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Tim',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.officers.index')
-                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Tambah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$request->id_part])
                 ->with('modal_redirect', 'modal-tim-view')
                 ->with('id_redirect', $request->id_part)
@@ -63,6 +73,14 @@ class TeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Tim',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Tambah Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -80,6 +98,14 @@ class TeamsController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Tim',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Tambah Tim Berhasil ('.$request->name.')',
+        ]);
+
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Tambah Tim Berhasil')
@@ -107,9 +133,17 @@ class TeamsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Tim',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.officers.index')
-                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$team->id_part, 'modal_tab_redirect'=>'pills-'.$team->id_team])
                 ->with('modal_redirect', 'modal-tim-view')
                 ->with('id_redirect', $team->id_part)
@@ -124,6 +158,14 @@ class TeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Tim',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Ubah Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
+            ]);
+
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -139,6 +181,14 @@ class TeamsController extends Controller
 		]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Tim',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Tim Berhasil ('.$request->name.')',
+        ]);
+
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Ubah Tim Berhasil')
@@ -166,9 +216,17 @@ class TeamsController extends Controller
         //CHECK STATUS
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Tim',
+                    'progress'=>'Delete',
+                    'result'=>'Error',
+                    'descriptions'=>'Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
                 return redirect()
                 ->route('admin.masters.officers.index')
-                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi sedang berjalan)')
+                ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
                 ->with('modal_redirect', 'modal-tim-view')
                 ->with('id_redirect', $redirect_part->id_part)
@@ -215,6 +273,14 @@ class TeamsController extends Controller
         $team->delete();
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Tim',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Tim Berhasil ('.$team->name.')',
+        ]);
+
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Hapus Tim Berhasil')

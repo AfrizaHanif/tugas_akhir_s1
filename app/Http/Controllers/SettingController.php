@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Criteria;
+use App\Models\Log;
 use App\Models\Period;
 use App\Models\Setting;
 use App\Models\User;
@@ -38,6 +39,14 @@ class SettingController extends Controller
                 'username.regex' => 'Username tidak boleh mengandung spasi',
             ]);
             if ($validator->fails()) {
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Setting',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Username Tidak Berhasil',
+                ]);
+
                 if(Auth::user()->part == "Dev"){
                     return redirect()->route('developer.settings.index')
                     ->withErrors($validator)
@@ -59,6 +68,14 @@ class SettingController extends Controller
             $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
             if(!empty($latest_per)){
                 if($latest_per->progress_status == 'Verifying'){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Setting',
+                        'progress'=>'Update',
+                        'result'=>'Error',
+                        'descriptions'=>'Ubah Setting Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                    ]);
+
                     if(Auth::user()->part == "Dev"){
                         return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1);
                     }else{
@@ -93,6 +110,14 @@ class SettingController extends Controller
         }
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Setting',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Ubah Setting Berhasil',
+        ]);
+
         if(Auth::user()->part == "Dev"){
             return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }elseif(Auth::user()->part != "Pegawai"){

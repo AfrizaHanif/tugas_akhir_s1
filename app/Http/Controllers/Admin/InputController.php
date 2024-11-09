@@ -14,6 +14,7 @@ use App\Models\Criteria;
 use App\Models\HistoryInput;
 use App\Models\HistoryInputRAW;
 use App\Models\InputRAW;
+use App\Models\Log;
 use App\Models\Officer;
 use App\Models\Period;
 use App\Models\Score;
@@ -202,6 +203,14 @@ class InputController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Hapus Semua Nilai',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Seluruh Data Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Hapus Semua Data Nilai Berhasil')->with('code_alert', 1);
     }
 
@@ -216,8 +225,24 @@ class InputController extends Controller
 
         //CHECK WEIGHTS
         if($allcriterias->sum('weight')*100 > 100){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Import Nilai',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Import Data Tidak Berhasil (Bobot Melebihi 100%)',
+            ]);
+
             return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Total Bobot melebihi 100%. Cek kembali bobot di setiap kriteria')->with('code_alert', 1);
         }elseif($allcriterias->sum('weight')*100 <= 99){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Import Nilai',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Import Data Tidak Berhasil (Bobot Belum Mencapai 100%)',
+            ]);
+
             return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Total Bobot belum mencapai 100%. Cek kembali bobot di setiap kriteria')->with('code_alert', 1);
         }
 
@@ -225,6 +250,14 @@ class InputController extends Controller
         foreach($allcriterias as $criteria){
             //dd($crips->where('id_criteria', $criteria->id_criteria)->count());
             if(count($crips->where('id_criteria', $criteria->id_criteria)) == 0){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Import Nilai',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Import Data Tidak Berhasil (Tidak Ada Data Crips di Kriteria '.$criteria->name.')',
+                ]);
+
                 return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('fail','Import Data Tidak Berhasil. Terdapat Data Crips yang belum ditambahkan untuk konversi nilai. Silahkan tambahkan Data Crips di halaman Kriteria. ('.$criteria->id_criteria.')')->with('code_alert', 1);
             }
         }
@@ -281,6 +314,13 @@ class InputController extends Controller
                         ->delete();
                         */
                     }
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Import Nilai',
+                        'progress'=>'Delete',
+                        'result'=>'Success',
+                        'descriptions'=>'Hapus Data Presensi Sebelumnya Berhasil ('.$name_file.')',
+                    ]);
                 }elseif(Str::contains($name_file, 'SKP') || Str::contains($name_file, 'skp')){
                     //dd('SKP Detected');
                     if($latest_per->progress_status == 'Scoring'){
@@ -324,6 +364,13 @@ class InputController extends Controller
                         ->delete();
                         */
                     }
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Import Nilai',
+                        'progress'=>'Delete',
+                        'result'=>'Success',
+                        'descriptions'=>'Hapus Data SKP Sebelumnya Berhasil ('.$name_file.')',
+                    ]);
                 }elseif(Str::contains($name_file, 'CKP') || Str::contains($name_file, 'ckp')){
                     //dd('CKP Detected');
                     if($latest_per->progress_status == 'Scoring'){
@@ -367,13 +414,36 @@ class InputController extends Controller
                         ->delete();
                         */
                     }
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Import Nilai',
+                        'progress'=>'Delete',
+                        'result'=>'Success',
+                        'descriptions'=>'Hapus Data CKP Sebelumnya Berhasil ('.$name_file.')',
+                    ]);
                 }else{
                     //OPTIONAL: USE RETURN IF FILE NAME NOT CONTAIN PRESENSI, SKP, OR CKP.
                     //DB::table('inputs')->delete();
                     //$criterias = Criteria::get();
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Import Nilai',
+                        'progress'=>'Create',
+                        'result'=>'Error',
+                        'descriptions'=>'Import Data Tidak Berhasil (Nama File Tidak Sesuai (Sumber File))',
+                    ]);
+
                     return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Presensi, CKP, atau SKP).')->with('modal_redirect', 'modal-inp-import')->with('code_alert', 2);
                 }
             }else{
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Import Nilai',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Import Data Tidak Berhasil (Nama File Tidak Sesuai (Bulan dan Tahun))',
+                ]);
+
                 return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Penamaan file tidak sesuai dengan kriteria yang berlaku (Bulan dan Tahun).')->with('modal_redirect', 'modal-inp-import')->with('code_alert', 2);
             }
 
@@ -457,6 +527,15 @@ class InputController extends Controller
                 })->get();
             }
             */
+
+            //CREATE A LOG (PER FILE)
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Import Nilai',
+                'progress'=>'Create',
+                'result'=>'Success',
+                'descriptions'=>'Import Data Berhasil ('.$name_file.')',
+            ]);
         }
 
         //UPDATE IMPORT STATUS
@@ -465,6 +544,14 @@ class InputController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Import Nilai',
+            'progress'=>'Create',
+            'result'=>'Success',
+            'descriptions'=>'Import Data Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Import Data Berhasil. Silahkan cek kembali sebelum dilakukan Konversi Data')->with('code_alert', 1);
     }
 
@@ -560,6 +647,14 @@ class InputController extends Controller
         //RETURN TO VIEW
         //IF NOT CONVERTED
         if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Konversi Nilai',
+                'progress'=>'Update',
+                'result'=>'Warning',
+                'descriptions'=>'Konversi Data Sebagian Berhasil ('.$latest_per->name.')',
+            ]);
+
             return redirect()
             ->route('admin.inputs.data.index')
             ->withInput(['tab_redirect'=>'pills-'.$period])
@@ -567,6 +662,14 @@ class InputController extends Controller
             ->with('code_alert', 1);
         }
         //IF ALL CONVERTED
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Konversi Nilai',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Konversi Data Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()
         ->route('admin.inputs.data.index')
         ->withInput(['tab_redirect'=>'pills-'.$period])
@@ -658,6 +761,14 @@ class InputController extends Controller
         //RETURN TO VIEW
         //IF NOT CONVERTED
         if(Input::where('id_period', $period)->where('status', 'Not Converted')->count() >= 1){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Refresh Data',
+                'progress'=>'Update',
+                'result'=>'Warning',
+                'descriptions'=>'Refresh Data Sebagian Berhasil ('.$latest_per->name.')',
+            ]);
+
             return redirect()
             ->route('admin.inputs.data.index')
             ->withInput(['tab_redirect'=>'pills-'.$period])
@@ -665,6 +776,14 @@ class InputController extends Controller
             ->with('code_alert', 1);
         }
         //IF ALL CONVERTED
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Refresh Data',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Refresh Data Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()
         ->route('admin.inputs.data.index')
         ->withInput(['tab_redirect'=>'pills-'.$period])
@@ -696,6 +815,14 @@ class InputController extends Controller
         ]);
 
         //RETURN TO VIEW
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Reset Data',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Reset Data Berhasil ('.$latest_per->name.')',
+        ]);
+
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Reset Data Berhasil')->with('code_alert', 1);
     }
 
@@ -703,6 +830,15 @@ class InputController extends Controller
     {
         //LATEST PERIODE
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Export Data',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Export Data Berhasil ('.$latest_per->name.')',
+        ]);
 
         //GET EXPORT FILE
         return Excel::download(new InputsExport($latest_per), 'INP-Backup-'.$latest_per->id_period.'.xlsx');

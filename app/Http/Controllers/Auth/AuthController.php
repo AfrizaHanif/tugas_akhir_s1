@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Log;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,6 +55,14 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             //RETURN TO VIEW
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Login',
+                'progress'=>'Login',
+                'result'=>'Success',
+                'descriptions'=>'Login Berhasil',
+            ]);
+
             if (Auth::user()->first_time_login) {
                 //$first_time_login = true;
                 User::where('id_user', Auth::user()->id_user)->update([
@@ -91,6 +100,14 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request): RedirectResponse{
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Logout',
+            'progress'=>'Logout',
+            'result'=>'Success',
+            'descriptions'=>'Logout Berhasil',
+        ]);
+
         //LOGOUT ACCOUNT
         Session::flush();
         Auth::logout();

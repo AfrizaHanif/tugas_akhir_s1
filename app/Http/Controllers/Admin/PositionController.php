@@ -50,7 +50,7 @@ class PositionController extends Controller
         if ($validator->fails()) {
             Log::create([
                 'id_user'=>Auth::user()->id_user,
-                'page'=>'Pegawai',
+                'activity'=>'Jabatan',
                 'progress'=>'Create',
                 'result'=>'Error',
                 'descriptions'=>'Tambah Jabatan Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
@@ -69,7 +69,7 @@ class PositionController extends Controller
         //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
-            'page'=>'Pegawai',
+            'activity'=>'Jabatan',
             'progress'=>'Create',
             'result'=>'Success',
             'descriptions'=>'Tambah Jabatan Berhasil ('.$request->name.')',
@@ -100,7 +100,7 @@ class PositionController extends Controller
         if ($validator->fails()) {
             Log::create([
                 'id_user'=>Auth::user()->id_user,
-                'page'=>'Pegawai',
+                'activity'=>'Jabatan',
                 'progress'=>'Update',
                 'result'=>'Error',
                 'descriptions'=>'Ubah Jabatan Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
@@ -118,7 +118,7 @@ class PositionController extends Controller
         //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
-            'page'=>'Pegawai',
+            'activity'=>'Jabatan',
             'progress'=>'Update',
             'result'=>'Success',
             'descriptions'=>'Ubah Jabatan Berhasil ('.$request->name.')',
@@ -137,7 +137,7 @@ class PositionController extends Controller
         if(Officer::where('id_position', $position->id_position)->exists()) {
             Log::create([
                 'id_user'=>Auth::user()->id_user,
-                'page'=>'Pegawai',
+                'activity'=>'Jabatan',
                 'progress'=>'Delete',
                 'result'=>'Error',
                 'descriptions'=>'Hapus Jabatan Tidak Berhasil (Jabatan '.$position->name.' Terhubung Dengan Beberapa Pegawai)',
@@ -151,7 +151,7 @@ class PositionController extends Controller
         //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
-            'page'=>'Pegawai',
+            'activity'=>'Jabatan',
             'progress'=>'Delete',
             'result'=>'Success',
             'descriptions'=>'Hapus Jabatan Berhasil ('.$position->name.')',

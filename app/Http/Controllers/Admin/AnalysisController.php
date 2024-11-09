@@ -9,6 +9,7 @@ use App\Models\HistoryInputRAW;
 use App\Models\HistoryScore;
 use App\Models\Input;
 use App\Models\InputRAW;
+use App\Models\Log;
 use App\Models\Performance;
 use App\Models\Presence;
 use App\Models\Result;
@@ -17,6 +18,7 @@ use App\Models\Period;
 use App\Models\Setting;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AnalysisController extends Controller
@@ -63,23 +65,79 @@ class AnalysisController extends Controller
         //CHECK EMPTY DATA
         if(!empty($latest_per)){
             if(Input::where('id_period', $latest_per->id_period)->count() == 0){
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Analisis',
+                    'progress'=>'View',
+                    'result'=>'Error',
+                    'descriptions'=>'Analisis Gagal (Tidak Ada Data) ('.$latest_per->name.')',
+                ]);
+
                 return redirect()->route('admin.analysis.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
             }else{
                 if($latest_per->import_status == 'Not Clear'){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Analisis',
+                        'progress'=>'View',
+                        'result'=>'Error',
+                        'descriptions'=>'Analisis Gagal (Belum Dikonversi) ('.$latest_per->name.')',
+                    ]);
+
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat nilai yang belum dikonversi. Silahkan lakukan konversi data nilai terlebih dahulu.');
                 }elseif($latest_per->import_status == 'Few Clear'){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Analisis',
+                        'progress'=>'View',
+                        'result'=>'Error',
+                        'descriptions'=>'Analisis Gagal (Sebagian Dikonversi) ('.$latest_per->name.')',
+                    ]);
+
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria.');
                 }elseif($subcriterias->sum('weight')*100 > 100){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Analisis',
+                        'progress'=>'View',
+                        'result'=>'Error',
+                        'descriptions'=>'Analisis Gagal (Bobot Melebihi 100%) ('.$latest_per->name.')',
+                    ]);
+
                     return redirect()->route('admin.analysis.index')->with('fail','Total Bobot melebihi 100%. Silahkan cek kembali Kriteria yang terdaftar.');
                 }elseif($subcriterias->sum('weight')*100 <= 99){
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Analisis',
+                        'progress'=>'View',
+                        'result'=>'Error',
+                        'descriptions'=>'Analisis Gagal (Bobot Belum Mencapat 100%) ('.$latest_per->name.')',
+                    ]);
+
                     return redirect()->route('admin.analysis.index')->with('fail','Total Bobot belum mencapai 100%. Silahkan cek kembali Kriteria yang terdaftar.');
                 }else{
                     foreach ($officers as $officer) {
                         if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
+                            Log::create([
+                                'id_user'=>Auth::user()->id_user,
+                                'activity'=>'Analisis',
+                                'progress'=>'View',
+                                'result'=>'Error',
+                                'descriptions'=>'Analisis Gagal (Belum Dinilai Sepenuhnya ('.$officer->name.') ('.$latest_per->name.'))',
+                            ]);
+
                             return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
                         }else{ //IF OFFICER HAS A FEW DATA
                             foreach ($subcriterias as $subcriteria) {
                                 if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
+                                    Log::create([
+                                        'id_user'=>Auth::user()->id_user,
+                                        'activity'=>'Analisis',
+                                        'progress'=>'View',
+                                        'result'=>'Error',
+                                        'descriptions'=>'Analisis Gagal (Hanya Dinilai Sebagian ('.$officer->name.') ('.$subcriteria->name.'))',
+                                    ]);
+
                                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
                                 }else{
                                     //CLEAR
@@ -90,6 +148,14 @@ class AnalysisController extends Controller
                 }
             }
         }else{
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Analisis',
+                'progress'=>'View',
+                'result'=>'Error',
+                'descriptions'=>'Analisis Gagal (Periode Belum Jalan)',
+            ]);
+
             return redirect()->route('admin.analysis.index')->with('fail','Tidak ada periode yang sedang berjalan.');
         }
 
