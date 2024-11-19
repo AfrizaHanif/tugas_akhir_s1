@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Officer;
 use App\Http\Controllers\Controller;
 use App\Models\HistoryInput;
 use App\Models\HistoryScore;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -45,6 +46,15 @@ class ReportController extends Controller
         $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
         $inputs = HistoryInput::where('id_officer', Auth::user()->nip)->where('id_period', $periods->id_period)->get();
         $detail = Auth::user();
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period_name.') ('.Auth::user()->name.')',
+        ]);
 
         //CREATE A REPORT
         $file = 'RPT-Score-'.$periods->id_period.'-'.Auth::user()->nip.'.pdf';

@@ -119,6 +119,7 @@ class UserController extends Controller
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Pengguna',
@@ -127,6 +128,7 @@ class UserController extends Controller
                         'descriptions'=>'Tambah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
                     ]);
 
+                    //RETURN TO VIEW
                     if(Auth::user()->part == "Admin"){
                         return redirect()
                         ->route('admin.masters.users.index')
@@ -184,7 +186,7 @@ class UserController extends Controller
             //'id_officer'=>$request->id_officer,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pengguna',
@@ -193,6 +195,7 @@ class UserController extends Controller
             'descriptions'=>'Tambah Pengguna Berhasil ('.$officer->name.')',
         ]);
 
+        //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
             return redirect()
             ->route('admin.masters.users.index')
@@ -260,6 +263,7 @@ class UserController extends Controller
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Pengguna',
@@ -268,6 +272,7 @@ class UserController extends Controller
                         'descriptions'=>'Ubah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
                     ]);
 
+                    //RETURN TO VIEW
                     if(Auth::user()->part == "Admin"){
                         return redirect()
                         ->route('admin.masters.users.index')
@@ -307,7 +312,7 @@ class UserController extends Controller
             ]);
         }
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pengguna',
@@ -316,6 +321,7 @@ class UserController extends Controller
             'descriptions'=>'Ubah Pengguna Berhasil ('.$user->name.')',
         ]);
 
+        //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
             return redirect()
             ->route('admin.masters.users.index')
@@ -334,6 +340,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pengguna',

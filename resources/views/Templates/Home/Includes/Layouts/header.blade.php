@@ -17,9 +17,15 @@
                     </li>
                     <li>
                         <a href="/eotm" class="nav-link {{ (request()->is('eotm')) ? 'text-secondary' : 'text-white' }}">
-                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#score"/></svg>
+                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#eotm"/></svg>
                             Hasil
                         </a>
+                    </li>
+                    <li>
+                        <button class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#modal-about">
+                            <svg class="bi d-block mx-auto mb-1" style="vertical-align: -.125em;" width="24" height="24"><use xlink:href="#about"/></svg>
+                            About
+                        </button>
                     </li>
                 </ul>
             </div>

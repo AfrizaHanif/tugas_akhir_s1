@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HistoryInput;
 use App\Models\HistoryScore;
+use App\Models\Log;
 use App\Models\Position;
 use App\Models\Officer;
 use App\Models\Part;
@@ -57,6 +58,15 @@ class ReportController extends Controller
         $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Laporan Pegawai Berhasil Dibuat',
+        ]);
 
         //CREATE A REPORT
         $file = 'RPT-Pegawai.pdf';
@@ -152,6 +162,7 @@ class ReportController extends Controller
         }
         //dd($mxin);
 
+        //SUM ALL MATRIX
         $mx_hasil = $mxin; //$ranking = $normal;
         foreach($normal as $n => $value1){
             $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
@@ -165,6 +176,15 @@ class ReportController extends Controller
         }
         arsort($matrix);
         //dd($mx_hasil);
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period_name.')',
+        ]);
 
         //CREATE A REPORT
         $file = 'RPT-Analysis-'.$periods->id_period.'.pdf';
@@ -183,6 +203,15 @@ class ReportController extends Controller
         $results = HistoryScore::where('period_month', $month)->where('period_year', $year)->where('id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
         $subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->where('id_sub_team', $subteam)->first();
 
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Laporan Nilai Akhir per Tim Berhasil Dibuat ('.$periods->period_name.') ('.$subteams->sub_team_1_name.')',
+        ]);
+
         //CREATE A REPORT
         $file = 'RPT-Result-'.$subteams->id_sub_team.'-'.$periods->id_period.'.pdf';
         $pdf = PDF::
@@ -198,6 +227,15 @@ class ReportController extends Controller
         //GET DATA
         $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
         $results = HistoryScore::where('id_period', $periods->id_period)->orderBy('final_score', 'DESC')->get();
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Laporan Karyawan Terbaik Berhasil Dibuat ('.$periods->period_name.')',
+        ]);
 
         //CREATE A REPORT
         $file = 'RPT-Result-'.$periods->id_period.'.pdf';
@@ -232,7 +270,7 @@ class ReportController extends Controller
         //return response()->download($output, $file);
     }
 
-    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now)
+    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now) //FOR CERTIFICATE
     {
         //SET TEMPLATE
         $fpdi = new Fpdi;
@@ -262,6 +300,15 @@ class ReportController extends Controller
         $fpdi->SetTextColor(25,26,25);
         $fpdi->SetXY(149, 165);
         $fpdi->Cell(75, 0, $text3, 0, 2, 'L');
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Laporan',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Sertifikat Karyawan Terbaik Berhasil Dibuat ('.$period_name.')',
+        ]);
 
         //RETURN TO VIEW
         $fpdi->Output('F', $output);

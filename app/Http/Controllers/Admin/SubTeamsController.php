@@ -33,7 +33,8 @@ class SubTeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Sub Tim',
@@ -42,6 +43,7 @@ class SubTeamsController extends Controller
                     'descriptions'=>'Tambah Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -85,6 +87,7 @@ class SubTeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Sub Tim',
@@ -93,6 +96,7 @@ class SubTeamsController extends Controller
                 'descriptions'=>'Tambah Sub Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$request->id_team])->with('modal_redirect', 'modal-stm-create')->with('id_redirect', $request->id_team)->with('code_alert', 3);
         }
 
@@ -103,7 +107,7 @@ class SubTeamsController extends Controller
             'name'=>$request->name,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Sub Tim',
@@ -112,6 +116,7 @@ class SubTeamsController extends Controller
             'descriptions'=>'Tambah Sub Tim Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Tambah Sub Tim Berhasil')
@@ -138,7 +143,8 @@ class SubTeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Sub Tim',
@@ -147,6 +153,7 @@ class SubTeamsController extends Controller
                     'descriptions'=>'Ubah Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -164,6 +171,7 @@ class SubTeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Sub Tim',
@@ -172,6 +180,7 @@ class SubTeamsController extends Controller
                 'descriptions'=>'Ubah Sub Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -193,7 +202,7 @@ class SubTeamsController extends Controller
             'id_team'=>$request->id_team,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Sub Tim',
@@ -202,6 +211,7 @@ class SubTeamsController extends Controller
             'descriptions'=>'Ubah Sub Tim Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Ubah Sub Tim Berhasil')
@@ -236,7 +246,8 @@ class SubTeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Sub Tim',
@@ -245,6 +256,7 @@ class SubTeamsController extends Controller
                     'descriptions'=>'Hapus Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -270,6 +282,15 @@ class SubTeamsController extends Controller
         }
             */
 
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Sub Tim',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Sub Tim Berhasil ('.$subteam->name.')',
+        ]);
+
         //DESTROY DATA
         Input::with('officer')
         ->whereHas('officer', function($query) use($subteam){
@@ -283,14 +304,6 @@ class SubTeamsController extends Controller
         $subteam->delete();
 
         //RETURN TO VIEW
-        Log::create([
-            'id_user'=>Auth::user()->id_user,
-            'activity'=>'Sub Tim',
-            'progress'=>'Delete',
-            'result'=>'Success',
-            'descriptions'=>'Tambah Sub Tim Berhasil ('.$subteam->name.')',
-        ]);
-
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Hapus Sub Tim Berhasil')

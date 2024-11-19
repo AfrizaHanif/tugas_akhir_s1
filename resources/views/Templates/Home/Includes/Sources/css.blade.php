@@ -7,3 +7,4 @@
 <link rel="stylesheet" href="{{asset('Sources/CSS/Home/carousel.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/Home/features.css')}}">
 <link rel="stylesheet" href="{{asset('Sources/CSS/Home/jumbotron-video.css')}}">
+<link rel="stylesheet" href="{{asset('Sources/CSS/Home/home-pic.css')}}">

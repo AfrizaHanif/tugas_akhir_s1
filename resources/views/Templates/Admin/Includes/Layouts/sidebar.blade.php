@@ -128,6 +128,12 @@
                 </a>
             </li>
             <li>
+                <button class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#modal-about">
+                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#about"/></svg>
+                    About
+                </button>
+            </li>
+            <li>
                 <button class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#modallogout">
                     <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#logout"/></svg>
                     Keluar

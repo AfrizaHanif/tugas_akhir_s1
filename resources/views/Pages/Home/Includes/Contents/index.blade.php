@@ -35,8 +35,7 @@
 <!--MAIN CONTENT-->
 <div class="container pt-1">
     <!--MAIN JUMBOTRON-->
-    <div class="p-5 mb-4 text-bg-dark rounded-3"
-        style="background-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0)), url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');">
+    <div id="home-img" class="p-5 mb-4 text-bg-dark rounded-3">
         <div class="container-fluid py-5">
             <div class="row flex-lg-row-reverse align-items-center g-5">
                 <div class="col-10 col-sm-8 col-lg-6">

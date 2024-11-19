@@ -48,6 +48,7 @@ class PositionController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Jabatan',
@@ -56,6 +57,7 @@ class PositionController extends Controller
                 'descriptions'=>'Tambah Jabatan Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-create')->with('code_alert', 3);
         }
 
@@ -98,6 +100,7 @@ class PositionController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Jabatan',
@@ -106,6 +109,7 @@ class PositionController extends Controller
                 'descriptions'=>'Ubah Jabatan Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-dep-update')->with('id_redirect', $position->id_position)->with('code_alert', 3);
         }
 
@@ -133,8 +137,9 @@ class PositionController extends Controller
      */
     public function destroy(Position $position)
     {
-        //CHECK DATA
+        //CHECK IF EXISTS
         if(Officer::where('id_position', $position->id_position)->exists()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Jabatan',
@@ -143,6 +148,7 @@ class PositionController extends Controller
                 'descriptions'=>'Hapus Jabatan Tidak Berhasil (Jabatan '.$position->name.' Terhubung Dengan Beberapa Pegawai)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view')->with('code_alert', 2);
         }else{
             //CLEAR

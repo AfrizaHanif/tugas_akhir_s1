@@ -39,6 +39,7 @@ class SettingController extends Controller
                 'username.regex' => 'Username tidak boleh mengandung spasi',
             ]);
             if ($validator->fails()) {
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Setting',
@@ -47,6 +48,7 @@ class SettingController extends Controller
                     'descriptions'=>'Ubah Username Tidak Berhasil',
                 ]);
 
+                //RETURN TO VIEW
                 if(Auth::user()->part == "Dev"){
                     return redirect()->route('developer.settings.index')
                     ->withErrors($validator)
@@ -67,7 +69,8 @@ class SettingController extends Controller
             //CHECK STATUS
             $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
             if(!empty($latest_per)){
-                if($latest_per->progress_status == 'Verifying'){
+                if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Setting',
@@ -76,6 +79,7 @@ class SettingController extends Controller
                         'descriptions'=>'Ubah Setting Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                     ]);
 
+                    //RETURN TO VIEW
                     if(Auth::user()->part == "Dev"){
                         return redirect()->route('developer.settings.index')->with('fail','Tidak dapat mengubah pengaturan dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 1);
                     }else{
@@ -109,7 +113,7 @@ class SettingController extends Controller
             ]);
         }
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Setting',
@@ -118,6 +122,7 @@ class SettingController extends Controller
             'descriptions'=>'Ubah Setting Berhasil',
         ]);
 
+        //RETURN TO VIEW
         if(Auth::user()->part == "Dev"){
             return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }elseif(Auth::user()->part != "Pegawai"){

@@ -79,6 +79,7 @@ class PeriodController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Periode',
@@ -87,6 +88,7 @@ class PeriodController extends Controller
                 'descriptions'=>'Tambah Periode Tidak Berhasil (Nama '.$name_month.' '.$request->year.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create')->with('code_alert', 2);
         }
 
@@ -102,6 +104,7 @@ class PeriodController extends Controller
             'import_status'=>'No Data',
 		]);
 
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Periode',
@@ -121,7 +124,7 @@ class PeriodController extends Controller
             'active_days'=>$request->active_days,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Periode',
@@ -130,6 +133,7 @@ class PeriodController extends Controller
             'descriptions'=>'Ubah Periode Berhasil ('.$period->name.')',
         ]);
 
+        //RETURN TO VIEW
         if($period->progress_status == 'Scoring'){
             return redirect()->route('admin.masters.periods.index')->with('success','Ubah Periode Berhasil. Jika diperlukan, silahkan lakukan import ulang')->with('code_alert', 1);
         }else{
@@ -139,6 +143,7 @@ class PeriodController extends Controller
 
     public function destroy(Period $period)
     {
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Periode',
@@ -154,11 +159,13 @@ class PeriodController extends Controller
         return redirect()->route('admin.masters.periods.index')->with('success','Hapus Periode Berhasil')->with('code_alert', 1);
     }
 
+    /*
     public function refresh()
     {
         Artisan::call('app:create-period');
         return redirect()->route('admin.masters.periods.index')->with('success', 'Refresh Periode Berhasil. Jika tidak ada perubahan, maka hal ini normal. Baca Bantuan untuk mengetahui mengenai Refresh Periode.')->with('code_alert', 1);
     }
+    */
 
     public function start($period)
     {
@@ -168,6 +175,7 @@ class PeriodController extends Controller
         //CHECK RUNNING
         $count = Period::where('progress_status', 'Scoring')->count();
         if($count != 0){
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Periode',
@@ -176,6 +184,7 @@ class PeriodController extends Controller
                 'descriptions'=>'Mulai Periode Tidak Berhasil (Sedang Berjalan)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.masters.periods.index')->with('fail','Tidak dapat memulai proses pada periode ini karena proses Penentuan Karyawan Terbaik sedang berjalan.')->with('code_alert', 1);
         }
 
@@ -184,6 +193,7 @@ class PeriodController extends Controller
             'progress_status'=>'Scoring',
 		]);
 
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Periode',

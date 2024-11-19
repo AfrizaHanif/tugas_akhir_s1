@@ -39,7 +39,7 @@ class MessageController extends Controller
             'type'=>$request->type,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Feedback',
@@ -48,6 +48,7 @@ class MessageController extends Controller
             'descriptions'=>'Kirim Pesan Berhasil',
         ]);
 
+        //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
             return redirect()->route('admin.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
         }else{
@@ -62,7 +63,7 @@ class MessageController extends Controller
             'message_out'=>$request->message_out,
         ]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Feedback',
@@ -71,6 +72,7 @@ class MessageController extends Controller
             'descriptions'=>'Balas Pesan Berhasil',
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('developer.messages.index')->with('success','Balas Pesan Berhasil')->with('code_alert', 1);
     }
 
@@ -79,7 +81,7 @@ class MessageController extends Controller
         //DELETE DATA
         $message->delete();
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Feedback',
@@ -88,6 +90,7 @@ class MessageController extends Controller
             'descriptions'=>'Hapus Pesan Berhasil',
         ]);
 
+        //RETURN TO VIEW
         return redirect()->route('developer.messages.index')->with('success','Hapus Pesan Berhasil')->with('code_alert', 1);
     }
 }

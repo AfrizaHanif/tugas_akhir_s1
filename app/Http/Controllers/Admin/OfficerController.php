@@ -67,7 +67,8 @@ class OfficerController extends Controller
         //CHECK STATUS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -76,6 +77,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Tambah Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()->route('admin.masters.officers.index')->with('fail','Tidak dapat menambahkan pegawai dikarenakan sedang dalam proses verifikasi nilai.')->with('code_alert', 2)->withInput(['tab_redirect'=>'pills-'.$request->id_part])->with('modal_redirect', 'modal-off-create');
             }
         }
@@ -120,6 +122,7 @@ class OfficerController extends Controller
             'phone.unique' => 'Nomor telepon telah terdaftar',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Pegawai',
@@ -128,6 +131,7 @@ class OfficerController extends Controller
                 'descriptions'=>'Tambah Pegawai Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -141,6 +145,7 @@ class OfficerController extends Controller
         $count_lead = Officer::with('position')->whereHas('position', function($query){$query->where('name', 'LIKE', 'Kepala%');})->where('id_position', $request->id_position)->count();
         if(!empty($count_lead)){
             if($count_lead > 0){
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -149,6 +154,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Tambah Pegawai Tidak Berhasil (Kepala BPS Jawa Timur tidak boleh lebih dari satu)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')
@@ -160,6 +166,7 @@ class OfficerController extends Controller
 
         //CHECK SAME TEAM
         if($request->id_sub_team_1 == $request->id_sub_team_2){
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Pegawai',
@@ -168,6 +175,7 @@ class OfficerController extends Controller
                 'descriptions'=>'Tambah Pegawai Tidak Berhasil (Tim Utama dan Tim Cadangan tidak boleh sama)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')
             ->with('code_alert', 2)->withInput(['tab_redirect'=>'pills-'.$request->id_part])
@@ -176,7 +184,7 @@ class OfficerController extends Controller
             ->with('code_alert', 2);
         }
 
-        //CHECK IF LEAD
+        //CHECK SUITABLE PART FOR USER
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $request->id_position){
@@ -194,6 +202,7 @@ class OfficerController extends Controller
             $tim_2 = $request->id_sub_team_2;
         }
 
+        //AUTO DETECT POSITION (FOR FUTURE DEVELOPMENT)
         /*
         $check_lead1 = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         $check_lead2 = Position::where('name', 'LIKE', 'Kepala Bagian Umum%')->where('id_position', $request->id_position)->first();
@@ -279,7 +288,7 @@ class OfficerController extends Controller
         $tab = Team::with('subteam')
         ->whereHas('subteam', function($query) use($request){$query->where('id_sub_team', $request->id_sub_team_1);})->latest()->first();
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pegawai',
@@ -295,6 +304,7 @@ class OfficerController extends Controller
             'descriptions'=>'Tambah Pengguna Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'sub_tab_redirect'=>$request->id_part.'-'.$tab->id_team.'-tab-pane'])
@@ -332,7 +342,8 @@ class OfficerController extends Controller
         //CHECK STATUS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -341,6 +352,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Ubah Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Tidak dapat mengubah pegawai dikarenakan sedang dalam proses verifikasi nilai.')
@@ -360,6 +372,7 @@ class OfficerController extends Controller
             'name.unique' => 'Nama telah terdaftar',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Pegawai',
@@ -368,6 +381,7 @@ class OfficerController extends Controller
                 'descriptions'=>'Ubah Pegawai Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -383,6 +397,7 @@ class OfficerController extends Controller
             //dd($count_lead);
             if(!empty($count_lead)){
                 if($count_lead > 0){
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Pegawai',
@@ -391,6 +406,7 @@ class OfficerController extends Controller
                         'descriptions'=>'Ubah Pegawai Tidak Berhasil (Kepala BPS Jawa Timur tidak boleh lebih dari satu)',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()
                     ->route('admin.masters.officers.index')
                     ->with('fail','Kepala BPS Jawa Timur / Bagian Umum tidak boleh lebih dari satu pegawai. Jika dikarenakan pindah kerja, mohon untuk mengubah jabatan dari Kepala BPS Jatim / Bagian Umum sebelumnya, lalu ubah pada Kepala BPS Jatim / Bagian Umum terbaru.')
@@ -404,6 +420,7 @@ class OfficerController extends Controller
 
         //CHECK SAME TEAM
         if($request->id_sub_team_1 == $request->id_sub_team_2){
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Pegawai',
@@ -412,6 +429,7 @@ class OfficerController extends Controller
                 'descriptions'=>'Ubah Pegawai Tidak Berhasil (Tim Utama dan Tim Cadangan tidak boleh sama)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->with('fail','Tim Utama dan Tim Cadangan tidak boleh sama. Jika hanya satu pegawai, pilih Tidak Ada di Tim Cadangan.')
@@ -421,7 +439,7 @@ class OfficerController extends Controller
             ->with('code_alert', 2);
         }
 
-        //CHECK IF LEAD
+        //CHECK SUITABLE PART FOR USER
         $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         if(!empty($check_lead->id_position)){
             if($check_lead->id_position == $request->id_position){
@@ -439,6 +457,7 @@ class OfficerController extends Controller
             $tim_2 = $request->id_sub_team_2;
         }
 
+        //AUTO DETECT POSITION (FOR FUTURE DEVELOPMENT)
         /*
         $check_lead1 = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $request->id_position)->first();
         $check_lead2 = Position::where('name', 'LIKE', 'Kepala Bagian Umum%')->where('id_position', $request->id_position)->first();
@@ -489,7 +508,7 @@ class OfficerController extends Controller
             //'photo'=>$request->photo,
             //'is_lead'=>'No',
 		]);
-        if(!empty(User::where('nip', $officer->id_officer)->first())){
+        if(!empty(User::where('nip', $officer->id_officer)->first())){ //IF USER EXISTS
             User::where('nip', $officer->id_officer)->update([
                 'name'=>$request->name,
                 'nip'=>$request->id_officer,
@@ -538,7 +557,7 @@ class OfficerController extends Controller
         }
         */
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pegawai',
@@ -554,6 +573,7 @@ class OfficerController extends Controller
             'descriptions'=>'Ubah Pengguna Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Ubah Pegawai Berhasil')
@@ -571,7 +591,8 @@ class OfficerController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -580,6 +601,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Hapus Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -606,6 +628,7 @@ class OfficerController extends Controller
             File::delete($path_photo);
         }
 
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Pegawai',
@@ -622,7 +645,9 @@ class OfficerController extends Controller
         ]);
 
         //DESTROY DATA
+        if(!empty(User::where('nip', $officer->id_officer)->first())){
         Log::where('id_user', User::where('nip', $officer->id_officer)->first()->id_user)->delete();
+        }
         User::where('nip', $officer->id_officer)->delete();
         Input::where('id_officer', $officer->id_officer)->delete();
         $officer->delete();
@@ -656,6 +681,26 @@ class OfficerController extends Controller
 
     public function import(Request $request): RedirectResponse
     {
+        //CHECK STATUS
+        if(!empty($latest_per)){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Pegawai',
+                    'progress'=>'Import',
+                    'result'=>'Error',
+                    'descriptions'=>'Import Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.officers.index')
+                ->with('fail','Import Pegawai Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
+                ->with('code_alert', 1);
+            }
+        }
+
         //ERASE ALL DATA (RESET ONLY)
         if($request->import_method == 'reset'){
             //DELETE ALL DATA (INPUTS AND OFFICERS)
@@ -686,6 +731,7 @@ class OfficerController extends Controller
             */
         }
 
+        //TRY AND CATCH
         try{
             //IMPORT FILE (OFFICERS)
             $import_off = New OfficersImport($request->import_method);
@@ -702,6 +748,7 @@ class OfficerController extends Controller
 
             //RETURN TO VIEW
             if(Auth::user()->part == 'Dev'){
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -710,12 +757,14 @@ class OfficerController extends Controller
                     'descriptions'=>'Import Pegawai Berhasil (Reset)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('index')
                 ->with('success','Import Pegawai Berhasil')
                 ->with('code_alert', 1);
             }else{
                 if($request->import_method == 'reset'){
+                    //LOGOUT
                     Session::flush();
                     Auth::logout();
                     //request()->session()->invalidate();
@@ -723,6 +772,7 @@ class OfficerController extends Controller
                     $request->session()->invalidate();
                     $request->session()->regenerateToken();
 
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>'USR-000',
                         'activity'=>'Pegawai',
@@ -731,11 +781,13 @@ class OfficerController extends Controller
                         'descriptions'=>'Import Pegawai Berhasil (Reset)',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()
                     ->route('index')
                     ->with('success','Import Pegawai Berhasil. Demi keamanan, silahkan lakukan login kembali dengan password "bps3500".')
                     ->with('code_alert', 1);
                 }else{
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Pegawai',
@@ -744,6 +796,7 @@ class OfficerController extends Controller
                         'descriptions'=>'Import Pegawai Berhasil (Update or Create)',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()
                     ->route('admin.masters.officers.index')
                     ->with('success','Import Pegawai Berhasil')
@@ -756,7 +809,8 @@ class OfficerController extends Controller
             $errorCode = $ex->errorInfo[1];
 
             //RETURN TO VIEW
-            if($errorCode == 1062){
+            if($errorCode == 1062){ //IF DATA IN EXCEL DUPLICATE
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -765,6 +819,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Import Pegawai Gagal (Duplikat Data di Excel)',
                 ]);
 
+                //RETURN TO VIEW
                 if(Auth::user()->part == 'Dev'){
                     return redirect()
                     ->route('developer.officers.index')
@@ -776,7 +831,8 @@ class OfficerController extends Controller
                     ->with('fail', 'Import Pegawai Gagal. Terdapat duplikat data yang ada di Excel Import Pegawai. Silahkan cek file Excel kembali')
                     ->with('code_alert', 1);
                 }
-            }elseif($errorCode == 1364){
+            }elseif($errorCode == 1364){ //IF COLUMN NOT MEET CRITERIA
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -785,6 +841,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Import Pegawai Gagal (Kolom Tidak Lengkap di Excel)',
                 ]);
 
+                //RETURN TO VIEW
                 if(Auth::user()->part == 'Dev'){
                     return redirect()
                     ->route('developer.officers.index')
@@ -796,7 +853,8 @@ class OfficerController extends Controller
                     ->with('fail', 'Import Pegawai Gagal. Terdapat kolom yang tidak ada di Excel. Silahkan cek kebutuhan kolom di Modal Import atau hubungi Developer')
                     ->with('code_alert', 1);
                 }
-            }else{
+            }else{ //NORMAL ERROR
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Pegawai',
@@ -805,6 +863,7 @@ class OfficerController extends Controller
                     'descriptions'=>'Import Pegawai Gagal ('.$message.')',
                 ]);
 
+                //RETURN TO VIEW
                 if(Auth::user()->part == 'Dev'){
                     return redirect()
                     ->route('developer.officers.index')

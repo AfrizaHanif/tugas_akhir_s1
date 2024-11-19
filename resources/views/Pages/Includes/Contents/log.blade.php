@@ -8,7 +8,7 @@
         <div class="position-sticky" style="top: 0rem;">
             <!--MENU-->
             <p>
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-usr-create">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-log-export">
                     <i class="bi bi-file-earmark-arrow-down"></i>
                     Export
                 </a>
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($logs->where('id_user', Auth::user()->id_user) as $log)
+                        @forelse ($logs as $log)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>

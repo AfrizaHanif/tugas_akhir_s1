@@ -294,6 +294,28 @@
 <!--CURRENT PERIOD-->
 @endforeach
 
+<!--EXPORT ALL OLD DATA-->
+<div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-all">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <form action="{{ route('admin.inputs.data.export.all') }}" method="post" enctype="multipart/form-data">
+                <div class="modal-header border-bottom-0">
+                    <h1 class="modal-title fs-5">Export Input Data (Semua Periode)</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <p>Proses ini akan mengunduh Data Input dari semua periode ke komputer anda.</p>
+                </div>
+                <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                    @csrf
+                    <button type="submit" class="btn btn-lg btn-primary" id="exportToastBtn-all">Export Data</button>
+                    <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @foreach ($history_per as $hperiod)
 <!--EXPORT OLD DATA-->
 <div class="modal modal-sheet p-4 py-md-5 fade" tabindex="-1" role="dialog" id="modal-old-inp-export-{{ $hperiod->id_period }}">

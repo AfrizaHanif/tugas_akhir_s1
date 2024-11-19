@@ -54,7 +54,7 @@ class AuthController extends Controller
             //dd(auth()->user()->part);
             $request->session()->regenerate();
 
-            //RETURN TO VIEW
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Login',
@@ -63,6 +63,7 @@ class AuthController extends Controller
                 'descriptions'=>'Login Berhasil',
             ]);
 
+            //RETURN TO VIEW
             if (Auth::user()->first_time_login) {
                 //$first_time_login = true;
                 User::where('id_user', Auth::user()->id_user)->update([

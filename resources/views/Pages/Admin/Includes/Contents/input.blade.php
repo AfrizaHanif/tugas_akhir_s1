@@ -287,6 +287,12 @@
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export
                                 </button>
+                                <!--
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-export-all">
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                    Export Semua
+                                </button>
+                                -->
                             </div>
                         </div>
                         <!--DATA CHECKER-->

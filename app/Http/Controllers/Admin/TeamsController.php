@@ -27,7 +27,8 @@ class TeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Tim',
@@ -36,6 +37,7 @@ class TeamsController extends Controller
                     'descriptions'=>'Tambah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Tambah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -73,6 +75,7 @@ class TeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Tim',
@@ -81,6 +84,7 @@ class TeamsController extends Controller
                 'descriptions'=>'Tambah Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -97,7 +101,7 @@ class TeamsController extends Controller
             'name'=>$request->name,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Tim',
@@ -106,6 +110,7 @@ class TeamsController extends Controller
             'descriptions'=>'Tambah Tim Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Tambah Tim Berhasil')
@@ -132,7 +137,8 @@ class TeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Tim',
@@ -141,6 +147,7 @@ class TeamsController extends Controller
                     'descriptions'=>'Ubah Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -158,6 +165,7 @@ class TeamsController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Tim',
@@ -166,6 +174,7 @@ class TeamsController extends Controller
                 'descriptions'=>'Ubah Tim Tidak Berhasil (Nama '.$request->name.' Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.officers.index')
             ->withErrors($validator)
@@ -180,7 +189,7 @@ class TeamsController extends Controller
             'name'=>$request->name,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Tim',
@@ -189,6 +198,7 @@ class TeamsController extends Controller
             'descriptions'=>'Ubah Tim Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Ubah Tim Berhasil')
@@ -215,7 +225,8 @@ class TeamsController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Tim',
@@ -224,6 +235,7 @@ class TeamsController extends Controller
                     'descriptions'=>'Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.officers.index')
                 ->with('fail','Hapus Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
@@ -256,6 +268,15 @@ class TeamsController extends Controller
         }
             */
 
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Tim',
+            'progress'=>'Delete',
+            'result'=>'Success',
+            'descriptions'=>'Hapus Tim Berhasil ('.$team->name.')',
+        ]);
+
         //DESTROY DATA
         $loop_subteam = SubTeam::where('id_team', $team->id_team)->get();
         foreach($loop_subteam as $subteam){
@@ -273,14 +294,6 @@ class TeamsController extends Controller
         $team->delete();
 
         //RETURN TO VIEW
-        Log::create([
-            'id_user'=>Auth::user()->id_user,
-            'activity'=>'Tim',
-            'progress'=>'Delete',
-            'result'=>'Success',
-            'descriptions'=>'Hapus Tim Berhasil ('.$team->name.')',
-        ]);
-
         return redirect()
         ->route('admin.masters.officers.index')
         ->with('success','Hapus Tim Berhasil')

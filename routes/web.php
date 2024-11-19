@@ -141,6 +141,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                         Route::prefix('export')->name('export.')->group(function () {
                             Route::post('/', 'export_latest')->name('latest');
                             Route::post('/old/{period}', 'export_old')->name('old');
+                            Route::post('/all', 'export_all')->name('all');
                         });
                         Route::post('/destroyall/{period}', 'destroyall')->name('destroyall');
                         Route::post('/convert/{period}', 'convert')->name('convert');
@@ -212,7 +213,13 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
             });
         });
         //LOGS
-        Route::get('/logs', [LogController::class, 'index'])->name('logs');
+        Route::prefix('logs')->name('logs.')->group(function () {
+            Route::controller(LogController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/export', 'export')->name('export');
+            });
+        });
+        //Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 
@@ -246,7 +253,14 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
                 Route::post('/in', 'store_in')->name('in');
             });
         });
-        Route::get('/logs', [LogController::class, 'index'])->name('logs');
+        //LOGS
+        Route::prefix('logs')->name('logs.')->group(function () {
+            Route::controller(LogController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/export', 'export')->name('export');
+            });
+        });
+        //Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 
@@ -277,7 +291,14 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
                 Route::post('/update', 'update')->name('update');
             });
         });
-        Route::get('/logs', [LogController::class, 'index'])->name('logs');
+        //LOGS
+        Route::prefix('logs')->name('logs.')->group(function () {
+            Route::controller(LogController::class)->group(function() {
+                Route::get('/', 'index')->name('index');
+                Route::post('/export', 'export')->name('export');
+            });
+        });
+        //Route::get('/logs', [LogController::class, 'index'])->name('logs');
     });
 });
 

@@ -64,7 +64,8 @@ class AnalysisController extends Controller
         //VERIFICATION
         //CHECK EMPTY DATA
         if(!empty($latest_per)){
-            if(Input::where('id_period', $latest_per->id_period)->count() == 0){
+            if(Input::where('id_period', $latest_per->id_period)->count() == 0){ //IF NO DATA
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Analisis',
@@ -73,9 +74,11 @@ class AnalysisController extends Controller
                     'descriptions'=>'Analisis Gagal (Tidak Ada Data) ('.$latest_per->name.')',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()->route('admin.analysis.index')->with('fail','Tidak ada data yang terdaftar di periode yang dipilih untuk melakukan analisis.');
             }else{
-                if($latest_per->import_status == 'Not Clear'){
+                if($latest_per->import_status == 'Not Clear'){ //IF NOT CONVERTED
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Analisis',
@@ -84,8 +87,10 @@ class AnalysisController extends Controller
                         'descriptions'=>'Analisis Gagal (Belum Dikonversi) ('.$latest_per->name.')',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat nilai yang belum dikonversi. Silahkan lakukan konversi data nilai terlebih dahulu.');
-                }elseif($latest_per->import_status == 'Few Clear'){
+                }elseif($latest_per->import_status == 'Few Clear'){ //IF FEW CONVERTED
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Analisis',
@@ -94,8 +99,10 @@ class AnalysisController extends Controller
                         'descriptions'=>'Analisis Gagal (Sebagian Dikonversi) ('.$latest_per->name.')',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat beberapa nilai tidak dapat dikonversi. Silahkan cek kembali Data Crips di masing-masing Kriteria.');
-                }elseif($subcriterias->sum('weight')*100 > 100){
+                }elseif($subcriterias->sum('weight')*100 > 100){ //IF WEIGHT MORE THAN 100%
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Analisis',
@@ -104,20 +111,24 @@ class AnalysisController extends Controller
                         'descriptions'=>'Analisis Gagal (Bobot Melebihi 100%) ('.$latest_per->name.')',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()->route('admin.analysis.index')->with('fail','Total Bobot melebihi 100%. Silahkan cek kembali Kriteria yang terdaftar.');
-                }elseif($subcriterias->sum('weight')*100 <= 99){
+                }elseif($subcriterias->sum('weight')*100 <= 99){ //IF WEIGHT LESS THAN 100%
+                    //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
                         'activity'=>'Analisis',
                         'progress'=>'View',
                         'result'=>'Error',
-                        'descriptions'=>'Analisis Gagal (Bobot Belum Mencapat 100%) ('.$latest_per->name.')',
+                        'descriptions'=>'Analisis Gagal (Bobot Belum Mencapai 100%) ('.$latest_per->name.')',
                     ]);
 
+                    //RETURN TO VIEW
                     return redirect()->route('admin.analysis.index')->with('fail','Total Bobot belum mencapai 100%. Silahkan cek kembali Kriteria yang terdaftar.');
-                }else{
+                }else{ //CHECK OFFICER HAS DATA OR NOT
                     foreach ($officers as $officer) {
                         if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
+                            //CREATE A LOG
                             Log::create([
                                 'id_user'=>Auth::user()->id_user,
                                 'activity'=>'Analisis',
@@ -126,10 +137,12 @@ class AnalysisController extends Controller
                                 'descriptions'=>'Analisis Gagal (Belum Dinilai Sepenuhnya ('.$officer->name.') ('.$latest_per->name.'))',
                             ]);
 
+                            //RETURN TO VIEW
                             return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
                         }else{ //IF OFFICER HAS A FEW DATA
                             foreach ($subcriterias as $subcriteria) {
                                 if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
+                                    //CREATE A LOG
                                     Log::create([
                                         'id_user'=>Auth::user()->id_user,
                                         'activity'=>'Analisis',
@@ -138,8 +151,9 @@ class AnalysisController extends Controller
                                         'descriptions'=>'Analisis Gagal (Hanya Dinilai Sebagian ('.$officer->name.') ('.$subcriteria->name.'))',
                                     ]);
 
+                                    //RETURN TO VIEW
                                     return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
-                                }else{
+                                }else{ //ALL CLEAR
                                     //CLEAR
                                 }
                             }
@@ -147,7 +161,8 @@ class AnalysisController extends Controller
                     }
                 }
             }
-        }else{
+        }else{ //IF NO RUNNING PERIOD
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Analisis',
@@ -156,6 +171,7 @@ class AnalysisController extends Controller
                 'descriptions'=>'Analisis Gagal (Periode Belum Jalan)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()->route('admin.analysis.index')->with('fail','Tidak ada periode yang sedang berjalan.');
         }
 
@@ -247,6 +263,7 @@ class AnalysisController extends Controller
         }
         //dd($mxin);
 
+        //SUM ALL MATRIX
         $mx_hasil = $mxin; //$ranking = $normal;
         foreach($normal as $n => $value1){
             $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
@@ -260,6 +277,15 @@ class AnalysisController extends Controller
         }
         arsort($matrix);
         //dd($mx_hasil);
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Analisis',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Analisis Berhasil ('.$latest_per->name.')',
+        ]);
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
@@ -367,6 +393,7 @@ class AnalysisController extends Controller
         }
         //dd($mxin);
 
+        //SUM ALL MATRIX
         $mx_hasil = $mxin; //$ranking = $normal;
         foreach($normal as $n => $value1){
             $mx_hasil[$n][] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
@@ -380,6 +407,15 @@ class AnalysisController extends Controller
         }
         arsort($matrix);
         //dd($mx_hasil);
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Analisis',
+            'progress'=>'View',
+            'result'=>'Success',
+            'descriptions'=>'Analisis Berhasil ('.$select_period->name.')',
+        ]);
 
         //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 

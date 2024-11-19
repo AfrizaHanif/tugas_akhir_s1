@@ -1,7 +1,8 @@
 #imagecarousel .carousel-item img {
     object-position: center;
     overflow: hidden;
-    height: 100%;
+    object-fit:cover;
+    height: 480px;
 }
 
 #imagecarousel .carousel-item:before {

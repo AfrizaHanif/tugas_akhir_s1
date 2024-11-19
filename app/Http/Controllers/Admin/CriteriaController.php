@@ -41,7 +41,8 @@ class CriteriaController extends Controller
         //CHECK STATUS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Kriteria',
@@ -50,6 +51,7 @@ class CriteriaController extends Controller
                     'descriptions'=>'Tambah Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan proses pembuatan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -85,6 +87,7 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Kriteria',
@@ -93,6 +96,7 @@ class CriteriaController extends Controller
                 'descriptions'=>'Tambah Kriteria Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -123,7 +127,7 @@ class CriteriaController extends Controller
             'source'=>$source,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Kriteria',
@@ -132,8 +136,9 @@ class CriteriaController extends Controller
             'descriptions'=>'Tambah Kriteria Berhasil ('.$request->name.')',
         ]);
 
+        //RETURN TO VIEW
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Scoring'){
+            if($latest_per->progress_status == 'Scoring'){ //PROGRESS: SCORING
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
@@ -157,7 +162,8 @@ class CriteriaController extends Controller
         //CHECK STATUS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
+                //CREATE A LOG
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Kriteria',
@@ -166,6 +172,7 @@ class CriteriaController extends Controller
                     'descriptions'=>'Ubah Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
 
+                //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan perubahan data kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -182,6 +189,7 @@ class CriteriaController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
+            //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Kriteria',
@@ -190,6 +198,7 @@ class CriteriaController extends Controller
                 'descriptions'=>'Ubah Kriteria Tidak Berhasil (Beberapa Data Telah Terdaftar di Database)',
             ]);
 
+            //RETURN TO VIEW
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
@@ -219,7 +228,7 @@ class CriteriaController extends Controller
             'source'=>$source,
 		]);
 
-        //RETURN TO VIEW
+        //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,
             'activity'=>'Kriteria',
@@ -227,9 +236,10 @@ class CriteriaController extends Controller
             'result'=>'Success',
             'descriptions'=>'Ubah Kriteria Berhasil ('.$request->name.')',
         ]);
-
+        
+        //RETURN TO VIEW
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Scoring'){
+            if($latest_per->progress_status == 'Scoring'){ //PROGRESS: SCORING
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
@@ -255,7 +265,7 @@ class CriteriaController extends Controller
 
         //CHECK STATUS
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Verifying'){
+            if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 Log::create([
                     'id_user'=>Auth::user()->id_user,
                     'activity'=>'Kriteria',
@@ -263,7 +273,6 @@ class CriteriaController extends Controller
                     'result'=>'Error',
                     'descriptions'=>'Hapus Kriteria Tidak Berhasil (Proses Verifikasi Sedang Berjalan)',
                 ]);
-
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Tidak dapat melakukan penghapusan kriteria dikarenakan sedang dalam proses verifikasi nilai.')
@@ -297,7 +306,7 @@ class CriteriaController extends Controller
 
         //RETURN TO VIEW
         if(!empty($latest_per)){
-            if($latest_per->progress_status == 'Scoring'){
+            if($latest_per->progress_status == 'Scoring'){ //PROGRESS: SCORING
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->withInput(['tab_redirect'=>'pills-'.$criteria->id_category])
