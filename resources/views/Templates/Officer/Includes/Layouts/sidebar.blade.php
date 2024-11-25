@@ -45,12 +45,6 @@
                     Halaman Utama
                 </a>
             </li>
-            <li>
-                <button class="dropdown-item d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#modal-dsh-first">
-                    <svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#welcome"/></svg>
-                    Welcome (Test)
-                </button>
-            </li>
             <li><hr class="dropdown-divider"></li>
             <li>
                 <a class="dropdown-item d-flex gap-2 align-items-center" href="/officer/settings">
