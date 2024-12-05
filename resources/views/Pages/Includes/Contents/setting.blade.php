@@ -36,12 +36,12 @@
         </div>
     </div>
     @endif
-    @if (Auth::user()->part != 'Dev')
+    @if (Auth::user()->part != 'Dev') <!--DEVELOPER CANNOT EDIT USERNAME-->
     <div class="col-md-6 pb-4">
         <div class="h-100 p-5 bg-body-tertiary border rounded-3">
             <h2>Ganti Username</h2>
             <p>Anda dapat mengubah username anda untuk memudahkan anda saat melakukan login jika anda lupa NIP.</p>
-            @if (Auth::user()->username == Auth::user()->nip)
+            @if (Auth::user()->username == Auth::user()->nip) <!--IF USERNAME EQUALS NIP (FIRST TIME)-->
             <input type="username" class="form-control" id="s_username" name="s_username" required>
             @else
             <input type="username" class="form-control" id="s_username" name="s_username" value="{{ Auth::user()->username }}" required>

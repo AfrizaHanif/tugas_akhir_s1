@@ -75,6 +75,7 @@
         </h2>
         <div id="collapse-officer" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
             <div class="accordion-body">
+                <!--OFFICERS' TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -112,6 +113,7 @@
         </h2>
         <div id="collapse-criteria" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
             <div class="accordion-body">
+                <!--CRITERIAS' TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -158,6 +160,7 @@
             <div id="collapse-hasil" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
                     <div class="table-responsive">
+                        <!--INPUTS' TABLE-->
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
@@ -223,6 +226,7 @@
             <div id="collapse-normal" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
                     <div class="table-responsive">
+                        <!--NORMALIZATION'S TABLE-->
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
@@ -294,6 +298,7 @@
             <div id="collapse-matrix" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
                     <div class="table-responsive">
+                        <!--MATRIX'S TABLE-->
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="table-primary">
@@ -362,6 +367,7 @@
             </h2>
             <div id="collapse-ranking" class="accordion-collapse collapse" data-bs-parent="#accordion">
                 <div class="accordion-body">
+                    <!--SIMILAR INFO-->
                     <div class="alert alert-info" role="alert">
                         <i class="bi bi-info-circle-fill"></i> <strong>INFO</strong>
                         <br/>
@@ -371,6 +377,7 @@
                         Jika terdapat nilai akhir yang sama pada peringkat pertama, maka yang akan dipilih adalah nilai terbaik dari kriteria <strong>{{ $h_set_crit->criteria_name }}</strong> yang dapat dilihat di halaman Karyawan Terbaik pada halaman utama dan dashboard.
                         @endif
                     </div>
+                    <!--RANKS' TABLE-->
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <thead>

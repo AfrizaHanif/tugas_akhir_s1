@@ -176,9 +176,9 @@
                     <div class="col-6 d-grid gap-2 d-md-flex justify-content-md-end">
                         <!--MENU-->
                         @if (!empty(Auth::user()->part))
-                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
+                            @if (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Request::is('developer/masters/officers*') && Auth::user()->part == "Dev") <!--ONLY ADMIN AND DEVELOPER CAN EDIT THIS DATA-->
                                 @if ($part->id_part == 'PRT-001')
-                                    @if (count($officers->where('id_position', 'DPT-001')) > 0)
+                                    @if (count($officers->where('id_position', 'DPT-001')) > 0) <!--IF KEPALA BPS HAS BEEN REGISTERED-->
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Kepala BPS Jawa Timur telah terdaftar.">
                                         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-off-precre-{{ $part->id_part }}" disabled>
                                             <i class="bi bi-person-plus"></i>
@@ -215,7 +215,7 @@
                 <nav>
                     <div class="nav nav-pills" id="teams-tab" role="tablist">
                         @foreach ($teams->where('id_part', $part->id_part) as $team)
-                            @if ($team->id_team == 'TIM-001')
+                            @if ($team->id_team == 'TIM-001') <!--PIMPINAN BPS HAS NO TEAM (ONLY ONE)-->
                             <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $part->id_part }}-{{ $team->id_team }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" type="button" role="tab" aria-controls="{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}" hidden>{{ $team->name }}</button>
                             @else
                             <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $part->id_part }}-{{ $team->id_team }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" type="button" role="tab" aria-controls="{{ $part->id_part }}-{{ $team->id_team }}-tab-pane" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ $team->name }}</button>
@@ -259,7 +259,7 @@
                                                     </a>
                                                 </li>
                                                 @if (Request::is('admin/masters/officers*') || Request::is('developer/masters/officers*') && !empty(Auth::user()->part))
-                                                    @if (Auth::user()->part == "Admin" || Auth::user()->part == "Dev")
+                                                    @if (Auth::user()->part == "Admin" || Auth::user()->part == "Dev") <!--ONLY ADMIN AND DEVELOPER CAN EDIT THIS DATA-->
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-preupd-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#update"/></svg>

@@ -28,35 +28,35 @@
 @if (!empty($latest_per))
     <!--ADMIN ALERT-->
     @if (Auth::user()->part == "Admin")
-        @if ($inputs->count() == 0)
+        @if ($inputs->count() == 0) <!--IF NO INPUT AVAILABLE-->
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Tidak ada nilai yang terdaftar di periode ini. Silahkan lakukan import data nilai di halaman <b>Data Input</b>.
         </div>
-        @elseif ($latest_per->import_status == 'Few Clear')
+        @elseif ($latest_per->import_status == 'Few Clear') <!--IF FEW INPUT DATA NOT CONVERTED-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Terdapat sebagian nilai yang tidak dapat dikonversi. Segera lakukan pemeriksaan setiap data crips di halaman <b>Kriteria</b>.
         </div>
-        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])))
+        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted']))) <!--AFTER IMPORT INPUT DATA-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Data nilai yang telah diimport belum dilakukan konversi. Segera lakukan konversi data nilai di halaman <b>Data Input</b>.
         </div>
-        @elseif (($inputs->count()) != ($officers->count() * $subcriterias->count()))
+        @elseif (($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW OFFICERS HAS NO INPUT DATA-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Terdapat beberapa pegawai yang belum memiliki nilai yang lengkap. Silahkan lakukan import data nilai yang kurang di halaman <b>Data Input</b>.
         </div>
-        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')))
+        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected'))) <!--IF FEW OFFICERS HAS REJECTED INPUT DATA-->
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             Terdapat beberapa pegawai yang nilai akhirnya ditolak. Segera lakukan revisi dan import ulang di halaman <b>Data Input</b>.
         </div>
-        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1)
+        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF FEW INPUT DATA HAS BEEN REVISED-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Terdapat nilai yang telah direvisi dan belum direvisi. Segera lakukan revisi dan import ulang di halaman <b>Data Input</b>.
         </div>
         @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert"> <!--AFTER CONVERT DATA (SCORING)-->
             Seluruh data nilai telah dilakukan import dan konversi. Segera menghubungi <b>Kepala BPS Jawa Timur</b> untuk melakukan <b>Verifikasi Nilai</b>.
         </div>
-        @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1))
+        @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1)) <!--IF ALL DATA HAS BEEN REVISED-->
         <div class="alert alert-primary alert-dismissible fade show" role="alert">
             Seluruh data nilai telah dilakukan import dan konversi. Segera menghubungi <b>Kepala BPS Jawa Timur</b> untuk melakukan <b>Verifikasi Nilai Ulang</b>.
         </div>
@@ -65,25 +65,25 @@
     <!--KBPS ALERT-->
     @if (Auth::user()->part == "KBPS")
         @if ($latest_per->progress_status == 'Verifying')
-            @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+            @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers)) <!--IF ALL SCORE DATA HAS BEEN ACCEPTED-->
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Seluruh nilai akhir telah disetujui semua. Segera lakukan penyelesaian proses penentuan karyawan terbaik di halaman <b>Verifikasi Input</b>.
             </div>
-            @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1))
+            @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() >= 1)) <!--IF ALL SCORE DATA HAS BEEN REVISED-->
             <div class="alert alert-primary alert-dismissible fade show" role="alert">
                 Seluruh nilai yang ditolak telah direvisi. Segera lakukan pengambilan data nilai akhir di halaman <b>Verifikasi Input</b>.
             </div>
-            @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])->count() >= 1))
+            @elseif (($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])->count() >= 1)) <!--IF ALL / FEW DATA IS NOT BEING VERIFIED-->
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 Seluruh / sebagian nilai belum dilakukan pemeriksan nilai akhir. Segera lakukan verifikasi nilai di halaman <b>Verifikasi Input</b>.
             </div>
             @endif
         @else
-            @if (($inputs->count()) != ($officers->count() * $subcriterias->count()))
+            @if (($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW OFFICERS HAS NO INPUT DATA-->
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 Terdapat beberapa pegawai yang belum memiliki nilai yang lengkap. Silahkan hubungi <b>Kepegawaian</b> untuk memeriksa data nilai yang kurang.
             </div>
-            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off)) <!--IF ALL INPUT DATA HAS BEEN CONVERTED-->
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Seluruh data nilai telah dilakukan import dan konversi. Silahkan melakukan pengambilan data nilai akhir di halaman <b>Verifikasi Nilai</b>.
             </div>
@@ -113,13 +113,13 @@
     <!--DATA INPUT COUNTER CARD-->
     <div class="col">
         @if (!empty($latest_per))
-            @if ($inputs->count() == 0)
+            @if ($inputs->count() == 0) <!--IF NO INPUT AVAILABLE-->
             <div class="card text-bg-danger h-100">
-            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW INPUT DATA NOT CONVERTED-->
             <div class="card text-bg-warning h-100">
-            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) == count($input_off))
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) == count($input_off)) <!--AFTER CONVERTED (SCORING)-->
             <div class="card border-success h-100">
-            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) >= 1)
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) >= 1) <!--AFTER REVISED-->
             <div class="card border-primary h-100">
             @else
             <div class="card h-100">
@@ -221,11 +221,11 @@
     <div class="col">
         @if (!empty($latest_per))
             @if ($latest_per->progress_status == 'Verifying')
-                @if (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1)
+                @if (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF FEW DATA HAS BEEN REJECTED-->
                 <div class="card text-bg-danger h-100">
-                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1)
+                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1) <!--AFTER REVISED-->
                 <div class="card border-primary h-100">
-                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1)
+                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF ALL DATA HAS BEEN REJECTED-->
                 <div class="card text-bg-danger h-100">
                 @else
                 <div class="card border-success h-100">
@@ -383,19 +383,19 @@
     <div class="col">
         @if (!empty($latest_per))
             @if ($latest_per->progress_status == 'Verifying')
-                @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1)
+                @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1) <!--IF SCORE DATA HAS BEEN REVISED-->
                 <div class="card text-bg-success h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
                 <div class="card border-warning h-100">
                 @else
                 <div class="card border-success h-100">
                 @endif
             @elseif ($latest_per->progress_status == 'Scoring')
-                @if ($inputs->count() == 0)
+                @if ($inputs->count() == 0) <!--IF NO SCORE DATA AVAILABLE-->
                 <div class="card border-danger h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
                 <div class="card border-warning h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off)) <!--IF ALL DATA HAS BEEN CONVERTED-->
                 <div class="card text-bg-success h-100">
                 @else
                 <div class="card border-primary h-100">
@@ -515,11 +515,11 @@
     <div class="col">
         @if (!empty($latest_per))
             @if ($latest_per->progress_status == 'Verifying')
-                @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1 && count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1)
+                @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1 && count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1) <!--IF FEW DATA ARE NOT BEING VERIFIED-->
                 <div class="card border-warning h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1)
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1) <!--IF ALL DATA ARE NOT BEING VERIFIED-->
                 <div class="card text-bg-warning h-100">
-                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers)) <!--IF ALL DATA HAS BEEN VERIFIED-->
                 <div class="card border-success h-100">
                 @else
                 <div class="card border-secondary h-100">
@@ -621,11 +621,11 @@
     <div class="col">
         @if (!empty($latest_per))
             @if ($latest_per->progress_status == 'Verifying')
-                @if (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1)
+                @if (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF FEW DATA HAS BEEN REJECTED-->
                 <div class="card border-danger h-100">
-                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1)
+                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1) <!--AFTER REVISED-->
                 <div class="card text-bg-primary h-100">
-                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1)
+                @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF ALL DATA HAS BEEN REJECTED-->
                 <div class="card border-danger h-100">
                 @else
                 <div class="card border-success h-100">

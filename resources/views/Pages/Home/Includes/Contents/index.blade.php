@@ -11,7 +11,7 @@
     @endif
 </div>
 <!--RESULT JUMBOTRON-->
-@if (!empty($latest_best))
+@if (!empty($latest_best)) <!--IF CURRENT PERIOD HAS BEEN FINISHED-->
 <div class="container my-1 collapse show pt-1" id="collapseExample">
     <div class="jumbotron jumbotron-fluid my-1 rounded-3">
         <video autoplay muted loop id="myVideo">

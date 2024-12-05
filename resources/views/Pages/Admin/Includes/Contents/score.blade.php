@@ -42,7 +42,7 @@
     </div>
     <!--MAIN CONTENT-->
     <div class="col-md-9">
-        @if (count($periods) >= 1)
+        @if (count($periods) >= 1) <!--IF PERIOD ACTIVE-->
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
@@ -57,19 +57,19 @@
                         <div class="row g-3 align-items-center">
                             <!--GET DATA-->
                             <div class="col-auto pe-0">
-                                @if ($latest_per->progress_status == "Finished")
+                                @if ($latest_per->progress_status == "Finished") <!--IF PERIOD HAS BEEN FINISHED-->
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai dan tidak dapat melakukan ambil data.">
                                 <a class="btn btn-primary disabled">
                                     <i class="bi bi-database-down"></i>
                                     Ambil Data
                                 </a>
                                 </span>
-                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')->count() >= 1)
+                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')->count() >= 1) <!--IF ALL DATA REVISED (PREVIOUSLY REJECTED)-->
                                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-scr-get-{{ $latest_per->id_period }}">
                                     <i class="bi bi-database-down"></i>
                                     Ambil Data
                                 </a>
-                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')->count() >= 1)
+                                @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')->count() >= 1) <!--IF ONE OR MORE DATA HAS BEEN REJECTED-->
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Terdapat nilai yang ditolak. Pastikan nilai tersebut telah direvisi sebelum melakukan update data.">
                                     <a class="btn btn-primary disabled">
                                         <i class="bi bi-database-down"></i>
@@ -77,7 +77,7 @@
                                     </a>
                                 </span>
                                 @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')->count() >= 1 || $scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() >= 1)
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses ini hanya dilakukan sekali saja. Lakukan pengambilan kembali jika ada nilai yang telah direvisi.">
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses ini hanya dilakukan sekali saja. Lakukan pengambilan kembali jika ada nilai yang telah direvisi."> <!--AFTER GET DATA-->
                                     <a class="btn btn-primary disabled">
                                         <i class="bi bi-database-down"></i>
                                         Ambil Data
@@ -93,19 +93,19 @@
                             <!--FINISH-->
                             <div class="col-auto pe-0">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    @if ($latest_per->progress_status == "Finished")
+                                    @if ($latest_per->progress_status == "Finished") <!--IF PERIOD HAS BEEN FINISHD-->
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Proses Karyawan Terbaik sudah selesai.">
                                         <a class="btn btn-success disabled">
                                             <i class="bi bi-clipboard2-check"></i>
                                             Selesai
                                         </a>
                                     </span>
-                                    @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() == $officers->count())
+                                    @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() == $officers->count()) <!--IF ALL DATA HAS BEEN ACCEPTED-->
                                     <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-scr-finish-{{ $latest_per->id_period }}">
                                         <i class="bi bi-clipboard2-check"></i>
                                         Selesai
                                     </a>
-                                    @else
+                                    @else <!--IF FEW DATA IS NOT BEING VERIFIED-->
                                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pastikan seluruh hasil akhir pegawai sudah disetujui.">
                                         <a class="btn btn-success disabled">
                                             <i class="bi bi-clipboard2-check"></i>

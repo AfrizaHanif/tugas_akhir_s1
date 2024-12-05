@@ -36,6 +36,7 @@
     <div class="col-md-9">
         <div class="tab-content" id="log-tabContent">
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab" tabindex="0">
+                <!--ALL TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -104,6 +105,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="pills-success" role="tabpanel" aria-labelledby="pills-success-tab" tabindex="0">
+                <!--SUCCESS' TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -163,6 +165,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="pills-warning" role="tabpanel" aria-labelledby="pills-warning-tab" tabindex="0">
+                <!--WARNING'S TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
@@ -222,6 +225,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="pills-error" role="tabpanel" aria-labelledby="pills-error-tab" tabindex="0">
+                <!--ERROR'S TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">

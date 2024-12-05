@@ -5,7 +5,7 @@
 <!--MENU-->
 <p>
     <!--ADD USER-->
-    @if (count($users) == count($officers))
+    @if (count($users) == count($officers)) <!--IF ALL OFFICERS HAS USERS-->
     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua pegawai telah memiliki pengguna">
         <a class="btn btn-secondary disabled">
             <i class="bi bi-person-add"></i>
@@ -55,7 +55,7 @@
                                 Edit
                             </a>
                         </li>
-                        @if (Auth::user()->id_user == $user->id_user)
+                        @if (Auth::user()->id_user == $user->id_user) <!--LOGGED IN USER CANNOT DELETE USER ITSELF-->
                         <li>
                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tidak dapat menghapus akun anda sendiri">
                                 <button class="dropdown-item d-flex gap-2 align-items-center" disabled>

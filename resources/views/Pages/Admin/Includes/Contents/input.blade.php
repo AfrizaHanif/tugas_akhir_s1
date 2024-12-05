@@ -1,12 +1,12 @@
 <h1 class="text-center mb-4">Data Input Pegawai</h1>
 @include('Templates.Includes.Components.alert')
-@if ($allcriterias->sum('weight')*100 > 100)
+@if ($allcriterias->sum('weight')*100 > 100) <!--IF TOTAL MORE THAN 100-->
 <div class="alert alert-warning" role="alert">
     <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
     <br/>
     Total Bobot melebihi 100%. Cek kembali bobot di halaman kriteria
 </div>
-@elseif ($allcriterias->sum('weight')*100 <= 99)
+@elseif ($allcriterias->sum('weight')*100 <= 99) <!--IF TOTAL BELOW THAN 100-->
 <div class="alert alert-warning" role="alert">
     <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
     <br/>
@@ -57,7 +57,7 @@
     </div>
     <!--MAIN CONTENT-->
     <div class="col-md-9">
-        @if (count($periods) >= 1)
+        @if (count($periods) >= 1) <!--IF PERIOD ACTIVE-->
         <div class="tab-content" id="v-pills-tabContent">
             <!--CURRENT PERIOD-->
             @if (!empty($latest_per))
@@ -100,26 +100,26 @@
                         <!--MODIFY IMPORT DATA-->
                         <div class="col-auto">
                             <!--CONVERT DATA-->
-                            @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1)
+                            @if ($status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() >= 1) <!--AFTER IMPORT DATA-->
                             <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-inp-convert-{{ $latest_per->id_period }}">
                                 <i class="bi bi-arrow-clockwise"></i>
                                 Convert
                             </a>
-                            @elseif ($latest_per->progress_status == 'Scoring' && !$inputs->isEmpty() && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $latest_per->import_status == 'Clear')
+                            @elseif ($latest_per->progress_status == 'Scoring' && !$inputs->isEmpty() && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $latest_per->import_status == 'Clear') <!--AFTER CONVERT DATA (DURING SCORING)-->
                             <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Refresh
                             </a>
-                            @elseif ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) != count($officers) && count($inputs->where('id_period', $latest_per->id_period)->where('status', 'Fixed')) >= 1)
+                            @elseif ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) != count($officers) && count($inputs->where('id_period', $latest_per->id_period)->where('status', 'Fixed')) >= 1) <!--AFTER CONVERT DATA (IF REVISION AVAILABLE)-->
                             <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Refresh
                             </a>
                             @else
                             @if ($latest_per->progress_status == 'Scoring' && !empty($inputs))
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada data nilai yang terdaftar untuk dilakukan konversi nilai.">
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada data nilai yang terdaftar untuk dilakukan konversi nilai."> <!--IF NO DATA AVAILABLE-->
                             @else
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan konversi nilai karena tidak ada nilai revisi yang terdaftar.">
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan konversi nilai karena tidak ada nilai revisi yang terdaftar."> <!--IF NO REVISION AVAILABLE-->
                             @endif
                                 <a class="btn btn-success disabled">
                                     <i class="bi bi-arrow-clockwise"></i>
@@ -131,14 +131,14 @@
                         <!--DELETE ALL DATA-->
                         <div class="col-auto">
                             @if (!$inputs->isEmpty())
-                                @if ($latest_per->progress_period == 'Verifying' && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0)
+                                @if ($latest_per->progress_period == 'Verifying' && $status->where('id_period', $latest_per->id_period)->where('status', 'Not Converted')->count() == 0 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0) <!--IF NO REVISION AVAILABLE-->
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena tidak ada nilai revisi yang terdaftar.">
                                     <a class="btn btn-danger disabled">
                                         <i class="bi bi-trash3"></i>
                                         Hapus Semua
                                     </a>
                                 </span>
-                                @elseif ($latest_per->import_period == 'Clear' && $status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0)
+                                @elseif ($latest_per->import_period == 'Clear' && $status->where('id_period', $latest_per->id_period)->where('status', 'In Review')->count() >= 1 && $status->where('id_period', $latest_per->id_period)->where('status', 'Fixed')->count() == 0) <!--DURING VERIFYING-->
                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Penilaian tersebut sedang dalam pemeriksaan.">
                                     <a class="btn btn-danger disabled">
                                         <i class="bi bi-trash3"></i>
@@ -146,7 +146,7 @@
                                     </a>
                                 </span>
                                 @elseif ($status->where('id_period', $latest_per->id_period)->where('status', 'Final')->count() >= 1)
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena seluruh nilai sudah disetujui.">
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak dapat melakukan penghapusan karena seluruh nilai sudah disetujui."> <!--IF ALL DATA ACCEPTED-->
                                     <a class="btn btn-danger disabled">
                                         <i class="bi bi-trash3"></i>
                                         Hapus Semua
@@ -158,7 +158,7 @@
                                     Hapus Semua
                                 </a>
                                 @endif
-                            @else
+                            @else <!--IF NO DATA AVAILABLE-->
                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Tidak ada nilai yang terdaftar.">
                                 <a class="btn btn-danger disabled">
                                     <i class="bi bi-trash3"></i>
@@ -176,7 +176,7 @@
                         </div>
                     </div>
                 </p>
-                @if ($latest_per->import_status == 'Clear' || $latest_per->import_status == 'No Data' || $latest_per->import_status == 'Few Clear')
+                @if ($latest_per->import_status == 'Clear' || $latest_per->import_status == 'No Data' || $latest_per->import_status == 'Few Clear') <!--IF DATA CONVERTED / NO DATA AVAILABLE-->
                 <!--TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
@@ -341,7 +341,7 @@
             </div>
             @endforeach
         </div>
-        @else
+        @else <!--IF NO PERIOD ACTIVE (FIRST TIME)-->
         <p>
             <a type="button" href="{{ route('admin.masters.periods.index') }}" class="btn btn-primary">
                 <i class="bi bi-box-arrow-in-right"></i>

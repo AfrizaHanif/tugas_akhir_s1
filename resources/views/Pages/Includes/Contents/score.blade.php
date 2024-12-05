@@ -33,11 +33,11 @@
                     </thead>
                     <tbody>
                         @forelse ($scores->where('id_period', $period->id_period) as $score)
-                        @if ($loop->first)
+                        @if ($loop->first) <!--WINNER COLOR-->
                         <tr class="table-success">
-                        @elseif ($loop->iteration == 2 || $loop->iteration == 3)
+                        @elseif ($loop->iteration == 2 || $loop->iteration == 3) <!--2ND AND 3RD PLACES COLOR-->
                         <tr class="table-warning">
-                        @elseif ($loop->last)
+                        @elseif ($loop->last) <!--LAST PLACES COLOR-->
                         <tr class="table-danger">
                         @else
                         <tr>

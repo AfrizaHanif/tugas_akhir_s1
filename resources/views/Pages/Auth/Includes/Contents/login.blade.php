@@ -8,7 +8,7 @@
                 @csrf
                 <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/commons/2/28/Lambang_Badan_Pusat_Statistik_%28BPS%29_Indonesia.svg" alt="" width="72" height="57">
                 <h1 class="h3 mb-3 fw-normal">Masuk / Login</h1>
-                @if ($errors->any())
+                @if ($errors->any()) <!--IF DATA NOT MATCH-->
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-x-circle-fill"></i> <strong>ERROR </strong>
                     Terdapat kesalahan saat melakukan input data:
