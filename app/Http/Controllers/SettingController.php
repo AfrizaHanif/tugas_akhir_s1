@@ -17,8 +17,8 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $criterias = Criteria::get();
-        $settings = Setting::get();
+        $criterias = Criteria::get(); //GET CRITERIAS
+        $settings = Setting::get(); //GET SETTING VALUES
         if(Auth::user()->part == "Dev"){
             return view('Pages.Developer.setting', compact('criterias', 'settings'));
         }elseif(Auth::user()->part != "Pegawai"){
@@ -67,7 +67,7 @@ class SettingController extends Controller
 
         if(Auth::user()->part == "Dev"){
             //CHECK STATUS
-            $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+            $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
             if(!empty($latest_per)){
                 if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                     //CREATE A LOG

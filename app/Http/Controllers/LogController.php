@@ -32,7 +32,7 @@ class LogController extends Controller
     public function export()
     {
         //GET DATA
-        $current_user = Auth::user()->id_user;
+        $current_user = Auth::user()->id_user; //GET CURRENT USER
 
         //CREATE A LOG
         Log::create([

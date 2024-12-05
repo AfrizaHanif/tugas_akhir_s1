@@ -39,7 +39,7 @@ class CriteriaController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -109,9 +109,9 @@ class CriteriaController extends Controller
         $weight = $request->weight / 100;
 
         //MODIFY SOURCE TEXT
-        $str_src_trim = trim($request->source);
-        $str_src_replace = str_replace(' ', '_', $str_src_trim);
-        $source = strtolower($str_src_replace);
+        $str_src_trim = trim($request->source); //REMOVE WHITESPACE
+        $str_src_replace = str_replace(' ', '_', $str_src_trim); //REPLACE UNDERSCORE TO SPACE
+        $source = strtolower($str_src_replace); //LOWER ALL CHARACTER
 
         //STORE DATA
         Criteria::insert([
@@ -160,7 +160,7 @@ class CriteriaController extends Controller
     public function update(Request $request, Criteria $criteria)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -212,9 +212,9 @@ class CriteriaController extends Controller
         $weight = $request->weight / 100;
 
         //MODIFY SOURCE TEXT
-        $str_src_trim = trim($request->source);
-        $str_src_replace = str_replace(' ', '_', $str_src_trim);
-        $source = strtolower($str_src_replace);
+        $str_src_trim = trim($request->source); //REMOVE WHITESPACE
+        $str_src_replace = str_replace(' ', '_', $str_src_trim); //REPLACE UNDERSCORE TO SPACE
+        $source = strtolower($str_src_replace); //LOWER ALL CHARACTER
 
         //STORE DATA
         $criteria->update([
@@ -236,7 +236,7 @@ class CriteriaController extends Controller
             'result'=>'Success',
             'descriptions'=>'Ubah Kriteria Berhasil ('.$request->name.')',
         ]);
-        
+
         //RETURN TO VIEW
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Scoring'){ //PROGRESS: SCORING
@@ -261,7 +261,7 @@ class CriteriaController extends Controller
     public function destroy(Criteria $criteria)
     {
         //GET LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //CHECK STATUS
         if(!empty($latest_per)){

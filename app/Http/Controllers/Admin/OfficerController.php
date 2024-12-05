@@ -40,19 +40,19 @@ class OfficerController extends Controller
     public function index()
     {
         //GET DATA
-        $parts = Part::whereNot('name', 'Developer')->get();
-        $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get();
-        $positions = Position::whereNot('name', 'Developer')->get();
-        $kbps_positions = Position::whereNot('name', 'Developer')->where('id_position', 'DPT-001')->get();
-        $umum_positions = Position::whereNot('name', 'Developer')->whereNot('id_position', 'DPT-001')->get();
-        $off_positions = Position::whereNot('name', 'Developer')->whereNotIn('id_position', ['DPT-001', 'DPT-002'])->get();
-        $teams = Team::with('part')->get();
-        $team_lists = Team::with('part')->whereNotIn('name', ['Developer', 'Pimpinan BPS'])->get();
-        $subteams = SubTeam::with('team')->get();
+        $parts = Part::whereNot('name', 'Developer')->get(); //GET PARTS
+        $parts_2 = Part::whereNotIn('name', ['Developer', 'Kepemimpinan'])->get(); //GET PARTS (ONLY LEADER)
+        $positions = Position::whereNot('name', 'Developer')->get(); //GET POSITIONS
+        $kbps_positions = Position::whereNot('name', 'Developer')->where('id_position', 'DPT-001')->get(); //GET POSITIONS BY KBPS
+        $umum_positions = Position::whereNot('name', 'Developer')->whereNot('id_position', 'DPT-001')->get(); //GET POSITIONS BY NOT KBPS
+        $off_positions = Position::whereNot('name', 'Developer')->whereNotIn('id_position', ['DPT-001', 'DPT-002'])->get(); //GET POSITIONS BY NOT KBPS AND UMUM
+        $teams = Team::with('part')->get(); //GET TEAMS
+        $team_lists = Team::with('part')->whereNotIn('name', ['Developer', 'Pimpinan BPS'])->get(); //GET LIST OF TEAM
+        $subteams = SubTeam::with('team')->get(); //GET SUB TEAMS
         $officers = Officer::with('position', 'subteam_1', 'subteam_2')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->get();
-        $users = User::get();
+        ->get(); //GET OFFICERS
+        $users = User::get(); //GET USERS
         //dd($officers);
 
         //RETURN TO VIEW
@@ -65,7 +65,7 @@ class OfficerController extends Controller
     public function store(Request $request)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -323,11 +323,11 @@ class OfficerController extends Controller
             $query->with('subteam')->whereHas('subteam', function($query) use($request){
                 $query->where('id_sub_team', $request->id_sub_team_1);
             });
-        })->first();
+        })->first(); //GET PART FOR REDIRECT TO PART
         $tab = Team::with('subteam')
         ->whereHas('subteam', function($query) use($request){
             $query->where('id_sub_team', $request->id_sub_team_1);
-        })->latest()->first();
+        })->latest()->first(); //GET TEAM FOR REDIRECT TO TAB
         //dd($redirect->id_part);
 
         //COMBINE KODE
@@ -340,7 +340,7 @@ class OfficerController extends Controller
         ]);
 
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -587,7 +587,7 @@ class OfficerController extends Controller
     public function destroy(Officer $officer)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //CHECK STATUS
         if(!empty($latest_per)){

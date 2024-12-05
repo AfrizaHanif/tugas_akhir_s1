@@ -38,29 +38,29 @@ class InputController extends Controller
             $query->where('name', 'LIKE', 'Kepala BPS%');
         })
         ->orderBy('name', 'ASC')
-        ->get();
-        $inputs = Input::get();
+        ->get(); //GET OFFICERS WITHOUT KEPALA BPS
+        $inputs = Input::get(); //GET INPUTS
         //$input_raws = InputRAW::get();
-        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get();
-        $categories = Category::with('criteria')->get();
-        $allcriterias = Criteria::with('category')->get();
-        $criterias = Criteria::get();
-        $countsub = Criteria::count();
-        $crips = Crips::orderBy('value_from', 'ASC')->get();
-        $scores = Score::get();
+        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get(); //GET STATUS PER INPUTS
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get(); //GET PERIOD IF PROGRESS STATUS ARE SCORING, VERIFYING, OR FINISHED
+        $categories = Category::with('criteria')->get(); //GET CATEGORIES
+        $allcriterias = Criteria::with('category')->get(); //GET CRITERIAS
+        $criterias = Criteria::get(); //GET CRITERIAS
+        $countsub = Criteria::count(); //COUNT CRITERIAS
+        $crips = Crips::orderBy('value_from', 'ASC')->get(); //GET DATA CRIPS
+        $scores = Score::get(); //GET SCORES
 
         //GET PERIOD FOR LIST
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first(); //GET CURRENT PERIOD
+        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS PERIODS
 
         //GET HISTORY
-        $histories = HistoryInput::get();
+        $histories = HistoryInput::get(); //GET OLD INPUT
         //$hraws = HistoryInputRAW::get();
-        $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
-        $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get();
-        $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get();
+        $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get(); //GET PREVIOUS OFFICERS FROM OLD INPUTS
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get(); //GET PREVIOUS CRITERIAS FROM OLD INPUTS
+        $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get(); //GET PREVIOUS ALL CRITERIAS FROM OLD INPUTS
+        $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get(); //GET PREVIOUS CRITERIAS FROM OLD INPUTS
 
         //RETURN TO VIEW
         return view('Pages.Admin.input', compact('officers', 'inputs', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'scores', 'histories', 'hofficers', 'hcriterias', 'hallsub', 'hsubs'));
@@ -181,7 +181,7 @@ class InputController extends Controller
     public function destroyall($period)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $period)->first();
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //DELETE ALL DATA
         if($latest_per->progress_status == 'Verifying'){
@@ -212,9 +212,9 @@ class InputController extends Controller
     public function import(Request $request, $period)
     {
         //GET DATA
-        $crips = Crips::with('criteria')->get();
-        $latest_per = Period::where('id_period', $period)->first();
-        $allcriterias = Criteria::get();
+        $crips = Crips::with('criteria')->get(); //GET DATA CRIPS
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
+        $allcriterias = Criteria::get(); //GET CRITERIAS
         //$inp_rejects = Input::where('id_period', $period)->where('status', 'Need Fix')->get();
         //dd($inp_rejects);
 
@@ -567,14 +567,14 @@ class InputController extends Controller
     public function convert($period)
     {
         //GET DATA
-        $officers = Officer::get();
-        $latest_per = Period::where('id_period', $period)->first();
+        $officers = Officer::get(); //GET OFFICERS
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
         //GET INPUT DATA AND CRITERIA
-        $inputs = Input::where('id_period', $period)->where('status', 'Not Converted')->get();
-        $criterias = Criteria::get();
-        $crips = Crips::with('criteria')->get();
+        $inputs = Input::where('id_period', $period)->where('status', 'Not Converted')->get(); //GET INPUTS IF NOT CONVERTED
+        $criterias = Criteria::get(); //GET CRITERIAS
+        $crips = Crips::with('criteria')->get(); //GET DATA CRIPS
         //UPDATE DATA
         foreach($criterias as $criteria){
             foreach($inputs->where('id_period', $period)->where('id_criteria', $criteria->id_criteria) as $input){
@@ -693,7 +693,7 @@ class InputController extends Controller
     public function refresh($period)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $period)->first();
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //MOVE INPUT RAW TO INPUT
         if($latest_per->progress_status == 'Verifying'){ //IF PREVIOUSLY REJECTED
@@ -811,7 +811,7 @@ class InputController extends Controller
     public function reset($period)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $period)->first();
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //MOVE INPUT RAW TO INPUT
         if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
@@ -847,7 +847,7 @@ class InputController extends Controller
     public function export_latest()
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //CREATE A LOG
         Log::create([

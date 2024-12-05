@@ -23,13 +23,13 @@ class ReportController extends Controller
     public function index()
     {
         //GET DATA
-        $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_team_years = HistoryInput::select('id_sub_team', 'sub_team_1_name', 'period_year')->groupBy('id_sub_team', 'sub_team_1_name', 'period_year')->orderBy('period_year', 'ASC')->get();
-        $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
-        $h_subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->whereNotIn('sub_team_1_name', ['Pimpinan BPS', 'Developer'])->get();
-        $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer', 'officer_name')->get();
-        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
+        $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS FROM OLD INPUTS
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR FROM OLD INPUTS
+        $h_team_years = HistoryInput::select('id_sub_team', 'sub_team_1_name', 'period_year')->groupBy('id_sub_team', 'sub_team_1_name', 'period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS TEAMS IN YEAR FROM OLD INPUTS
+        $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS PERIODS IN MONTH FROM OLD INPUTS
+        $h_subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->whereNotIn('sub_team_1_name', ['Pimpinan BPS', 'Developer'])->get(); //GET PREVIOUS SUB TEAMS FROM OLD INPUTS
+        $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer', 'officer_name')->get(); //GET PREVIOUS OFFICERS FROM OLD INPUTS
+        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS SCORES FROM OLD INPUTS
         /*
         $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})

@@ -39,7 +39,7 @@ class CategoryController extends Controller
         ]);
 
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -121,7 +121,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG
@@ -205,7 +205,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //CHECK STATUS
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         if(!empty($latest_per)){
             if($latest_per->progress_status == 'Verifying'){ //PROGRESS: VERIFYING
                 //CREATE A LOG

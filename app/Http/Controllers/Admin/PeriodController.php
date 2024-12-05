@@ -26,17 +26,17 @@ class PeriodController extends Controller
      */
     public function index()
     {
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $periods = Period::orderBy('year', 'ASC')->orderBy('num_month', 'ASC')->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first(); //GET CURRENT PERIOD
+        $periods = Period::orderBy('year', 'ASC')->orderBy('num_month', 'ASC')->get(); //GET ALL PERIODS
         return view('Pages.Admin.period', compact('latest_per', 'periods'));
     }
 
     public function store(Request $request)
     {
         //COMBINE KODE
-        $str_month = str_pad($request->month, 2, '0', STR_PAD_LEFT);
-        $str_year = substr($request->year, -2);
-        $id_period = "PRD-".$str_month.'-'.$str_year;
+        $str_month = str_pad($request->month, 2, '0', STR_PAD_LEFT); //ADD 0 IN MONTH
+        $str_year = substr($request->year, -2); //REMOVE 2 CHARACTER FROM START IN YEAR
+        $id_period = "PRD-".$str_month.'-'.$str_year; //COMBINE MONTH AND YEAR
 
         //CONVERT MONTH
         $name_month = '';
@@ -170,7 +170,7 @@ class PeriodController extends Controller
     public function start($period)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $period)->first();
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //CHECK RUNNING
         $count = Period::where('progress_status', 'Scoring')->count();

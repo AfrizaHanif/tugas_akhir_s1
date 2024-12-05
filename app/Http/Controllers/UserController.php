@@ -23,9 +23,9 @@ class UserController extends Controller
     public function index()
     {
         //GET DATA
-        $users = User::whereNot('id_user', 'USR-000')->get();
+        $users = User::whereNot('id_user', 'USR-000')->get(); //GET USERS
         //$parts = Part::whereNot('name', 'Developer')->get();
-        $subteams = SubTeam::get();
+        $subteams = SubTeam::get(); //GET SUB TEAMS
         /*
         $officers = Officer::with('position', 'subteam_1')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
@@ -40,8 +40,8 @@ class UserController extends Controller
         */
         $officers = Officer::with('position', 'subteam_1')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->get();
-        $count_kbps = User::where('part', 'KBPS')->count();
+        ->get(); //GET OFFICERS
+        $count_kbps = User::where('part', 'KBPS')->count(); //COUNT KBPS
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
@@ -57,7 +57,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //GET DATA
-        $officer = Officer::where('id_officer', $request->officer)->first();
+        $officer = Officer::where('id_officer', $request->officer)->first(); //GET OFFICERS
 
         //COMBINE KODE
         /*
@@ -115,7 +115,7 @@ class UserController extends Controller
         */
 
         //CHECK LEAD MORE THAN 1
-        $count_kbps = User::where('part', 'KBPS')->count();
+        $count_kbps = User::where('part', 'KBPS')->count(); //COUNT KBPS
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){
@@ -259,7 +259,7 @@ class UserController extends Controller
         */
 
         //CHECK LEAD MORE THAN 1
-        $count_kbps = User::where('part', 'KBPS')->count();
+        $count_kbps = User::where('part', 'KBPS')->count(); //COUNT KBPS
         if($request->part == 'KBPS'){
             if(!empty($count_kbps)){
                 if($count_kbps >= 1){

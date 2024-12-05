@@ -26,13 +26,13 @@ class AnalysisController extends Controller
     public function index()
     {
         //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PERIODS
         //$latest = Period::whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->latest()->first();
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET RUNNING PERIOD
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
 
         //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('periods', 'latest_per', 'h_years', 'h_months'));
@@ -42,23 +42,23 @@ class AnalysisController extends Controller
     {
         //GET DATA
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->get();
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $subcriterias = Criteria::with('category')->get();
+        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PERIODS
+        $subcriterias = Criteria::with('category')->get(); //GET SUB CRITERIAS
         $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
-        })->get();
+        })->get(); //GET OFFICERS (WITHOUT KEPALA BPS AND DEVELOPER)
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
 
         //LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET RUNNING PERIOD
 
         //GET DATA FOR SORT
-        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-        $set_crit = Criteria::where('id_criteria', $setting)->first();
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET CURRENT VALUE SETTING
+        $set_crit = Criteria::where('id_criteria', $setting)->first(); //SET CRITERIA SETTING FOR INFO ONLY
         //$ckp = InputRAW::where('id_period', $latest_per->id_period)->where('id_criteria', $crit_ckp->id_criteria)->get();
 
         //VERIFICATION
@@ -186,7 +186,7 @@ class AnalysisController extends Controller
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
         })
-        ->getQuery()->get();
+        ->getQuery()->get(); //GET OFFICERS AS ALTERNATIVES
 
         //GET CRITERIA
         $criterias = DB::table("inputs")
@@ -203,7 +203,7 @@ class AnalysisController extends Controller
             )
         ->where('id_period', $latest_per->id_period)
         //->where('criterias.need', 'Ya')
-        ->get();
+        ->get(); //GET CRITERIAS FROM INPUTS
         //$criterias = Criteria::get();
 
         //GET INPUT
@@ -214,7 +214,7 @@ class AnalysisController extends Controller
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
         })
-        ->getQuery()->get();
+        ->getQuery()->get(); //GET INPUTS
 
         //FIND MIN DAN MAX
         foreach($criterias as $crit => $value1){
@@ -296,23 +296,23 @@ class AnalysisController extends Controller
     public function history_saw($period)
     {
         //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->get();
+        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
+        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get(); //GET PREVIOUS SUB CRITERIAS
+        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->get();  //GET PREVIOUS OFFICERS
 
         //SELECTED PERIOD
-        $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first();
+        $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first(); //GET SELECTED OLD PERIOD
 
         //LATEST PERIOD
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get();
+        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR
+        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
 
         //GET DATA FOR SORT
-        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-        $h_set_crit = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_criteria', $setting)->first();
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET CURRENT VALUE SETTING
+        $h_set_crit = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_criteria', $setting)->first(); //SET CRITERIA SETTING FOR INFO ONLY
         //$history_ckp = HistoryInputRAW::where('id_period', $period)->where('id_criteria', $h_crit_ckp->id_criteria)->get();
 
         //SAW ANALYSIS
@@ -322,7 +322,7 @@ class AnalysisController extends Controller
         ->groupBy('id_officer')
         ->where('id_period', $period)
         //->where('is_lead', 'No')
-        ->getQuery()->get();
+        ->getQuery()->get(); //GET PREVIOUS OFFICERS AS ALTERNATIVES
 
         //GET CRITERIA
         $criterias = DB::table("history_inputs")
@@ -337,14 +337,14 @@ class AnalysisController extends Controller
             'attribute'
             )
         ->where('id_period', $period)
-        ->get();
+        ->get(); //GET CRITERIAS FROM OLD INPUTS
         //$criterias = Criteria::get();
 
         //GET INPUT
         $inputs = HistoryInput::with('criteria')
         ->where('id_period', $period)
         //->where('is_lead', 'No')
-        ->getQuery()->get();
+        ->getQuery()->get(); //GET OLD INPUTS
 
         //FIND MIN DAN MAX
         foreach($criterias as $crit => $value1){

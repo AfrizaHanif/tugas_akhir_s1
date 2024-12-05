@@ -23,7 +23,7 @@ class TeamsController extends Controller
     public function store(Request $request)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -126,14 +126,14 @@ class TeamsController extends Controller
     public function update(Request $request, Team $team)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET REDIRECT
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($team){
             $query->where('id_team', $team->id_team);
-        })->latest()->first();
-        $redirect_team = Team::where('id_team', $team->id_team)->first();
+        })->latest()->first(); //GET PART FOR REDIRECT
+        $redirect_team = Team::where('id_team', $team->id_team)->first(); //GET TEAM FOR REDIRECT
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -214,14 +214,14 @@ class TeamsController extends Controller
     public function destroy(Team $team)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET REDIRECT
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($team){
             $query->where('id_team', $team->id_team);
-        })->latest()->first();
-        $redirect_team = Team::where('id_team', $team->id_team)->first();
+        })->latest()->first(); //GET PART FOR REDIRECT
+        $redirect_team = Team::where('id_team', $team->id_team)->first(); //GET TEAM FOR REDIRECT
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -248,7 +248,7 @@ class TeamsController extends Controller
 
         //GET TEAM FOR CHECK
         //$check_team = Team::where('id_team', $team->id_team)->first();
-        $subteams = SubTeam::where('id_team', $team->id_team)->get();
+        $subteams = SubTeam::where('id_team', $team->id_team)->get(); //GET SUB TEAM
         //dd($check_sub_team);
 
         //CHECK DATA
@@ -278,7 +278,7 @@ class TeamsController extends Controller
         ]);
 
         //DESTROY DATA
-        $loop_subteam = SubTeam::where('id_team', $team->id_team)->get();
+        $loop_subteam = SubTeam::where('id_team', $team->id_team)->get(); //GET SUB TEAMS FOR LOOP
         foreach($loop_subteam as $subteam){
             Input::with('officer')
             ->whereHas('officer', function($query) use($subteam){

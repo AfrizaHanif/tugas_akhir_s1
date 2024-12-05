@@ -41,30 +41,30 @@ class ScoreController extends Controller
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
         })
         //->where('is_lead', 'No')
-        ->get();
-        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get();
-        $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
-        $inputs = Input::get();
+        ->get(); //GET OFFICERS
+        $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get(); //GET PERIODS
+        $scores = Score::with('officer')->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get(); //GET SCORES
+        $inputs = Input::get(); //GET INPUTS
         //$input_raws = InputRAW::get();
-        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get();
-        $categories = Category::with('criteria')->get();
-        $allcriterias = Criteria::with('category')->get();
-        $criterias = Criteria::get();
-        $countsub = Criteria::count();
-        $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-        $set_crit = Criteria::where('id_criteria', $setting)->first();
+        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get(); //GET STATUS
+        $categories = Category::with('criteria')->get(); //GET CATEGORIES
+        $allcriterias = Criteria::with('category')->get(); //GET CRITERIAS
+        $criterias = Criteria::get(); //GET CRITERIAS
+        $countsub = Criteria::count(); //COUNT CRITERIAS
+        $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET SETTING VALUE
+        $set_crit = Criteria::where('id_criteria', $setting)->first(); //SET SETTING FROM VALUE FOR SECOND SCORE
 
         //GET PERIODS FOR LIST
-        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first();
-        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get();
+        $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first(); //GET CURRENT PERIOD
+        $history_per = HistoryScore::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS PERIODS
 
         //dd($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() != $officers->count());
 
         //GET HISTORY DATA
-        $histories = HistoryInput::get();
-        $hscore = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
-        $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
-        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get();
+        $histories = HistoryInput::get(); //GET OLD INPUTS
+        $hscore = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get(); //GET OLD SCORES
+        $hofficers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get(); //GET PREVIOUS OFFICERS FROM OLD INPUTS
+        $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get(); //GET PREVIOUS CRITERIAS FROM OLD INPUTS
 
         //RETURN TO VIEW
         return view('Pages.Admin.score', compact('officers', 'periods', 'latest_per', 'history_per', 'scores', 'inputs', 'status', 'categories', 'allcriterias', 'criterias', 'countsub', 'set_crit', 'histories', 'hscore', 'hofficers', 'hcriterias'));
@@ -74,12 +74,12 @@ class ScoreController extends Controller
     {
         //GET DATA
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('status', 'Pending')->get();
-        $subcriterias = Criteria::with('category')->get();
+        $subcriterias = Criteria::with('category')->get(); //GET CRITERIAS
         $officers = Officer::with('position')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
-        })->get();
-        $latest_per = Period::whereIn('progress_status', ['Scoring', 'Verifying'])->latest()->first();
+        })->get(); //GET OFFICERS
+        $latest_per = Period::whereIn('progress_status', ['Scoring', 'Verifying'])->latest()->first(); //GET CURRENT PERIOD
 
         //VERIFICATION
         //CHECK EMPTY DATA
@@ -206,7 +206,7 @@ class ScoreController extends Controller
             )
         ->where('id_period', $period)
         //->where('criterias.need', 'Ya')
-        ->get();
+        ->get(); //GET CRITERIAS FROM INPUTS
         //$criterias = Criteria::get();
 
         //GET INPUT
@@ -217,7 +217,7 @@ class ScoreController extends Controller
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
         })
-        ->getQuery()->get();
+        ->getQuery()->get(); //GET INPUTS
 
         //FIND MIN DAN MAX
         foreach($criterias as $crit => $value1){
@@ -276,13 +276,13 @@ class ScoreController extends Controller
             //INSERT DATA
             if(DB::table('scores')->where('id_period', $period)->where('id_officer', $n)->count() == 0){ //FIRST TIME GET DATA
                 //GET DATA FOR SECOND SORT
-                $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-                $set_second = Criteria::where('id_criteria', $setting)->first();
-                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw;
+                $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET SETTING VALUE
+                $set_second = Criteria::where('id_criteria', $setting)->first(); //SET SETTING FROM VALUE
+                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw; //GET SECOND SCORE
 
                 //INSERT DATA SCORES
-                $str_officer = substr($n, 4);
-                $str_year = substr($period, -5);
+                $str_officer = substr($n, 4); //GET ID START FROM 4TH DIGIT
+                $str_year = substr($period, -5); //GET YEAR START FROM MINUS 5TH DIGIT
                 $id_score = "SCR-".$str_year.'-'.$str_officer;
                 DB::table('scores')->insert([
                     //'id_score'=>$id_score,
@@ -303,9 +303,9 @@ class ScoreController extends Controller
                 ]);
             }else{ //AFTER REVISION
                 //GET DATA FOR SECOND SORT
-                $setting = Setting::where('id_setting', 'STG-002')->first()->value;
-                $set_second = Criteria::where('id_criteria', $setting)->first();
-                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw;
+                $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET SETTING VALUE
+                $set_second = Criteria::where('id_criteria', $setting)->first(); //SET SETTING FROM VALUE
+                $second_score = Input::where('id_period', $period)->where('id_officer', $n)->where('id_criteria', $set_second->id_criteria)->first()->input_raw; //GET SECOND SCORE
 
                 //CHECK STATUS
                 if(Score::where('id_officer', $n)->where('id_period', $period)->first()->status == 'Accepted'){
@@ -386,10 +386,10 @@ class ScoreController extends Controller
     public function yes($id)
     {
         //GET DATA
-        $result = Score::where('id', $id)->first();
-        $period = Period::where('id_period', $result->id_period)->first()->id_period;
-        $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer;
-        $name = Officer::where('id_officer', $result->id_officer)->first()->name;
+        $result = Score::where('id', $id)->first(); //GET SELECTED SCORE
+        $period = Period::where('id_period', $result->id_period)->first()->id_period; //GET SELECTED PERIOD
+        $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer; //GET SELECTED OFFICER
+        $name = Officer::where('id_officer', $result->id_officer)->first()->name; //GET SELECTED NAME
 
         //UPDATE STATUS
         Score::where('id', $id)->update([
@@ -420,7 +420,7 @@ class ScoreController extends Controller
     public function yesall($id)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $id)->first();
+        $latest_per = Period::where('id_period', $id)->first(); //GET CURRENT PERIOD
 
         //UPDATE STATUS
         Score::where('id_period', $id)->update([
@@ -463,7 +463,7 @@ class ScoreController extends Controller
     public function yesall_remain($id)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $id)->first();
+        $latest_per = Period::where('id_period', $id)->first(); //GET CURRENT PERIOD
 
         //UPDATE STATUS
         Score::where('id_period', $id)->where('status', 'Pending')->update([
@@ -495,10 +495,10 @@ class ScoreController extends Controller
     public function no($id)
     {
         //GET DATA
-        $result = Score::where('id', $id)->first();
-        $period = Period::where('id_period', $result->id_period)->first()->id_period;
-        $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer;
-        $name = Officer::where('id_officer', $result->id_officer)->first()->name;
+        $result = Score::where('id', $id)->first(); //GET SELECTED SCORE
+        $period = Period::where('id_period', $result->id_period)->first()->id_period; //GET SELECTED PERIOD
+        $officer = Officer::where('id_officer', $result->id_officer)->first()->id_officer; //GET SELECTED OFFICER
+        $name = Officer::where('id_officer', $result->id_officer)->first()->name; //GET SELECTED NAME
 
         //UPDATE STATUS
         Score::where('id', $id)->update([
@@ -529,7 +529,7 @@ class ScoreController extends Controller
     public function noall($id)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $id)->first();
+        $latest_per = Period::where('id_period', $id)->first(); //GET CURRENT PERIOD
 
         //UPDATE STATUS
         Score::where('id_period', $id)->update([
@@ -572,7 +572,7 @@ class ScoreController extends Controller
     public function noall_remain($id)
     {
         //GET DATA
-        $latest_per = Period::where('id_period', $id)->first();
+        $latest_per = Period::where('id_period', $id)->first(); //GET CURRENT PERIOD
 
         //UPDATE STATUS
         Score::where('id_period', $id)->where('status', 'Pending')->update([
@@ -604,18 +604,18 @@ class ScoreController extends Controller
     public function finish($period)
     {
         //GET PERIOD DATA
-        $latest_per = Period::where('id_period', $period)->first();
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //HISTORY SCORE
         //GET DATA (1/2)
-        $scores1 = Score::where('id_period', $period)->get();
+        $scores1 = Score::where('id_period', $period)->get(); //GET ALL SCORES
         foreach($scores1 as $score){
             //GET DATA (2/2)
-            $getperiod1 = Period::where('id_period', $score->id_period)->first();
-            $getofficer1 = Officer::where('id_officer', $score->id_officer)->first();
+            $getperiod1 = Period::where('id_period', $score->id_period)->first(); //GET PERIOD PER OFFICER
+            $getofficer1 = Officer::where('id_officer', $score->id_officer)->first(); //GET SELECTED OFFICER
             $getposition1 = Position::with('officer')->whereHas('officer', function($query) use($score){
                 $query->where('id_officer', $score->id_officer);
-            })->first();
+            })->first(); //GET POSITION PER OFFICER
             //dd($score->id_officer);
             $getteam1 = Team::with('subteam')->whereHas('subteam', function($query) use($score)
             {
@@ -623,15 +623,15 @@ class ScoreController extends Controller
                 {
                     $query->where('id_officer', $score->id_officer);
                 });
-            })->first();
+            })->first(); //GET TEAM PER OFFICER
             $getsubteam1a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($score)
             {
                 $query->where('id_officer', $score->id_officer);
-            })->first();
+            })->first(); //GET SUB TEAM PER OFFICER (MAIN)
             $getsubteam1b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($score)
             {
                 $query->where('id_officer', $score->id_officer);
-            })->first();
+            })->first(); //GET SUB TEAM PER OFFICER (SUB)
 
             //INSERT DATA
             HistoryScore::insert([
@@ -656,34 +656,34 @@ class ScoreController extends Controller
 
         //HISTORY INPUT (CONVERTED)
         //GET DATA (1/2)
-        $inputs = Input::where('id_period', $period)->get();
+        $inputs = Input::where('id_period', $period)->get(); //GET ALL INPUTS AT CURRENT PERIOD
         foreach($inputs as $input){
             //GET DATA (2/2)
             //$getuser2 = User::where('id_officer', $input->id_officer)->first();
-            $getperiod2 = Period::where('id_period', $input->id_period)->first();
-            $getofficer2 = Officer::where('id_officer', $input->id_officer)->first();
+            $getperiod2 = Period::where('id_period', $input->id_period)->first(); //GET SELECTED PERIOD
+            $getofficer2 = Officer::where('id_officer', $input->id_officer)->first(); //GET SELECTED OFFICER
             $getposition2 = Position::with('officer')->whereHas('officer', function($query) use($input){
                 $query->where('id_officer', $input->id_officer);
-            })->first();
+            })->first(); //GET POSITION PER OFFICER
             $getteam2 = Team::with('subteam')->whereHas('subteam', function($query) use($input)
             {
                 $query->with('officer_1')->whereHas('officer_1', function($query) use($input)
                 {
                     $query->where('id_officer', $input->id_officer);
                 });
-            })->first();
+            })->first(); //GET TEAM PER OFFICER
             $getsubteam2a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($input)
             {
                 $query->where('id_officer', $input->id_officer);
-            })->first();
+            })->first(); //GET SUB TEAM PER OFFICER (MAIN)
             $getsubteam2b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($input)
             {
                 $query->where('id_officer', $input->id_officer);
-            })->first();
+            })->first(); //GET SUB TEAM PER OFFICER (SUB)
             $getcriteria2 = Category::with('criteria')->whereHas('criteria', function($query) use($input){
                 $query->where('id_criteria', $input->id_criteria);
-            })->first();
-            $getsubcriteria2 = Criteria::where('id_criteria', $input->id_criteria)->first();
+            })->first(); //GET SELECTED CATEGORY
+            $getsubcriteria2 = Criteria::where('id_criteria', $input->id_criteria)->first(); //GET SELECTED CRITERIA
 
             //CHECK IF ADMIN (WILL BE REMOVED)
             /*
@@ -773,37 +773,37 @@ class ScoreController extends Controller
 
         //HISTORY RESULT
         //GET DATA (RESULT)
-        $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->offset(0)->limit(1)->first();
-        $getperiod4 = Period::where('id_period', $scores2->id_period)->first();
-        $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first();
+        $scores2 = Score::where('id_period', $period)->orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->offset(0)->limit(1)->first(); //GET SCORE FROM WINNER AT CURRENT PERIOD
+        $getperiod4 = Period::where('id_period', $scores2->id_period)->first(); //GET SELECTED PERIOD
+        $getofficer4 = Officer::where('id_officer', $scores2->id_officer)->first(); //GET SELECTED OFFICER
         $getposition4 = Position::with('officer')->whereHas('officer', function($query) use($scores2){
             $query->where('id_officer', $scores2->id_officer);
-        })->first();
+        })->first(); //GET POSITION FROM SELECTED OFFICER
         $getteam4 = Team::with('subteam')->whereHas('subteam', function($query) use($scores2)
             {
                 $query->with('officer_1')->whereHas('officer_1', function($query) use($scores2)
                 {
                     $query->where('id_officer', $scores2->id_officer);
                 });
-            })->first();
+            })->first(); //GET TEAM FROM SELECTED OFFICER
         $getsubteam4a = SubTeam::with('officer_1')->whereHas('officer_1', function($query) use($scores2)
         {
             $query->where('id_officer', $scores2->id_officer);
-        })->first();
+        })->first(); //GET SUB TEAM (MAIN) FROM SELECTED OFFICER
         $getsubteam4b = SubTeam::with('officer_2')->whereHas('officer_2', function($query) use($scores2)
         {
             $query->where('id_officer', $scores2->id_officer);
-        })->first();
+        })->first(); //GET SUB TEAM (SUB) FROM SELECTED OFFICER
 
         //GET PHOTO (RESULT)
         $photo = '';
-        $id_officer = Officer::find($getofficer4->id_officer);
-        $path_photo = public_path('Images/Portrait/'.$id_officer->photo);
+        $id_officer = Officer::find($getofficer4->id_officer); //FIND ID FROM SELECTED OFFICER
+        $path_photo = public_path('Images/Portrait/'.$id_officer->photo); //GET OFFICER'S PHOTO
         if(!empty($getofficer4->photo)){
-            $extension = File::extension($path_photo);
-            $photo = 'IMG-'.$getperiod4->id_period.'-'.$getofficer4->id_officer.'.'.$extension;
-            $new_path = 'Images/History/Portrait/'.$photo;
-            File::copy($path_photo , $new_path);
+            $extension = File::extension($path_photo); //GET IMAGE EXTENSION
+            $photo = 'IMG-'.$getperiod4->id_period.'-'.$getofficer4->id_officer.'.'.$extension; //CREATE A NEW NAME
+            $new_path = 'Images/History/Portrait/'.$photo; //CREATE A NEW PATH
+            File::copy($path_photo , $new_path); //COPY IMAGE
         }
 
         //INSERT DATA (RESULT)

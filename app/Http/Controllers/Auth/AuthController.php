@@ -47,7 +47,7 @@ class AuthController extends Controller
         ]);
 
         //REMEMBER ME
-        $remember = $request->has('remember_me') ? true : false;
+        $remember = $request->has('remember_me') ? true : false; //CHECK REMEMBER ME
 
         if (Auth::attempt($request->only($login_type, 'password'), $remember)) {
             //REGENERATE SESSION
@@ -64,7 +64,7 @@ class AuthController extends Controller
             ]);
 
             //RETURN TO VIEW
-            if (Auth::user()->first_time_login) {
+            if (Auth::user()->first_time_login) { //IF USER FIRST TIME LOGIN (TO SHOW WELCOME MODAL)
                 //$first_time_login = true;
                 User::where('id_user', Auth::user()->id_user)->update([
                     'first_time_login'=>false

@@ -23,13 +23,13 @@ class SubTeamsController extends Controller
     public function store(Request $request)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET REDIRECT
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($request){
             $query->where('id_team', $request->id_team);
-        })->first();
+        })->first(); //GET PART FOR REDIRECT
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -132,14 +132,14 @@ class SubTeamsController extends Controller
     public function update(Request $request, SubTeam $subteam)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET REDIRECT
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($subteam){
             $query->where('id_team', $subteam->id_team);
-        })->latest()->first();
-        $redirect_team = Team::where('id_team', $subteam->id_team)->first();
+        })->latest()->first(); //GET PART FOR REDIRECT
+        $redirect_team = Team::where('id_team', $subteam->id_team)->first(); //GET TEAM FOR REDIRECT
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -227,7 +227,7 @@ class SubTeamsController extends Controller
     public function destroy(SubTeam $subteam)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET REDIRECT
         /*
@@ -241,8 +241,8 @@ class SubTeamsController extends Controller
         $redirect_part = Part::with('team')
         ->whereHas('team', function($query) use($subteam){
             $query->where('id_team', $subteam->id_team);
-        })->latest()->first();
-        $redirect_team = Team::where('id_team', $subteam->id_team)->first();
+        })->latest()->first(); //GET PART FOR REDIRECT
+        $redirect_team = Team::where('id_team', $subteam->id_team)->first(); //GET TEAM FOR REDIRECT
 
         //CHECK STATUS
         if(!empty($latest_per)){

@@ -13,7 +13,7 @@ class MessageController extends Controller
     public function index()
     {
         //GET DATA
-        $messages = Message::get();
+        $messages = Message::get(); //GET MESSAGES
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin" || Auth::user()->part == "KBPS"){

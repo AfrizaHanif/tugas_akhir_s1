@@ -20,8 +20,8 @@ class CripsController extends Controller
     public function store(Request $request)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
-        $criteria = Criteria::where('id_criteria', $request->id_criteria)->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
+        $criteria = Criteria::where('id_criteria', $request->id_criteria)->first(); //GET SELECTED CRITERIA
 
         //COMBINE KODE
         /*
@@ -47,7 +47,7 @@ class CripsController extends Controller
 
         //TAB FOR RETURN
         $tab = Category::with('criteria')
-        ->whereHas('criteria', function($query) use($request){$query->where('id_criteria', $request->id_criteria);})->latest()->first();
+        ->whereHas('criteria', function($query) use($request){$query->where('id_criteria', $request->id_criteria);})->latest()->first(); //GET SELECTED CRITERIA FOR AUTO TAB
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -276,12 +276,12 @@ class CripsController extends Controller
     public function update(Request $request, Crips $crip)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
-        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
+        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first(); //SELECTED CRITERIA
 
         //TAB FOR RETURN
         $tab = Category::with('criteria')
-        ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first();
+        ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first(); //GET SELECTED CRITERIA FOR AUTO TAB
 
         //CHECK STATUS
         if(!empty($latest_per)){
@@ -510,12 +510,12 @@ class CripsController extends Controller
     public function destroy(Crips $crip)
     {
         //LATEST PERIODE
-        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first();
-        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first();
+        $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
+        $criteria = Criteria::where('id_criteria', $crip->id_criteria)->first(); //GET SELECTED CRITERIA
 
         //TAB FOR RETURN
         $tab = Category::with('criteria')
-        ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first();
+        ->whereHas('criteria', function($query) use($crip){$query->where('id_criteria', $crip->id_criteria);})->latest()->first(); //GET SELECTED CRITERIA FOR AUTO TAB
 
         //CHECK STATUS
         if(!empty($latest_per)){
