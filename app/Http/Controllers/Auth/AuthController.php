@@ -64,6 +64,7 @@ class AuthController extends Controller
             ]);
 
             //RETURN TO VIEW
+            User::where('id_user', Auth::user()->id_user)->update(['force_logout' => false]);
             if (Auth::user()->first_time_login) { //IF USER FIRST TIME LOGIN (TO SHOW WELCOME MODAL)
                 //$first_time_login = true;
                 User::where('id_user', Auth::user()->id_user)->update([
@@ -111,6 +112,7 @@ class AuthController extends Controller
 
         //LOGOUT ACCOUNT
         Session::flush();
+        User::where('id_user', Auth::user()->id_user)->update(['remember_token' => null]); //FUTURE DEVELOPMENT
         Auth::logout();
 
         $request->session()->invalidate();

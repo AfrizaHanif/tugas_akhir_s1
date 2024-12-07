@@ -632,6 +632,7 @@ class ScoreController extends Controller
             {
                 $query->where('id_officer', $score->id_officer);
             })->first(); //GET SUB TEAM PER OFFICER (SUB)
+            //$getsetting1 = Setting::where('id_setting', 'STG-002')->first(); //FUTURE DEVELOPMENT
 
             //INSERT DATA
             HistoryScore::insert([
@@ -650,6 +651,7 @@ class ScoreController extends Controller
                 'sub_team_1_name'=>$getsubteam1a->name,
                 'sub_team_2_name'=>$getsubteam1b->name ?? '',
                 'final_score'=>$score->final_score,
+                //'setting_value'=>$getsetting1->value,
                 'second_score'=>$score->second_score,
             ]);
         }

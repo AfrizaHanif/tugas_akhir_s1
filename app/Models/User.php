@@ -30,6 +30,7 @@ class User extends Authenticatable
         'password',
         'part',
         //'id_officer',
+        'force_logout',
     ];
 
     /**

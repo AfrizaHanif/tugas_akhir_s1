@@ -765,7 +765,9 @@ class OfficerController extends Controller
             }else{
                 if($request->import_method == 'reset'){
                     //LOGOUT
+                    User::whereNot('id_user', 'USR-000')->update(['force_logout' => true]); //FUTURE DEVELOPMENT
                     Session::flush();
+                    User::whereNot('id_user', 'USR-000')->update(['remember_token' => null]); //FUTURE DEVELOPMENT
                     Auth::logout();
                     //request()->session()->invalidate();
                     //request()->session()->regenerateToken();

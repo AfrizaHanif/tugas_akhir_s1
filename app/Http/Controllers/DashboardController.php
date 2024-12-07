@@ -22,12 +22,24 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
     public function admin(){ //KEPEGAWAIAN ONLY
         //AUTO CREATE PERIOD (DISABLE IF NOT NEEDED)
         //Artisan::call('app:create-period');
+
+        //CHECK LOGOUT CONDITION
+        /*
+        if(Auth::check() && Auth::user()->force_logout == true){
+            ForceLogoutController::check();
+            return redirect()
+            ->route('index')
+            ->with('success','Anda telah dikeluarkan secara otomatis dari sistem. Silahkan login kembali.')
+            ->with('code_alert', 1);
+        }
+            */
 
         //GET DATA
         $periods = Period::get(); //GET PERIODS
@@ -126,6 +138,17 @@ class DashboardController extends Controller
     }
 
     public function officer(Request $request){
+        //CHECK LOGOUT CONDITION
+        /*
+        if(Auth::check() && Auth::user()->force_logout == true){
+            ForceLogoutController::check();
+            return redirect()
+            ->route('index')
+            ->with('success','Anda telah dikeluarkan secara otomatis dari sistem. Silahkan login kembali.')
+            ->with('code_alert', 1);
+        }
+            */
+
         //GET PERIODS
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         $history_per = HistoryInput::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'DESC')->get(); //GET PREVIOUS PERIOD
@@ -167,6 +190,17 @@ class DashboardController extends Controller
     }
 
     public function developer(){
+        //CHECK LOGOUT CONDITION
+        /*
+        if(Auth::check() && Auth::user()->force_logout == true){
+            ForceLogoutController::check();
+            return redirect()
+            ->route('index')
+            ->with('success','Anda telah dikeluarkan secara otomatis dari sistem. Silahkan login kembali.')
+            ->with('code_alert', 1);
+        }
+            */
+
         //GET DATA
         $officers = Officer::get(); //GET OFFICERS
         $users = User::get(); //GET USERS

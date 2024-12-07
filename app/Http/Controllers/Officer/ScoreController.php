@@ -14,7 +14,7 @@ class ScoreController extends Controller
     public function index()
     {
         $periods = HistoryScore::select('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $scores = HistoryScore::orderBy('final_score', 'DESC')->get();
+        $scores = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get();
         $officers = HistoryScore::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get();
 
         return view('Pages.Officer.score', compact('periods', 'scores', 'officers'));

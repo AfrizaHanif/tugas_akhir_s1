@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('part', 30);
             $table->boolean('first_time_login')->default(true);
+            $table->boolean('force_logout')->default(false); //FUTURE DEVELOPMENT
             $table->rememberToken();
             $table->timestamps();
         });
