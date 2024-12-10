@@ -2,10 +2,12 @@
 
 namespace App\Imports;
 
+use App\Models\Log;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -36,7 +38,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
             $positions = $this->positions->where('name', $row['jabatan'])->first();
 
             //CHECK IF LEAD
-            if(!empty($positions->id_position) || !empty($subteams1->id_sub_team)){
+            if(!empty($positions->id_position)){
                 $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
                 if(!empty($check_lead->id_position)){
                     if($check_lead->id_position == $positions->id_position){
@@ -81,8 +83,8 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                 'reset_on_prefix_change'=>true,
             ]);
 
-            if(!empty($positions->id_position) || !empty($subteams1->id_sub_team)){
-                if($this->import_method == 'reset'){
+            if($this->import_method == 'reset'){
+                if(!empty($positions->id_position)){
                     User::insert([
                         'id_user'=>$id_user,
                         'username'=>$row['nip'],
@@ -92,6 +94,16 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'part'=>$part,
                     ]);
                 }else{
+                    Log::create([
+                        'id_user'=>'System',
+                        'activity'=>'Pengguna',
+                        'progress'=>'Create',
+                        'result'=>'Error',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses import pegawai yang gagal.) ('.$row['nama'].')',
+                    ]);
+                }
+            }else{
+                if(!empty($positions->id_position)){
                     User::firstOrCreate([
                         'nip'=>$row['nip'],
                     ],[
@@ -100,6 +112,14 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'name'=>$row['nama'],
                         'password'=>Hash::make('bps3500'),
                         'part'=>$part,
+                    ]);
+                }else{
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Pengguna',
+                        'progress'=>'Create',
+                        'result'=>'Error',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses import pegawai yang gagal.) ('.$row['nama'].')',
                     ]);
                 }
             }

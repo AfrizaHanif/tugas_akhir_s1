@@ -3,14 +3,14 @@
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CripsController;
-use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\Admin\PartController;
 use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\InputController;
-use App\Http\Controllers\Admin\SubTeamsController;
-use App\Http\Controllers\Admin\TeamsController;
+use App\Http\Controllers\SubTeamsController;
+use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\AuthController;
 //use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
@@ -113,7 +113,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
                     Route::controller(PeriodController::class)->group(function() {
                         Route::post('/refresh', 'refresh')->name('refresh');
                         Route::post('/start/{period}', 'start')->name('start');
-                        Route::post('/skip/{period}', 'skip')->name('skip');
+                        Route::post('/stop/{period}', 'stop')->name('stop');
                         Route::post('/finish/{period}', 'finish')->name('finish');
                     });
                 });

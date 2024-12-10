@@ -9,7 +9,7 @@
     </a>
 </p>
 <div class="row align-items-md-stretch">
-    @if (Auth::user()->part == 'Dev')
+    @if (Auth::user()->part != 'Pegawai')
     <div class="col-md-6 pb-4">
         <div class="h-100 p-5 text-bg-dark rounded-3">
             <h2>Perhitungan Kehadiran</h2>

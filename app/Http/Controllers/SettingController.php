@@ -65,7 +65,7 @@ class SettingController extends Controller
             }
         }
 
-        if(Auth::user()->part == "Dev"){
+        if(Auth::user()->part != "Pegawai"){
             //CHECK STATUS
             $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
             if(!empty($latest_per)){

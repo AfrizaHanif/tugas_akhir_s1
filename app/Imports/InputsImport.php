@@ -53,8 +53,16 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
         foreach($this->criterias as $criteria){
             foreach ($rows as $row){
                 //dd($row);
-                $officer = $this->officers->where('id_officer', $row['nip'])->first();
-                //dd(!is_null($officer));
+                $name_import = $row['nama'];
+                //dd(Officer::where('name', 'like', '%'.$row['nama'].'%')->first());
+                if(!empty($row['nip'])){
+                    $officer = $this->officers->where('id_officer', $row['nip'])->first();
+                }elseif(!empty($row['nama'])){
+                    $officer = Officer::where('name', 'LIKE', '%'.$name_import.'%')->first();
+                }else{
+                    $officer = Officer::where('id_officer', $row['nip'])->orwhere('name', 'LIKE', '%'.$name_import.'%')->first();
+                }
+                //dd($officer);
                 if(!is_null($officer)){
                     $str_officer = substr($officer->id_officer, 4);
                     $str_year = substr($this->latest_per, -5);

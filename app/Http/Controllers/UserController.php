@@ -56,6 +56,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //SET REDIRECT
+        $redirect_route = '';
+        if(Auth::user()->part == "Admin"){
+            $redirect_route = 'admin.masters.users.index';
+        }else{
+            $redirect_route = 'developer.masters.users.index';
+        }
+
         //GET DATA
         $officer = Officer::where('id_officer', $request->officer)->first(); //GET OFFICERS
 
@@ -214,6 +222,14 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        //SET REDIRECT
+        $redirect_route = '';
+        if(Auth::user()->part == "Admin"){
+            $redirect_route = 'admin.masters.users.index';
+        }else{
+            $redirect_route = 'developer.masters.users.index';
+        }
+
         //VALIDATE DATA
         /*
         $request->validate([
@@ -260,33 +276,35 @@ class UserController extends Controller
 
         //CHECK LEAD MORE THAN 1
         $count_kbps = User::where('part', 'KBPS')->count(); //COUNT KBPS
-        if($request->part == 'KBPS'){
-            if(!empty($count_kbps)){
-                if($count_kbps >= 1){
-                    //CREATE A LOG
-                    Log::create([
-                        'id_user'=>Auth::user()->id_user,
-                        'activity'=>'Pengguna',
-                        'progress'=>'Update',
-                        'result'=>'Error',
-                        'descriptions'=>'Ubah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
-                    ]);
+        if($request->part != $user->part){
+            if($request->part == 'KBPS'){
+                if(!empty($count_kbps)){
+                    if($count_kbps >= 1){
+                        //CREATE A LOG
+                        Log::create([
+                            'id_user'=>Auth::user()->id_user,
+                            'activity'=>'Pengguna',
+                            'progress'=>'Update',
+                            'result'=>'Error',
+                            'descriptions'=>'Ubah Pengguna Tidak Berhasil (Pengguna KBPS telah terdaftar)',
+                        ]);
 
-                    //RETURN TO VIEW
-                    if(Auth::user()->part == "Admin"){
-                        return redirect()
-                        ->route('admin.masters.users.index')
-                        ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
-                        ->with('modal_redirect', 'modal-usr-update')
-                        ->with('id_redirect', $user->id_user)
-                        ->with('code_alert', 2);
-                    }elseif(Auth::user()->part == "Dev"){
-                        return redirect()
-                        ->route('developer.masters.users.index')
-                        ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
-                        ->with('modal_redirect', 'modal-usr-update')
-                        ->with('id_redirect', $user->id_user)
-                        ->with('code_alert', 2);
+                        //RETURN TO VIEW
+                        if(Auth::user()->part == "Admin"){
+                            return redirect()
+                            ->route('admin.masters.users.index')
+                            ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                            ->with('modal_redirect', 'modal-usr-update')
+                            ->with('id_redirect', $user->id_user)
+                            ->with('code_alert', 2);
+                        }elseif(Auth::user()->part == "Dev"){
+                            return redirect()
+                            ->route('developer.masters.users.index')
+                            ->with('fail','Ubah Pengguna Gagal (User Kepala BPS Jawa Timur tidak boleh lebih dari satu)')
+                            ->with('modal_redirect', 'modal-usr-update')
+                            ->with('id_redirect', $user->id_user)
+                            ->with('code_alert', 2);
+                        }
                     }
                 }
             }
@@ -340,6 +358,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        //SET REDIRECT
+        $redirect_route = '';
+        if(Auth::user()->part == "Admin"){
+            $redirect_route = 'admin.masters.users.index';
+        }else{
+            $redirect_route = 'developer.masters.users.index';
+        }
+
         //CREATE A LOG
         Log::create([
             'id_user'=>Auth::user()->id_user,

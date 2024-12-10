@@ -101,6 +101,10 @@
                             <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-delete-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#delete"/></svg>
                                 Delete
                             </a>
+                            @elseif ($period->progress_status == "Scoring")
+                            <a class="dropdown-item d-flex gap-2 align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#modal-per-stop-{{ $period->id_period }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#stop"/></svg>
+                                Berhenti
+                            </a>
                             @endif
                         </li>
                     </ul>

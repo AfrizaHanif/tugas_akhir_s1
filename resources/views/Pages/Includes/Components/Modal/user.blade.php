@@ -7,7 +7,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-usr-create"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Auth::user()->part == 'Admin')
                     <form id="form-usr-create" action="{{ route('admin.masters.users.store') }}" method="POST" enctype="multipart/form-data" id="form-usr-create">
+                    @else
+                    <form id="form-usr-create" action="{{ route('developer.masters.users.store') }}" method="POST" enctype="multipart/form-data" id="form-usr-create">
+                    @endif
                         @csrf
                         <div class="row justify-content-center g-4">
                             <div class="col-md-7">
@@ -81,7 +85,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Auth::user()->part == 'Admin')
                     <form id="form-usr-update-{{ $user->id_user }}" action="{{ route('admin.masters.users.update', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                    @else
+                    <form id="form-usr-update-{{ $user->id_user }}" action="{{ route('developer.masters.users.update', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                    @endif
                         @csrf @method('PUT')
                         <div class="row justify-content-center g-4">
                             <div class="col-md-7">
@@ -151,7 +159,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-usr-delete-{{ $user->id_user }}" action="{{ route('admin.masters.users.destroy', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                @else
+                <form id="form-usr-delete-{{ $user->id_user }}" action="{{ route('developer.masters.users.destroy', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                @endif
                     @csrf @method('DELETE')
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>

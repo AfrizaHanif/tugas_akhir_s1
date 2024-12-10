@@ -546,6 +546,21 @@ class InputController extends Controller
             ]);
         }
 
+        //CHECK IF EMPTY
+        $inputs = Input::count();
+        if($inputs == 0){
+            Log::create([
+                'id_user'=>Auth::user()->id_user,
+                'activity'=>'Import Nilai',
+                'progress'=>'Create',
+                'result'=>'Error',
+                'descriptions'=>'Import Data Tidak Berhasil (Seluruh nilai belum masuk ke dalam database) ('.$name_file.')',
+            ]);
+
+            //RETURN TO VIEW
+            return redirect()->route('admin.inputs.data.index')->with('fail','Import Data Gagal. Tidak ada data yang masuk walaupun import berhasil.')->with('modal_redirect', 'modal-inp-import')->with('code_alert', 2);
+        }
+
         //UPDATE IMPORT STATUS
         Period::where('id_period', $period)->update([
             'import_status'=>'Not Clear',

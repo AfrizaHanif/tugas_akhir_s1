@@ -1040,11 +1040,18 @@
                                         <div class="mb-3">
                                             @if ($officer->subteam_1->team->part->name == 'Umum')
                                             <div class="form-check">
-                                                @if ($users->where('nip', $officer->id_officer)->first()->part == 'Admin')
-                                                <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr" checked>
-                                                <label class="form-check-label" for="is_hr">
-                                                    Apakah Merupakan Kepegawaian?
-                                                </label>
+                                                @if (!empty($users->where('nip', $officer->id_officer)->first()))
+                                                    @if ($users->where('nip', $officer->id_officer)->first()->part == 'Admin')
+                                                    <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr" checked>
+                                                    <label class="form-check-label" for="is_hr">
+                                                        Apakah Merupakan Kepegawaian?
+                                                    </label>
+                                                    @else
+                                                    <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr">
+                                                    <label class="form-check-label" for="is_hr">
+                                                        Apakah Merupakan Kepegawaian?
+                                                    </label>
+                                                    @endif
                                                 @else
                                                 <input class="form-check-input" type="checkbox" value="" id="is_hr" name="is_hr">
                                                 <label class="form-check-label" for="is_hr">

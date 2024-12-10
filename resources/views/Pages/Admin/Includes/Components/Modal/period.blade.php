@@ -120,6 +120,37 @@
         </div>
     </div>
 </div>
+<!--STOP PROGRESS-->
+<div class="modal fade" id="modal-per-stop-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Perhentian Proses Penentuan Karyawan Terbaik ({{ $period->name }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-per-stop-{{ $period->id_period }}" action="{{ route('admin.masters.periods.stop', $period->id_period) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                        <br/>
+                        Apakah anda ingin berhenti melakukan proses penentuan karyawan terbaik? Anda dapat memulai proses kembali jika anda memiliki data nilai yang lengkap. Data nilai yang terdaftar akan hilang dan diperlukan import kembali saat memulai proses kembali.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <i class="bi bi-backspace"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-per-stop-{{ $period->id_period }}" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--DELETE PERIOD-->
 <div class="modal fade" id="modal-per-delete-{{ $period->id_period }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">

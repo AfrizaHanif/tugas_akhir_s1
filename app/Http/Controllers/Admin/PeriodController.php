@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Position;
 use App\Models\HistoryResult;
+use App\Models\Input;
 use App\Models\Log;
 use App\Models\Officer;
 use App\Models\Period;
@@ -204,5 +205,32 @@ class PeriodController extends Controller
 
         //RETURN TO VIEW
         return redirect()->route('admin.inputs.data.index')->withInput(['tab_redirect'=>'pills-'.$period])->with('success','Proses Penentuan Karyawan Terbaik Dimulai')->with('code_alert', 1);
+    }
+
+    public function stop($period)
+    {
+        //GET DATA
+        $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
+
+        //DELETE DATA
+        Input::where('id_period', $latest_per->id_period)->delete();
+
+        //UPDATE DATA
+        Period::where('id_period', $period)->update([
+            'progress_status'=>'Pending',
+            'import_status'=>'No Data',
+		]);
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Periode',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Proses Dihentikan ('.$latest_per->name.')',
+        ]);
+
+        //RETURN TO VIEW
+        return redirect()->route('admin.masters.periods.index')->with('success','Proses Penentuan Karyawan Terbaik Telah Berhenti. Anda dapat melakukan proses kembali dengan cara klik mulai')->with('code_alert', 1);
     }
 }

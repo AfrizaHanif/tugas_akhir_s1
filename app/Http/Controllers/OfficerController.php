@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\OfficersExport;
 use App\Http\Controllers\Controller;
+use App\Imports\CheckImport;
 use App\Imports\OfficersImport;
 use App\Imports\OfficersModalImport;
 use App\Imports\UserImport;
@@ -769,6 +770,19 @@ class OfficerController extends Controller
 
         //ERASE ALL DATA (RESET ONLY)
         if($request->import_method == 'reset'){
+            /*
+            //CHECK POSITION AND TEAM
+            $import_check = New CheckImport($redirect_route);
+            $import_check->import($request->file('file'));
+
+            if($import_check->failRedirect() == '0'){
+                return redirect()
+                ->route($redirect_route)
+                ->with('fail','Import Pegawai Tidak Berhasil (Data Pegawai / Tim tidak sama dengan yang terdaftar)')
+                ->with('code_alert', 1);
+            }
+                */
+
             //DELETE ALL DATA (INPUTS AND OFFICERS)
             DB::statement("SET foreign_key_checks=0");
             Log::truncate();
@@ -814,23 +828,40 @@ class OfficerController extends Controller
 
             //RETURN TO VIEW
             if(Auth::user()->part == 'Dev'){
-                //LOGOUT
-                User::whereNot('id_user', 'USR-000')->update(['force_logout' => true]); //FUTURE DEVELOPMENT
+                if($request->import_method == 'reset'){
+                    //LOGOUT
+                    User::whereNot('id_user', 'USR-000')->update(['force_logout' => true]); //FUTURE DEVELOPMENT
 
-                //CREATE A LOG
-                Log::create([
-                    'id_user'=>Auth::user()->id_user,
-                    'activity'=>'Pegawai',
-                    'progress'=>'All',
-                    'result'=>'Success',
-                    'descriptions'=>'Import Pegawai Berhasil (Reset)',
-                ]);
+                    //CREATE A LOG
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Pegawai',
+                        'progress'=>'All',
+                        'result'=>'Success',
+                        'descriptions'=>'Import Pegawai Berhasil (Reset)',
+                    ]);
 
-                //RETURN TO VIEW
-                return redirect()
-                ->route('developer.masters.officers.index')
-                ->with('success','Import Pegawai Berhasil')
-                ->with('code_alert', 1);
+                    //RETURN TO VIEW
+                    return redirect()
+                    ->route('developer.masters.officers.index')
+                    ->with('success','Import Pegawai Berhasil')
+                    ->with('code_alert', 1);
+                }else{
+                    //CREATE A LOG
+                    Log::create([
+                        'id_user'=>Auth::user()->id_user,
+                        'activity'=>'Pegawai',
+                        'progress'=>'All',
+                        'result'=>'Success',
+                        'descriptions'=>'Import Pegawai Berhasil (Update or Create)',
+                    ]);
+
+                    //RETURN TO VIEW
+                    return redirect()
+                    ->route('developer.masters.officers.index')
+                    ->with('success','Import Pegawai Berhasil')
+                    ->with('code_alert', 1);
+                }
             }else{
                 if($request->import_method == 'reset'){
                     //LOGOUT
