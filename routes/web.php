@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CripsController;
 use App\Http\Controllers\Admin\PositionController;
-use App\Http\Controllers\Admin\OfficerController;
 use App\Http\Controllers\Admin\PartController;
 use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\ScoreController;
@@ -14,11 +13,12 @@ use App\Http\Controllers\Admin\SubTeamsController;
 use App\Http\Controllers\Admin\TeamsController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
+//use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
 use App\Http\Controllers\Home\HomeController;
-use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
+//use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
 use App\Http\Controllers\Home\ReportController as HomeReportController;
+use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
@@ -26,7 +26,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController as AllReportController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\Officer\OfficerController as OfficerOfficerController;
+//use App\Http\Controllers\Officer\OfficerController as OfficerOfficerController;
 use App\Http\Controllers\Officer\ReportController as OfficerReportController;
 use App\Http\Controllers\Officer\ScoreController as OfficerScoreController;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Route;
 //FRONT END
 //HOMEPAGE
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::controller(HomeOfficerController::class)->group(function() {
+Route::controller(OfficerController::class)->group(function() {
     Route::prefix('officers')->name('officers.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/search', 'search')->name('search');
@@ -228,7 +228,7 @@ Route::middleware(['auth', 'checkOfficer'])->group(function () {
     Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
     Route::prefix('officer')->name('officer.')->group(function () {
         Route::prefix('officers')->name('officers.')->group(function () {
-            Route::controller(OfficerOfficerController::class)->group(function() {
+            Route::controller(OfficerController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::get('/search', 'search')->name('search');
                 Route::post('/export', 'export')->name('export');
@@ -269,17 +269,21 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
     Route::get('/developer', [DashboardController::class, 'developer'])->name('developer');
     Route::prefix('developer')->name('developer.')->group(function () {
         Route::prefix('masters')->name('masters.')->group(function () {
+            Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
             Route::prefix('officers')->name('officers.')->group(function () {
-                Route::controller(DeveloperOfficerController::class)->group(function() {
+                Route::controller(OfficerController::class)->group(function() {
                     Route::get('/', 'index')->name('index');
                     Route::get('/search', 'search')->name('search');
                     Route::post('/import', 'import')->name('import');
                     Route::post('/export', 'export')->name('export');
                 });
             });
+            Route::resource('/positions', PositionController::class, ['only' => ['store', 'update', 'destroy']]);
             Route::resource('/users', UserController::class);
+            Route::resource('/teams', TeamsController::class);
+            Route::resource('/subteams', SubTeamsController::class);
         });
-        //Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::resource('/messages', MessageController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::prefix('messages')->name('messages.')->group(function () {
             Route::controller(MessageController::class)->group(function() {
                 Route::post('/out/{id}', 'store_out')->name('out');

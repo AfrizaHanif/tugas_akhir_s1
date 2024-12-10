@@ -115,11 +115,11 @@ class AuthController extends Controller
         User::where('id_user', Auth::user()->id_user)->update(['remember_token' => null]); //FUTURE DEVELOPMENT
         Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        //$request->session()->invalidate();
+        //$request->session()->regenerateToken();
 
-        //request()->session()->invalidate();
-        //request()->session()->regenerateToken();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
         //RETURN TO VIEW
         return redirect()

@@ -8,7 +8,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-off-import" action="{{ route('admin.masters.officers.import') }}" method="post" enctype="multipart/form-data">
+                @elseif (Auth::user()->part == 'Dev')
+                <form id="form-off-import" action="{{ route('developer.masters.officers.import') }}" method="post" enctype="multipart/form-data">
+                @endif
                     @csrf
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
@@ -310,7 +314,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-off-create-{{ $part->id_part }}"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-off-create-{{ $part->id_part }}" action="{{ route('admin.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
+                @else
+                <form id="form-off-create-{{ $part->id_part }}" action="{{ route('developer.masters.officers.store') }}" method="POST" enctype="multipart/form-data" id="form-off-create-{{ $part->id_part }}">
+                @endif
                     @csrf
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
@@ -410,6 +418,11 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
+                                                @if ($part->id_part == 'PRT-001')
+                                                <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" disabled>
+                                                    <option selected disabled value="">Tidak Ada</option>
+                                                </select>
+                                                @else
                                                 <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
                                                     <option selected disabled value="">---Pilih Tim Fungsi---</option>
                                                     @foreach ($team_lists->where('id_part', $part->id_part) as $team)
@@ -419,9 +432,15 @@
                                                         @endforeach
                                                     @endforeach
                                                 </select>
+                                                @endif
                                             </div>
                                             <div class="col">
                                                 <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
+                                                @if ($part->id_part == 'PRT-001')
+                                                <select class="form-select" id="id_sub_team_2" name="id_sub_team_2" disabled>
+                                                    <option selected value="">Tidak Ada</option>
+                                                </select>
+                                                @else
                                                 <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
                                                     <option selected value="">Tidak Ada</option>
                                                     @foreach ($team_lists as $team)
@@ -431,6 +450,7 @@
                                                         @endforeach
                                                     @endforeach
                                                 </select>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -593,7 +613,11 @@
 <div class="modal fade" id="modal-tim-create-{{ $part->id_part }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            @if (Auth::user()->part == 'Admin')
             <form action="{{ route('admin.masters.teams.store') }}" method="POST" enctype="multipart/form-data" id="form-tim-create">
+            @else
+            <form action="{{ route('developer.masters.teams.store') }}" method="POST" enctype="multipart/form-data" id="form-tim-create">
+            @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Tim Bagian {{ $part->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-tim-create"></button>
@@ -631,7 +655,11 @@
     <div class="modal fade" id="modal-tim-update-{{ $team->id_team }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                @if (Auth::user()->part == 'Admin')
                 <form action="{{ route('admin.masters.teams.update', $team->id_team) }}" method="POST" enctype="multipart/form-data" id="form-tim-update">
+                @else
+                <form action="{{ route('developer.masters.teams.update', $team->id_team) }}" method="POST" enctype="multipart/form-data" id="form-tim-update">
+                @endif
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Tim Bagian {{ $part->name }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-tim-update"></button>
@@ -678,7 +706,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if (Auth::user()->part == 'Admin')
                     <form id="form-tim-delete-{{ $team->id_team }}" action="{{ route('admin.masters.teams.destroy', $team->id_team) }}" method="POST" enctype="multipart/form-data">
+                    @else
+                    <form id="form-tim-delete-{{ $team->id_team }}" action="{{ route('developer.masters.teams.destroy', $team->id_team) }}" method="POST" enctype="multipart/form-data">
+                    @endif
                         @csrf @method('DELETE')
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
@@ -709,7 +741,11 @@
     <div class="modal fade" id="modal-stm-create-{{ $team->id_team }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                @if (Auth::user()->part == 'Admin')
                 <form action="{{ route('admin.masters.subteams.store') }}" method="POST" enctype="multipart/form-data" id="form-stm-create">
+                @else
+                <form action="{{ route('developer.masters.subteams.store') }}" method="POST" enctype="multipart/form-data" id="form-stm-create">
+                @endif
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sub Tim (Tim {{ $team->name }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-stm-create"></button>
@@ -751,7 +787,11 @@
         <div class="modal fade" id="modal-stm-update-{{ $subteam->id_sub_team }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
+                    @if (Auth::user()->part == 'Admin')
                     <form action="{{ route('admin.masters.subteams.update', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data" id="form-stm-update">
+                    @else
+                    <form action="{{ route('developer.masters.subteams.update', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data" id="form-stm-update">
+                    @endif
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Sub Tim (Tim {{ $team->name }})</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-stm-update"></button>
@@ -805,7 +845,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        @if (Auth::user()->part == 'Admin')
                         <form id="form-stm-delete-{{ $subteam->id_sub_team }}" action="{{ route('admin.masters.subteams.destroy', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data">
+                        @else
+                        <form id="form-stm-delete-{{ $subteam->id_sub_team }}" action="{{ route('developer.masters.subteams.destroy', $subteam->id_sub_team) }}" method="POST" enctype="multipart/form-data">
+                        @endif
                             @csrf @method('DELETE')
                             <div class="alert alert-warning" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
@@ -863,7 +907,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-off-update-{{ $officer->id_officer }}" action="{{ route('admin.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @else
+                <form id="form-off-update-{{ $officer->id_officer }}" action="{{ route('developer.masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @endif
                     @csrf @method('PUT')
                     <div class="row justify-content-center g-4">
                         <div class="col-md-7">
@@ -956,7 +1004,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="id_position" class="form-label">Jabatan</label>
-                                            <select class="form-select" id="id_position" name="id_position" required>
+                                            <select class="form-select" id="id_position_{{ $officer->id_officer }}" name="id_position" required>
                                                 <option selected disabled value="">---Pilih Jabatan---</option>
                                                 @foreach ($positions as $position)
                                                 <option value="{{ $position->id_position }}" {{ $officer->id_position ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
@@ -966,7 +1014,7 @@
                                         <div class="row mb-3">
                                             <div class="col">
                                                 <label for="id_sub_team_1" class="form-label">Tim Fungsi Utama</label>
-                                                <select class="form-select" id="id_sub_team_1" name="id_sub_team_1" required>
+                                                <select class="form-select" id="id_sub_team_1_{{ $officer->id_officer }}" name="id_sub_team_1" required>
                                                     <option selected disabled value="">---Pilih Tim Fungsi---</option>
                                                     @foreach ($team_lists as $team)
                                                         <option disabled value="">---{{ $team->name }}---</option>
@@ -978,7 +1026,7 @@
                                             </div>
                                             <div class="col">
                                                 <label for="id_sub_team_2" class="form-label">Tim Fungsi Cadangan</label>
-                                                <select class="form-select" id="id_sub_team_2" name="id_sub_team_2">
+                                                <select class="form-select" id="id_sub_team_2_{{ $officer->id_officer }}" name="id_sub_team_2">
                                                     <option selected value="">Tidak Ada</option>
                                                     @foreach ($team_lists as $team)
                                                         <option disabled value="">---{{ $team->name }}---</option>
@@ -1047,7 +1095,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-off-delete-{{ $officer->id_officer }}" action="{{ route('admin.masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @else
+                <form id="form-off-delete-{{ $officer->id_officer }}" action="{{ route('developer.masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                @endif
                     @csrf @method('DELETE')
                     <div class="mb-3" hidden>
                         <label for="id_part" class="form-label" hidden>Bagian</label>
@@ -1160,7 +1212,11 @@
 <div class="modal fade" id="modal-dep-create" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            @if (Auth::user()->part == 'Admin')
             <form action="{{ route('admin.masters.positions.store') }}" method="POST" enctype="multipart/form-data" id="form-dep-create">
+            @else
+            <form action="{{ route('developer.masters.positions.store') }}" method="POST" enctype="multipart/form-data" id="form-dep-create">
+            @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-dep-create"></button>
@@ -1194,7 +1250,11 @@
 <div class="modal fade" id="modal-dep-update-{{ $position->id_position }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            @if (Auth::user()->part == 'Admin')
             <form action="{{ route('admin.masters.positions.update', $position->id_position) }}" method="POST" enctype="multipart/form-data">
+            @else
+            <form action="{{ route('developer.masters.positions.update', $position->id_position) }}" method="POST" enctype="multipart/form-data">
+            @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Jabatan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1232,7 +1292,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
                 <form id="form-dep-delete-{{ $position->id_position }}" action="{{ route('admin.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
+                @else
+                <form id="form-dep-delete-{{ $position->id_position }}" action="{{ route('developer.masters.positions.destroy', $position->id_position) }}" method="POST" enctype="multipart/form-data">
+                @endif
                     @csrf @method('DELETE')
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>

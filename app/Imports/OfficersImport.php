@@ -81,26 +81,28 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
                 ]);
             }else{
                 //IMPORT DATA
-                Officer::updateOrInsert([
-                    'id_officer' => $row['nip'],
-                    'name'=>$row['nama'],
-                    'email'=>$row['email'],
-                    'phone'=>$row['telp'],
-                ],[
-                    'id_officer' => $row['nip'],
-                    'name'=>$row['nama'],
-                    'id_position'=>$positions->id_position,
-                    'id_sub_team_1'=>$subteams1->id_sub_team,
-                    'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
-                    'email'=>$row['email'],
-                    'phone'=>$row['telp'],
-                    'place_birth'=>$row['tmplahir'],
-                    'date_birth'=>$row['tgllahir'],
-                    'gender'=>$row['jk'],
-                    'religion'=>$row['agama'],
-                    //'is_lead'=>$is_lead,
-                    'photo'=>$row['foto'],
-                ]);
+                if(!empty($positions->id_position) || !empty($subteams1->id_sub_team)){
+                    Officer::updateOrInsert([
+                        'id_officer' => $row['nip'],
+                        'name'=>$row['nama'],
+                        'email'=>$row['email'],
+                        'phone'=>$row['telp'],
+                    ],[
+                        'id_officer' => $row['nip'],
+                        'name'=>$row['nama'],
+                        'id_position'=>$positions->id_position,
+                        'id_sub_team_1'=>$subteams1->id_sub_team,
+                        'id_sub_team_2'=>$subteams2->id_sub_team ?? null,
+                        'email'=>$row['email'],
+                        'phone'=>$row['telp'],
+                        'place_birth'=>$row['tmplahir'],
+                        'date_birth'=>$row['tgllahir'],
+                        'gender'=>$row['jk'],
+                        'religion'=>$row['agama'],
+                        //'is_lead'=>$is_lead,
+                        'photo'=>$row['foto'],
+                    ]);
+                }
             }
         }
     }

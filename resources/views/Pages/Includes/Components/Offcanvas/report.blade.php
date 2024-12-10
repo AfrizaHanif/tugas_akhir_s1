@@ -8,12 +8,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                        Mengapa Feedback Diperlukan?
+                        Mengapa Laporan tidak tersedia saat periode sedang berjalan?
                     </button>
                 </h2>
                 <div id="collapse-1" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
                     <div class="accordion-body">
-                        Feedback merupakan pesan yang akan dikirim ke pengembangan aplikasi ini. Hal ini bertujuan untuk memberikan kritik dan saran untuk pengembangan aplikasi yang akan mendatang.
+                        Laporan tidak akan tersedia selama proses penilaian dan verifikasi sedang berlangsung dan laporan tersebut akan tersedia apabila proses karyawan terbaik pada periode yang sedang berjalan telah selesai dilakukan.
                     </div>
                 </div>
             </div>

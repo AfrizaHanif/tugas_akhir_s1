@@ -33,7 +33,7 @@ class MessageController extends Controller
         //STORE DATA
         Message::insert([
             //'id_officer'=>$id_officer,
-            //'officer_nip'=>$request->officer_nip,
+            'officer_nip'=>$request->officer_nip,
             'officer_name'=>$request->officer_name,
             'message_in'=>$request->message_in,
             'type'=>$request->type,

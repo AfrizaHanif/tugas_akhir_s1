@@ -36,16 +36,18 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
             $positions = $this->positions->where('name', $row['jabatan'])->first();
 
             //CHECK IF LEAD
-            $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
-            if(!empty($check_lead->id_position)){
-                if($check_lead->id_position == $positions->id_position){
-                    $part = 'KBPS';
-                }
-            }else{
-                if($row['is_hr'] == 'Ya'){
-                    $part = 'Admin';
+            if(!empty($positions->id_position) || !empty($subteams1->id_sub_team)){
+                $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $positions->id_position)->first();
+                if(!empty($check_lead->id_position)){
+                    if($check_lead->id_position == $positions->id_position){
+                        $part = 'KBPS';
+                    }
                 }else{
-                    $part = 'Pegawai';
+                    if($row['is_hr'] == 'Ya'){
+                        $part = 'Admin';
+                    }else{
+                        $part = 'Pegawai';
+                    }
                 }
             }
 
@@ -79,25 +81,27 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                 'reset_on_prefix_change'=>true,
             ]);
 
-            if($this->import_method == 'reset'){
-                User::insert([
-                    'id_user'=>$id_user,
-                    'username'=>$row['nip'],
-                    'name'=>$row['nama'],
-                    'nip'=>$row['nip'],
-                    'password'=>Hash::make('bps3500'),
-                    'part'=>$part,
-                ]);
-            }else{
-                User::firstOrCreate([
-                    'nip'=>$row['nip'],
-                ],[
-                    'id_user'=>$id_user,
-                    'username'=>$row['nip'],
-                    'name'=>$row['nama'],
-                    'password'=>Hash::make('bps3500'),
-                    'part'=>$part,
-                ]);
+            if(!empty($positions->id_position) || !empty($subteams1->id_sub_team)){
+                if($this->import_method == 'reset'){
+                    User::insert([
+                        'id_user'=>$id_user,
+                        'username'=>$row['nip'],
+                        'name'=>$row['nama'],
+                        'nip'=>$row['nip'],
+                        'password'=>Hash::make('bps3500'),
+                        'part'=>$part,
+                    ]);
+                }else{
+                    User::firstOrCreate([
+                        'nip'=>$row['nip'],
+                    ],[
+                        'id_user'=>$id_user,
+                        'username'=>$row['nip'],
+                        'name'=>$row['nama'],
+                        'password'=>Hash::make('bps3500'),
+                        'part'=>$part,
+                    ]);
+                }
             }
         }
     }

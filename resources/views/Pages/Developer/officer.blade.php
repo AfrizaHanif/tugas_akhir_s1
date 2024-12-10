@@ -66,6 +66,22 @@
         })
     }
 </script>
+@foreach ($officers as $officer)
+<script>
+    var $idposition{{ str_replace('-', '', $officer->id_officer) }} = $('#id_position_{{ $officer->id_officer }}');
+    var $idsubteam1{{ str_replace('-', '', $officer->id_officer) }} = $('#id_sub_team_1_{{ $officer->id_officer }}');
+    var $idsubteam2{{ str_replace('-', '', $officer->id_officer) }} = $('#id_sub_team_2_{{ $officer->id_officer }}');
+    $idposition{{ str_replace('-', '', $officer->id_officer) }}.change(function() {
+        if($idposition{{ str_replace('-', '', $officer->id_officer) }}.val() != 'DPT-001'){
+            $idsubteam1{{ str_replace('-', '', $officer->id_officer) }}.removeAttr('disabled');
+            $idsubteam2{{ str_replace('-', '', $officer->id_officer) }}.removeAttr('disabled');
+        }else{
+            $idsubteam1{{ str_replace('-', '', $officer->id_officer) }}.attr('disabled', 'disabled').val('');
+            $idsubteam2{{ str_replace('-', '', $officer->id_officer) }}.attr('disabled', 'disabled').val('');
+        }
+    }).trigger('change'); // added trigger to calculate initial state
+</script>
+@endforeach
 <!--
 <script>
     document.getElementById("close-prt-create").addEventListener("click", function()

@@ -9,7 +9,7 @@
         <form action="{{ route('officers.search') }}" method="GET">
         @elseif (Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
         <form action="{{ route('developer.masters.officers.search') }}" method="GET">
-        @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+        @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Auth::user()->part == "KBPS")
         <form action="{{ route('admin.masters.officers.search') }}" method="GET">
         @elseif (Request::is('officer/officers*') && Auth::user()->part == "Pegawai")
         <form action="{{ route('officer.officers.search') }}" method="GET">
@@ -19,14 +19,14 @@
     @endif
         <div class="input-group mb-3">
             <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
-            @if (Request::is('officers/search*') || Request::is('admin/masters/officers/search*') || Request::is('developer/masters/officers/search*'))
+            @if (Request::is('officers/search*') || Request::is('admin/masters/officers/search*') || Request::is('developer/masters/officers/search*') || Request::is('officer/officers/search*'))
             <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
                 @if (!empty(Auth::user()->part))
                     @if (Request::is('officers*'))
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('officers.index') }}">Kembali</a>
                     @elseif (Request::is('developer/masters/officers*') && Auth::user()->part == "Dev")
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('developer.masters.officers.index') }}">Kembali</a>
-                    @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin")
+                    @elseif (Request::is('admin/masters/officers*') && Auth::user()->part == "Admin" || Auth::user()->part == "KBPS")
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('admin.masters.officers.index') }}">Kembali</a>
                     @elseif (Request::is('officer/officers*') && Auth::user()->part == "Pegawai")
                     <a class="btn btn-outline-secondary" type="button" href="{{ route('officer.officers.index') }}">Kembali</a>
@@ -42,7 +42,7 @@
     </form>
 </p>
 <!--SEARCH PAGE-->
-@if (Request::is('officers/search*') || Request::is('admin/masters/officers/search*') || Request::is('developer/masters/officers/search*'))
+@if (Request::is('officers/search*') || Request::is('admin/masters/officers/search*') || Request::is('developer/masters/officers/search*') || Request::is('officer/officers/search*'))
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-primary">
@@ -141,11 +141,18 @@
                         </ul>
                         @endif
                     @endif
+                    @if (Auth::user()->part == 'Admin' || Auth::user()->part == 'Dev')
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Bantuan">
                         <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
                             <i class="bi bi-question-lg"></i>
                         </a>
                     </span>
+                    @else
+                    <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
+                        <i class="bi bi-question-lg"></i>
+                        Bantuan
+                    </a>
+                    @endif
                 </div>
             </div>
             <!--PART NAV-->

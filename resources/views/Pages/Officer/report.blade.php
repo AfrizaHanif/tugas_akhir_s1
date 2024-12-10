@@ -21,6 +21,7 @@
 
 <!--OFFCANVAS-->
 @section('offcanvas')
+@include('Pages.Includes.Components.Offcanvas.report')
 @endsection
 
 <!--SCRIPTS-->

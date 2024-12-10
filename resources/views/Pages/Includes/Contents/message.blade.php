@@ -4,18 +4,18 @@
 @endif
 <!--MENU-->
 <p>
-    <!--SEND MESSAGE-->
     @if (Auth::user()->part != "Dev")
+    <!--SEND MESSAGE-->
     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-msg-send">
         <i class="bi bi-envelope-plus"></i>
         Kirim Pesan
     </a>
-    @endif
     <!--HELP-->
     <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvas-help" role="button" aria-controls="offcanvas-help">
         <i class="bi bi-question-lg"></i>
         Bantuan
     </a>
+    @endif
 </p>
 <!--TABLE-->
 <table class="table table-hover table-bordered">
@@ -23,10 +23,10 @@
         <tr class="table-primary">
             <th rowspan="2" class="col-1" scope="col">#</th>
             @if (Auth::user()->part == "Dev")
-            <th rowspan="2" scope="col">NIP</th>
-            <th rowspan="2" scope="col">Nama Pegawai</th>
+            <th rowspan="2" class="col-1" scope="col">NIP</th>
+            <th rowspan="2" class="col-2" scope="col">Nama Pegawai</th>
             @endif
-            <th rowspan="2" scope="col">Jenis</th>
+            <th rowspan="2" class="col-2" scope="col">Jenis</th>
             <th colspan="2" scope="col">Pesan</th>
             <th rowspan="2" class="col-1" scope="col">Action</th>
         </tr>

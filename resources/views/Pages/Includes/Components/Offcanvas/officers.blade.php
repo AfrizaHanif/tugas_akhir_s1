@@ -18,6 +18,7 @@
                     </div>
                 </div>
             </div>
+            @if (Auth::user()->part == 'Admin')
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1-2" aria-expanded="false" aria-controls="collapse-1-2">
@@ -38,12 +39,26 @@
                 </h2>
                 <div id="collapse-1-3" class="accordion-collapse collapse" data-bs-parent="#accordionHelp-1">
                     <div class="accordion-body">
-                        Untuk mempercepat pengisian pegawai secara akurat dan cepat, maka Import Pegawai sangat disarankan untuk melakukan pengisian data pegawai. Perlu diingat anda harus melihat langkah-langkah cara import di bagian kanan dialog Import Data.
+                        Untuk mempercepat pengisian pegawai secara akurat dan cepat, maka Import Pegawai sangat disarankan untuk melakukan pengisian data pegawai. Perlu diingat anda harus melihat langkah-langkah cara import di bagian kanan dialog Import Data. Jika anda tidak perlu import data, anda dapat melakukan pengisian secara manual.
                     </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-1-4" aria-expanded="false" aria-controls="collapse-1-4">
+                        Mengapa Tidak Ada Perubahan Data Setelah Melakukan Import?
+                    </button>
+                </h2>
+                <div id="collapse-1-4" class="accordion-collapse collapse" data-bs-parent="#accordionHelp-1">
+                    <div class="accordion-body">
+                        Apabila terdapat data yang tidak berubah setelah melakukan import data, terdapat kemungkinan yang menyebabkan masalah. Salah satunya adalah Nama Jabatan atau Tim di file import tidak sama dengan yang terdaftar di aplikasi. Silahkan sesuaikan kembali nama yang berbeda.
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
         <hr/>
+        @if (Auth::user()->part == 'Admin')
         <h6>Jabatan</h6>
         <div class="accordion" id="accordionHelp-2">
             <div class="accordion-item">
@@ -60,6 +75,7 @@
             </div>
         </div>
         <hr/>
+        @endif
         <h6>Tim Fungsi</h6>
         <div class="accordion" id="accordionHelp-3">
             <div class="accordion-item">
