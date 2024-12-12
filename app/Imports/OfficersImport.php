@@ -90,7 +90,7 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
                         'activity'=>'Pegawai',
                         'progress'=>'Import',
                         'result'=>'Error',
-                        'descriptions'=>'Import Pegawai Gagal (Data Jabatan / Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') (Jabatan: '.$row['jabatan'].') (Tim: '.$row['subtim1'].')',
+                        'descriptions'=>'Tambah Pegawai Gagal (Data Jabatan / Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') (Jabatan: '.$row['jabatan'].') (Tim: '.$row['subtim1'].')',
                     ]);
                 }
             }else{
@@ -123,7 +123,7 @@ class OfficersImport implements ToCollection, SkipsEmptyRows, SkipsOnError, With
                         'activity'=>'Pegawai',
                         'progress'=>'Import',
                         'result'=>'Error',
-                        'descriptions'=>'Import Pegawai Gagal (Data Jabatan / Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') (Jabatan: '.$row['jabatan'].') (Tim: '.$row['subtim1'].')',
+                        'descriptions'=>'Tambah Pegawai Gagal (Data Jabatan / Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') (Jabatan: '.$row['jabatan'].') (Tim: '.$row['subtim1'].')',
                     ]);
                 }
             }

@@ -99,7 +99,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'activity'=>'Pengguna',
                         'progress'=>'Create',
                         'result'=>'Error',
-                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses import pegawai yang gagal.) ('.$row['nama'].')',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan pegawai melalui import yang gagal.) ('.$row['nama'].')',
                     ]);
                 }
             }else{
@@ -119,7 +119,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'activity'=>'Pengguna',
                         'progress'=>'Create',
                         'result'=>'Error',
-                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses import pegawai yang gagal.) ('.$row['nama'].')',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan pegawai melalui import yang gagal.) ('.$row['nama'].')',
                     ]);
                 }
             }
