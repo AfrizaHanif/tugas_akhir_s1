@@ -30,10 +30,6 @@ class Period extends Model
     {
         return $this->hasMany(Input::class, 'id_period', 'id_period');
     }
-    public function inputraw()
-    {
-        return $this->hasMany(InputRAW::class, 'id_officer', 'id_officer');
-    }
     public function result()
     {
         return $this->hasMany(Result::class, 'id_period', 'id_period');
@@ -41,5 +37,17 @@ class Period extends Model
     public function score()
     {
         return $this->hasMany(Score::class, 'id_period', 'id_period');
+    }
+    public function history_input()
+    {
+        return $this->hasMany(HistoryInput::class, 'id_period', 'id_period');
+    }
+    public function history_score()
+    {
+        return $this->hasMany(HistoryScore::class, 'id_period', 'id_period');
+    }
+    public function history_result()
+    {
+        return $this->hasMany(HistoryResult::class, 'id_period', 'id_period');
     }
 }

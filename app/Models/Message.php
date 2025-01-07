@@ -12,12 +12,20 @@ class Message extends Model
     protected $table = "messages";
 
     protected $fillable = [
-        'id_officer',
-        'officer_nip',
-        'officer_name',
-        //'officer_position',
+        'id_employee', //FK
+        //'employee_nip',
+        //'employee_name',
+        //'employee_position',
         'message_in',
         'message_out',
         'type',
+
+
     ];
+
+    //CONNECT TO ANOTHER TABLE
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'id_employee', 'id_employee',);
+    }
 }

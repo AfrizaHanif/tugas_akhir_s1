@@ -11,14 +11,14 @@
     <!--MAIN CONTENT-->
     <div class="col-md-7">
         <div class="accordion" id="accordionExample">
-            <!--OFFICERS RECORD-->
+            <!--EMPLOYEES RECORD-->
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-officer" aria-expanded="false" aria-controls="collapse-officer">
-                        Laporan Pegawai
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-employee" aria-expanded="false" aria-controls="collapse-employee">
+                        Laporan Karyawan
                     </button>
                 </h2>
-                <div id="collapse-officer" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div id="collapse-employee" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="row align-items-center">
                             <div class="col">
@@ -26,7 +26,7 @@
                             </div>
                             <div class="col">
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="{{ route('reports.officers') }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                                    <a href="{{ route('reports.employees') }}" type="button" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
                                         <i class="bi bi-filetype-pdf"></i>
                                         PDF
                                     </a>

@@ -23,11 +23,11 @@
                 @forelse ($history_per as $period)
                 @if (!empty($latest_per))
                 <button class="nav-link text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="false">
-                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
+                    <i class="bi bi-check-lg"></i> {{ $period->period->name }}
                 </button>
                 @else
                 <button class="nav-link {{ $loop->first ? 'active' : '' }} text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
+                    <i class="bi bi-check-lg"></i> {{ $period->period->name }}
                 </button>
                 @endif
                 @empty
@@ -100,13 +100,13 @@
                                             Selesai
                                         </a>
                                     </span>
-                                    @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() == $officers->count()) <!--IF ALL DATA HAS BEEN ACCEPTED-->
+                                    @elseif ($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')->count() == $employees->count()) <!--IF ALL DATA HAS BEEN ACCEPTED-->
                                     <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-scr-finish-{{ $latest_per->id_period }}">
                                         <i class="bi bi-clipboard2-check"></i>
                                         Selesai
                                     </a>
                                     @else <!--IF FEW DATA IS NOT BEING VERIFIED-->
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pastikan seluruh hasil akhir pegawai sudah disetujui.">
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pastikan seluruh hasil akhir karyawan sudah disetujui.">
                                         <a class="btn btn-success disabled">
                                             <i class="bi bi-clipboard2-check"></i>
                                             Selesai
@@ -197,7 +197,7 @@
                         @forelse ($scores->where('id_period', $latest_per->id_period) as $score)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $score->officer->name }}</td>
+                            <td>{{ $score->employee->name }}</td>
                             <td>{{ $score->final_score }}</td>
                             <td>{{ $score->second_score }}</td>
                             <td>
@@ -215,7 +215,7 @@
                             </td>
                             <td>
                                 <div class="dropdown">
-                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $score->id_officer }}">
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $score->id_employee }}">
                                         <i class="bi bi-info-circle"></i>
                                     </button>
                                     @if ($latest_per->progress_status == 'Finished' || $score->status == 'Revised' || $score->status == 'Rejected')
@@ -271,7 +271,7 @@
                     <tfoot>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="10">Total Data: <b>{{ $scores->where('id_period', $latest_per->id_period)->count() }}</b> Pegawai</td>
+                                <td colspan="10">Total Data: <b>{{ $scores->where('id_period', $latest_per->id_period)->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </tfoot>
@@ -290,7 +290,7 @@
             @endif
                 <div class="row align-items-center pb-2">
                     <div class="col-5">
-                        <h2>{{ $period->period_name }}</h2>
+                        <h2>{{ $period->period->name }}</h2>
                     </div>
                     <!--MENU-->
                     <div class="col-7 d-grid gap-2 d-md-flex justify-content-md-end">
@@ -316,11 +316,11 @@
                         @forelse ($hscore->where('id_period', $period->id_period) as $score)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $score->officer_name }}</td>
+                            <td>{{ $score->employee_name }}</td>
                             <td>{{ $score->final_score }}</td>
                             <td>{{ $score->second_score }}</td>
                             <td>
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}-{{ $score->id_officer }}">
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $period->id_period }}-{{ $score->id_employee }}">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </td>
@@ -334,7 +334,7 @@
                     <tfoot>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="10">Total Data: <b>{{ $hscore->where('id_period', $period->id_period)->count() }}</b> Pegawai</td>
+                                <td colspan="10">Total Data: <b>{{ $hscore->where('id_period', $period->id_period)->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </tfoot>

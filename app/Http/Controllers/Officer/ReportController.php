@@ -15,37 +15,39 @@ class ReportController extends Controller
     public function index()
     {
         //GET DATA
-        $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get();
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get();
-        $h_team_years = HistoryInput::select('id_sub_team', 'sub_team_1_name', 'period_year')->groupBy('id_sub_team', 'sub_team_1_name', 'period_year')->orderBy('period_year', 'ASC')->get();
-        $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
+        $h_periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'ASC')->get();
+        $h_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year')->groupBy('periods.year')->orderBy('periods.year', 'ASC')->get();
+        $h_team_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('history_inputs.id_sub_team', 'history_inputs.sub_team_1_name', 'periods.year')->groupBy('history_inputs.id_sub_team', 'history_inputs.sub_team_1_name', 'periods.year')->orderBy('periods.year', 'ASC')->get();
+        $h_months = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year', 'periods.month', 'periods.num_month')->groupBy('periods.year', 'periods.month', 'periods.num_month')->orderBy('periods.year', 'DESC')->orderBy('periods.num_month', 'ASC')->get();
         $h_subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->whereNotIn('sub_team_1_name', ['Pimpinan BPS', 'Developer'])->get();
-        $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer', 'officer_name')->get();
-        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get();
+        $h_employees = HistoryInput::select('id_employee', 'employee_name')->groupBy('id_employee', 'employee_name')->get();
+        $h_scores = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.year', 'periods.month', 'periods.num_month', 'history_scores.id_sub_team', 'history_scores.sub_team_1_name')->groupBy('periods.id_period', 'periods.name', 'periods.year', 'periods.month', 'periods.num_month', 'history_scores.id_sub_team', 'history_scores.sub_team_1_name')->orderBy('periods.year', 'DESC')->orderBy('periods.year', 'DESC')->orderBy('periods.num_month', 'ASC')->get();
         /*
-        $officers = Officer::with('position')
+        $employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
+        ->where('status', 'Active')
         ->get();
         */
         //$check_teams = HistoryScore::get();
 
         //UNUSED CODE
-        if(Auth::user()->part != "Pegawai"){
+        if(Auth::user()->part != "Karyawan"){
 
         }else{
 
         }
 
         //RETURN TO VIEW
-        return view('Pages.Officer.report', compact('h_periods', 'h_years', 'h_team_years', 'h_months', 'h_subteams', 'h_officers', 'h_scores'));
+        return view('Pages.Employee.report', compact('h_periods', 'h_years', 'h_team_years', 'h_months', 'h_subteams', 'h_employees', 'h_scores'));
     }
 
     public function score($month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
-        $inputs = HistoryInput::where('id_officer', Auth::user()->nip)->where('id_period', $periods->id_period)->get();
+        $periods = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->groupBy('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->orderBy('periods.id_period', 'ASC')->where('periods.month', $month)->where('periods.year', $year)->first();
+        $inputs = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->where('history_inputs.id_employee', Auth::user()->id_employee)->where('periods.id_period', $periods->id_period)->get();
         $detail = Auth::user();
+        $summary = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->where('history_scores.id_employee', Auth::user()->id_employee)->where('periods.id_period', $periods->id_period)->first();
 
         //CREATE A LOG
         Log::create([
@@ -53,13 +55,13 @@ class ReportController extends Controller
             'activity'=>'Laporan',
             'progress'=>'View',
             'result'=>'Success',
-            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period_name.') ('.Auth::user()->name.')',
+            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period->name.') ('.Auth::user()->employee->name.')',
         ]);
 
         //CREATE A REPORT
-        $file = 'RPT-Score-'.$periods->id_period.'-'.Auth::user()->nip.'.pdf';
+        $file = 'RPT-Score-'.$periods->id_period.'-'.Auth::user()->id_employee.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.score', compact('periods','inputs', 'detail'))
+        loadview('Pages.PDF.score', compact('periods','inputs', 'detail', 'summary'))
         ->setPaper('a4')
         ->save('PDFs/'.$file)
         ->stream($file);

@@ -13,7 +13,7 @@
                 </h2>
                 <div id="collapse-1" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
                     <div class="accordion-body">
-                        Setelah menekan tombol ambil data, sistem akan mengambil data nilai untuk dilakukan analisis yang akan digunakan untuk melakukan pengambilan nilai akhir pada seluruh pegawai. Analisis yang digunakan pada proses ini adalah SIMPLE ADDITIVE WEIGHTING (SAW). Setelah seluruh nilai akhir tersebut didapat, nilai tersebut akan ditampilkan di halaman ini.
+                        Setelah menekan tombol ambil data, sistem akan mengambil data nilai untuk dilakukan analisis yang akan digunakan untuk melakukan pengambilan nilai akhir pada seluruh karyawan. Analisis yang digunakan pada proses ini adalah SIMPLE ADDITIVE WEIGHTING (SAW). Setelah seluruh nilai akhir tersebut didapat, nilai tersebut akan ditampilkan di halaman ini.
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                     <div class="accordion-body">
                         Hal ini terjadi dikarenakan:
                         <ol>
-                            <li>Semua / beberapa pegawai tidak memiliki data nilai.</li>
+                            <li>Semua / beberapa karyawan tidak memiliki data nilai.</li>
                             <li>Total bobot dari seluruh kriteria kurang / lebih dari 100%.</li>
                             <li>Seluruh / sebagian data nilai belum dikonversi.</li>
                         </ol>

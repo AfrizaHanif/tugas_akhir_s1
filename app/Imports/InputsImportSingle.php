@@ -4,7 +4,7 @@ namespace App\Imports;
 
 use App\Models\Criteria;
 use App\Models\Input;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Period;
 use App\Models\Score;
 use Illuminate\Support\Collection;
@@ -25,18 +25,19 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $active_days, $officers, $criterias, $scores;
+    protected $latest_per, $active_days, $employees, $criterias, $scores;
 
-    public function __construct($period, $officer)
+    public function __construct($period, $employee)
     {
         $this->latest_per = $period;
         $this->active_days = Period::where('id_period', $period)->first()->active_days;
-        $this->officers = Officer::with('position')
+        $this->employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
         })
         //->where('is_lead', 'No')
-        ->where('id_officer', $officer)
+        ->where('id_employee', $employee)
+        ->where('status', 'Active')
         ->orderBy('name', 'ASC')->get();
         $this->criterias = Criteria::with('category')->get();
         $this->scores = Score::get();
@@ -47,13 +48,13 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
         foreach($this->criterias as $criteria){
             foreach ($rows as $row){
                 //dd($row);
-                $officer = $this->officers->where('nip', $row['nip'])->first();
-                //dd(!is_null($officer));
-                if(!is_null($officer)){
-                    $str_officer = substr($officer->id_officer, 4);
+                $employee = $this->employees->where('nip', $row['nip'])->first();
+                //dd(!is_null($employee));
+                if(!is_null($employee)){
+                    $str_employee = substr($employee->id_employee, 4);
                     $str_year = substr($this->latest_per, -5);
                     $str_sub = substr($criteria->id_criteria, 4);
-                    $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+                    $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
                         if($criteria->name == 'Kehadiran' || $criteria->name == 'Hadir'){
@@ -62,7 +63,7 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
                             Input::create([
                                 'id_input' => $id_input,
                                 'id_period' => $this->latest_per,
-                                'id_officer' => $officer->id_officer,
+                                'id_employee' => $employee->id_employee,
                                 'id_criteria' => $criteria->id_criteria,
                                 'input' => $remain,
                                 'status' => 'Pending',
@@ -72,7 +73,7 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
                             Input::create([
                                 'id_input' => $id_input,
                                 'id_period' => $this->latest_per,
-                                'id_officer' => $officer->id_officer,
+                                'id_employee' => $employee->id_employee,
                                 'id_criteria' => $criteria->id_criteria,
                                 'input' => $row[$criteria->source],
                                 'status' => 'Pending',
@@ -80,9 +81,9 @@ class InputsImportSingle implements ToCollection, SkipsEmptyRows, SkipsOnError, 
                         }
                     }
 
-                    $check = $this->scores->where('id_officer', $officer->id_officer)->where('id_period', $this->latest_per)->where('status', 'Rejected')->first();
+                    $check = $this->scores->where('id_employee', $employee->id_employee)->where('id_period', $this->latest_per)->where('status', 'Rejected')->first();
                     if(!is_null($check)){
-                        Score::where('id_period', $this->latest_per)->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
+                        Score::where('id_period', $this->latest_per)->where('id_employee', $employee->id_employee)->where('status', 'Rejected')->update([
                             'status'=>'Revised',
                         ]);
                     }

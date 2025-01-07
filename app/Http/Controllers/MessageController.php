@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Models\Message;
-use App\Models\Officer;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,20 +21,20 @@ class MessageController extends Controller
         }elseif(Auth::user()->part == "Dev"){
             return view('Pages.Developer.message', compact('messages'));
         }else{
-            return view('Pages.Officer.message', compact('messages'));
+            return view('Pages.Employee.message', compact('messages'));
         }
     }
 
     public function store_in(Request $request)
     {
-        //GET ID OFFICER
-        //$id_officer = Officer::where('id_officer', $request->id_officer)->first()->id_officer;
+        //GET ID EMPLOYEE
+        $id_employee = Employee::where('id_employee', $request->id_employee)->first()->id_employee;
 
         //STORE DATA
         Message::insert([
-            //'id_officer'=>$id_officer,
-            'officer_nip'=>$request->officer_nip,
-            'officer_name'=>$request->officer_name,
+            'id_employee'=>$id_employee,
+            //'employee_nip'=>$request->employee_nip,
+            //'employee_name'=>$request->employee_name,
             'message_in'=>$request->message_in,
             'type'=>$request->type,
 		]);
@@ -52,7 +52,7 @@ class MessageController extends Controller
         if(Auth::user()->part == "Admin"){
             return redirect()->route('admin.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
         }else{
-            return redirect()->route('officer.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
+            return redirect()->route('employee.messages.index')->with('success','Kirim Pesan Berhasil. Terima kasih atas Feedback yang anda berikan kepada Developer.')->with('code_alert', 1);
         }
     }
 

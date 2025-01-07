@@ -19,13 +19,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($officers as $officer)
+                            @forelse ($employees as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 <td>
-                                    @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $s)
+                                    @forelse ($status->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $s)
                                         @if ($s->status == 'Pending')
                                         <span class="badge text-bg-primary">Belum Diperiksa</span>
                                         @elseif ($s->status == 'In Review')
@@ -42,13 +42,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -85,7 +85,7 @@
                             Apakah anda telah selesai melakukan verifikasi?
                             <ul>
                                 <li>Proses ini juga akan <strong>mengakhiri proses penentuan karyawan terbaik</strong>.</li>
-                                <li>Data Nilai, Data Nilai Akhir, dan pegawai terpilih sebagai karyawan terbaik akan dipindahkan ke <strong>riwayat</strong> yang tidak dapat diubah atau dihapus kembali <strong>(Permanen)</strong>.</li>
+                                <li>Data Nilai, Data Nilai Akhir, dan karyawan terpilih sebagai karyawan terbaik akan dipindahkan ke <strong>riwayat</strong> yang tidak dapat diubah atau dihapus kembali <strong>(Permanen)</strong>.</li>
                                 <li>Kepegawaian dapat melakukan penambahan, perubahan, dan penghapusan data <strong>master</strong>.</li>
                                 <li><strong>Laporan</strong> akan tersedia secara langsung oleh sistem setelah proses ini selesai.</li>
                             </ul>
@@ -127,7 +127,7 @@
                         Apakah anda ingin mengambil data nilai akhir pada periode ini?
                         <ul>
                             <li>Data nilai akhir yang lama akan <strong>digantikan</strong> dengan nilai akhir yang baru.</li>
-                            <li>Jika terdapat Revisi, seluruh status dari nilai akhir yang telah disetujui akan <strong>terhapus</strong> dan diperlukan <strong>verifikasi ulang</strong> yang dikarenakan terdapat <strong>perubahan</strong> data nilai akhir dari seluruh pegawai.</li>
+                            <li>Jika terdapat Revisi, seluruh status dari nilai akhir yang telah disetujui akan <strong>terhapus</strong> dan diperlukan <strong>verifikasi ulang</strong> yang dikarenakan terdapat <strong>perubahan</strong> data nilai akhir dari seluruh karyawan.</li>
                             <li>Kepegawaian <strong>tidak dapat</strong> melakukan penambahan, perubahan, dan penghapusan <strong>data master</strong> selama proses verifikasi berlangsung.</li>
                             <li>Tidak dapat mengambil <strong>ambil data</strong> kembali selama proses verifikasi berlangsung (Kecuali jika ada <strong>Revisi</strong>).</li>
                         </ul>
@@ -168,7 +168,7 @@
                         <br/>
                         Apakah anda ingin menyetujui seluruh hasil penilaian ini?
                         <ul>
-                            <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
+                            <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari karyawan lain.</li>
                         </ul>
                     </div>
                 </form>
@@ -182,21 +182,21 @@
                         <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
-                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
                             Ya (Sebagian)
                         </button>
                     </span>
-                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
                             Ya (Sebagian)
                         </button>
                     </span>
-                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', [ 'Revised'])->count() == count($officers))
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', [ 'Revised'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan revisi.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
@@ -216,7 +216,7 @@
                         Ya (Sebagian)
                     </button>
                     @endif
-                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
@@ -285,21 +285,21 @@
                         <i class="bi bi-x-lg"></i>
                         Tidak
                     </button>
-                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan persetujuan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
                             Ya (Sebagian)
                         </button>
                     </span>
-                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
                             Ya (Sebagian)
                         </button>
                     </span>
-                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() == count($officers))
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Revised'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan revisi.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
@@ -319,7 +319,7 @@
                         Ya (Sebagian)
                     </button>
                     @endif
-                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($officers))
+                    @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Rejected'])->count() == count($employees))
                     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua nilai telah dilakukan penolakan.">
                         <button type="submit" class="btn btn-secondary" disabled>
                             <i class="bi bi-check-lg"></i>
@@ -350,7 +350,7 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->officer->name}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Persetujuan Nilai Akhir ({{ $score->employee->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -366,7 +366,7 @@
                             <br/>
                             Apakah anda ingin menyetujui hasil penilaian ini?
                             <ul>
-                                <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari pegawai lain.</li>
+                                <li>Nilai akhir yang telah disetujui dapat berubah sewaktu-waktu ketika terdapat revisi yang ada dari karyawan lain.</li>
                             </ul>
                         </div>
                     </form>
@@ -389,7 +389,7 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->officer->name}})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Penolakan Nilai Akhir ({{ $score->employee->name}})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

@@ -48,7 +48,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                     if($row['is_hr'] == 'Ya'){
                         $part = 'Admin';
                     }else{
-                        $part = 'Pegawai';
+                        $part = 'Karyawan';
                     }
                 }
             }
@@ -70,7 +70,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                     $part = 'Admin';
                 }
             }else{
-                $part = 'Pegawai';
+                $part = 'Karyawan';
             }
             */
 
@@ -87,9 +87,10 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                 if(!empty($positions->id_position)){
                     User::insert([
                         'id_user'=>$id_user,
+                        'id_employee'=>$row['nip'],
                         'username'=>$row['nip'],
-                        'name'=>$row['nama'],
-                        'nip'=>$row['nip'],
+                        //'name'=>$row['nama'],
+                        //'nip'=>$row['nip'],
                         'password'=>Hash::make('bps3500'),
                         'part'=>$part,
                     ]);
@@ -99,17 +100,18 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'activity'=>'Pengguna',
                         'progress'=>'Create',
                         'result'=>'Error',
-                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan pegawai melalui import yang gagal.) ('.$row['nama'].')',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan karyawan melalui import yang gagal.) ('.$row['nama'].')',
                     ]);
                 }
             }else{
                 if(!empty($positions->id_position)){
                     User::firstOrCreate([
-                        'nip'=>$row['nip'],
+                        //'nip'=>$row['nip'],
+                        'id_employee'=>$row['nip'],
                     ],[
                         'id_user'=>$id_user,
                         'username'=>$row['nip'],
-                        'name'=>$row['nama'],
+                        //'name'=>$row['nama'],
                         'password'=>Hash::make('bps3500'),
                         'part'=>$part,
                     ]);
@@ -119,7 +121,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
                         'activity'=>'Pengguna',
                         'progress'=>'Create',
                         'result'=>'Error',
-                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan pegawai melalui import yang gagal.) ('.$row['nama'].')',
+                        'descriptions'=>'Tambah Pengguna Gagal (Terdapat proses penambahan karyawan melalui import yang gagal.) ('.$row['nama'].')',
                     ]);
                 }
             }

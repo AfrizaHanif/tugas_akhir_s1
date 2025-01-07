@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('officers', function (Blueprint $table) {
-            $table->char('id_officer', 11)->primary();
+        Schema::create('employees', function (Blueprint $table) {
+            $table->char('id_employee', 11)->primary();
             //$table->integer('nip_bps')->unique();
             //$table->bigInteger('nip')->unique();
             $table->string('name', 50)->unique();
@@ -36,6 +36,8 @@ return new class extends Migration
             //$table->foreign('id_user')->references('id')->on('users');
             //$table->char('is_lead', 10);
             $table->string('photo', 300)->nullable();
+            $table->boolean('is_hr');
+            $table->char('status', 15);
             $table->timestamps();
         });
     }
@@ -45,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('officers');
+        Schema::dropIfExists('employees');
     }
 };

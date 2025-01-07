@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Criteria;
 use App\Models\Input;
 use App\Models\InputRAW;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Period;
 use App\Models\Score;
 use App\Models\Setting;
@@ -28,16 +28,17 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
 {
     use Importable, SkipsErrors, SkipsFailures;
 
-    protected $latest_per, $active_days, $officers, $criterias, $scores, $inputs, $val_setting, $per_status;
+    protected $latest_per, $active_days, $employees, $criterias, $scores, $inputs, $val_setting, $per_status;
 
     public function __construct($period)
     {
         $this->latest_per = $period;
         $this->active_days = Period::where('id_period', $period)->first()->active_days;
-        $this->officers = Officer::with('position')
+        $this->employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
         })
+        ->where('status', 'Active')
         //->where('is_lead', 'No')
         ->orderBy('name', 'ASC')->get();
         $this->criterias = Criteria::with('category')->get();
@@ -54,20 +55,20 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
             foreach ($rows as $row){
                 //dd($row);
                 $name_import = $row['nama'];
-                //dd(Officer::where('name', 'like', '%'.$row['nama'].'%')->first());
+                //dd(Employee::where('name', 'like', '%'.$row['nama'].'%')->first());
                 if(!empty($row['nip'])){
-                    $officer = $this->officers->where('id_officer', $row['nip'])->first();
+                    $employee = $this->employees->where('id_employee', $row['nip'])->first();
                 }elseif(!empty($row['nama'])){
-                    $officer = Officer::where('name', 'LIKE', '%'.$name_import.'%')->first();
+                    $employee = Employee::where('name', 'LIKE', '%'.$name_import.'%')->first();
                 }else{
-                    $officer = Officer::where('id_officer', $row['nip'])->orwhere('name', 'LIKE', '%'.$name_import.'%')->first();
+                    $employee = Employee::where('id_employee', $row['nip'])->orwhere('name', 'LIKE', '%'.$name_import.'%')->first();
                 }
-                //dd($officer);
-                if(!is_null($officer)){
-                    $str_officer = substr($officer->id_officer, 4);
+                //dd($employee);
+                if(!is_null($employee)){
+                    $str_employee = substr($employee->id_employee, 4);
                     $str_year = substr($this->latest_per, -5);
                     $str_sub = substr($criteria->id_criteria, 4);
-                    $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+                    $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
                     //dd($id_input);
                     if(isset($row[$criteria->source])){
                         if($criteria->id_criteria == $this->val_setting){ //STG
@@ -77,7 +78,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
@@ -88,7 +89,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
@@ -99,7 +100,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
@@ -110,7 +111,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $remain,
@@ -124,7 +125,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
@@ -135,7 +136,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
@@ -146,7 +147,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 Input::firstOrCreate([
                                     'id_input' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
@@ -157,7 +158,7 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                                 InputRAW::firstOrCreate([
                                     'id_input_raw' => $id_input,
                                     'id_period' => $this->latest_per,
-                                    'id_officer' => $officer->id_officer,
+                                    'id_employee' => $employee->id_employee,
                                     'id_criteria' => $criteria->id_criteria,
                                 ],[
                                     'input' => $row[$criteria->source],
@@ -169,9 +170,9 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
                     }
 
                     /*
-                    $check_score = $this->scores->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->first();
+                    $check_score = $this->scores->where('id_employee', $employee->id_employee)->where('status', 'Rejected')->first();
                     if(!is_null($check_score)){
-                        Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
+                        Score::where('id_employee', $employee->id_employee)->where('status', 'Rejected')->update([
                             'status'=>'Revised',
                         ]);
                     }
@@ -187,16 +188,16 @@ class InputsImport implements ToCollection, SkipsEmptyRows, SkipsOnError, SkipsO
     public function model(array $row)
     {
         foreach($this->criterias as $criteria){
-            $officer = $this->officers->where('id_officer', $row['nip'])->first();
-            $str_officer = substr($officer->id_officer, 4);
+            $employee = $this->employees->where('id_employee', $row['nip'])->first();
+            $str_employee = substr($employee->id_employee, 4);
             $str_year = substr($this->latest_per, -5);
             $str_sub = substr($criteria->id_criteria, 4);
-            $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+            $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
             //dd($id_input);
             return new Input([
                 'id_input' => $id_input,
                 'id_period' => $this->latest_per,
-                'id_officer' => $officer->id_officer,
+                'id_employee' => $employee->id_employee,
                 'id_criteria' => $criteria->id_criteria,
                 'input' => $row[$criteria->source],
                 'status' => 'Not Converted',

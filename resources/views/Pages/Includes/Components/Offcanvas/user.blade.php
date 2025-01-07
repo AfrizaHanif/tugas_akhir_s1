@@ -17,18 +17,6 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                        Mengapa tidak ada pegawai (Selain Kepegawaian dan Kepala BPS Jatim)?
-                    </button>
-                </h2>
-                <div id="collapse-2" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
-                    <div class="accordion-body">
-                        Pegawai hanya dapat mengakses halaman utama untuk melihat daftar pegawai, daftar nilai akhir, dan laporan.
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

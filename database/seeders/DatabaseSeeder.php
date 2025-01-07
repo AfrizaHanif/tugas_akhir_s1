@@ -52,94 +52,92 @@ class DatabaseSeeder extends Seeder
         */
 
         //POSITIONS: Jabatan
-        /*
         DB::table('positions')->insert([
-            'id_position' => 'DPT-000',
+            'id_position' => 'POS-000',
             //'id_part' => 'PRT-000',
             'name' => 'Developer',
             //'part' => 'Developer',
         ]);
-        */
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-001',
+            'id_position' => 'POS-001',
             //'id_part' => 'PRT-002',
             'name' => 'Kepala BPS Jawa Timur',
             //'part' => 'Kepala',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-002',
+            'id_position' => 'POS-002',
             //'id_part' => 'PRT-003',
             'name' => 'Kepala Bagian Umum',
             //'part' => 'Kepala',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-003',
+            'id_position' => 'POS-003',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Keuangan APBN Penyelia',
             //'part' => 'Keuangan',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-004',
+            'id_position' => 'POS-004',
             //'id_part' => 'PRT-003',
             'name' => 'Analis Kepegawaian Ahli Muda ',
             //'part' => 'Kepegawaian',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-005',
+            'id_position' => 'POS-005',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Pertama',
             //'part' => 'Staf',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-006',
+            'id_position' => 'POS-006',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-007',
+            'id_position' => 'POS-007',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-008',
+            'id_position' => 'POS-008',
             //'id_part' => 'PRT-003',
             'name' => 'Statistisi Ahli Utama',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-009',
+            'id_position' => 'POS-009',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Pertama',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-010',
+            'id_position' => 'POS-010',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Muda',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-011',
+            'id_position' => 'POS-011',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Madya',
             //'part' => 'Tim Teknis',
         ]);
 
         DB::table('positions')->insert([
-            'id_position' => 'DPT-012',
+            'id_position' => 'POS-012',
             //'id_part' => 'PRT-003',
             'name' => 'Pranata Komputer Ahli Utama',
             //'part' => 'Tim Teknis',
@@ -295,13 +293,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'Analisis dan IPS',
         ]);
 
-        //OFFICERS: Pegawai
-        /*
-        DB::table('officers')->insert([
-            'id_officer' => 'OFF-000',
+        //EMPLOYEES: Karyawan
+        DB::table('employees')->insert([
+            'id_employee' => '100000000',
             //'nip' => '100000000',
             'name' => 'Muhammad Afriza Hanif',
-            'id_position' => 'DPT-000',
+            'id_position' => 'POS-000',
             'id_sub_team_1' => 'STM-001',
             'email' => 'firzavista728@gmail.com',
             'phone' => '081217248427',
@@ -310,14 +307,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             //'is_lead' => 'Yes',
+            'is_hr' => false,
+            'status' => 'Permanent',
         ]);
-        */
 
-        DB::table('officers')->insert([
-            'id_officer' => '340014119',
+        DB::table('employees')->insert([
+            'id_employee' => '340014119',
             //'nip' => '340014119',
             'name' => 'Dr. Ir. Zulkipli, M.Si',
-            'id_position' => 'DPT-001',
+            'id_position' => 'POS-001',
             'id_sub_team_1' => 'STM-001',
             'email' => 'izqpli@yahoo.com',
             'phone' => '08123545822',
@@ -326,14 +324,16 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             //'is_lead' => 'Yes',
+            'is_hr' => false,
+            'status' => 'Active',
         ]);
 
         /*
-        DB::table('officers')->insert([
-            'id_officer' => 340013834',
+        DB::table('employees')->insert([
+            'id_employee' => 340013834',
             //'nip' => '340013834',
             'name' => 'Satriyo Wibowo, SP, M.M',
-            'id_position' => 'DPT-002',
+            'id_position' => 'POS-002',
             'id_sub_team_1' => 'STM-002',
             'id_sub_team_2' => 'STM-008',
             'email' => 'satriyo@bps.com',
@@ -346,11 +346,11 @@ class DatabaseSeeder extends Seeder
         ]);
         */
 
-        DB::table('officers')->insert([
-            'id_officer' => '340056728',
+        DB::table('employees')->insert([
+            'id_employee' => '340056728',
             //'nip' => '340056728',
             'name' => 'La Ode Ahmad Arafat S.ST,',
-            'id_position' => 'DPT-003',
+            'id_position' => 'POS-003',
             'id_sub_team_1' => 'STM-011',
             'email' => 'laode@bps.com',
             'phone' => '081234567891',
@@ -359,13 +359,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Perempuan',
             'religion' => 'Islam',
             //'is_lead' => 'No',
+            'is_hr' => false,
+            'status' => 'Active',
         ]);
 
-        DB::table('officers')->insert([
-            'id_officer' => '340012614',
+        DB::table('employees')->insert([
+            'id_employee' => '340012614',
             //'nip' => '340012614',
             'name' => 'Akhmad Yuliadi',
-            'id_position' => 'DPT-004',
+            'id_position' => 'POS-004',
             'id_sub_team_1' => 'STM-014',
             'email' => 'akhmad@bps.com',
             'phone' => '081234567892',
@@ -374,13 +376,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             //'is_lead' => 'No',
+            'is_hr' => false,
+            'status' => 'Active',
         ]);
 
-        DB::table('officers')->insert([
-            'id_officer' => '340020343',
+        DB::table('employees')->insert([
+            'id_employee' => '340020343',
             //'nip' => '340020343',
             'name' => 'Widia Puspitasari SST, M.Stat,',
-            'id_position' => 'DPT-006',
+            'id_position' => 'POS-006',
             'id_sub_team_1' => 'STM-014',
             'id_sub_team_2' => 'STM-013',
             'email' => 'widia@bps.com',
@@ -390,13 +394,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Perempuan',
             'religion' => 'Islam',
             //'is_lead' => 'No',
+            'is_hr' => false,
+            'status' => 'Active',
         ]);
 
-        DB::table('officers')->insert([
-            'id_officer' => '340018542',
+        DB::table('employees')->insert([
+            'id_employee' => '340018542',
             //'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
-            'id_position' => 'DPT-006',
+            'id_position' => 'POS-006',
             'id_sub_team_1' => 'STM-009',
             'email' => 'peni@bps.com',
             'phone' => '081234567894',
@@ -405,13 +411,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Perempuan',
             'religion' => 'Islam',
             //'is_lead' => 'No',
+            'is_hr' => true,
+            'status' => 'Active',
         ]);
 
-        DB::table('officers')->insert([
-            'id_officer' => '340015905',
+        DB::table('employees')->insert([
+            'id_employee' => '340015905',
             //'nip' => '340015905',
             'name' => 'Abdullah Hakim SE,',
-            'id_position' => 'DPT-007',
+            'id_position' => 'POS-007',
             'id_sub_team_1' => 'STM-009',
             'email' => 'abdullah@bps.com',
             'phone' => '081234567895',
@@ -420,14 +428,17 @@ class DatabaseSeeder extends Seeder
             'gender' => 'Laki-Laki',
             'religion' => 'Islam',
             //'is_lead' => 'No',
+            'is_hr' => false,
+            'status' => 'Active',
         ]);
 
         //USERS: Pengguna
         DB::table('users')->insert([
             'id_user' => 'USR-000',
-            'nip' => '100000000',
+            //'nip' => '100000000',
+            'id_employee' => '100000000',
             'username' => 'developer',
-            'name' => 'Muhammad Afriza Hanif',
+            //'name' => 'Muhammad Afriza Hanif',
             //'email' => 'dev@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'Dev',
@@ -435,9 +446,10 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'id_user' => 'USR-001',
-            'nip' => '340018542',
+            //'nip' => '340018542',
+            'id_employee' => '340018542',
             'username' => 'testadmin',
-            'name' => 'Peni Meivita, S.Si., M.M.',
+            //'name' => 'Peni Meivita, S.Si., M.M.',
             //'email' => 'testadmin@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'Admin',
@@ -450,7 +462,7 @@ class DatabaseSeeder extends Seeder
             //'email' => 'testkabag@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'KBU',
-            'id_officer' => 'OFF-003',
+            'id_employee' => 'EMP-003',
         ]);
 
         DB::table('users')->insert([
@@ -459,7 +471,7 @@ class DatabaseSeeder extends Seeder
             //'email' => 'testketim1@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'KTT',
-            'id_officer' => 'OFF-006',
+            'id_employee' => 'EMP-006',
         ]);
 
         DB::table('users')->insert([
@@ -468,15 +480,16 @@ class DatabaseSeeder extends Seeder
             //'email' => 'testketim2@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'KTT',
-            'id_officer' => 'OFF-007',
+            'id_employee' => 'EMP-007',
         ]);
         */
 
         DB::table('users')->insert([
             'id_user' => 'USR-002',
-            'nip' => '340014119',
+            //'nip' => '340014119',
+            'id_employee' => '340014119',
             'username' => 'testkbps',
-            'name' => 'Dr. Ir. Zulkipli, M.Si',
+            //'name' => 'Dr. Ir. Zulkipli, M.Si',
             //'email' => 'testkbps@bps.com',
             'password' => Hash::make('bps3500'),
             'part' => 'KBPS',
@@ -484,11 +497,12 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'id_user' => 'USR-003',
-            'nip' => '340020343',
+            //'nip' => '340020343',
+            'id_employee' => '340020343',
             'username' => 'testpegawai',
-            'name' => 'Widia Puspitasari SST, M.Stat,',
+            //'name' => 'Widia Puspitasari SST, M.Stat,',
             'password' => Hash::make('bps3500'),
-            'part' => 'Pegawai',
+            'part' => 'Karyawan',
         ]);
 
         //PERIOODS: Periode
@@ -568,7 +582,7 @@ class DatabaseSeeder extends Seeder
         DB::table('criterias')->insert([
             'id_criteria' => 'CRT-003',
             'id_category' => 'CAT-002',
-            'name' => 'Capaian Kinerja Pegawai',
+            'name' => 'Capaian Kinerja Karyawan',
             'weight' => '0.15',
             'attribute' => 'Benefit',
             //'level' => '9',

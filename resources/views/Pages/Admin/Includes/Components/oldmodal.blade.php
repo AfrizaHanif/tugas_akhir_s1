@@ -1,4 +1,4 @@
-@if (Request::is('masters/officers'))
+@if (Request::is('masters/employees'))
 <div class="modal fade" id="modal-prt-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -91,12 +91,12 @@
         </div>
     </div>
 
-    <div class="modal modal-xl fade" id="modal-off-create-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-xl fade" id="modal-emp-create-{{ $part->id_part }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('masters.officers.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('masters.employees.store') }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Pegawai Bagian {{ $part->name }}</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Karyawan Bagian {{ $part->name }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -110,7 +110,7 @@
                             <input type="number" class="form-control" id="nip" name="nip" value="{{ old('nip') }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nama Pegawai</label>
+                            <label for="name" class="form-label">Nama Karyawan</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                         </div>
                         <div class="mb-3">
@@ -200,39 +200,39 @@
     </div>
     @endforeach
 
-    @foreach ($officers as $officer)
-    <div class="modal modal-xl fade" id="modal-off-update-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @foreach ($employees as $employee)
+    <div class="modal modal-xl fade" id="modal-emp-update-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('masters.officers.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('masters.employees.update', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Pegawai ({{ $officer->id_officer }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Karyawan ({{ $employee->id_employee }})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         @csrf @method('PUT')
                         <div class="mb-3">
                             <label for="nip_bps" class="form-label">NIP BPS</label>
-                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ $officer->nip_bps }}" disabled>
+                            <input type="number" class="form-control" id="nip_bps" name="nip_bps" value="{{ $employee->nip_bps }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="nip" class="form-label">NIP</label>
-                            <input type="number" class="form-control" id="nip" name="nip" value="{{ $officer->nip }}" disabled>
+                            <input type="number" class="form-control" id="nip" name="nip" value="{{ $employee->nip }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nama Pegawai</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $officer->name }}" required>
+                            <label for="name" class="form-label">Nama Karyawan</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $employee->name }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="org_code" class="form-label">Kode Organisasi</label>
-                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $officer->org_code }}" disabled>
+                            <input type="number" class="form-control" id="org_code" name="org_code" value="{{ $employee->org_code }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="id_position" class="form-label">Jabatan</label>
                             <select class="form-select" id="id_position" name="id_position" required>
                                 <option selected disabled>---Pilih Jabatan---</option>
                                 @foreach ($positions as $position)
-                                <option value="{{ $position->id_position }}" {{ $officer->id_position ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
+                                <option value="{{ $position->id_position }}" {{ $employee->id_position ==  $position->id_position ? 'selected' : null }}>{{ $position->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -241,56 +241,56 @@
                             <select class="form-select" id="id_part" name="id_part" required>
                                 <option selected disabled>---Pilih Bagian---</option>
                                 @foreach ($parts as $part)
-                                <option value="{{ $part->id_part }}" {{ $officer->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
+                                <option value="{{ $part->id_part }}" {{ $employee->id_part ==  $part->id_part ? 'selected' : null }}>{{ $part->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status" name="status" value="{{ $officer->status }}" disabled>
+                            <input type="text" class="form-control" id="status" name="status" value="{{ $employee->status }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="last_group" class="form-label">Golongan Akhir</label>
-                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ $officer->last_group }}" disabled>
+                            <input type="text" class="form-control" id="last_group" name="last_group" value="{{ $employee->last_group }}" disabled>
                         </div>
                         <div class="mb-3">
                             <label for="last_education" class="form-label">Pendidikan Terakhir</label>
                             <select class="form-select" id="last_education" name="last_education" disabled>
                                 <option selected disabled>---Pilih Status Kerja---</option>
-                                <option value="SD" {{ $officer->last_education == 'SD' ? 'selected' : null }}>SD</option>
-                                <option value="SMP" {{ $officer->last_education == 'SMP' ? 'selected' : null }}>SMP</option>
-                                <option value="SMA" {{ $officer->last_education == 'SMA' ? 'selected' : null }}>SMA</option>
-                                <option value="D1/D2/D3" {{ $officer->last_education == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
-                                <option value="D4" {{ $officer->last_education == 'D4' ? 'selected' : null }}>D4</option>
-                                <option value="S1" {{ $officer->last_education == 'S1' ? 'selected' : null }}>S1</option>
-                                <option value="S2" {{ $officer->last_education == 'S2' ? 'selected' : null }}>S2</option>
-                                <option value="S3" {{ $officer->last_education == 'S3' ? 'selected' : null }}>S3</option>
+                                <option value="SD" {{ $employee->last_education == 'SD' ? 'selected' : null }}>SD</option>
+                                <option value="SMP" {{ $employee->last_education == 'SMP' ? 'selected' : null }}>SMP</option>
+                                <option value="SMA" {{ $employee->last_education == 'SMA' ? 'selected' : null }}>SMA</option>
+                                <option value="D1/D2/D3" {{ $employee->last_education == 'D1/D2/D3' ? 'selected' : null }}>D1/D2/D3</option>
+                                <option value="D4" {{ $employee->last_education == 'D4' ? 'selected' : null }}>D4</option>
+                                <option value="S1" {{ $employee->last_education == 'S1' ? 'selected' : null }}>S1</option>
+                                <option value="S2" {{ $employee->last_education == 'S2' ? 'selected' : null }}>S2</option>
+                                <option value="S3" {{ $employee->last_education == 'S3' ? 'selected' : null }}>S3</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="place_birth" class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $officer->place_birth }}" required>
+                            <input type="text" class="form-control" id="place_birth" name="place_birth" value="{{ $employee->place_birth }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="date_birth" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $officer->date_birth }}" required>
+                            <input type="date" class="form-control" id="date_birth" name="date_birth" value="{{ $employee->date_birth }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="form-label">Jenis Kelamin</label>
                             <select class="form-select" id="gender" name="gender" required>
                                 <option selected disabled>---Pilih Jenis Kelamin---</option>
-                                <option value="Laki-Laki" {{ $officer->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
-                                <option value="Perempuan" {{ $officer->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
+                                <option value="Laki-Laki" {{ $employee->gender == 'Laki-Laki' ? 'selected' : null }}>Laki-Laki</option>
+                                <option value="Perempuan" {{ $employee->gender == 'Perempuan' ? 'selected' : null }}>Perempuan</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="religion" class="form-label">Agama</label>
                             <select class="form-select" id="religion" name="religion" required>
                                 <option selected disabled>---Pilih Agama---</option>
-                                <option value="Islam" {{ $officer->religion == 'Islam' ? 'selected' : null }}>Islam</option>
-                                <option value="Kristen" {{ $officer->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
-                                <option value="Budha" {{ $officer->religion == 'Budha' ? 'selected' : null }}>Budha</option>
-                                <option value="Hindu" {{ $officer->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
+                                <option value="Islam" {{ $employee->religion == 'Islam' ? 'selected' : null }}>Islam</option>
+                                <option value="Kristen" {{ $employee->religion == 'Kristen' ? 'selected' : null }}>Kristen</option>
+                                <option value="Budha" {{ $employee->religion == 'Budha' ? 'selected' : null }}>Budha</option>
+                                <option value="Hindu" {{ $employee->religion == 'Hindu' ? 'selected' : null }}>Hindu</option>
                             </select>
                         </div>
                     </div>
@@ -309,19 +309,19 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-off-delete-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-emp-delete-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('masters.officers.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('masters.employees.destroy', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Pegawai ({{ $officer->id_officer}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Karyawan ({{ $employee->id_employee}})</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert">
                             <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
                             <br/>
-                            Apakah anda ingin menghapus Pegawai tersebut?
+                            Apakah anda ingin menghapus Karyawan tersebut?
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -340,38 +340,38 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-off-view-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-emp-view-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Pegawai ({{ $officer->id_officer }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Karyawan ({{ $employee->id_employee }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table">
                         <tr>
-                            <th scope="row">Nama Pegawai</th>
-                            <td>{{ $officer->name }}</td>
+                            <th scope="row">Nama Karyawan</th>
+                            <td>{{ $employee->name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Jabatan</th>
-                            <td>{{ $officer->position->name }}</td>
+                            <td>{{ $employee->position->name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Bagian</th>
-                            <td>{{ $officer->part->name }}</td>
+                            <td>{{ $employee->part->name }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Tempat Tanggal Lahir</th>
-                            <td>{{ $officer->place_birth }}, {{ date('d F Y', strtotime($officer->date_birth)) }}</td>
+                            <td>{{ $employee->place_birth }}, {{ date('d F Y', strtotime($employee->date_birth)) }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Jenis Kelamin</th>
-                            <td>{{ $officer->gender }}</td>
+                            <td>{{ $employee->gender }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Agama</th>
-                            <td>{{ $officer->religion }}</td>
+                            <td>{{ $employee->religion }}</td>
                         </tr>
                     </table>
                 </div>
@@ -598,11 +598,11 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                        <select class="form-select" id="id_officer" name="id_officer" required>
-                            <option selected disabled>---Pilih Pegawai---</option>
-                            @foreach ($officers as $officer)
-                            <option value="{{ $officer->id_officer }}" {{ old('id_officer') ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                        <label for="id_employee" class="form-label">Karyawan / Pengguna Akun</label>
+                        <select class="form-select" id="id_employee" name="id_employee" required>
+                            <option selected disabled>---Pilih Karyawan---</option>
+                            @foreach ($employees as $employee)
+                            <option value="{{ $employee->id_employee }}" {{ old('id_employee') ==  $employee->id_employee ? 'selected' : null }}>{{ $employee->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -656,11 +656,11 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="id_officer" class="form-label">Pegawai / Pengguna Akun</label>
-                            <select class="form-select" id="id_officer" name="id_officer" required>
-                                <option selected disabled>---Pilih Pegawai---</option>
-                                @foreach ($officers as $officer)
-                                <option value="{{ $officer->id_officer }}" {{ $user->id_officer ==  $officer->id_officer ? 'selected' : null }}>{{ $officer->name }}</option>
+                            <label for="id_employee" class="form-label">Karyawan / Pengguna Akun</label>
+                            <select class="form-select" id="id_employee" name="id_employee" required>
+                                <option selected disabled>---Pilih Karyawan---</option>
+                                @foreach ($employees as $employee)
+                                <option value="{{ $employee->id_employee }}" {{ $user->id_employee ==  $employee->id_employee ? 'selected' : null }}>{{ $employee->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -1097,21 +1097,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($officers as $officer)
+                            @forelse ($employees as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($subcriterias as $subcriteria)
                                         @if (Request::is('inputs/presences'))
-                                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $presence)
                                                 <td>{{ $presence->input }}</td>
                                             @empty
                                                 <td>0</td>
                                             @endforelse
                                         @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $performance)
                                                 <td>{{ $performance->input }}</td>
                                             @empty
                                                 <td>0</td>
@@ -1126,17 +1126,17 @@
                                 @if ($countsub != 0)
                                 <td>
                                     @if (Request::is('inputs/presences'))
-                                        @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
+                                        @if ($presences->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                        @elseif ($presences->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == 0)
                                         <span class="badge text-bg-danger">Tidak Terisi</span>
                                         @else
                                         <span class="badge text-bg-warning">Terisi Sebagian</span>
                                         @endif
                                     @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                                        @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
+                                        @if ($performances->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                        @elseif ($performances->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == 0)
                                         <span class="badge text-bg-danger">Tidak Terisi</span>
                                         @else
                                         <span class="badge text-bg-warning">Terisi Sebagian</span>
@@ -1147,13 +1147,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -1169,8 +1169,8 @@
     </div>
 </div>
 
-    @foreach ($officers as $officer)
-    <div class="modal fade" id="modal-inp-create-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @foreach ($employees as $employee)
+    <div class="modal fade" id="modal-inp-create-{{ $period->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
@@ -1182,9 +1182,9 @@
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $officer->name }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kehadiran ({{ $employee->name }})</h1>
                         @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Prestasi Kerja ({{ $officer->name }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Prestasi Kerja ({{ $employee->name }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -1192,8 +1192,8 @@
                         @csrf
                         <div class="row mb-3">
                             <div class="col">
-                                <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                                <label for="id_employee" class="form-label">Kode Karyawan</label>
+                                <input type="text" class="form-control" id="id_employee" name="id_employee" value="{{ $employee->id_employee }}" readonly>
                             </div>
                             <div class="col">
                                 <label for="id_period" class="form-label">Kode Periode</label>
@@ -1227,21 +1227,21 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-inp-update-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-inp-update-{{ $period->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
-                <form action="{{ route('inputs.presences.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.presences.update', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @elseif (Request::is('inputs/kbu/performances'))
-                <form action="{{ route('inputs.kbu.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.kbu.performances.update', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @elseif (Request::is('inputs/ktt/performances'))
-                <form action="{{ route('inputs.ktt.performances.update', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.ktt.performances.update', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $employee->id_employee }})</h1>
                         @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Prestasi Kerja ({{ $officer->id_officer }})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Prestasi Kerja ({{ $employee->id_employee }})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -1249,8 +1249,8 @@
                         @csrf @method('PUT')
                         <div class="row mb-3">
                             <div class="col">
-                                <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                                <label for="id_employee" class="form-label">Kode Karyawan</label>
+                                <input type="text" class="form-control" id="id_employee" name="id_employee" value="{{ $employee->id_employee }}" readonly>
                             </div>
                             <div class="col">
                                 <label for="id_period" class="form-label">Kode Periode</label>
@@ -1260,7 +1260,7 @@
                         <hr/>
                         @forelse ($subcriterias as $subcriteria)
                             @if (Request::is('inputs/presences'))
-                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $presence)
                             <div class="mb-3">
                                 <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
                                 <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $presence->input }}" min="0" max="31" required>
@@ -1272,7 +1272,7 @@
                             </div>
                             @endforelse
                             @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $performance)
                             <div class="mb-3">
                                 <label for="{{ $subcriteria->id_sub_criteria }}" class="form-label">{{ $subcriteria->name }}</label>
                                 <input type="number" class="form-control" id="{{ $subcriteria->id_sub_criteria }}" name="{{ $subcriteria->id_sub_criteria }}" value="{{ $performance->input }}" min="0" max="31" required>
@@ -1305,18 +1305,18 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-inp-view-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-inp-view-{{ $period->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $officer->id_officer }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Data Kehadiran ({{ $employee->id_employee }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table">
                     @foreach ($subcriterias as $subcriteria)
                         @if (Request::is('inputs/presences'))
-                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                            @forelse ($presences->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $presence)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
                                 <td>
@@ -1340,7 +1340,7 @@
                             </tr>
                             @endforelse
                         @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                            @forelse ($performances->where('id_sub_criteria', $subcriteria->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $performance)
                             <tr>
                                 <th scope="row">{{ $subcriteria->name }}</th>
                                 <td>
@@ -1377,29 +1377,29 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-inp-delete-{{ $period->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-inp-delete-{{ $period->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 @if (Request::is('inputs/presences'))
-                <form action="{{ route('inputs.presences.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.presences.destroy', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @elseif (Request::is('inputs/kbu/performances'))
-                <form action="{{ route('inputs.kbu.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.kbu.performances.destroy', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @elseif (Request::is('inputs/ktt/performances'))
-                <form action="{{ route('inputs.ktt.performances.destroy', $officer->id_officer) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('inputs.ktt.performances.destroy', $employee->id_employee) }}" method="POST" enctype="multipart/form-data">
                 @endif
                     <div class="modal-header">
                         @if (Request::is('inputs/presences'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $officer->id_officer}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Kehadiran ({{ $employee->id_employee}})</h1>
                         @elseif (Request::is('inputs/kbu/performances') || Request::is('inputs/ktt/performances'))
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Prestasi Kerja ({{ $officer->id_officer}})</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Prestasi Kerja ({{ $employee->id_employee}})</h1>
                         @endif
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col">
-                                <label for="id_officer" class="form-label">Kode Pegawai</label>
-                                <input type="text" class="form-control" id="id_officer" name="id_officer" value="{{ $officer->id_officer }}" readonly>
+                                <label for="id_employee" class="form-label">Kode Karyawan</label>
+                                <input type="text" class="form-control" id="id_employee" name="id_employee" value="{{ $employee->id_employee }}" readonly>
                             </div>
                             <div class="col">
                                 <label for="id_period" class="form-label">Kode Periode</label>
@@ -1473,38 +1473,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($officers as $officer)
+                            @forelse ($employees as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 @foreach ($subcritprs as $scprs)
-                                    @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $presence)
+                                    @forelse ($presences->where('id_sub_criteria', $scprs->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $presence)
                                     <td>{{ $presence->input }}</td>
                                     @empty
                                         <td>0</td>
                                     @endforelse
                                 @endforeach
                                 @foreach ($subcritprf as $scprf)
-                                    @forelse ($performances->where('id_sub_criteria', $scprf->id_sub_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $performance)
+                                    @forelse ($performances->where('id_sub_criteria', $scprf->id_sub_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $performance)
                                     <td>{{ $performance->input }}</td>
                                     @empty
                                         <td>0</td>
                                     @endforelse
                                 @endforeach
                                 <td>
-                                    @if ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprs)
+                                    @if ($presences->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == $countprs)
                                     <span class="badge text-bg-primary">Terisi Semua</span>
-                                    @elseif ($presences->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                    @elseif ($presences->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == 0)
                                     <span class="badge text-bg-danger">Tidak Terisi</span>
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countprf)
+                                    @if ($performances->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == $countprf)
                                     <span class="badge text-bg-primary">Terisi Semua</span>
-                                    @elseif ($performances->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                    @elseif ($performances->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == 0)
                                     <span class="badge text-bg-danger">Tidak Terisi</span>
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
@@ -1513,13 +1513,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -1558,13 +1558,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($officers as $officer)
+                                @forelse ($employees as $employee)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td>{{ $officer->name }}</td>
-                                    <td>{{ $officer->position->name }}</td>
+                                    <td>{{ $employee->name }}</td>
+                                    <td>{{ $employee->position->name }}</td>
                                     <td>
-                                        @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $s)
+                                        @forelse ($status->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $s)
                                             @if ($s->status == 'Pending')
                                             <span class="badge text-bg-primary">Belum Diperiksa</span>
                                             @elseif ($s->status == 'In Review')
@@ -1581,13 +1581,13 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                                    <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                                 </tr>
                                 @endforelse
                             </tbody>
                             <tfoot class="table-group-divider table-secondary">
                                 <tr>
-                                    <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                    <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                                 </tr>
                             </tfoot>
                         </table>

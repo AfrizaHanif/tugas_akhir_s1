@@ -1,34 +1,30 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JSONController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\OfficerController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SubTeamsController;
+use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\AnalysisController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CripsController;
-use App\Http\Controllers\PositionController;
-use App\Http\Controllers\Admin\PartController;
-use App\Http\Controllers\Admin\PeriodController;
-use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Admin\CriteriaController;
 use App\Http\Controllers\Admin\InputController;
-use App\Http\Controllers\SubTeamsController;
-use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\Admin\PartController;
+use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Auth\AuthController;
-//use App\Http\Controllers\Developer\OfficerController as DeveloperOfficerController;
 use App\Http\Controllers\Home\HomeController;
-//use App\Http\Controllers\Home\OfficerController as HomeOfficerController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
-use App\Http\Controllers\Home\ReportController as HomeReportController;
-use App\Http\Controllers\OfficerController;
-use App\Http\Controllers\JSONController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LogController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ReportController as AllReportController;
-use App\Http\Controllers\MessageController;
-//use App\Http\Controllers\Officer\OfficerController as OfficerOfficerController;
 use App\Http\Controllers\Officer\ReportController as OfficerReportController;
 use App\Http\Controllers\Officer\ScoreController as OfficerScoreController;
+//use App\Http\Controllers\ReportController as AllReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,14 +42,14 @@ use Illuminate\Support\Facades\Route;
 //HOMEPAGE
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::controller(OfficerController::class)->group(function() {
-    Route::prefix('officers')->name('officers.')->group(function () {
+    Route::prefix('employees')->name('employees.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/search', 'search')->name('search');
         //Route::get('/auto', 'auto')->name('auto');
     });
 });
 Route::get('/eotm', [HomeScoreController::class, 'index']);
-Route::get('/reports', [HomeReportController::class, 'index']);
+//Route::get('/reports', [HomeReportController::class, 'index']);
 Route::controller(JSONController::class)->group(function() {
     Route::get('/autocomplete', 'autocomplete')->name('json.autocomplete');
 });
@@ -75,7 +71,7 @@ Route::middleware('auth')->group(function () {
 /*
 Route::prefix('reports')->name('reports.')->group(function () {
     Route::controller(AllReportController::class)->group(function() {
-        Route::get('/officers', 'officers')->name('officers');
+        Route::get('/employees', 'employees')->name('employees');
         Route::prefix('input')->name('input.')->group(function () {
             Route::get('/{period}', 'inpall')->name('all');
             Route::get('/{period}/{id}', 'inpsingle')->name('single');
@@ -96,18 +92,24 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         //MASTERS
         Route::prefix('masters')->name('masters.')->group(function () {
-            Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-            Route::prefix('officers')->name('officers.')->group(function () {
+            Route::resource('/employees', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            Route::prefix('employees')->name('employees.')->group(function () {
                 Route::controller(OfficerController::class)->group(function() {
                     Route::get('/search', 'search')->name('search');
                     Route::post('/import', 'import')->name('import');
                     Route::post('/export', 'export')->name('export');
+                    Route::post('/retire/{id}', 'retire')->name('retire');
                 });
             });
             Route::middleware('checkPart:Admin')->group(function () {
                 Route::resource('/positions', PositionController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/parts', PartController::class, ['only' => ['store', 'update', 'destroy']]);
                 Route::resource('/users', UserController::class);
+                Route::prefix('users')->name('users.')->group(function () {
+                    Route::controller(UserController::class)->group(function() {
+                        Route::post('/password/{id}', 'password')->name('password');
+                    });
+                });
                 Route::resource('/periods', PeriodController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
                 Route::prefix('periods')->name('periods.')->group(function () {
                     Route::controller(PeriodController::class)->group(function() {
@@ -187,7 +189,7 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::controller(ReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
-                Route::get('/officers', 'officers')->name('officers');
+                Route::get('/employees', 'employees')->name('employees');
                 Route::prefix('input')->name('input.')->group(function () {
                     Route::get('/{period}', 'inpall')->name('all');
                     Route::get('/{period}/{id}', 'inpsingle')->name('single');
@@ -223,11 +225,11 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
     });
 });
 
-//OFFICER'S DASHBOARD
+//EMPLOYEE'S DASHBOARD
 Route::middleware(['auth', 'checkOfficer'])->group(function () {
-    Route::get('/officer', [DashboardController::class, 'officer'])->name('officer');
-    Route::prefix('officer')->name('officer.')->group(function () {
-        Route::prefix('officers')->name('officers.')->group(function () {
+    Route::get('/employee', [DashboardController::class, 'employee'])->name('employee');
+    Route::prefix('employee')->name('employee.')->group(function () {
+        Route::prefix('employees')->name('employees.')->group(function () {
             Route::controller(OfficerController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::get('/search', 'search')->name('search');
@@ -269,8 +271,8 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
     Route::get('/developer', [DashboardController::class, 'developer'])->name('developer');
     Route::prefix('developer')->name('developer.')->group(function () {
         Route::prefix('masters')->name('masters.')->group(function () {
-            Route::resource('/officers', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
-            Route::prefix('officers')->name('officers.')->group(function () {
+            Route::resource('/employees', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            Route::prefix('employees')->name('employees.')->group(function () {
                 Route::controller(OfficerController::class)->group(function() {
                     Route::get('/', 'index')->name('index');
                     Route::get('/search', 'search')->name('search');

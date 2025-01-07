@@ -100,8 +100,9 @@ class CriteriaController extends Controller
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
-            ->withInput(['tab_redirect'=>'pills-'.$request->id_category])
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_category, 'old_input'=>$request->all(), 'old_input'=>$request->all()])
             ->with('modal_redirect', 'modal-crt-create')
+            ->with('id_redirect', $request->id_category)
             ->with('code_alert', 2);
         }
 

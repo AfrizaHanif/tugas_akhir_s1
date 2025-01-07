@@ -20,23 +20,14 @@
                                     @include('Templates.Includes.Components.alert')
                                     @endif
                                     <div class="mb-3">
-                                        <label for="officer" class="form-label">Pegawai</label>
-                                        <select class="form-select" id="officer" name="officer" required>
-                                            <option selected disabled value="">---Pilih Pegawai---</option>
-                                            @foreach ($officers as $officer)
-                                                @if (empty($users->where('nip', $officer->id_officer)->first()))
-                                                <option value="{{ $officer->id_officer }}" {{ old('officer') ==  $officer->id_officer ? 'selected' : null }}>({{ $officer->id_officer }}) {{ $officer->name }}</option>
+                                        <label for="id_employee" class="form-label">Karyawan</label>
+                                        <select class="form-select" id="id_employee" name="id_employee" required>
+                                            <option selected disabled value="">---Pilih Karyawan---</option>
+                                            @foreach ($employees as $employee)
+                                                @if (empty($users->where('id_employee', $employee->id_employee)->first()))
+                                                <option value="{{ $employee->id_employee }}" {{ old('employee') ==  $employee->id_employee ? 'selected' : null }}>({{ $employee->id_employee }}) {{ $employee->name }}</option>
                                                 @endif
                                             @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="part" class="form-label">Bagian / Jenis Akun</label>
-                                        <select class="form-select" id="part" name="part" required>
-                                            <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
-                                            <option value="Pegawai" {{ old('part') == 'Pegawai' ? 'selected' : null }}>Pegawai</option>
-                                            <option value="Admin" {{ old('part') == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
-                                            <option value="KBPS" {{ old('part') == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
                                         </select>
                                     </div>
                                 </div>
@@ -46,14 +37,14 @@
                                     <div class="alert alert-info" role="alert">
                                         <i class="bi bi-info-circle-fill"></i> <strong>CARA PENGISIAN</strong>
                                         <ol>
-                                            <li>Satu pegawai hanya dapat memakai satu user.</li>
+                                            <li>Satu karyawan hanya dapat memakai satu user.</li>
                                             <li>Bagian:</li>
                                             <ol>
                                                 <li>Kepegawaian: Pilih Admin</li>
                                                 <li>Ketua BPS Jatim: Pilih KBPS</li>
-                                                <li>Pegawai Biasa: Pilih Pegawai</li>
+                                                <li>Karyawan Biasa: Pilih Karyawan</li>
                                             </ol>
-                                            <li>Untuk KBPS, hanya dapat dipakai oleh satu pegawai</li>
+                                            <li>Untuk KBPS, hanya dapat dipakai oleh satu karyawan</li>
                                             <li>Password default: "bps3500"</li>
                                         </ol>
                                     </div>
@@ -81,7 +72,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Pengguna ({{ $user->name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ubah Pengguna ({{ $user->employee->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -107,15 +98,6 @@
                                             <label class="btn btn-outline-danger" for="password_yes-{{ $user->id_user }}" style="flex: 1">Ya</label>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="part" class="form-label">Bagian / Jenis Akun</label>
-                                        <select class="form-select" id="part" name="part" required>
-                                            <option selected disabled value="">---Pilih Bagian / Jenis Akun---</option>
-                                            <option value="Pegawai" {{ $user->part == 'Pegawai' ? 'selected' : null }}>Pegawai</option>
-                                            <option value="Admin" {{ $user->part == 'Admin' ? 'selected' : null }}>Administrator (Kepegawaian)</option>
-                                            <option value="KBPS" {{ $user->part == 'KBPS' ? 'selected' : null }}>Kepala BPS Jawa Timur</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -127,9 +109,9 @@
                                             <ol>
                                                 <li>Kepegawaian: Pilih Admin</li>
                                                 <li>Ketua BPS Jatim: Pilih KBPS</li>
-                                                <li>Pegawai Biasa: Pilih Pegawai</li>
+                                                <li>Karyawan Biasa: Pilih Karyawan</li>
                                             </ol>
-                                            <li>Untuk KBPS, hanya dapat dipakai oleh satu pegawai</li>
+                                            <li>Untuk KBPS, hanya dapat dipakai oleh satu karyawan</li>
                                         </ol>
                                     </div>
                                 </div>
@@ -181,6 +163,44 @@
                     Tidak
                 </button>
                 <button type="submit" form="form-usr-delete-{{ $user->id_user }}" class="btn btn-danger">
+                    <i class="bi bi-check-lg"></i>
+                    Ya
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--RESET PASSWORD-->
+<div class="modal fade" id="modal-usr-password-{{ $user->id_user }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Reset Password Pengguna ({{ $user->username }})</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (Auth::user()->part == 'Admin')
+                <form id="form-usr-password-{{ $user->id_user }}" action="{{ route('admin.masters.users.password', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                @else
+                <form id="form-usr-password-{{ $user->id_user }}" action="{{ route('developer.masters.users.password', $user->id_user) }}" method="POST" enctype="multipart/form-data">
+                @endif
+                    @csrf
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
+                        <br/>
+                        Apakah anda ingin reset ulang password dari pengguna dengan nama <b>{{ $user->username }}</b>?
+                        <ul>
+                            <li>Setelah reset dilakukan, informasikan kepada pemilik akun tersebut bahwa password telah direset ulang menjadi "bps3500".</li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-dep-view">
+                    <i class="bi bi-backspace"></i>
+                    Tidak
+                </button>
+                <button type="submit" form="form-usr-password-{{ $user->id_user }}" class="btn btn-danger">
                     <i class="bi bi-check-lg"></i>
                     Ya
                 </button>

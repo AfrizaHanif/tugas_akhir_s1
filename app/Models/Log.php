@@ -15,10 +15,16 @@ class Log extends Model
     //protected $keyType = 'string';
 
     protected $fillable = [
-        'id_user',
+        'id_user', //FK
         'activity',
         'progress',
         'result',
         'descriptions',
     ];
+
+    //CONNECT TO ANOTHER TABLE
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user',);
+    }
 }

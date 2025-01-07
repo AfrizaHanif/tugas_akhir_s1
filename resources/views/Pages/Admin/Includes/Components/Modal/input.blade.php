@@ -77,7 +77,7 @@
                                     <ol>
                                         <li>Sebelum melakukan import, buatlah file Excel baru, dan pastikan file tersebut memenuhi ketentuan berikut:</li>
                                         <ol>
-                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data pegawai. Anda juga dapat menambahkan kolom <b>Nama Pegawai</b> sebagai pelengkap.</li>
+                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data karyawan. Anda juga dapat menambahkan kolom <b>Nama Karyawan</b> sebagai pelengkap.</li>
                                             <li>Samakan nama kolom dengan ketentuan yang diberikan di tab <b>Sumber Kolom</b> (Contoh: Jika ingin import <b>Presensi</b>, maka kolom yang harus ada adalah kriteria dari sumber <b>Presensi</b>).</li>
                                         </ol>
                                         <li>Pilih file yang akan di import ke dalam sistem. Pastikan file tersebut mengandung nama seperti berikut:</li>
@@ -323,7 +323,7 @@
         <div class="modal-content rounded-4 shadow">
             <form action="{{ route('admin.inputs.data.export.old', $hperiod->id_period) }}" method="post" enctype="multipart/form-data">
                 <div class="modal-header border-bottom-0">
-                    <h1 class="modal-title fs-5">Export Input Data ({{ $hperiod->period_name }})</h1>
+                    <h1 class="modal-title fs-5">Export Input Data ({{ $hperiod->period->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body py-0">

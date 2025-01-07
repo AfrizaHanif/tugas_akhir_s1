@@ -6,8 +6,8 @@
             <form action="{{ route('developer.logs.export') }}" method="post" enctype="multipart/form-data">
             @elseif (Auth::user()->part == 'Admin' || Auth::user()->part == 'KBPS')
             <form action="{{ route('admin.logs.export') }}" method="post" enctype="multipart/form-data">
-            @elseif (Auth::user()->part == 'Pegawai')
-            <form action="{{ route('officer.logs.export') }}" method="post" enctype="multipart/form-data">
+            @elseif (Auth::user()->part == 'Karyawan')
+            <form action="{{ route('employee.logs.export') }}" method="post" enctype="multipart/form-data">
             @endif
                 <div class="modal-header border-bottom-0">
                     <h1 class="modal-title fs-5">Export Logs</h1>

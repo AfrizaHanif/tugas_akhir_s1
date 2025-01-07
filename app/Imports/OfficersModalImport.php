@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Position;
 use App\Models\SubTeam;
 use Illuminate\Validation\Rule;
@@ -45,8 +45,8 @@ class OfficersModalImport implements ToModel, WithHeadingRow, WithValidation, Sk
         }
         */
 
-        return new Officer([
-            'id_officer' => $row['nip'],
+        return new Employee([
+            'id_employee' => $row['nip'],
             'name'=>$row['nama'],
             'id_position'=>$positions->id_position,
             'id_sub_team_1'=>$subteams1->id_sub_team,
@@ -65,10 +65,10 @@ class OfficersModalImport implements ToModel, WithHeadingRow, WithValidation, Sk
     public function rules(): array
     {
         return [
-            '*.nip' => ['unique:officers,id_officer'],
-            '*.nama' => ['unique:officers,name'],
-            '*.email' => ['unique:officers,email'],
-            '*.telp' => ['unique:officers,phone'],
+            '*.nip' => ['unique:employees,id_employee'],
+            '*.nama' => ['unique:employees,name'],
+            '*.email' => ['unique:employees,email'],
+            '*.telp' => ['unique:employees,phone'],
         ];
     }
 

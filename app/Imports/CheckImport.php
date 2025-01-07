@@ -41,10 +41,10 @@ class CheckImport implements ToCollection, SkipsEmptyRows, SkipsOnError, WithHea
                     //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
-                        'activity'=>'Pegawai',
+                        'activity'=>'Karyawan',
                         'progress'=>'Import',
                         'result'=>'Error',
-                        'descriptions'=>'Import Pegawai Gagal (Data Pegawai tidak sama dengan yang terdaftar) ('.$row['nama'].') ('.$row['jabatan'].' <=> '.$position->name.')',
+                        'descriptions'=>'Import Karyawan Gagal (Data Karyawan tidak sama dengan yang terdaftar) ('.$row['nama'].') ('.$row['jabatan'].' <=> '.$position->name.')',
                     ]);
 
                     $this->check = '1';
@@ -60,10 +60,10 @@ class CheckImport implements ToCollection, SkipsEmptyRows, SkipsOnError, WithHea
                     //CREATE A LOG
                     Log::create([
                         'id_user'=>Auth::user()->id_user,
-                        'activity'=>'Pegawai',
+                        'activity'=>'Karyawan',
                         'progress'=>'Import',
                         'result'=>'Error',
-                        'descriptions'=>'Import Pegawai Gagal (Data Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') ('.$row['subtim1'].' <=> '.$subteam->name.')',
+                        'descriptions'=>'Import Karyawan Gagal (Data Tim tidak sama dengan yang terdaftar) ('.$row['nama'].') ('.$row['subtim1'].' <=> '.$subteam->name.')',
                     ]);
 
                     $this->check = '1';

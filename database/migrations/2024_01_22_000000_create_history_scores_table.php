@@ -14,21 +14,24 @@ return new class extends Migration
         Schema::create('history_scores', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('id_period', 11);
-            $table->char('period_name', 20);
-            $table->char('period_month', 10);
-            $table->unsignedSmallInteger('period_num_month');
-            $table->unsignedSmallInteger('period_year');
-            $table->char('id_officer', 11);
-            //$table->bigInteger('officer_nip');
-            $table->string('officer_name', 50);
-            $table->string('officer_position', 50);
+            $table->foreign('id_period')->references('id_period')->on('periods');
+            //$table->char('period_name', 20);
+            //$table->char('period_month', 10);
+            //$table->unsignedSmallInteger('period_num_month');
+            //$table->unsignedSmallInteger('period_year');
+            $table->char('id_employee', 11);
+            //$table->bigInteger('employee_nip');
+            $table->string('employee_name', 50);
+            $table->string('employee_position', 50);
             $table->char('id_team', 20);
             $table->string('team_name', 50);
             $table->char('id_sub_team', 20);
             $table->string('sub_team_1_name', 50);
             $table->string('sub_team_2_name', 50)->nullable();
+            $table->char('setting_value', 11);
             $table->decimal('final_score', 8, 3);
             $table->smallInteger('second_score');
+            $table->smallInteger('rank');
             $table->timestamps();
         });
     }

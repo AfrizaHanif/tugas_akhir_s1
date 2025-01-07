@@ -23,17 +23,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($officers as $officer)
+                            @forelse ($employees as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 @if ($countsub != 0)
                                 <td>
-                                    @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
-                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
+                                    @if (!empty($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')))
+                                        @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
                                         <span class="badge text-bg-primary">Terisi Semua</span>
-                                        @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
+                                        @elseif ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->count() == 0)
                                         <span class="badge text-bg-danger">Tidak Terisi</span>
                                         @else
                                         <span class="badge text-bg-warning">Terisi Sebagian</span>
@@ -43,12 +43,12 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
-                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                    @if (!empty($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')))
+                                        @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                         <span class="badge text-bg-warning">Sebagian Dikonversi</span>
                                         @else
                                             @if (!empty($latest_per))
-                                                @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                                @forelse ($status->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period) as $s)
                                                     @if ($s->status == 'Not Converted')
                                                     <span class="badge text-bg-warning">Belum Dikonversi</span>
                                                     @else
@@ -69,13 +69,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -116,21 +116,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($progress_offs as $officer)
+                            @forelse ($progress_offs as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 <td>
                                     @if (!empty($latest_per))
-                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                        @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                         <span class="badge text-bg-warning">Perlu Perhatian</span>
                                         @else
-                                            @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
-                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub && $latest_per->import_status == 'Clear')
+                                            @if (!empty($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')))
+                                                @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub && $latest_per->import_status == 'Clear')
                                                 <span class="badge text-bg-success">Siap Diambil</span>
                                                 @else
-                                                    @foreach ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                                    @foreach ($input_lists->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '') as $input)
                                                         @if ($input->status == 'Not Converted')
                                                         <span class="badge text-bg-warning">Belum Dikonversi</span>
                                                         @else
@@ -194,19 +194,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($acc_offs as $officer)
+                            @forelse ($acc_offs as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 <td>
                                     @if (!empty($latest_per))
-                                        @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                        @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                         <span class="badge text-bg-warning">Perlu Perhatian</span>
                                         @else
-                                            @if (!empty($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')))
-                                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
-                                                    @forelse ($input_lists->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $input)
+                                            @if (!empty($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')))
+                                                @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->count() == $countsub)
+                                                    @forelse ($input_lists->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '') as $input)
                                                         @if ($input->status == 'Pending' || $input->status == 'Fixed')
                                                         <span class="badge text-bg-primary">Siap Diperiksa</span>
                                                         @elseif ($input->status == 'In Review')
@@ -279,13 +279,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($reject_offs as $officer)
+                            @forelse ($reject_offs as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 <td>
-                                    @foreach ($scores->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '') as $score)
+                                    @foreach ($scores->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '') as $score)
                                     @if ($score->status == 'Rejected')
                                     <span class="badge text-bg-danger">Ditolak</span>
                                     @elseif ($score->status == 'Revised')
@@ -298,7 +298,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10">Tidak ada Pegawai yang memiliki nilai yang ditolak atau nilai yang telah direvisi</td>
+                                <td colspan="10">Tidak ada Karyawan yang memiliki nilai yang ditolak atau nilai yang telah direvisi</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -341,7 +341,7 @@
                                 <th scope="col">Periode</th>
                                 <th scope="col">Nama</th>
                                 <th scope="col">Jabatan</th>
-                                @if (Auth::user()->part != "Pegawai")
+                                @if (Auth::user()->part != "Karyawan")
                                 <th scope="col">Nilai Akhir</th>
                                 @endif
                             </tr>
@@ -351,10 +351,10 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             @foreach ($voteresults->where('id_period', $period->id_period) as $voteresult)
-                            <td>{{ $voteresult->period_name }}</td>
-                            <td>{{ $voteresult->officer_name }}</td>
-                            <td>{{ $voteresult->officer_position }}</td>
-                                @if (Auth::user()->part != "Pegawai")
+                            <td>{{ $voteresult->period->name }}</td>
+                            <td>{{ $voteresult->employee_name }}</td>
+                            <td>{{ $voteresult->employee_position }}</td>
+                                @if (Auth::user()->part != "Karyawan")
                                 <td>{{ $voteresult->final_score }}</td>
                                 @endif
                             @endforeach
@@ -383,7 +383,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Nilai Akhir Terbaik Saat Ini ({{ $history_prd->period_name ?? ''}})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nilai Akhir Terbaik Saat Ini ({{ $history_prd->period->name ?? ''}})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -395,7 +395,7 @@
                                 <th class="col-1" scope="col">#</th>
                                 <th scope="col">Nama</th>
                                 <th scope="col">Jabatan</th>
-                                @if (Auth::user()->part != "Pegawai")
+                                @if (Auth::user()->part != "Karyawan")
                                 <th scope="col">Nilai Akhir</th>
                                 <th scope="col">Nilai Kedua</th>
                                 @endif
@@ -405,8 +405,8 @@
                             @foreach ($scoreresults->where('id_period', $history_prd->id_period) as $scoreresult)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td>{{ $scoreresult->officer_name }}</td>
-                                    <td>{{ $scoreresult->officer_position }}</td>
+                                    <td>{{ $scoreresult->employee_name }}</td>
+                                    <td>{{ $scoreresult->employee_position }}</td>
                                     <td>{{ $scoreresult->final_score }}</td>
                                     <td>{{ $scoreresult->second_score }}</td>
                                 </tr>

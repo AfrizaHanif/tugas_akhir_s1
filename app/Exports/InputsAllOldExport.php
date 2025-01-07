@@ -18,7 +18,7 @@ class InputsAllOldExport implements FromQuery, WithMultipleSheets, WithStrictNul
 
     public function __construct()
     {
-        $this->periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get();
+        $this->periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('year', 'ASC')->orderBy('periods.num_month', 'ASC')->get();
     }
 
     public function query()
@@ -31,8 +31,8 @@ class InputsAllOldExport implements FromQuery, WithMultipleSheets, WithStrictNul
         $sheets = [];
 
         foreach ($this->periods as $period) {
-            $id_period = $period->id_period;
-            $period_name = $period->period_name;
+            $id_period = $period->period->id_period;
+            $period_name = $period->period->name;
             $sheets[] = new InputsAllLoopExport($id_period, $period_name);
         }
 

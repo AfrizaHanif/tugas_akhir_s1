@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Part;
 use App\Models\Position;
 use App\Models\SubTeam;
@@ -27,7 +27,7 @@ class UserController extends Controller
         //$parts = Part::whereNot('name', 'Developer')->get();
         $subteams = SubTeam::get(); //GET SUB TEAMS
         /*
-        $officers = Officer::with('position', 'subteam_1')
+        $employees = Employee::with('position', 'subteam_1')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->whereDoesntHave('subteam_1', function($query){
             $query->with('team')->whereHas('team', function($query){
@@ -36,18 +36,20 @@ class UserController extends Controller
                 });
             });
         })
+        ->where('status', 'Active')
         ->get();
         */
-        $officers = Officer::with('position', 'subteam_1')
+        $employees = Employee::with('position', 'subteam_1')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
-        ->get(); //GET OFFICERS
+        //->where('status', 'Active')
+        ->get(); //GET EMPLOYEES
         $count_kbps = User::where('part', 'KBPS')->count(); //COUNT KBPS
 
         //RETURN TO VIEW
         if(Auth::user()->part == "Admin"){
-            return view('Pages.Admin.user', compact('users', 'officers', 'subteams', 'count_kbps'));
+            return view('Pages.Admin.user', compact('users', 'employees', 'subteams', 'count_kbps'));
         }elseif(Auth::user()->part == "Dev"){
-            return view('Pages.Developer.user', compact('users', 'officers', 'subteams', 'count_kbps'));
+            return view('Pages.Developer.user', compact('users', 'employees', 'subteams', 'count_kbps'));
         }
     }
 
@@ -65,7 +67,9 @@ class UserController extends Controller
         }
 
         //GET DATA
-        $officer = Officer::where('id_officer', $request->officer)->first(); //GET OFFICERS
+        $employee = Employee::where('id_employee', $request->id_employee)
+        //->where('status', 'Active')
+        ->first(); //GET EMPLOYEES
 
         //COMBINE KODE
         /*
@@ -85,21 +89,21 @@ class UserController extends Controller
         //VALIDATE DATA
         /*
         $request->validate([
-            'id_officer' => 'unique:users',
+            'id_employee' => 'unique:users',
             'username' => 'unique:users',
             'email' => 'unique:users',
         ], [
-            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            'id_employee.unique' => 'Satu akun hanya dapat digunakan pada satu karyawan. Karyawan tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         $validator = Validator::make($request->all(), [
-            //'id_officer' => 'unique:users',
+            //'id_employee' => 'unique:users',
             'username' => 'regex:/^\S*$/u|unique:users',
             'name' => 'unique:users',
             //'email' => 'unique:users',
         ], [
-            //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            //'id_employee.unique' => 'Satu akun hanya dapat digunakan pada satu karyawan. Karyawan tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'username.regex' => 'Username tidak boleh mengandung spasi',
             'name.unique' => 'Nama tidak boleh sama dengan yang terdaftar',
@@ -154,22 +158,20 @@ class UserController extends Controller
             }
         }
 
-
-        //CHECK IF LEAD
-        /*
-        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $officer->id_position)->first();
+        //CHECK SUITABLE USER
+        $check_lead = Position::where('name', 'LIKE', 'Kepala BPS%')->where('id_position', $employee->id_position)->first();
         if(!empty($check_lead->id_position)){
-            if($check_lead->id_position == $officer->id_position){
+            if($check_lead->id_position == $employee->id_position){
                 $part = 'KBPS';
             }
         }else{
-            if($request->has('is_hr')){
+            if($employee->is_hr == true){
                 $part = 'Admin';
             }else{
-                $part = 'Pegawai';
+                $part = 'Karyawan';
             }
         }
-        */
+        //dd($part);
 
         //STORE DATA
         /*
@@ -180,18 +182,19 @@ class UserController extends Controller
             //'email'=>$request->email,
             'password'=>Hash::make($request->password),
             'part'=>$request->part,
-            //'id_officer'=>$request->id_officer,
+            //'id_employee'=>$request->id_employee,
 		]);
         */
         User::insert([
             'id_user'=>$id_user,
-            'username'=>$officer->id_officer,
-            'nip'=>$officer->id_officer,
-            'name'=>$officer->name,
+            'id_employee'=>$employee->id_employee,
+            'username'=>$employee->id_employee,
+            //'nip'=>$employee->id_employee,
+            //'name'=>$employee->name,
             //'email'=>$request->email,
             'password'=>Hash::make('bps3500'),
-            'part'=>$request->part,
-            //'id_officer'=>$request->id_officer,
+            'part'=>$part,
+            //'id_employee'=>$request->id_employee,
 		]);
 
         //CREATE A LOG
@@ -200,7 +203,7 @@ class UserController extends Controller
             'activity'=>'Pengguna',
             'progress'=>'Create',
             'result'=>'Success',
-            'descriptions'=>'Tambah Pengguna Berhasil ('.$officer->name.')',
+            'descriptions'=>'Tambah Pengguna Berhasil ('.$employee->name.')',
         ]);
 
         //RETURN TO VIEW
@@ -233,23 +236,23 @@ class UserController extends Controller
         //VALIDATE DATA
         /*
         $request->validate([
-            'id_officer' => [Rule::unique('users')->ignore($user),],
+            'id_employee' => [Rule::unique('users')->ignore($user),],
             'username' => [Rule::unique('users')->ignore($user),],
             'email' => [Rule::unique('users')->ignore($user),],
         ], [
-            'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            'id_employee.unique' => 'Satu akun hanya dapat digunakan pada satu karyawan. Karyawan tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'email.unique' => 'E-Mail tidak boleh sama dengan yang terdaftar',
         ]);
         */
         /*
         $validator = Validator::make($request->all(), [
-            //'id_officer' => [Rule::unique('users')->ignore($user),],
+            //'id_employee' => [Rule::unique('users')->ignore($user),],
             'username' => [Rule::unique('users')->ignore($user),'regex:/^\S*$/u'],
             'name' => [Rule::unique('users')->ignore($user),],
             //'email' => [Rule::unique('users')->ignore($user),],
         ], [
-            //'id_officer.unique' => 'Satu akun hanya dapat digunakan pada satu pegawai. Pegawai tersebut telah memiliki akun',
+            //'id_employee.unique' => 'Satu akun hanya dapat digunakan pada satu karyawan. Karyawan tersebut telah memiliki akun',
             'username.unique' => 'Username tidak boleh sama dengan yang terdaftar',
             'username.regex' => 'Username tidak boleh mengandung spasi',
             'name.unique' => 'Nama tidak boleh sama dengan yang terdaftar',
@@ -318,7 +321,7 @@ class UserController extends Controller
                 //'email'=>$request->email,
                 'password'=>Hash::make('bps3500'),
                 'part'=>$request->part,
-                //'id_officer'=>$request->id_officer,
+                //'id_employee'=>$request->id_employee,
             ]);
         }else{
             $user->update([
@@ -326,7 +329,7 @@ class UserController extends Controller
                 //'name'=>$request->name,
                 //'email'=>$request->email,
                 'part'=>$request->part,
-                //'id_officer'=>$request->id_officer,
+                //'id_employee'=>$request->id_employee,
             ]);
         }
 
@@ -336,7 +339,7 @@ class UserController extends Controller
             'activity'=>'Pengguna',
             'progress'=>'Update',
             'result'=>'Success',
-            'descriptions'=>'Ubah Pengguna Berhasil ('.$user->name.')',
+            'descriptions'=>'Ubah Pengguna Berhasil ('.$user->employee->name.')',
         ]);
 
         //RETURN TO VIEW
@@ -372,7 +375,7 @@ class UserController extends Controller
             'activity'=>'Pengguna',
             'progress'=>'Delete',
             'result'=>'Success',
-            'descriptions'=>'Hapus Pengguna Berhasil ('.$user->name.')',
+            'descriptions'=>'Hapus Pengguna Berhasil ('.$user->employee->name.')',
         ]);
 
         //DELETE DATA
@@ -389,6 +392,47 @@ class UserController extends Controller
             return redirect()
             ->route('developer.masters.users.index')
             ->with('success','Hapus Pengguna Berhasil')
+            ->with('code_alert', 1);
+        }
+    }
+
+    public function password($user)
+    {
+        //SET REDIRECT
+        $redirect_route = '';
+        if(Auth::user()->part == "Admin"){
+            $redirect_route = 'admin.masters.users.index';
+        }else{
+            $redirect_route = 'developer.masters.users.index';
+        }
+
+        //GET USER
+        $selected_user = User::where('id_user', $user)->first();
+
+        //CREATE A LOG
+        Log::create([
+            'id_user'=>Auth::user()->id_user,
+            'activity'=>'Pengguna',
+            'progress'=>'Update',
+            'result'=>'Success',
+            'descriptions'=>'Reset Password Pengguna Berhasil ('.$selected_user->employee->name.')',
+        ]);
+
+        //DELETE DATA
+        User::where('id_user', $user)->update([
+            'password'=>Hash::make('bps3500'),
+        ]);
+
+        //RETURN TO VIEW
+        if(Auth::user()->part == "Admin"){
+            return redirect()
+            ->route('admin.masters.users.index')
+            ->with('success','Reset Password Pengguna Berhasil')
+            ->with('code_alert', 1);
+        }elseif(Auth::user()->part == "Dev"){
+            return redirect()
+            ->route('developer.masters.users.index')
+            ->with('success','Reset Password Pengguna Berhasil')
             ->with('code_alert', 1);
         }
     }

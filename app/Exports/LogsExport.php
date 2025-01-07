@@ -58,7 +58,7 @@ class LogsExport implements FromQuery, WithHeadings, WithMapping
         $user = User::where('id_user', $data->id_user)->first();
 
         return [
-            $user->name,
+            $user->employee->name,
             $data->activity,
             $data->progress,
             $data->result,

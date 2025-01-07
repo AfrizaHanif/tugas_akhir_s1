@@ -7,7 +7,7 @@ use App\Models\Position;
 use App\Models\HistoryResult;
 use App\Models\Input;
 use App\Models\Log;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Period;
 use App\Models\Result;
 use App\Models\Score;
@@ -90,7 +90,12 @@ class PeriodController extends Controller
             ]);
 
             //RETURN TO VIEW
-            return redirect()->route('admin.masters.periods.index')->withErrors($validator)->with('modal_redirect', 'modal-per-create')->with('code_alert', 2);
+            return redirect()
+            ->route('admin.masters.periods.index')
+            ->withErrors($validator)
+            ->withInput()
+            ->with('modal_redirect', 'modal-per-create')
+            ->with('code_alert', 2);
         }
 
         //STORE DATA

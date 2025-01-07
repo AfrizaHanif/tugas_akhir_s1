@@ -36,14 +36,14 @@
         <div class="container d-flex flex-wrap justify-content-center">
             <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
                 @if (Auth::check())
-                <button type="button" class="btn">{{Auth::user()->name}}</button>
+                <button type="button" class="btn">{{Auth::user()->employee->name}}</button>
                 @endif
             </div>
             <!--LOGIN / REGISTER-->
             <div class="text-end">
                 @if (Auth::check())
-                    @if (Auth::user()->part == "Pegawai")
-                    <a href="/officer" type="button" class="btn btn-light text-dark me-2">
+                    @if (Auth::user()->part == "Karyawan")
+                    <a href="/employee" type="button" class="btn btn-light text-dark me-2">
                         <i class="bi bi-speedometer2"></i>
                         Dashboard
                     </a>

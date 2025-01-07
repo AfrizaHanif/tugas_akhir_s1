@@ -15,8 +15,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->char('id_period', 11);
             $table->foreign('id_period')->references('id_period')->on('periods');
-            $table->char('id_officer', 11);
-            $table->foreign('id_officer')->references('id_officer')->on('officers');
+            $table->char('id_employee', 11);
+            $table->foreign('id_employee')->references('id_employee')->on('employees');
             $table->decimal('final_score', 8, 3);
             $table->smallInteger('second_score');
             $table->char('status', 15);

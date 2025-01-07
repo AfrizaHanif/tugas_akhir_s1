@@ -1,4 +1,4 @@
-<h1 class="text-center mb-4">Data Input Pegawai</h1>
+<h1 class="text-center mb-4">Data Input Karyawan</h1>
 @include('Templates.Includes.Components.alert')
 @if ($allcriterias->sum('weight')*100 > 100) <!--IF TOTAL MORE THAN 100-->
 <div class="alert alert-warning" role="alert">
@@ -38,11 +38,11 @@
                 @forelse ($history_per as $period)
                 @if (!empty($latest_per))
                 <button class="nav-link text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="false">
-                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
+                    <i class="bi bi-check-lg"></i> {{ $period->period->name }}
                 </button>
                 @else
                 <button class="nav-link {{ $loop->first ? 'active' : '' }} text-start" id="pills-{{ $period->id_period }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $period->id_period }}" type="button" role="tab" aria-controls="pills-{{ $period->id_period }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                    <i class="bi bi-check-lg"></i> {{ $period->period_name }}
+                    <i class="bi bi-check-lg"></i> {{ $period->period->name }}
                 </button>
                 @endif
                 @empty
@@ -69,7 +69,7 @@
                         <!--IMPORT DATA-->
                         <div class="col-auto">
                             <div class="btn-group">
-                                @if ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')) == count($officers) || count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) >= 1)
+                                @if ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Accepted')) == count($employees) || count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) >= 1)
                                     <a href="#" class="btn btn-primary disabled">
                                 @else
                                 <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-inp-import-{{ $latest_per->id_period }}">
@@ -110,7 +110,7 @@
                                 <i class="bi bi-arrow-repeat"></i>
                                 Refresh
                             </a>
-                            @elseif ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) != count($officers) && count($inputs->where('id_period', $latest_per->id_period)->where('status', 'Fixed')) >= 1) <!--AFTER CONVERT DATA (IF REVISION AVAILABLE)-->
+                            @elseif ($latest_per->progress_status == 'Verifying' && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Pending')) != count($employees) && count($inputs->where('id_period', $latest_per->id_period)->where('status', 'Fixed')) >= 1) <!--AFTER CONVERT DATA (IF REVISION AVAILABLE)-->
                             <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-inp-refresh-{{ $latest_per->id_period }}">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Refresh
@@ -193,27 +193,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($officers as $officer)
+                        @forelse ($employees as $employee)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $officer->name }}</td>
-                            <td>{{ $officer->position->name }}</td>
+                            <td>{{ $employee->name }}</td>
+                            <td>{{ $employee->position->name }}</td>
                             <td>
                                 @if ($countsub == 0)
                                 <span class="badge text-bg-secondary">Kriteria Kosong</span>
-                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == $countsub)
+                                @elseif ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period)->count() == $countsub)
                                 <span class="badge text-bg-primary">Terisi Semua</span>
-                                @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() == 0)
+                                @elseif ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period)->count() == 0)
                                 <span class="badge text-bg-danger">Tidak Terisi</span>
                                 @else
                                 <span class="badge text-bg-warning">Terisi Sebagian</span>
                                 @endif
                             </td>
                             <td>
-                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
+                                @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Not Converted')->count() >= 1 && $inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period ?? '')->where('status', 'Pending')->count() >= 1)
                                 <span class="badge text-bg-warning">Perlu Perhatian</span>
                                 @else
-                                    @forelse ($status->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $s)
+                                    @forelse ($status->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period) as $s)
                                         @if ($s->status == 'Pending')
                                         <span class="badge text-bg-primary">Belum Diperiksa</span>
                                         @elseif ($s->status == 'Not Converted')
@@ -233,10 +233,10 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period)->count() != 0)
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}">
+                                @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period)->count() != 0)
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}-{{ $employee->id_employee }}">
                                 @else
-                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Pegawai tersebut belum memiliki data nilai.">
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Karyawan tersebut belum memiliki data nilai.">
                                 <button type="button" class="btn btn-info" disabled>
                                 </span>
                                 @endif
@@ -246,13 +246,13 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                            <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                         </tr>
                         @endforelse
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="10">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                            <td colspan="10">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -277,7 +277,7 @@
             <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="pills-{{ $hperiod->id_period }}" role="tabpanel" aria-labelledby="pills-{{ $hperiod->id_period }}-tab" tabindex="0">
             @endif
                 <!--HEADING WITH MENU-->
-                <h2>{{ $hperiod->period_name }}</h2>
+                <h2>{{ $hperiod->period->name }}</h2>
                 <p>
                     <div class="row g-3 align-items-center">
                         <!--EXPORT DATA-->
@@ -287,12 +287,10 @@
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export
                                 </button>
-                                <!--
                                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-old-inp-export-all">
                                     <i class="bi bi-file-earmark-arrow-down"></i>
                                     Export Semua
                                 </button>
-                                -->
                             </div>
                         </div>
                         <!--DATA CHECKER-->
@@ -315,26 +313,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($hofficers->where('id_period', $hperiod->id_period) as $officer)
+                        @forelse ($hemployees->where('id_period', $hperiod->id_period) as $employee)
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $officer->officer_name }}</td>
-                            <td>{{ $officer->officer_position }}</td>
+                            <td>{{ $employee->employee_name }}</td>
+                            <td>{{ $employee->employee_position }}</td>
                             <td>
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}">
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-old-inp-view-{{ $hperiod->id_period }}-{{ $employee->id_employee }}">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+                            <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
                         </tr>
                         @endforelse
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="10">Total Data: <b>{{ $hofficers->count() }}</b> Pegawai</td>
+                            <td colspan="10">Total Data: <b>{{ $hemployees->count() }}</b> Karyawan</td>
                         </tr>
                     </tfoot>
                 </table>

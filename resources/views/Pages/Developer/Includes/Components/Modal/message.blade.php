@@ -5,7 +5,7 @@
         <div class="modal-content">
             <form action="{{ route('developer.messages.update', $message->id) }}" method="POST" enctype="multipart/form-data" id="form-msg-reply-{{ $message->id }}">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Balas Pesan ({{ $message->officer_name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Balas Pesan ({{ $message->employee_name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-msg-reply-{{ $message->id }}"></button>
                 </div>
                 <div class="modal-body">
@@ -14,12 +14,12 @@
                         <div class="col-md-7">
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label for="officer_nip" class="form-label">NIP Pegawai</label>
-                                    <input type="text" class="form-control" id="officer_nip" name="officer_nip" value="{{ $message->officer_nip }}" readonly>
+                                    <label for="employee_nip" class="form-label">NIP Karyawan</label>
+                                    <input type="text" class="form-control" id="employee_nip" name="employee_nip" value="{{ $message->employee_nip }}" readonly>
                                 </div>
                                 <div class="col">
-                                    <label for="officer_name" class="form-label">Nama Pegawai</label>
-                                    <input type="text" class="form-control" id="officer_name" name="officer_name" value="{{ $message->officer_name }}" readonly>
+                                    <label for="employee_name" class="form-label">Nama Karyawan</label>
+                                    <input type="text" class="form-control" id="employee_name" name="employee_name" value="{{ $message->employee_name }}" readonly>
                                 </div>
                             </div>
                             <hr/>

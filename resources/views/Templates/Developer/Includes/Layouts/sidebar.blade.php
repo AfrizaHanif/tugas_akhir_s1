@@ -22,9 +22,9 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item" href="/developer/masters/officers">
+                        <a class="dropdown-item" href="/developer/masters/employees">
                             <i class="bi bi-people-fill"></i>
-                            Pegawai
+                            Karyawan
                         </a>
                     </li>
                     <li>

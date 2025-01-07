@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Laporan Nilai (Auth::user()->name) | Tugas Akhir</title>
+<title>Laporan Nilai (Auth::user()->employee->name) | Tugas Akhir</title>
 @endsection
 
 <!--CSS-->

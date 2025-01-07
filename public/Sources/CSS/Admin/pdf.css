@@ -2,26 +2,26 @@ p, h1, h2, h3 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#table-officer, #table-result, #table-score, #table-analysis {
+#table-employee, #table-result, #table-score, #table-analysis {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#table-officer td, #table-officer th, #table-result td, #table-result th, #table-score td, #table-score th, #table-analysis td, #table-analysis th {
+#table-employee td, #table-employee th, #table-result td, #table-result th, #table-score td, #table-score th, #table-analysis td, #table-analysis th {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-#table-officer tr:nth-child(even), #table-score tr:nth-child(even), #table-analysis tr:nth-child(even) {
+#table-employee tr:nth-child(even), #table-score tr:nth-child(even), #table-analysis tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-#table-officer tr:hover, #table-score tr:hover , #table-analysis tr:hover {
+#table-employee tr:hover, #table-score tr:hover , #table-analysis tr:hover {
     background-color: #ddd;
 }
 
-#table-officer th {
+#table-employee th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;

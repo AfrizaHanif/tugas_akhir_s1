@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->char('id_user', 11);
+            //$table->foreign('id_user')->references('id_user')->on('users');
             $table->char('activity', 20);
             $table->char('progress', 15);
             $table->char('result', 15);
-            $table->string('descriptions', 200)->nullable();
+            $table->string('descriptions', 500)->nullable();
             $table->timestamps();
         });
     }

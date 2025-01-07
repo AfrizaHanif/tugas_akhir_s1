@@ -40,14 +40,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($officers as $officer)
+                            @forelse ($employees as $employee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $officer->name }}</td>
-                                <td>{{ $officer->position->name }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position->name }}</td>
                                 @if ($countsub != 0)
                                     @foreach ($criterias as $criteria)
-                                        @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period) as $input)
+                                        @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period) as $input)
                                             @if ($input->status == 'Not Converted' && $input->input == $input->input_raw)
                                             <td class="table-warning">{{ $input->input }} {{ $criteria->unit }}</td>
                                             @else
@@ -64,9 +64,9 @@
                                 @endif
                                 @if ($countsub != 0)
                                 <td>
-                                    @if ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == $countsub)
+                                    @if ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == $countsub)
                                     <span class="badge text-bg-primary">Terisi Semua</span>
-                                    @elseif ($inputs->where('id_officer', $officer->id_officer)->where('id_period', $period->id_period)->count() == 0)
+                                    @elseif ($inputs->where('id_employee', $employee->id_employee)->where('id_period', $period->id_period)->count() == 0)
                                     <span class="badge text-bg-danger">Tidak Terisi</span>
                                     @else
                                     <span class="badge text-bg-warning">Terisi Sebagian</span>
@@ -76,13 +76,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="99">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="99">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="99">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+                                <td colspan="99">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -107,20 +107,20 @@
         </div>
     </div>
 </div>
-    @foreach ($officers as $officer)
+    @foreach ($employees as $employee)
     @if (!empty($latest_per))
-    <!--VIEW INPUT PER OFFICER-->
-    <div class="modal fade" id="modal-inp-view-{{ $latest_per->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!--VIEW INPUT PER EMPLOYEE-->
+    <div class="modal fade" id="modal-inp-view-{{ $latest_per->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $officer->name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $employee->name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table">
                     @foreach ($criterias as $criteria)
-                        @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $latest_per->id_period) as $input)
+                        @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $latest_per->id_period) as $input)
                         <tr>
                             @if ($input->status == 'Not Converted' && $input->input == $input->input_raw)
                             <th class="table-warning" scope="row">{{ $criteria->name }}</th>
@@ -164,7 +164,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $hperiod->period_name }})</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Seluruh Data ({{ $hperiod->period->name }})</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -188,13 +188,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($hofficers->where('id_period', $hperiod->id_period) as $hofficer)
+                            @forelse ($hemployees->where('id_period', $hperiod->id_period) as $hemployee)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
-                                <td>{{ $hofficer->officer_name }}</td>
-                                <td>{{ $hofficer->officer_position }}</td>
+                                <td>{{ $hemployee->employee_name }}</td>
+                                <td>{{ $hemployee->employee_position }}</td>
                                 @foreach ($hcriterias->where('id_period', $hperiod->id_period) as $criteria)
-                                    @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $hofficer->id_officer)->where('id_period', $hperiod->id_period) as $history)
+                                    @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_employee', $hemployee->id_employee)->where('id_period', $hperiod->id_period) as $history)
                                         <td>{{ $history->input }} ({{ $history->input_raw }} {{ $criteria->unit }})</td>
                                     @empty
                                         <td>0</td>
@@ -203,13 +203,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="20">Tidak ada Pegawai yang terdaftar</td>
+                                <td colspan="20">Tidak ada Karyawan yang terdaftar</td>
                             </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-group-divider table-secondary">
                             <tr>
-                                <td colspan="20">Total Data: <b>{{ $hofficers->count() }}</b> Pegawai</td>
+                                <td colspan="20">Total Data: <b>{{ $hemployees->count() }}</b> Karyawan</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -225,18 +225,18 @@
     </div>
 </div>
     <!--ARCHIVED PERIOD-->
-    @foreach ($hofficers as $officer)
-    <div class="modal fade" id="modal-old-inp-view-{{ $hperiod->id_period }}-{{ $officer->id_officer }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @foreach ($hemployees as $employee)
+    <div class="modal fade" id="modal-old-inp-view-{{ $hperiod->id_period }}-{{ $employee->id_employee }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $officer->officer_name }})</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data Penilaian ({{ $employee->employee_name }})</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table">
                         @foreach ($hcriterias->where('id_period', $hperiod->id_period) as $criteria)
-                            @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', $officer->id_officer)->where('id_period', $hperiod->id_period) as $history)
+                            @forelse ($histories->where('id_criteria', $criteria->id_criteria)->where('id_employee', $employee->id_employee)->where('id_period', $hperiod->id_period) as $history)
                             <tr>
                                 <th scope="row">{{ $criteria->criteria_name }}</th>
                                 <td>{{ $history->input }} ({{ $history->input_raw }} {{ $criteria->unit }})</td>

@@ -14,7 +14,7 @@
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Kategori</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                     </div>
                     <!--
                     <div-- class="mb-3">
@@ -30,8 +30,8 @@
                         <select class="form-select" id="source" name="source" required>
                             <option selected disabled value="">---Pilih Sumber Data---</option>
                             <option value="Presensi" {{ old('source') == 'Presensi' ? 'selected' : null }}>Presensi</option>
-                            <option value="SKP" {{ old('source') == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Pegawai (SKP)</option>
-                            <option value="CKP" {{ old('source') == 'CKP' ? 'selected' : null }}>Capaian Kinerja Pegawai (CKP)</option>
+                            <option value="SKP" {{ old('source') == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Karyawan (SKP)</option>
+                            <option value="CKP" {{ old('source') == 'CKP' ? 'selected' : null }}>Capaian Kinerja Karyawan (CKP)</option>
                         </select>
                     </div>
                 </div>
@@ -83,8 +83,8 @@
                         <select class="form-select" id="source" name="source" required>
                             <option selected disabled value="">---Pilih Sumber Data---</option>
                             <option value="Presensi" {{ $category->source == 'Presensi' ? 'selected' : null }}>Presensi</option>
-                            <option value="SKP" {{ $category->source == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Pegawai (SKP)</option>
-                            <option value="CKP" {{ $category->source == 'CKP' ? 'selected' : null }}>Capaian Kinerja Pegawai (CKP)</option>
+                            <option value="SKP" {{ $category->source == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Karyawan (SKP)</option>
+                            <option value="CKP" {{ $category->source == 'CKP' ? 'selected' : null }}>Capaian Kinerja Karyawan (CKP)</option>
                         </select>
                     </div>
                 </div>
@@ -162,13 +162,13 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Nama Kriteria</label>
-                                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ old('old_input.name') }}" required>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="weight" class="form-label">Bobot</label>
                                             <div class="input-group">
-                                                <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" value="{{ old('weight') }}" aria-describedby="percent_weight" required>
+                                                <input type="number" class="form-control" id="weight" name="weight" min="0" max="100" value="{{ old('old_input.weight') }}" aria-describedby="percent_weight" required>
                                                 <span class="input-group-text" id="percent_weight">%</span>
                                             </div>
                                         </div>
@@ -176,24 +176,24 @@
                                             <label for="attribute" class="form-label">Atribut</label>
                                             <select class="form-select" id="attribute" name="attribute" required>
                                                 <option selected disabled value="">---Pilih Atribut---</option>
-                                                <option value="Benefit" {{ old('attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
-                                                <option value="Cost" {{ old('attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
+                                                <option value="Benefit" {{ old('old_input.attribute') == 'Benefit' ? 'selected' : null }}>Benefit</option>
+                                                <option value="Cost" {{ old('old_input.attribute') == 'Cost' ? 'selected' : null }}>Cost</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="max" class="form-label">Maksimum Nilai Asli</label>
-                                            <input type="number" class="form-control" id="max" name="max" min="0" value="{{ old('max') }}" required>
+                                            <input type="number" class="form-control" id="max" name="max" min="0" value="{{ old('old_input.max') }}" required>
                                         </div>
                                         <div class="col">
                                             <label for="unit" class="form-label">Satuan Nilai</label>
-                                            <input type="text" class="form-control" id="unit" name="unit" value="{{ old('unit') }}" required>
+                                            <input type="text" class="form-control" id="unit" name="unit" value="{{ old('old_input.unit') }}" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="source" class="form-label">Sumber Kolom (Untuk Import)</label>
-                                        <input type="text" class="form-control" id="source" name="source" value="{{ old('source') }}" required>
+                                        <input type="text" class="form-control" id="source" name="source" value="{{ old('old_input.source') }}" required>
                                     </div>
                                 </div>
                             </div>

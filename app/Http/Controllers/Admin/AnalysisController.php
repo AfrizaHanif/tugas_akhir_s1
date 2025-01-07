@@ -5,18 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
 use App\Models\HistoryInput;
-use App\Models\HistoryInputRAW;
-use App\Models\HistoryScore;
 use App\Models\Input;
-use App\Models\InputRAW;
 use App\Models\Log;
-use App\Models\Performance;
-use App\Models\Presence;
-use App\Models\Result;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Period;
 use App\Models\Setting;
-use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,13 +19,14 @@ class AnalysisController extends Controller
     public function index()
     {
         //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PERIODS
+        $periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PERIODS
         //$latest = Period::whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->latest()->first();
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET RUNNING PERIOD
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
+        $h_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year')->groupBy('periods.year')->orderBy('periods.year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
+        //$h_years = Period::select('year')->groupBy('year')->orderBy('year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
+        $h_months = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.year', 'periods.name')->groupBy('periods.id_period', 'periods.year', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
 
         //RETURN TO VIEW
         return view('Pages.Admin.analysis', compact('periods', 'latest_per', 'h_years', 'h_months'));
@@ -42,16 +36,19 @@ class AnalysisController extends Controller
     {
         //GET DATA
         //$periods = Period::orderBy('id_period', 'ASC')->whereNot('progress_status', 'Skipped')->whereNot('progress_status', 'Pending')->get();
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PERIODS
+        $periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PERIODS
         $subcriterias = Criteria::with('category')->get(); //GET SUB CRITERIAS
-        $officers = Officer::with('position')
+        $employees = Employee::with('position')
+        ->where('status', 'Active')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
-        })->get(); //GET OFFICERS (WITHOUT KEPALA BPS AND DEVELOPER)
+        })
+        ->where('status', 'Active')
+        ->get(); //GET EMPLOYEES (WITHOUT KEPALA BPS AND DEVELOPER)
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
+        $h_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year')->groupBy('periods.year')->orderBy('periods.year', 'ASC')->get(); //GET PREVIOUS PERIOD IN YEAR
+        $h_months = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.year', 'periods.name')->groupBy('periods.id_period', 'periods.year', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PREVIOUS PERIOD
 
         //LATEST PERIOD
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET RUNNING PERIOD
@@ -125,34 +122,34 @@ class AnalysisController extends Controller
 
                     //RETURN TO VIEW
                     return redirect()->route('admin.analysis.index')->with('fail','Total Bobot belum mencapai 100%. Silahkan cek kembali Kriteria yang terdaftar.');
-                }else{ //CHECK OFFICER HAS DATA OR NOT
-                    foreach ($officers as $officer) {
-                        if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->count() == 0){ //IF OFFICER HAS NO DATA
+                }else{ //CHECK EMPLOYEE HAS DATA OR NOT
+                    foreach ($employees as $employee) {
+                        if(Input::where('id_period', $latest_per->id_period)->where('id_employee', $employee->id_employee)->count() == 0){ //IF EMPLOYEE HAS NO DATA
                             //CREATE A LOG
                             Log::create([
                                 'id_user'=>Auth::user()->id_user,
                                 'activity'=>'Analisis',
                                 'progress'=>'View',
                                 'result'=>'Error',
-                                'descriptions'=>'Analisis Gagal (Belum Dinilai Sepenuhnya ('.$officer->name.') ('.$latest_per->name.'))',
+                                'descriptions'=>'Analisis Gagal (Belum Dinilai Sepenuhnya ('.$employee->name.') ('.$latest_per->name.'))',
                             ]);
 
                             //RETURN TO VIEW
-                            return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.')');
-                        }else{ //IF OFFICER HAS A FEW DATA
+                            return redirect()->route('admin.analysis.index')->with('fail','Terdapat karyawan yang belum dinilai sepenuhnya. Silahkan cek kembali di halaman Input Data. ('.$employee->id_employee.')');
+                        }else{ //IF EMPLOYEE HAS A FEW DATA
                             foreach ($subcriterias as $subcriteria) {
-                                if(Input::where('id_period', $latest_per->id_period)->where('id_officer', $officer->id_officer)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
+                                if(Input::where('id_period', $latest_per->id_period)->where('id_employee', $employee->id_employee)->where('id_criteria', $subcriteria->id_criteria)->count() == 0) {
                                     //CREATE A LOG
                                     Log::create([
                                         'id_user'=>Auth::user()->id_user,
                                         'activity'=>'Analisis',
                                         'progress'=>'View',
                                         'result'=>'Error',
-                                        'descriptions'=>'Analisis Gagal (Hanya Dinilai Sebagian ('.$officer->name.') ('.$subcriteria->name.'))',
+                                        'descriptions'=>'Analisis Gagal (Hanya Dinilai Sebagian ('.$employee->name.') ('.$subcriteria->name.'))',
                                     ]);
 
                                     //RETURN TO VIEW
-                                    return redirect()->route('admin.analysis.index')->with('fail','Terdapat pegawai yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$officer->id_officer.') ('.$subcriteria->id_criteria.')');
+                                    return redirect()->route('admin.analysis.index')->with('fail','Terdapat karyawan yang hanya dinilai sebagian. Silahkan cek kembali di halaman Input Data. ('.$employee->id_employee.') ('.$subcriteria->id_criteria.')');
                                 }else{ //ALL CLEAR
                                     //CLEAR
                                 }
@@ -177,16 +174,16 @@ class AnalysisController extends Controller
 
         //SAW ANALYSIS
         //GET ALTERNATIVE
-        $alternatives = Input::with('criteria', 'officer')
-        ->select('id_officer')
-        ->groupBy('id_officer')
+        $alternatives = Input::with('criteria', 'employee')
+        ->select('id_employee')
+        ->groupBy('id_employee')
         ->where('id_period', $latest_per->id_period)
-        ->whereHas('officer', function($query){
+        ->whereHas('employee', function($query){
             $query->with('position')->whereDoesntHave('position', function($query){
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
         })
-        ->getQuery()->get(); //GET OFFICERS AS ALTERNATIVES
+        ->getQuery()->get(); //GET EMPLOYEES AS ALTERNATIVES
 
         //GET CRITERIA
         $criterias = DB::table("inputs")
@@ -207,9 +204,9 @@ class AnalysisController extends Controller
         //$criterias = Criteria::get();
 
         //GET INPUT
-        $inputs = Input::with('criteria', 'officer')
+        $inputs = Input::with('criteria', 'employee')
         ->where('id_period', $latest_per->id_period)
-        ->whereHas('officer', function($query){
+        ->whereHas('employee', function($query){
             $query->with('position')->whereDoesntHave('position', function($query){
                 $query->where('name', 'Developer')->orWhere('name', 'LIKE', 'Kepala BPS%');
             });
@@ -235,18 +232,18 @@ class AnalysisController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
+                        $normal[$value1->id_employee][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
                         if(min($minmax[$value2->id_criteria]) == 0){
                             if($value1->input == 0){
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / 0.5;
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / 0.5;
                             }else{
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
                             }
                         }else{
-                            $normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
+                            $normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
                         }
-                        //$normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
+                        //$normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -257,7 +254,7 @@ class AnalysisController extends Controller
         foreach($inputs as $input => $value1){
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
-                    $mxin[$value1->id_officer][$value2->id_criteria] = $normal[$value1->id_officer][$value2->id_criteria] * $value2->weight;
+                    $mxin[$value1->id_employee][$value2->id_criteria] = $normal[$value1->id_employee][$value2->id_criteria] * $value2->weight;
                 }
             }
         }
@@ -270,7 +267,7 @@ class AnalysisController extends Controller
             $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
             /*
             DB::table('hasil_saw_desa')->insert([
-                'id_officer'=>$n,
+                'id_employee'=>$n,
                 'matrix'=>$matrix[$n],
             ]);
             */
@@ -287,28 +284,28 @@ class AnalysisController extends Controller
             'descriptions'=>'Analisis Berhasil ('.$latest_per->name.')',
         ]);
 
-        //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
+        //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'employees', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('subcriterias', 'officers', 'alternatives', 'set_crit','criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
+        return view('Pages.Admin.analysis', compact('subcriterias', 'employees', 'alternatives', 'set_crit','criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
     }
 
     public function history_saw($period)
     {
         //GET DATA
-        $periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
-        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $period)->get(); //GET PREVIOUS SUB CRITERIAS
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->where('id_period', $period)->get();  //GET PREVIOUS OFFICERS
+        $periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
+        $subcriterias = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('history_inputs.id_category', 'history_inputs.category_name', 'history_inputs.id_criteria', 'history_inputs.criteria_name', 'history_inputs.attribute', 'history_inputs.weight')->groupBy('history_inputs.id_category', 'history_inputs.category_name', 'history_inputs.id_criteria', 'history_inputs.criteria_name', 'history_inputs.attribute', 'history_inputs.weight')->where('periods.id_period', $period)->get(); //GET PREVIOUS SUB CRITERIAS
+        $employees = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name', 'id_employee', 'employee_name', 'employee_position')->groupBy('periods.id_period', 'periods.name', 'id_employee', 'employee_name', 'employee_position')->where('periods.id_period', $period)->get();  //GET PREVIOUS EMPLOYEES
 
         //SELECTED PERIOD
-        $select_period = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->where('id_period', $period)->orderBy('id_period', 'ASC')->first(); //GET SELECTED OLD PERIOD
+        $select_period = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->where('periods.id_period', $period)->orderBy('periods.id_period', 'ASC')->first(); //GET SELECTED OLD PERIOD
 
         //LATEST PERIOD
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
 
         //GET DATA FOR PERIOD PICKER
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR
-        $h_months = HistoryInput::select('id_period', 'period_year', 'period_name')->groupBy('id_period', 'period_year', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
+        $h_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year')->groupBy('periods.year')->orderBy('periods.year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR
+        $h_months = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.year', 'periods.name')->groupBy('periods.id_period', 'periods.year', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PREVIOUS PERIODS
 
         //GET DATA FOR SORT
         $setting = Setting::where('id_setting', 'STG-002')->first()->value; //GET CURRENT VALUE SETTING
@@ -317,12 +314,12 @@ class AnalysisController extends Controller
 
         //SAW ANALYSIS
         //GET ALTERNATIVE
-        $alternatives = HistoryInput::with('criteria', 'officer')
-        ->select('id_officer')
-        ->groupBy('id_officer')
+        $alternatives = HistoryInput::with('criteria', 'employee')
+        ->select('id_employee')
+        ->groupBy('id_employee')
         ->where('id_period', $period)
         //->where('is_lead', 'No')
-        ->getQuery()->get(); //GET PREVIOUS OFFICERS AS ALTERNATIVES
+        ->getQuery()->get(); //GET PREVIOUS EMPLOYEES AS ALTERNATIVES
 
         //GET CRITERIA
         $criterias = DB::table("history_inputs")
@@ -365,18 +362,18 @@ class AnalysisController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
+                        $normal[$value1->id_employee][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
                         if(min($minmax[$value2->id_criteria]) == 0){
                             if($value1->input == 0){
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / 0.5;
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / 0.5;
                             }else{
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
                             }
                         }else{
-                            $normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
+                            $normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
                         }
-                        //$normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
+                        //$normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -387,7 +384,7 @@ class AnalysisController extends Controller
         foreach($inputs as $input => $value1){
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
-                    $mxin[$value1->id_officer][$value2->id_criteria] = $normal[$value1->id_officer][$value2->id_criteria] * $value2->weight;
+                    $mxin[$value1->id_employee][$value2->id_criteria] = $normal[$value1->id_employee][$value2->id_criteria] * $value2->weight;
                 }
             }
         }
@@ -400,7 +397,7 @@ class AnalysisController extends Controller
             $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
             /*
             DB::table('hasil_saw_desa')->insert([
-                'id_officer'=>$n,
+                'id_employee'=>$n,
                 'matrix'=>$matrix[$n],
             ]);
             */
@@ -417,9 +414,9 @@ class AnalysisController extends Controller
             'descriptions'=>'Analisis Berhasil ('.$select_period->name.')',
         ]);
 
-        //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'officers', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
+        //return view('Pages.Admin.Analysis.saw', compact('subcriterias', 'employees', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods'));
 
         //RETURN TO VIEW
-        return view('Pages.Admin.analysis', compact('select_period', 'subcriterias', 'officers', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
+        return view('Pages.Admin.analysis', compact('select_period', 'subcriterias', 'employees', 'h_set_crit', 'alternatives', 'criterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix', 'periods', 'latest_per', 'h_years', 'h_months'));
     }
 }

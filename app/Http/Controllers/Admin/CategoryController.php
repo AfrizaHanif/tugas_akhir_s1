@@ -79,6 +79,7 @@ class CategoryController extends Controller
             return redirect()
             ->route('admin.masters.criterias.index')
             ->withErrors($validator)
+            ->withInput()
             ->with('modal_redirect', 'modal-cat-create');
         }
 

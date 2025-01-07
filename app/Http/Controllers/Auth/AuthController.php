@@ -16,10 +16,10 @@ class AuthController extends Controller
     {
         //RETURN TO VIEW
         if (Auth::check()){
-            if(Auth::user()->part != "Pegawai"){
+            if(Auth::user()->part != "Karyawan"){
                 return view('Pages.Admin.dashboard');
             }else{
-                return view('Pages.Officer.dashboard');
+                return view('Pages.Employee.dashboard');
             }
         }
         else{
@@ -36,7 +36,8 @@ class AuthController extends Controller
         ]);
 
         if(is_numeric($request->input('login'))){
-            $login_type = 'nip';
+            //$login_type = 'nip';
+            $login_type = 'id_employee';
         }else{
             $login_type = 'username';
         }
@@ -70,8 +71,8 @@ class AuthController extends Controller
                 User::where('id_user', Auth::user()->id_user)->update([
                     'first_time_login'=>false
                 ]);
-                if(auth()->user()->part == "Pegawai"){
-                    return redirect()->route('officer')
+                if(auth()->user()->part == "Karyawan"){
+                    return redirect()->route('employee')
                     ->withSuccess('Selamat Datang!')
                     ->with('modal_redirect', 'modal-dsh-first');
                 }elseif(auth()->user()->part == "Dev"){
@@ -85,8 +86,8 @@ class AuthController extends Controller
                 }
             } else {
                 //$first_time_login = false;
-                if(auth()->user()->part == "Pegawai"){
-                    return redirect()->route('officer')->withSuccess('Selamat Datang!');
+                if(auth()->user()->part == "Karyawan"){
+                    return redirect()->route('employee')->withSuccess('Selamat Datang!');
                 }elseif(auth()->user()->part == "Dev"){
                     return redirect()->route('developer')->withSuccess('Selamat Datang!');
                 }else{

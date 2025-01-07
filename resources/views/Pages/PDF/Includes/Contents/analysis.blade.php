@@ -1,26 +1,26 @@
 <img src="{{ public_path('Images/Logo/BPS Black.png') }}" style="max-width: 30%;">
 <h1 style="text-align:center;">Laporan Analisis Data</h1>
-<h2 style="text-align:center;">Periode {{ $periods->period_name }}</h2>
+<h2 style="text-align:center;">Periode {{ $periods->period->name }}</h2>
 <p>Tanggal Pembaharuan: {{ now() }}</p>
-<h3>Pegawai yang Terlibat</h3>
+<h3>Karyawan yang Terlibat</h3>
 <table id="table-analysis">
     <thead>
         <tr>
             <th>NIP</th>
-            <th>Nama Pegawai</th>
+            <th>Nama Karyawan</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($officers as $officer)
+        @foreach ($employees as $employee)
         <tr>
-            <td>{{ $officer->id_officer }}</td>
-            <td>{{ $officer->officer_name }}</td>
+            <td>{{ $employee->id_employee }}</td>
+            <td>{{ $employee->employee_name }}</td>
         </tr>
         @endforeach
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="2">Total Data: <b>{{ count($officers) }}</b> Pegawai</td>
+            <td colspan="2">Total Data: <b>{{ count($employees) }}</b> Karyawan</td>
         </tr>
     </tfoot>
 </table>
@@ -60,9 +60,9 @@
     <tbody>
         @forelse ($alternatives as $alt)
         <tr>
-            <td>{{ $alt->id_officer }}</td>
+            <td>{{ $alt->id_employee }}</td>
             @if (count($inputs) > 0)
-                @foreach ($inputs->where('id_officer', $alt->id_officer) as $input)
+                @foreach ($inputs->where('id_employee', $alt->id_employee) as $input)
                 <td>
                     {{ $input->input }}
                 </td>
@@ -156,7 +156,7 @@
         @php $no = 1;@endphp
         @foreach ($matrix as $sqrt1 => $valsqrt1)
         <tr>
-            <th scope="row">{{$officers->where('id_officer', $sqrt1)->first()->officer_name ?? ''}} ({{ $sqrt1 }})</th>
+            <th scope="row">{{$employees->where('id_employee', $sqrt1)->first()->employee_name ?? ''}} ({{ $sqrt1 }})</th>
             <td>{{ number_format($valsqrt1,3) }}</td>
             <td>{{ $no++ }}</td>
         </tr>
@@ -169,6 +169,6 @@
     </tfoot>
 </table>
 <ul>
-    <li>Dikarenakan bahwa terbatasnya tampilan laporan, maka nama Pegawai dan Kriteria diganti dengan kode Pegawai dan Kriteria. Silahkan cek pada Pegawai dan Kriteria yang terlibat untuk melihat kode dan nama tersebut.</li>
+    <li>Dikarenakan bahwa terbatasnya tampilan laporan, maka nama Karyawan dan Kriteria diganti dengan kode Karyawan dan Kriteria. Silahkan cek pada Karyawan dan Kriteria yang terlibat untuk melihat kode dan nama tersebut.</li>
     <li>Analisis yang digunakan adalah analisis <b>SAW</b> untuk menentukan karyawan terbaik.</li>
 </ul>

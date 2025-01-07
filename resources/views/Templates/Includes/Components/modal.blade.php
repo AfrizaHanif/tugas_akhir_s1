@@ -17,7 +17,7 @@
     </div>
 </div>
 
-@if (Request::is('admin') || Request::is('officer'))
+@if (Request::is('admin') || Request::is('employee'))
 <!--WELCOME (FIRST TIME)-->
 <div class="modal modal-sheet fade p-4 py-md-1" tabindex="-1" role="dialog" id="modal-dsh-first">
     <div class="modal-dialog" role="document">
@@ -33,7 +33,7 @@
                             Mengelola data jadi lebih mudah hanya dalam satu halaman saja.
                         </div>
                     </li>
-                    @elseif (Auth::user()->part == 'KBPS' || Auth::user()->part == 'Pegawai')
+                    @elseif (Auth::user()->part == 'KBPS' || Auth::user()->part == 'Karyawan')
                     <li class="d-flex gap-4">
                         <svg class="bi text-body-secondary flex-shrink-0" width="48" height="48"><use xlink:href="#first_easy"/></svg>
                         <div>
@@ -47,7 +47,7 @@
                         <svg class="bi text-success flex-shrink-0" width="48" height="48"><use xlink:href="#first_fast"/></svg>
                         <div>
                             <h5 class="mb-0">Cepat Diproses</h5>
-                            Pemasukkan data menjadi lebih cepat dengan metode Import (Pegawai dan Data Input).
+                            Pemasukkan data menjadi lebih cepat dengan metode Import (Karyawan dan Data Input).
                         </div>
                     </li>
                     @elseif (Auth::user()->part == 'KBPS')
@@ -58,7 +58,7 @@
                             Pengambilan Nilai Akhir langsung dapat hanya dengan satu klik saat validasi.
                         </div>
                     </li>
-                    @elseif (Auth::user()->part == 'Pegawai')
+                    @elseif (Auth::user()->part == 'Karyawan')
                     <li class="d-flex gap-4">
                         <svg class="bi text-success flex-shrink-0" width="48" height="48"><use xlink:href="#first_chart"/></svg>
                         <div>
@@ -101,7 +101,7 @@
                     <div class="col-md-6">
                         <div class="h-100 p-5 bg-primary-subtle text-primary-emphasis rounded-3">
                             <h2><i class="bi bi-flag"></i> Tujuan Kami</h2>
-                            <p>Aplikasi yang Anda gunakan saat ini dapat melakukan penentuan karyawan terbaik oleh sistem sesuai dengan kinerja pegawai dan memenuhi tujuh kriteria BerAkhlak. Dengan adanya penerapan metode yang digunakan oleh sistem ini (SAW) diharapkan mampu untuk membantu pengguna untuk menentukan pegawai yang terpilih sebagai karyawan terbaik.</p>
+                            <p>Aplikasi yang Anda gunakan saat ini dapat melakukan penentuan karyawan terbaik oleh sistem sesuai dengan kinerja karyawan dan memenuhi tujuh kriteria BerAkhlak. Dengan adanya penerapan metode yang digunakan oleh sistem ini (SAW) diharapkan mampu untuk membantu pengguna untuk menentukan karyawan yang terpilih sebagai karyawan terbaik.</p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                         <img src="{{ asset('Images/About/2. Middle.jpg') }}" class="d-block w-100 rounded-2" alt="...">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Tujuan Kami</h5>
-                            <p>Aplikasi yang anda gunakaan saat ini dapat melakukan penentuan karyawan terbaik oleh sistem sesuai dengan kinerja pegawai dan memenuhi kriteria BerAkhlak. Dengan adanya penerapan metode yang digunakan oleh sistem ini (SAW) diharapkan mampu untuk membantu pengguna untuk menentukan pegawai yang terpilih sebagai karyawan terbaik.</p>
+                            <p>Aplikasi yang anda gunakaan saat ini dapat melakukan penentuan karyawan terbaik oleh sistem sesuai dengan kinerja karyawan dan memenuhi kriteria BerAkhlak. Dengan adanya penerapan metode yang digunakan oleh sistem ini (SAW) diharapkan mampu untuk membantu pengguna untuk menentukan karyawan yang terpilih sebagai karyawan terbaik.</p>
                         </div>
                     </div>
                     <div class="carousel-item">

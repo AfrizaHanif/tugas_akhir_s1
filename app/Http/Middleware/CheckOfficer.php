@@ -18,7 +18,7 @@ class CheckOfficer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->part == "Pegawai") {
+        if (Auth::check() && Auth::user()->part == "Karyawan") {
             //FUTURE DEVELOPMENT
             if(Auth::check() && Auth::user()->force_logout == true){
                 User::where('id_user', Auth::user()->id_user)->update(['force_logout' => false]);

@@ -12,16 +12,16 @@
                     @forelse ($h_years as $h_year)
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis-{{ $h_year->period_year }}" aria-expanded="true" aria-controls="collapse-analysis-{{ $h_year->period_year }}">
-                                {{ $h_year->period_year }}
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-analysis-{{ $h_year->year }}" aria-expanded="true" aria-controls="collapse-analysis-{{ $h_year->year }}">
+                                {{ $h_year->year }}
                             </button>
                         </h2>
-                        <div id="collapse-analysis-{{ $h_year->period_year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
+                        <div id="collapse-analysis-{{ $h_year->year }}" class="accordion-collapse collapse" data-bs-parent="#accordion-analysis">
                             <div class="accordion-body">
-                                @forelse ($h_months->where('period_year', $h_year->period_year) as $h_month)
+                                @forelse ($h_months->where('year', $h_year->year) as $h_month)
                                 <div class="row align-items-center pt-1">
                                     <div class="col">
-                                        {{ $h_month->period_name }}
+                                        {{ $h_month->period->name }}
                                     </div>
                                     <div class="col">
                                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

@@ -1,19 +1,19 @@
-<h1 class="text-center mb-4">Data Pegawai</h1>
+<h1 class="text-center mb-4">Data Karyawan</h1>
 <!--SEARCH FORM-->
 <p>
-    <form action="{{ route('officers.search') }}" method="GET">
+    <form action="{{ route('employees.search') }}" method="GET">
         <div class="input-group mb-3">
-            <span class="input-group-text" id="officer-search"><i class="bi bi-search"></i></span>
-            @if (Request::is('officers/search*'))
-            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search" value="{{ $search }}">
+            <span class="input-group-text" id="employee-search"><i class="bi bi-search"></i></span>
+            @if (Request::is('employees/search*'))
+            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari karyawan, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="employee-search" value="{{ $search }}">
             @else
-            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari pegawai, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="officer-search">
+            <input type="search" id="search" name="search" class="typeahead form-control" placeholder="Ketik untuk mencari karyawan, lalu tekan enter atau klik cari" aria-label="Search" aria-describedby="employee-search">
             @endif
-            <button class="btn btn-outline-primary" type="submit" id="officer-search">Cari</button>
+            <button class="btn btn-outline-primary" type="submit" id="employee-search">Cari</button>
         </div>
     </form>
 </p>
-@if (Request::is('officers/search*'))
+@if (Request::is('employees/search*'))
 <!--SEARCH PAGE-->
 <!--TABLE-->
 <table class="table table-hover table-bordered">
@@ -27,12 +27,12 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($officers as $officer)
+        @forelse ($employees as $employee)
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $officer->name }}</td>
-            <td>{{ $officer->position->name }}</td>
-            <td>{{ $officer->gender }}</td>
+            <td>{{ $employee->name }}</td>
+            <td>{{ $employee->position->name }}</td>
+            <td>{{ $employee->gender }}</td>
             <td>
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,7 +40,7 @@
                     </button>
                     <ul class="dropdown-menu mx-0 shadow w-table-menu">
                         <li>
-                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-view-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                            <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-emp-view-{{ $employee->id_employee }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                 Detail
                             </a>
                         </li>
@@ -50,17 +50,17 @@
         </tr>
         @empty
         <tr>
-            <td colspan="7">Tidak ada Pegawai yang terdaftar</td>
+            <td colspan="7">Tidak ada Karyawan yang terdaftar</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot class="table-group-divider table-secondary">
         <tr>
-            <td colspan="7">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+            <td colspan="7">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
         </tr>
     </tfoot>
 </table>
-{{$officers->withQueryString()->links()}}
+{{$employees->withQueryString()->links()}}
 @else
 <!--MAIN PAGE-->
 <div class="row g-2">
@@ -136,12 +136,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($officers->where('id_sub_team_1', $subteam->id_sub_team) as $officer)
+                                @forelse ($employees->where('id_sub_team_1', $subteam->id_sub_team) as $employee)
                                 <tr>
                                     <th scope="row">{{ $loop->iteration }}</th>
-                                    <td>{{ $officer->name }}</td>
-                                    <td>{{ $officer->position->name }}</td>
-                                    <td>{{ $officer->subteam_2->name ?? 'Tidak Ada'}}</td>
+                                    <td>{{ $employee->name }}</td>
+                                    <td>{{ $employee->position->name }}</td>
+                                    <td>{{ $employee->subteam_2->name ?? 'Tidak Ada'}}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -149,7 +149,7 @@
                                             </button>
                                             <ul class="dropdown-menu mx-0 shadow w-table-menu">
                                                 <li>
-                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-off-view-{{ $officer->id_officer }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
+                                                    <a class="dropdown-item d-flex gap-2 align-items-center"  href="#" data-bs-toggle="modal" data-bs-target="#modal-emp-view-{{ $employee->id_employee }}"><svg class="bi" width="16" height="16" style="vertical-align: -.125em;"><use xlink:href="#view"/></svg>
                                                         Detail
                                                     </a>
                                                 </li>
@@ -159,13 +159,13 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7">Tidak ada Pegawai yang terdaftar</td>
+                                    <td colspan="7">Tidak ada Karyawan yang terdaftar</td>
                                 </tr>
                                 @endforelse
                             </tbody>
                             <tfoot class="table-group-divider table-secondary">
                                 <tr>
-                                    <td colspan="7">Total Data: <b>{{ $officers->where('id_part', $part->id_part)->count() }}</b> Pegawai</td>
+                                    <td colspan="7">Total Data: <b>{{ $employees->where('id_part', $part->id_part)->count() }}</b> Karyawan</td>
                                 </tr>
                             </tfoot>
                         </table>

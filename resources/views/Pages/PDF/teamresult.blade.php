@@ -3,7 +3,7 @@
 
 <!--TITLE-->
 @section('title')
-<title>Laporan Karyawan Tim {{ $subteams->sub_team_1_name }} Terbaik ({{ $periods->period_name }}) | Tugas Akhir</title>
+<title>Laporan Karyawan Tim {{ $subteams->sub_team_1_name }} Terbaik ({{ $periods->period->name }}) | Tugas Akhir</title>
 @endsection
 
 <!--CSS-->

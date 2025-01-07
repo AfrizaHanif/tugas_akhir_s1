@@ -31,8 +31,8 @@ class Position extends Model
     */
 
     //CONNECT FROM ANOTHER TABLE
-    public function officer()
+    public function employee()
     {
-        return $this->hasMany(Officer::class, 'id_position', 'id_position');
+        return $this->hasMany(Employee::class, 'id_position', 'id_position');
     }
 }

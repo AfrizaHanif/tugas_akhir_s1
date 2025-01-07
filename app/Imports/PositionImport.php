@@ -28,7 +28,7 @@ class PositionImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Skip
                 'table'=>'positions',
                 'field'=>'id_position',
                 'length'=>7,
-                'prefix'=>'DPT-',
+                'prefix'=>'POS-',
                 'reset_on_prefix_change'=>true,
             ]);
 

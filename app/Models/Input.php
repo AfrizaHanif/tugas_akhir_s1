@@ -17,7 +17,7 @@ class Input extends Model
     protected $fillable = [
         'id_input',
         'id_period', //FOREIGN
-        'id_officer', //FOREIGN
+        'id_employee', //FOREIGN
         'id_criteria', //FOREIGN
         'input',
         'input_raw',
@@ -25,9 +25,9 @@ class Input extends Model
     ];
 
     //CONNECT TO ANOTHER TABLE
-    public function officer()
+    public function employee()
     {
-        return $this->belongsTo(Officer::class, 'id_officer', 'id_officer',);
+        return $this->belongsTo(Employee::class, 'id_employee', 'id_employee',);
     }
     public function period()
     {

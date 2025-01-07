@@ -10,7 +10,7 @@
     <!--PAGE MENU (CHANGE IF PAGE MENU FROM SIDEBAR HAS CHANGED)-->
     <div class="offcanvas-body text-bg-dark">
         <ul class="nav nav-pills flex-column mb-auto">
-            <div id="selector-offcanvas">
+            <div id="selector-sidebar">
                 @if (Auth::check())
                 <li class="nav-item">
                     <a href="/admin" class="{{ (request()->is('admin')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
@@ -20,9 +20,9 @@
                 </li>
                 @if (Auth::user()->part == "KBU" || Auth::user()->part == "KTT" || Auth::user()->part == "KBPS")
                 <li class="nav-item">
-                    <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
-                        Pegawai
+                    <a href="/admin/masters/employees" class="{{ (request()->is('admin/masters/employees*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#employee"/></svg>
+                        Karyawan
                     </a>
                 </li>
                 @endif
@@ -32,12 +32,12 @@
                         <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#master"/></svg>
                         Master
                     </button>
-                    <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector-offcanvas">
+                    <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector-sidebar">
                         <ul class="list-unstyled fw-normal pb-1 small">
                             <li>
-                                <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
-                                    Pegawai
+                                <a href="/admin/masters/employees" class="{{ (request()->is('admin/masters/employees*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#employee"/></svg>
+                                    Karyawan
                                 </a>
                             </li>
                             <li>
@@ -62,52 +62,26 @@
                     </div>
                 </li>
                 @endif
+                @if (Auth::user()->part == "Admin")
                 <li class="nav-item">
-                    <button class="nav-link text-white collapsed dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#inputs-collapse" aria-expanded="{{ (request()->is('admin/inputs*')) ? 'true' : 'false' }}">
-                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#input"/></svg>
-                        Input
-                    </button>
-                    <div class="{{ (request()->is('admin/inputs*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="inputs-collapse" data-bs-parent="#selector-offcanvas">
-                        <ul class="list-unstyled fw-normal pb-1 small">
-                            @if (Auth::user()->part == "Admin")
-                            <li>
-                                <a href="/admin/inputs/data" class="{{ (request()->is('admin/inputs/data*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
-                                    Data Input
-                                </a>
-                            </li>
-                            @elseif (Auth::user()->part == "KBPS")
-                            <li>
-                                <a href="/admin/inputs/validate" class="{{ (request()->is('admin/inputs/validate*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
-                                    Verifikasi Input
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
+                    <a href="/admin/inputs/data" class="{{ (request()->is('admin/inputs/data*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#presence"/></svg>
+                        Data Input
+                    </a>
                 </li>
+                @elseif (Auth::user()->part == "KBPS")
                 <li class="nav-item">
-                    <button class="nav-link text-white collapsed dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#analysis-collapse" aria-expanded="{{ (request()->is('admin/analysis*')) ? 'true' : 'false' }}">
+                    <a href="/admin/inputs/validate" class="{{ (request()->is('admin/inputs/validate*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                        <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#score"/></svg>
+                        Verifikasi Input
+                    </a>
+                </li>
+                @endif
+                <li class="nav-item">
+                    <a href="/admin/analysis" class="{{ (request()->is('admin/analysis*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
                         <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#analysis"/></svg>
-                        Analysis
-                    </button>
-                    <div class="{{ (request()->is('admin/analysis*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="analysis-collapse" data-bs-parent="#selector-offcanvas">
-                        <ul class="list-unstyled fw-normal pb-1 small">
-                            <li>
-                                <a href="/admin/analysis/saw" class="{{ (request()->is('admin/analysis/saw*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#saw"/></svg>
-                                    SAW
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/analysis/wp" class="{{ (request()->is('admin/analysis/wp*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#wp"/></svg>
-                                    WP
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                        Analisis Data
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a href="/admin/reports" class="{{ (request()->is('admin/reports')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">

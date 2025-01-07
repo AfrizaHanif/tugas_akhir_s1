@@ -18,13 +18,13 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($officers as $officer)
+        @forelse ($employees as $employee)
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $officer->name }}</td>
-            <td>{{ $officer->position->name }}</td>
+            <td>{{ $employee->name }}</td>
+            <td>{{ $employee->position->name }}</td>
             @foreach ($subcritprs as $prs)
-                @forelse ($presences->where('id_sub_criteria', $prs->id_sub_criteria)->where('id_officer', $officer->id_officer) as $presence)
+                @forelse ($presences->where('id_sub_criteria', $prs->id_sub_criteria)->where('id_employee', $employee->id_employee) as $presence)
                 <td>{{ $presence->input }}</td>
                 @empty
                     <td>0</td>
@@ -33,13 +33,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+            <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot class="table-group-divider table-secondary">
         <tr>
-            <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+            <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
         </tr>
     </tfoot>
 </table>
@@ -60,13 +60,13 @@
         </tr>
     </thead>
     <tbody>
-        @forelse ($officers as $officer)
+        @forelse ($employees as $employee)
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $officer->name }}</td>
-            <td>{{ $officer->position->name }}</td>
+            <td>{{ $employee->name }}</td>
+            <td>{{ $employee->position->name }}</td>
             @foreach ($subcritprf as $prf)
-                @forelse ($performances->where('id_sub_criteria', $prf->id_sub_criteria)->where('id_officer', $officer->id_officer) as $performance)
+                @forelse ($performances->where('id_sub_criteria', $prf->id_sub_criteria)->where('id_employee', $employee->id_employee) as $performance)
                 <td>{{ $performance->input }}</td>
                 @empty
                 <td>0</td>
@@ -75,13 +75,13 @@
         </tr>
         @empty
         <tr>
-            <td colspan="10">Tidak ada Pegawai yang terdaftar</td>
+            <td colspan="10">Tidak ada Karyawan yang terdaftar</td>
         </tr>
         @endforelse
     </tbody>
     <tfoot class="table-group-divider table-secondary">
         <tr>
-            <td colspan="20">Total Data: <b>{{ $officers->count() }}</b> Pegawai</td>
+            <td colspan="20">Total Data: <b>{{ $employees->count() }}</b> Karyawan</td>
         </tr>
     </tfoot>
 </table>

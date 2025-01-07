@@ -52,7 +52,7 @@
     <i class="bi bi-x-circle-fill"></i> <strong>ERROR</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <br/>
-    Import berhasil, namun terdapat kesalahan saat melakukan Import Data Pegawai:
+    Import berhasil, namun terdapat kesalahan saat melakukan Import Data Karyawan:
     <table class="table table-danger">
         <tr>
             <th>Row</th>

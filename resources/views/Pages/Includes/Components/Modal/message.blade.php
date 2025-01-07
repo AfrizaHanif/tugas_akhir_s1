@@ -6,7 +6,7 @@
             @if (Auth::user()->part == 'Admin')
             <form action="{{ route('admin.messages.in') }}" method="POST" enctype="multipart/form-data" id="form-msg-send">
             @else
-            <form action="{{ route('officer.messages.in') }}" method="POST" enctype="multipart/form-data" id="form-msg-send">
+            <form action="{{ route('employee.messages.in') }}" method="POST" enctype="multipart/form-data" id="form-msg-send">
             @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Kirim Pesan Feedback</h1>
@@ -24,12 +24,12 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="officer_nip" class="form-label" hidden>ID</label>
-                            <input type="text" class="form-control" id="officer_nip" name="officer_nip" value="{{ Auth::user()->nip }}" hidden>
+                            <label for="employee_nip" class="form-label" hidden>ID</label>
+                            <input type="text" class="form-control" id="employee_nip" name="employee_nip" value="{{ Auth::user()->id_employee }}" hidden>
                         </div>
                         <div class="col">
-                            <label for="officer_name" class="form-label" hidden>Nama Pegawai</label>
-                            <input type="text" class="form-control" id="officer_name" name="officer_name" value="{{ Auth::user()->name }}" hidden>
+                            <label for="employee_name" class="form-label" hidden>Nama Karyawan</label>
+                            <input type="text" class="form-control" id="employee_name" name="employee_name" value="{{ Auth::user()->employee->name }}" hidden>
                         </div>
                     </div>
                     <div class="mb-3">

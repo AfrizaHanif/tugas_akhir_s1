@@ -33,7 +33,7 @@ class InputsAllLoopExport implements FromQuery, WithHeadings, WithMapping, WithT
     {
         return [
             'NIP',
-            'Nama Pegawai',
+            'Nama Karyawan',
             'Kriteria',
             'Nilai Asli',
             'Nilai Konversi',
@@ -42,11 +42,11 @@ class InputsAllLoopExport implements FromQuery, WithHeadings, WithMapping, WithT
 
     public function map($data) : array {
         return [
-            $data->id_officer,
-            $data->officer_name,
+            $data->id_employee,
+            $data->employee_name,
             $data->criteria_name,
-            $data->input,
             $data->input_raw,
+            $data->input,
         ] ;
     }
 

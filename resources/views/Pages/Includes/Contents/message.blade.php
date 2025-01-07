@@ -24,7 +24,7 @@
             <th rowspan="2" class="col-1" scope="col">#</th>
             @if (Auth::user()->part == "Dev")
             <th rowspan="2" class="col-1" scope="col">NIP</th>
-            <th rowspan="2" class="col-2" scope="col">Nama Pegawai</th>
+            <th rowspan="2" class="col-2" scope="col">Nama Karyawan</th>
             @endif
             <th rowspan="2" class="col-2" scope="col">Jenis</th>
             <th colspan="2" scope="col">Pesan</th>
@@ -40,8 +40,8 @@
         <tr>
             <th scope="row">{{ $loop->iteration }}</th>
             @if (Auth::user()->part == "Dev")
-            <td>{{ $message->officer_nip }}</td>
-            <td>{{ $message->officer_name }}</td>
+            <td>{{ $message->employee->id_employee }}</td>
+            <td>{{ $message->employee->name }}</td>
             @endif
             <td>
                 @if ($message->type == 'Apresiasi')

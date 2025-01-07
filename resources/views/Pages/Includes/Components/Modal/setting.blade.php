@@ -4,10 +4,10 @@
         <div class="modal-content">
             @if (Auth::user()->part == "Dev")
             <form action="{{ route('developer.settings.update') }}" method="POST" enctype="multipart/form-data">
-            @elseif (Auth::user()->part != "Pegawai")
+            @elseif (Auth::user()->part != "Karyawan")
             <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
             @else
-            <form action="{{ route('officer.settings.update') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('employee.settings.update') }}" method="POST" enctype="multipart/form-data">
             @endif
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Simpan Pengaturan</h1>

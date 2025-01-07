@@ -25,9 +25,9 @@ class Part extends Model
         return $this->hasMany(Team::class, 'id_part', 'id_part');
     }
     /*
-    public function officer()
+    public function employee()
     {
-        return $this->hasMany(Officer::class, 'id_part', 'id_part');
+        return $this->hasMany(Employee::class, 'id_part', 'id_part');
     }
     public function position()
     {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Part;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
@@ -46,7 +46,7 @@ class PartController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
+            return redirect()->route('admin.masters.employees.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-create');
         }
 
         //STORE DATA
@@ -56,7 +56,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$id_part])->with('success','Tambah Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.employees.index')->withInput(['tab_redirect'=>'pills-'.$id_part])->with('success','Tambah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -78,7 +78,7 @@ class PartController extends Controller
             'name.unique' => 'Nama telah terdaftar sebelumnya',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('admin.masters.officers.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
+            return redirect()->route('admin.masters.employees.index')->withErrors($validator)->with('modal_redirect', 'modal-prt-update')->with('id_redirect', $part->id_part);
         }
 
         //UPDATE DATA
@@ -87,7 +87,7 @@ class PartController extends Controller
 		]);
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->withInput(['tab_redirect'=>'pills-'.$part->id_part])->with('success','Ubah Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.employees.index')->withInput(['tab_redirect'=>'pills-'.$part->id_part])->with('success','Ubah Bagian Berhasil')->with('code_alert', 1);
     }
 
     /**
@@ -96,8 +96,8 @@ class PartController extends Controller
     public function destroy(Part $part)
     {
         //CHECK DATA
-        if(Officer::where('id_part', $part->id_part)->exists()) {
-            return redirect()->route('admin.masters.officers.index')->with('fail', 'Hapus Bagian Tidak Berhasil (Terhubung dengan tabel Pegawai)');
+        if(Employee::where('id_part', $part->id_part)->exists()) {
+            return redirect()->route('admin.masters.employees.index')->with('fail', 'Hapus Bagian Tidak Berhasil (Terhubung dengan tabel Karyawan)');
         }else{
             //CLEAR
         }
@@ -106,6 +106,6 @@ class PartController extends Controller
         $part->delete();
 
         //RETURN TO VIEW
-        return redirect()->route('admin.masters.officers.index')->with('success','Hapus Bagian Berhasil')->with('code_alert', 1);
+        return redirect()->route('admin.masters.employees.index')->with('success','Hapus Bagian Berhasil')->with('code_alert', 1);
     }
 }

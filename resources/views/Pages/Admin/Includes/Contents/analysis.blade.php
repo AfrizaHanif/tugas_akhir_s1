@@ -5,7 +5,7 @@
     <h1 class="text-center mb-4">Analisis Data ({{ $latest_per->month }} {{ $latest_per->year }})</h1>
     @endif
 @elseif (Request::is('admin/analysis/*'))
-<h1 class="text-center mb-4">Analisis Data ({{ $select_period->period_name }})</h1>
+<h1 class="text-center mb-4">Analisis Data ({{ $select_period->period->name }})</h1>
 @endif
 @include('Templates.Includes.Components.alert')
 <!--MENU-->
@@ -53,7 +53,7 @@
 <div class="alert alert-warning" role="alert">
     <i class="bi bi-exclamation-triangle-fill"></i> <b>PERHATIAN</b>
     <br/>
-    Pastikan seluruh data input di setiap pegawai telah terisi. Cek status di halaman input apakah pegawai tersebut telah terinput atau belum.
+    Pastikan seluruh data input di setiap karyawan telah terisi. Cek status di halaman input apakah karyawan tersebut telah terinput atau belum.
 </div>
 @endif
 <!--ANALYSIS RESULT-->
@@ -66,38 +66,38 @@
     @endif
 <!--DETAILS-->
 <div class="accordion" id="accordion-details">
-    <!--OFFICERS-->
+    <!--EMPLOYEES-->
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-officer" aria-expanded="false" aria-controls="collapse-officer">
-                Pegawai Yang Terlibat untuk Analisis
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-employee" aria-expanded="false" aria-controls="collapse-employee">
+                Karyawan Yang Terlibat untuk Analisis
             </button>
         </h2>
-        <div id="collapse-officer" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
+        <div id="collapse-employee" class="accordion-collapse collapse" data-bs-parent="#accordion-details">
             <div class="accordion-body">
-                <!--OFFICERS' TABLE-->
+                <!--EMPLOYEES' TABLE-->
                 <table class="table table-hover table-bordered">
                     <thead>
                         <tr class="table-primary">
                             <th>Kode</th>
-                            <th>Nama Pegawai</th>
+                            <th>Nama Karyawan</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($officers as $officer)
+                        @foreach ($employees as $employee)
                         <tr>
-                            <td>{{ $officer->id_officer }}</td>
+                            <td>{{ $employee->id_employee }}</td>
                             @if (Request::is('admin/analysis/latest'))
-                            <td>{{ $officer->name }}</td>
+                            <td>{{ $employee->name }}</td>
                             @elseif (Request::is('admin/analysis/*'))
-                            <td>{{ $officer->officer_name }}</td>
+                            <td>{{ $employee->employee_name }}</td>
                             @endif
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="table-group-divider table-secondary">
                         <tr>
-                            <td colspan="2">Total Data: <b>{{ count($officers) }}</b> Pegawai</td>
+                            <td colspan="2">Total Data: <b>{{ count($employees) }}</b> Karyawan</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -185,17 +185,17 @@
                                 <tr>
                                     <td>
                                         @if (Request::is('admin/analysis/latest'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->name ?? '' }}">
-                                            {{ $alt->id_officer }}
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $alt->id_employee)->first()->name ?? '' }}">
+                                            {{ $alt->id_employee }}
                                         </span>
                                         @elseif (Request::is('admin/analysis/*'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $alt->id_officer)->first()->officer_name ?? '' }}">
-                                            {{ $alt->id_officer }}
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $alt->id_employee)->first()->employee_name ?? '' }}">
+                                            {{ $alt->id_employee }}
                                         </span>
                                         @endif
                                     </td>
                                     @if (count($inputs) > 0)
-                                        @forelse ($inputs->where('id_officer', $alt->id_officer) as $input)
+                                        @forelse ($inputs->where('id_employee', $alt->id_employee) as $input)
                                             <td>{{ $input->input }}</td>
                                         @empty
                                             <td>0</td>
@@ -257,11 +257,11 @@
                                 <tr>
                                     <td>
                                         @if (Request::is('admin/analysis/latest'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $n1)->first()->name }}">
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $n1)->first()->name }}">
                                         {{ $n1 }}
                                         </span>
                                         @elseif (Request::is('admin/analysis/*'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $n1)->first()->officer_name }}">
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $n1)->first()->employee_name }}">
                                         {{ $n1 }}
                                         </span>
                                         @endif
@@ -331,11 +331,11 @@
                                 <tr>
                                     <td>
                                         @if (Request::is('admin/analysis/latest'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $r1)->first()->name }}">
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $r1)->first()->name }}">
                                         {{ $r1 }}
                                         </span>
                                         @elseif (Request::is('admin/analysis/*'))
-                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $officers->where('id_officer', $r1)->first()->officer_name }}">
+                                        <span data-bs-toggle="tooltip" data-bs-title="{{ $employees->where('id_employee', $r1)->first()->employee_name }}">
                                         {{ $r1 }}
                                         </span>
                                         @endif
@@ -393,9 +393,9 @@
                                 <tr>
                                     <th scope="row">
                                         @if (Request::is('admin/analysis/latest'))
-                                        {{$officers->where('id_officer', $sqrt1)->first()->name ?? ''}} ({{ $sqrt1 }})
+                                        {{$employees->where('id_employee', $sqrt1)->first()->name ?? ''}} ({{ $sqrt1 }})
                                         @elseif (Request::is('admin/analysis/*'))
-                                        {{$officers->where('id_officer', $sqrt1)->first()->officer_name ?? ''}} ({{ $sqrt1 }})
+                                        {{$employees->where('id_employee', $sqrt1)->first()->employee_name ?? ''}} ({{ $sqrt1 }})
                                         @endif
                                     </th>
                                     <td>{{ number_format($valsqrt1,3) }}</td>

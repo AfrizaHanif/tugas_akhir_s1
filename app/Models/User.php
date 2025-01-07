@@ -23,13 +23,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id_user',
-        'nip',
+        //'nip',
+        'id_employee', //FK
         'name',
         'username',
         //'email',
         'password',
         'part',
-        //'id_officer',
         'force_logout',
     ];
 
@@ -62,4 +62,15 @@ class User extends Authenticatable
         return false;
     }
     */
+    //CONNECT TO ANOTHER TABLE
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'id_employee', 'id_employee',);
+    }
+
+    //CONNECT FROM ANOTHER TABLE
+    public function log()
+    {
+        return $this->hasMany(Log::class, 'id_user', 'id_user');
+    }
 }

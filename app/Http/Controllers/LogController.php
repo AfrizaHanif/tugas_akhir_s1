@@ -25,7 +25,7 @@ class LogController extends Controller
         }elseif(Auth::user()->part == "Dev"){
             return view('Pages.Developer.log', compact('logs'));
         }else{
-            return view('Pages.Officer.log', compact('logs'));
+            return view('Pages.Employee.log', compact('logs'));
         }
     }
 

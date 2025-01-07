@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Input;
 use App\Models\Log;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Part;
 use App\Models\Period;
 use App\Models\SubTeam;
@@ -21,9 +21,9 @@ class SubTeamsController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //LATEST PERIODE
@@ -49,7 +49,7 @@ class SubTeamsController extends Controller
 
                 //RETURN TO VIEW
                 return redirect()
-                ->route($redirect_route)
+                ->route($redirect_route)->withInput()
                 ->with('fail','Hapus Sub Tim Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
                 ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part])
                 ->with('modal_redirect', 'modal-tim-view')
@@ -101,7 +101,12 @@ class SubTeamsController extends Controller
             ]);
 
             //RETURN TO VIEW
-            return redirect()->route($redirect_route)->withErrors($validator)->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$request->id_team])->with('modal_redirect', 'modal-stm-create')->with('id_redirect', $request->id_team)->with('code_alert', 3);
+            return redirect()->route($redirect_route)
+            ->withErrors($validator)
+            ->withInput(['tab_redirect'=>'pills-'.$request->id_part, 'modal_tab_redirect'=>'pills-'.$request->id_team, 'old_input'=>$request->all()])
+            ->with('modal_redirect', 'modal-stm-create')
+            ->with('id_redirect', $request->id_team)
+            ->with('code_alert', 3);
         }
 
         //STORE DATA
@@ -135,9 +140,9 @@ class SubTeamsController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //LATEST PERIODE
@@ -235,9 +240,9 @@ class SubTeamsController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //LATEST PERIODE
@@ -283,10 +288,13 @@ class SubTeamsController extends Controller
 
         //CHECK DATA
         /*
-        if(Officer::where('id_sub_team_1', $subteam->id_sub_team)->orWhere('id_sub_team_2', $subteam->id_sub_team)->exists()) {
+        if(Employee::where('id_sub_team_1', $subteam->id_sub_team)
+        ->orWhere('id_sub_team_2', $subteam->id_sub_team)
+        ->where('status', 'Active')
+        ->exists()) {
             return redirect()
             ->route($redirect_route)
-            ->with('fail', 'Hapus Sub Tim Tidak Berhasil (Terhubung dengan tabel Pegawai)')
+            ->with('fail', 'Hapus Sub Tim Tidak Berhasil (Terhubung dengan tabel Karyawan)')
             ->withInput(['tab_redirect'=>'pills-'.$redirect_part->id_part, 'modal_tab_redirect'=>'pills-'.$redirect_team->id_team])
             ->with('modal_redirect', 'modal-tim-view')
             ->with('id_redirect', $redirect_part->id_part)
@@ -306,15 +314,15 @@ class SubTeamsController extends Controller
         ]);
 
         //DESTROY DATA
-        Input::with('officer')
-        ->whereHas('officer', function($query) use($subteam){
+        Input::with('employee')
+        ->whereHas('employee', function($query) use($subteam){
             $query->where('id_sub_team_1', $subteam->id_sub_team);
         })
         ->delete();
-        Officer::where('id_sub_team_2', $subteam->id_sub_team)->update([
+        Employee::where('id_sub_team_2', $subteam->id_sub_team)->update([
             'id_sub_team_2'=>'',
         ]);
-        Officer::where('id_sub_team_1', $subteam->id_sub_team)->delete();
+        Employee::where('id_sub_team_1', $subteam->id_sub_team)->delete();
         $subteam->delete();
 
         //RETURN TO VIEW

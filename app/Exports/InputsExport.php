@@ -30,7 +30,7 @@ class InputsExport implements FromQuery, WithHeadings, WithMapping, WithStrictNu
     {
         return [
             'NIP',
-            'Nama Pegawai',
+            'Nama Karyawan',
             'Kriteria',
             'Nilai Asli',
             'Nilai Konversi',
@@ -39,8 +39,8 @@ class InputsExport implements FromQuery, WithHeadings, WithMapping, WithStrictNu
 
     public function map($data) : array {
         return [
-            $data->officer->id_officer,
-            $data->officer->name,
+            $data->employee->id_employee,
+            $data->employee->name,
             $data->criteria->name,
             $data->input_raw,
             $data->input,

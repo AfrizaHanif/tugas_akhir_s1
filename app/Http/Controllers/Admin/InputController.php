@@ -7,16 +7,13 @@ use App\Exports\InputsExport;
 use App\Exports\InputsOldExport;
 use App\Http\Controllers\Controller;
 use App\Imports\InputsImport;
-use App\Imports\InputsImportSingle;
 use App\Models\Category;
 use App\Models\Crips;
 use App\Models\Input;
 use App\Models\Criteria;
 use App\Models\HistoryInput;
-use App\Models\HistoryInputRAW;
-use App\Models\InputRAW;
 use App\Models\Log;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Period;
 use App\Models\Score;
 use Illuminate\Http\Request;
@@ -33,15 +30,16 @@ class InputController extends Controller
     public function index()
     {
         //GET DATA
-        $officers = Officer::with('position')
+        $employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){
             $query->where('name', 'LIKE', 'Kepala BPS%');
         })
+        ->where('status', 'Active')
         ->orderBy('name', 'ASC')
-        ->get(); //GET OFFICERS WITHOUT KEPALA BPS
+        ->get(); //GET EMPLOYEES WITHOUT KEPALA BPS
         $inputs = Input::get(); //GET INPUTS
         //$input_raws = InputRAW::get();
-        $status = Input::select('id_period', 'id_officer', 'status')->groupBy('id_period', 'id_officer', 'status')->get(); //GET STATUS PER INPUTS
+        $status = Input::select('id_period', 'id_employee', 'status')->groupBy('id_period', 'id_employee', 'status')->get(); //GET STATUS PER INPUTS
         $periods = Period::orderBy('id_period', 'ASC')->whereIn('progress_status', ['Scoring', 'Verifying', 'Finished'])->get(); //GET PERIOD IF PROGRESS STATUS ARE SCORING, VERIFYING, OR FINISHED
         $categories = Category::with('criteria')->get(); //GET CATEGORIES
         $allcriterias = Criteria::with('category')->get(); //GET CRITERIAS
@@ -52,18 +50,18 @@ class InputController extends Controller
 
         //GET PERIOD FOR LIST
         $latest_per = Period::orderBy('id_period', 'ASC')->whereNotIn('progress_status', ['Skipped', 'Pending', 'Finished'])->latest()->first(); //GET CURRENT PERIOD
-        $history_per = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('period_year', 'ASC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS PERIODS
+        $history_per = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.year', 'ASC')->orderBy('periods.num_month', 'ASC')->get(); //GET PREVIOUS PERIODS
 
         //GET HISTORY
         $histories = HistoryInput::get(); //GET OLD INPUT
         //$hraws = HistoryInputRAW::get();
-        $hofficers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')->get(); //GET PREVIOUS OFFICERS FROM OLD INPUTS
+        $hemployees = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name', 'history_inputs.id_employee', 'history_inputs.employee_name', 'history_inputs.employee_position')->groupBy('periods.id_period', 'periods.name', 'history_inputs.id_employee', 'history_inputs.employee_name', 'history_inputs.employee_position')->get(); //GET PREVIOUS EMPLOYEES FROM OLD INPUTS
         $hcriterias = HistoryInput::select('id_criteria', 'criteria_name', 'id_period', 'unit')->groupBy('id_criteria', 'criteria_name', 'id_period', 'unit')->get(); //GET PREVIOUS CRITERIAS FROM OLD INPUTS
         $hallsub = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name',)->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name',)->get(); //GET PREVIOUS ALL CRITERIAS FROM OLD INPUTS
         $hsubs = HistoryInput::select('id_criteria', 'criteria_name')->groupBy('id_criteria', 'criteria_name')->get(); //GET PREVIOUS CRITERIAS FROM OLD INPUTS
 
         //RETURN TO VIEW
-        return view('Pages.Admin.input', compact('officers', 'inputs', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'scores', 'histories', 'hofficers', 'hcriterias', 'hallsub', 'hsubs'));
+        return view('Pages.Admin.input', compact('employees', 'inputs', 'status', 'periods', 'latest_per', 'history_per', 'categories', 'allcriterias', 'criterias', 'countsub', 'crips', 'scores', 'histories', 'hemployees', 'hcriterias', 'hallsub', 'hsubs'));
     }
 
     /*
@@ -75,16 +73,16 @@ class InputController extends Controller
 
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
-            $str_officer = substr($request->id_officer, 4);
+            $str_employee = substr($request->id_employee, 4);
             $str_year = substr($request->id_period, -5);
             $str_sub = substr($criteria->id_criteria, 4); //CRT-000-000
-            $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+            $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
 
             //STORE DATA
             Input::insert([
                 'id_input'=>$id_input,
                 'id_period'=>$request->id_period,
-                'id_officer'=>$request->id_officer,
+                'id_employee'=>$request->id_employee,
                 'id_criteria'=>$criteria->id_criteria,
                 'input'=>$request->input($criteria->id_criteria),
                 'status'=>'Pending',
@@ -114,10 +112,10 @@ class InputController extends Controller
 
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
-            $str_officer = substr($request->id_officer, 4);
+            $str_employee = substr($request->id_employee, 4);
             $str_year = substr($request->id_period, -5);
             $str_sub = substr($criteria->id_criteria, 4);
-            $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+            $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
 
             //UPDATE DATA
             if(Input::where('id_input', $id_input)->exists()){
@@ -126,7 +124,7 @@ class InputController extends Controller
                     'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
                 ]);
-                Score::where('id_period', $request->id_period)->where('id_officer', $request->id_officer)->update([
+                Score::where('id_period', $request->id_period)->where('id_employee', $request->id_employee)->update([
                     'status'=>'Revised',
                 ]);
             }else{
@@ -134,7 +132,7 @@ class InputController extends Controller
                 Input::insert([
                     'id_input'=>$id_input,
                     'id_period'=>$request->id_period,
-                    'id_officer'=>$request->id_officer,
+                    'id_employee'=>$request->id_employee,
                     'id_criteria'=>$criteria->id_criteria,
                     'input'=>$request->input($criteria->id_criteria),
                     'status'=>'Pending',
@@ -164,10 +162,10 @@ class InputController extends Controller
 
         foreach($criterias as $criteria){
             //COMBINE KODE (Ex: INP-01-24-001-001)
-            $str_officer = substr($request->id_officer, 4);
+            $str_employee = substr($request->id_employee, 4);
             $str_year = substr($request->id_period, -5);
             $str_sub = substr($criteria->id_criteria, 4);
-            $id_input = "INP-".$str_year.'-'.$str_officer.'-'.$str_sub;
+            $id_input = "INP-".$str_year.'-'.$str_employee.'-'.$str_sub;
 
             //DELETE DATA
             Input::where('id_input', $id_input)->delete();
@@ -582,7 +580,7 @@ class InputController extends Controller
     public function convert($period)
     {
         //GET DATA
-        $officers = Officer::get(); //GET OFFICERS
+        $employees = Employee::where('status', 'Active')->get(); //GET EMPLOYEES
         $latest_per = Period::where('id_period', $period)->first(); //GET CURRENT PERIOD
 
         //UPDATE VALUE ACCORDING TO DATA CRIPS (DISABLE ONLY FOR TESTING PURPOSE)
@@ -643,14 +641,14 @@ class InputController extends Controller
         */
 
         //UPDATE STATUS IN SCORES
-        foreach($officers as $officer){
-            $check_score = Score::where('id_period', $period)->where('id_officer', $officer->id_officer)->where('status', 'Rejected')->first();
+        foreach($employees as $employee){
+            $check_score = Score::where('id_period', $period)->where('id_employee', $employee->id_employee)->where('status', 'Rejected')->first();
             if(!is_null($check_score)){ //IF PREVIOUSLY REJECTED
-                Score::where('id_officer', $officer->id_officer)->where('status', 'Rejected')->update([
+                Score::where('id_employee', $employee->id_employee)->where('status', 'Rejected')->update([
                     'status'=>'Revised',
                 ]);
                 /*
-                Input::where('id_officer', $officer->id_officer)->where('status', 'Need Fix')->update([
+                Input::where('id_employee', $employee->id_employee)->where('status', 'Need Fix')->update([
                     'status'=>'Fixed',
                 ]);
                 */

@@ -9,7 +9,7 @@
     </a>
 </p>
 <div class="row align-items-md-stretch">
-    @if (Auth::user()->part != 'Pegawai')
+    @if (Auth::user()->part != 'Karyawan')
     <div class="col-md-6 pb-4">
         <div class="h-100 p-5 text-bg-dark rounded-3">
             <h2>Perhitungan Kehadiran</h2>
@@ -41,7 +41,7 @@
         <div class="h-100 p-5 bg-body-tertiary border rounded-3">
             <h2>Ganti Username</h2>
             <p>Anda dapat mengubah username anda untuk memudahkan anda saat melakukan login jika anda lupa NIP.</p>
-            @if (Auth::user()->username == Auth::user()->nip) <!--IF USERNAME EQUALS NIP (FIRST TIME)-->
+            @if (Auth::user()->username == Auth::user()->id_employee) <!--IF USERNAME EQUALS NIP (FIRST TIME)-->
             <input type="username" class="form-control" id="s_username" name="s_username" required>
             @else
             <input type="username" class="form-control" id="s_username" name="s_username" value="{{ Auth::user()->username }}" required>

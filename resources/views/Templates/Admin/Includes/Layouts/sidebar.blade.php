@@ -14,9 +14,9 @@
             </li>
             @if (Auth::user()->part == "KBU" || Auth::user()->part == "KTT" || Auth::user()->part == "KBPS")
             <li class="nav-item">
-                <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
-                    Pegawai
+                <a href="/admin/masters/employees" class="{{ (request()->is('admin/masters/employees*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                    <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#employee"/></svg>
+                    Karyawan
                 </a>
             </li>
             @endif
@@ -29,9 +29,9 @@
                 <div class="{{ (request()->is('admin/masters*')) ? 'collapse show' : 'collapse' }} multi-collapse" id="masters-collapse" data-bs-parent="#selector-sidebar">
                     <ul class="list-unstyled fw-normal pb-1 small">
                         <li>
-                            <a href="/admin/masters/officers" class="{{ (request()->is('admin/masters/officers*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
-                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#officer"/></svg>
-                                Pegawai
+                            <a href="/admin/masters/employees" class="{{ (request()->is('admin/masters/employees*')) ? 'nav-link active' : 'nav-link text-white' }}" aria-current="page">
+                                <svg class="bi pe-none me-2" style="vertical-align: -.125em;" width="16" height="16"><use xlink:href="#employee"/></svg>
+                                Karyawan
                             </a>
                         </li>
                         <li>
@@ -90,7 +90,7 @@
     <!--USER MENU-->
     <div class="dropup">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <snap class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="{{ Auth::user()->name }}">
+            <snap class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="{{ Auth::user()->employee->name }}">
                 <img src="{{ url('Images/User/'.Auth::user()->part.'.png') }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" alt="" width="32" height="32" style="object-fit:cover;" class="rounded me-2">
                 </snap>
             <strong>{{ Auth::user()->part }}</strong>

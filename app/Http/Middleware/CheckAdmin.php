@@ -18,7 +18,7 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->part != "Pegawai" && Auth::user()->part != "Dev") {
+        if (Auth::check() && Auth::user()->part != "Karyawan" && Auth::user()->part != "Dev") {
             //FUTURE DEVELOPMENT
             if(Auth::check() && Auth::user()->force_logout == true){
                 User::where('id_user', Auth::user()->id_user)->update(['force_logout' => false]);

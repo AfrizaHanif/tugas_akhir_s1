@@ -7,7 +7,7 @@ use App\Models\HistoryInput;
 use App\Models\HistoryScore;
 use App\Models\Log;
 use App\Models\Position;
-use App\Models\Officer;
+use App\Models\Employee;
 use App\Models\Part;
 use App\Models\SubTeam;
 use App\Models\Team;
@@ -23,40 +23,41 @@ class ReportController extends Controller
     public function index()
     {
         //GET DATA
-        $h_periods = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->get(); //GET PREVIOUS PERIODS FROM OLD INPUTS
-        $h_years = HistoryInput::select('period_year')->groupBy('period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR FROM OLD INPUTS
-        $h_team_years = HistoryInput::select('id_sub_team', 'sub_team_1_name', 'period_year')->groupBy('id_sub_team', 'sub_team_1_name', 'period_year')->orderBy('period_year', 'ASC')->get(); //GET PREVIOUS TEAMS IN YEAR FROM OLD INPUTS
-        $h_months = HistoryInput::select('period_year', 'period_month', 'period_num_month')->groupBy('period_year', 'period_month', 'period_num_month')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS PERIODS IN MONTH FROM OLD INPUTS
+        $h_periods = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'ASC')->get(); //GET PREVIOUS PERIODS FROM OLD INPUTS
+        $h_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year')->groupBy('periods.year')->orderBy('periods.year', 'ASC')->get(); //GET PREVIOUS PERIODS IN YEAR FROM OLD INPUTS
+        $h_team_years = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('history_inputs.id_sub_team', 'history_inputs.sub_team_1_name', 'periods.year')->groupBy('history_inputs.id_sub_team', 'history_inputs.sub_team_1_name', 'periods.year')->orderBy('periods.year', 'ASC')->get(); //GET PREVIOUS TEAMS IN YEAR FROM OLD INPUTS
+        $h_months = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.year', 'periods.month', 'periods.num_month')->groupBy('periods.year', 'periods.month', 'periods.num_month')->orderBy('periods.year', 'DESC')->orderBy('periods.num_month', 'ASC')->get(); //GET PREVIOUS PERIODS IN MONTH FROM OLD INPUTS
         $h_subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->whereNotIn('sub_team_1_name', ['Pimpinan BPS', 'Developer'])->get(); //GET PREVIOUS SUB TEAMS FROM OLD INPUTS
-        $h_officers = HistoryInput::select('id_officer', 'officer_name')->groupBy('id_officer', 'officer_name')->get(); //GET PREVIOUS OFFICERS FROM OLD INPUTS
-        $h_scores = HistoryScore::select('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->groupBy('id_period', 'period_name', 'period_year', 'period_month', 'period_num_month', 'id_sub_team', 'sub_team_1_name')->orderBy('period_year', 'DESC')->orderBy('period_year', 'DESC')->orderBy('period_num_month', 'ASC')->get(); //GET PREVIOUS SCORES FROM OLD INPUTS
+        $h_employees = HistoryInput::select('id_employee', 'employee_name')->groupBy('id_employee', 'employee_name')->get(); //GET PREVIOUS EMPLOYEES FROM OLD INPUTS
+        $h_scores = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.year', 'periods.month', 'periods.num_month', 'history_scores.id_sub_team', 'history_scores.sub_team_1_name')->groupBy('periods.id_period', 'periods.name', 'periods.year', 'periods.month', 'periods.num_month', 'history_scores.id_sub_team', 'history_scores.sub_team_1_name')->orderBy('periods.year', 'DESC')->orderBy('periods.year', 'DESC')->orderBy('periods.num_month', 'ASC')->get(); //GET PREVIOUS SCORES FROM OLD INPUTS
         /*
-        $officers = Officer::with('position')
+        $employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
         ->get();
         */
         //$check_teams = HistoryScore::get();
 
         //UNUSED CODE
-        if(Auth::user()->part != "Pegawai"){
+        if(Auth::user()->part != "Karyawan"){
 
         }else{
 
         }
 
         //RETURN TO VIEW
-        return view('Pages.Admin.report', compact('h_periods', 'h_years', 'h_team_years', 'h_months', 'h_subteams', 'h_officers', 'h_scores'));
+        return view('Pages.Admin.report', compact('h_periods', 'h_years', 'h_team_years', 'h_months', 'h_subteams', 'h_employees', 'h_scores'));
     }
 
-    public function officers()
+    public function employees()
     {
         //GET DATA
         $parts = Part::whereNot('name', 'Developer')->get();
         $positions = Position::whereNot('name', 'Developer')->get();
         $teams = Team::get();
         $subteams = SubTeam::get();
-        $officers = Officer::with('position')
+        $employees = Employee::with('position')
         ->whereDoesntHave('position', function($query){$query->where('name', 'Developer');})
+        ->where('status', 'Active')
         ->get();
 
         //CREATE A LOG
@@ -65,13 +66,13 @@ class ReportController extends Controller
             'activity'=>'Laporan',
             'progress'=>'View',
             'result'=>'Success',
-            'descriptions'=>'Laporan Pegawai Berhasil Dibuat',
+            'descriptions'=>'Laporan Karyawan Berhasil Dibuat',
         ]);
 
         //CREATE A REPORT
-        $file = 'RPT-Pegawai.pdf';
+        $file = 'RPT-Karyawan.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.officer', compact('parts', 'teams', 'subteams', 'positions', 'officers'))
+        loadview('Pages.PDF.employee', compact('parts', 'teams', 'subteams', 'positions', 'employees'))
         ->save('PDFs/'.$file)
         ->stream($file);
         return $pdf;
@@ -80,18 +81,18 @@ class ReportController extends Controller
     public function analysis($month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
-        $subcriterias = HistoryInput::select('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->groupBy('id_category', 'category_name', 'id_criteria', 'criteria_name', 'attribute', 'weight')->where('id_period', $periods->id_period)->get();
-        $officers = HistoryInput::select('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')
-        ->groupBy('id_period', 'period_name', 'id_officer', 'officer_name', 'officer_position')
-        ->where('id_period', $periods->id_period)
+        $periods = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->groupBy('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->orderBy('periods.id_period', 'ASC')->where('periods.month', $month)->where('periods.year', $year)->first();
+        $subcriterias = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.num_month', 'history_inputs.category_name', 'history_inputs.id_criteria', 'history_inputs.criteria_name', 'history_inputs.attribute', 'history_inputs.weight')->groupBy('periods.num_month', 'history_inputs.category_name', 'history_inputs.id_criteria', 'history_inputs.criteria_name', 'history_inputs.attribute', 'history_inputs.weight')->where('periods.id_period', $periods->id_period)->get();
+        $employees = HistoryInput::join('periods', 'periods.id_period', '=', 'history_inputs.id_period')->select('periods.id_period', 'periods.name', 'history_inputs.id_employee', 'history_inputs.employee_name', 'history_inputs.employee_position')
+        ->groupBy('periods.id_period', 'periods.name', 'history_inputs.id_employee', 'history_inputs.employee_name', 'history_inputs.employee_position')
+        ->where('periods.id_period', $periods->id_period)
         //->where('is_lead', 'No')
         ->get();
-        //$prd_name = HistoryInput::select('id_period', 'period_name')->groupBy('id_period', 'period_name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first()->period_name;
+        //$prd_name = HistoryInput::select('id_period', 'periods.name')->groupBy('id_period', 'periods.name')->orderBy('id_period', 'ASC')->where('id_period', $period)->first()->period_name;
 
-        $alternatives = HistoryInput::with('criteria', 'officer')
-        ->select('id_officer')
-        ->groupBy('id_officer')
+        $alternatives = HistoryInput::with('criteria', 'employee')
+        ->select('id_employee')
+        ->groupBy('id_employee')
         ->where('id_period', $periods->id_period)
         //->where('is_lead', 'No')
         ->getQuery()->get();
@@ -134,18 +135,18 @@ class ReportController extends Controller
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
                     if($value2->attribute == 'Benefit'){
-                        $normal[$value1->id_officer][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
+                        $normal[$value1->id_employee][$value2->id_criteria] = $value1->input / (max($minmax[$value2->id_criteria]) ?: 1);
                     }elseif($value2->attribute == 'Cost'){
                         if(min($minmax[$value2->id_criteria]) == 0){
                             if($value1->input == 0){
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / 0.5;
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / 0.5;
                             }else{
-                                $normal[$value1->id_officer][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
+                                $normal[$value1->id_employee][$value2->id_criteria] = 0.5 / ($value1->input ?: 1);
                             }
                         }else{
-                            $normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
+                            $normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / ($value1->input ?: 1);
                         }
-                        //$normal[$value1->id_officer][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
+                        //$normal[$value1->id_employee][$value2->id_criteria] = (min($minmax[$value2->id_criteria]) ?: 1) / $value1->input;
                     }
                 }
             }
@@ -156,7 +157,7 @@ class ReportController extends Controller
         foreach($inputs as $input => $value1){
             foreach($criterias as $crit => $value2){
                 if($value2->id_criteria == $value1->id_criteria){
-                    $mxin[$value1->id_officer][$value2->id_criteria] = $normal[$value1->id_officer][$value2->id_criteria] * $value2->weight;
+                    $mxin[$value1->id_employee][$value2->id_criteria] = $normal[$value1->id_employee][$value2->id_criteria] * $value2->weight;
                 }
             }
         }
@@ -169,7 +170,7 @@ class ReportController extends Controller
             $matrix[$n] = array_sum($mxin[$n]); //$normal[$n][] = array_sum($rank[$n]);
             /*
             DB::table('hasil_saw_desa')->insert([
-                'id_officer'=>$n,
+                'id_employee'=>$n,
                 'matrix'=>$matrix[$n],
             ]);
             */
@@ -183,13 +184,13 @@ class ReportController extends Controller
             'activity'=>'Laporan',
             'progress'=>'View',
             'result'=>'Success',
-            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period_name.')',
+            'descriptions'=>'Laporan Hasil Analisis SAW Berhasil Dibuat ('.$periods->period->name.')',
         ]);
 
         //CREATE A REPORT
         $file = 'RPT-Analysis-'.$periods->id_period.'.pdf';
         $pdf = PDF::
-        loadview('Pages.PDF.analysis', compact('periods', 'officers', 'alternatives', 'criterias', 'subcriterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix'))
+        loadview('Pages.PDF.analysis', compact('periods', 'employees', 'alternatives', 'criterias', 'subcriterias', 'inputs', 'minmax', 'normal', 'mx_hasil', 'matrix'))
         ->setPaper('a4', 'landscape')
         ->save('PDFs/'.$file)
         ->stream($file);
@@ -199,8 +200,8 @@ class ReportController extends Controller
     public function team_result($subteam, $month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
-        $results = HistoryScore::where('period_month', $month)->where('period_year', $year)->where('id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
+        $periods = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->groupBy('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->orderBy('periods.id_period', 'ASC')->where('periods.month', $month)->where('periods.year', $year)->first();
+        $results = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->where('periods.month', $month)->where('periods.year', $year)->where('history_scores.id_sub_team', $subteam)->orderBy('final_score', 'DESC')->get();
         $subteams = HistoryScore::select('id_sub_team', 'sub_team_1_name')->groupBy('id_sub_team', 'sub_team_1_name')->where('id_sub_team', $subteam)->first();
 
         //CREATE A LOG
@@ -209,7 +210,7 @@ class ReportController extends Controller
             'activity'=>'Laporan',
             'progress'=>'View',
             'result'=>'Success',
-            'descriptions'=>'Laporan Nilai Akhir per Tim Berhasil Dibuat ('.$periods->period_name.') ('.$subteams->sub_team_1_name.')',
+            'descriptions'=>'Laporan Nilai Akhir per Tim Berhasil Dibuat ('.$periods->period->name.') ('.$subteams->sub_team_1_name.')',
         ]);
 
         //CREATE A REPORT
@@ -225,8 +226,8 @@ class ReportController extends Controller
     public function result($month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
-        $results = HistoryScore::where('id_period', $periods->id_period)->orderBy('final_score', 'DESC')->get();
+        $periods = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->groupBy('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->orderBy('periods.id_period', 'ASC')->where('periods.month', $month)->where('periods.year', $year)->first();
+        $results = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->where('periods.id_period', $periods->id_period)->orderBy('final_score', 'DESC')->get();
 
         //CREATE A LOG
         Log::create([
@@ -234,7 +235,7 @@ class ReportController extends Controller
             'activity'=>'Laporan',
             'progress'=>'View',
             'result'=>'Success',
-            'descriptions'=>'Laporan Karyawan Terbaik Berhasil Dibuat ('.$periods->period_name.')',
+            'descriptions'=>'Laporan Karyawan Terbaik Berhasil Dibuat ('.$periods->period->name.')',
         ]);
 
         //CREATE A REPORT
@@ -250,12 +251,12 @@ class ReportController extends Controller
     public function certificate($month, $year)
     {
         //GET DATA
-        $periods = HistoryScore::select('id_period', 'period_name', 'period_month', 'period_year')->groupBy('id_period', 'period_name', 'period_month', 'period_year')->orderBy('id_period', 'ASC')->where('period_month', $month)->where('period_year', $year)->first();
-        $results = HistoryScore::where('id_period', $periods->id_period)->orderBy('final_score', 'DESC')->first();
+        $periods = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->select('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->groupBy('periods.id_period', 'periods.name', 'periods.month', 'periods.year')->orderBy('periods.id_period', 'ASC')->where('periods.month', $month)->where('periods.year', $year)->first();
+        $results = HistoryScore::join('periods', 'periods.id_period', '=', 'history_scores.id_period')->where('periods.id_period', $periods->id_period)->orderBy('final_score', 'DESC')->first();
 
         //PREPARING A CERTIFICATE
-        $officer_name = $results->officer_name;
-        $period_name = $periods->period_name;
+        $employee_name = $results->employee_name;
+        $period_name = $periods->period->name;
         $now = Carbon::now()
         ->locale('id')
         ->settings(['formatFunction' => 'translatedFormat'])
@@ -265,12 +266,12 @@ class ReportController extends Controller
         $source = public_path().'/PDFs/Default/New Certificate.pdf';
 
         //CREATE A CERTIFICATE (SWITCH TO ANOTHER FUNCTION)
-        $this->fillPDF($file, $source, $output, $officer_name, $period_name, $now);
+        $this->fillPDF($file, $source, $output, $employee_name, $period_name, $now);
 
         //return response()->download($output, $file);
     }
 
-    public function fillPDF($file, $source, $output, $officer_name, $period_name, $now) //FOR CERTIFICATE
+    public function fillPDF($file, $source, $output, $employee_name, $period_name, $now) //FOR CERTIFICATE
     {
         //SET TEMPLATE
         $fpdi = new Fpdi;
@@ -280,8 +281,8 @@ class ReportController extends Controller
         $fpdi->AddPage($size['orientation'],array($size['width'],$size['height']));
         $fpdi->useTemplate($template);
 
-        //GET AND CUSTOMIZE OFFICER NAME
-        $text1 = $officer_name;
+        //GET AND CUSTOMIZE EMPLOYEE NAME
+        $text1 = $employee_name;
         $fpdi->SetFont("Helvetica", "", 35);
         $fpdi->SetTextColor(25,26,25);
         $fpdi->SetXY(103, 103);

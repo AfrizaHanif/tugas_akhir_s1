@@ -24,26 +24,26 @@
 </script>
 @endif
 
-@if (Session::get('modal_redirect') == 'modal-off-import')
+@if (Session::get('modal_redirect') == 'modal-emp-import')
 <script>
     $(function() {
-        $('#modal-off-import').modal('show');
+        $('#modal-emp-import').modal('show');
     });
 </script>
 @endif
 
-@if (Session::get('modal_redirect') == 'modal-off-create')
+@if (Session::get('modal_redirect') == 'modal-emp-create')
 <script>
     $(function() {
-        $('#modal-off-create-{{ Session::get('id_redirect') }}').modal('show');
+        $('#modal-emp-create-{{ Session::get('id_redirect') }}').modal('show');
     });
 </script>
 @endif
 
-@if (Session::get('modal_redirect') == 'modal-off-update')
+@if (Session::get('modal_redirect') == 'modal-emp-update')
 <script>
     $(function() {
-        $('#modal-off-update-{{ Session::get('id_redirect') }}').modal('show');
+        $('#modal-emp-update-{{ Session::get('id_redirect') }}').modal('show');
     });
 </script>
 @endif
@@ -128,10 +128,26 @@
 </script>
 @endif
 
+@if (Session::get('modal_redirect') == 'modal-cat-create')
+<script>
+    $(function() {
+        $('#modal-cat-create').modal('show');
+    });
+</script>
+@endif
+
+@if (Session::get('modal_redirect') == 'modal-cat-update')
+<script>
+    $(function() {
+        $('#modal-cat-update-{{ Session::get('id_redirect') }}').modal('show');
+    });
+</script>
+@endif
+
 @if (Session::get('modal_redirect') == 'modal-crt-create')
 <script>
     $(function() {
-        $('#modal-crt-create').modal('show');
+        $('#modal-crt-create-{{ Session::get('id_redirect') }}').modal('show');
     });
 </script>
 @endif

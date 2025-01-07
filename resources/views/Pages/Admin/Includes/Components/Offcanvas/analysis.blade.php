@@ -32,12 +32,12 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                        Mengapa pada bagian Kriteria dan Pegawai hanya diperlihatkan kode saja?
+                        Mengapa pada bagian Kriteria dan Karyawan hanya diperlihatkan kode saja?
                     </button>
                 </h2>
                 <div id="collapse-3" class="accordion-collapse collapse" data-bs-parent="#accordionHelp">
                     <div class="accordion-body">
-                        Dikarenakan terbatasnya resolusi display, maka nama Kriteria dan Pegawai dapat dilihat dengan cara hover mouse ke kode. Atau anda dapat melihat Pegawai dan Kriteria yang terlibat di halaman analisis pada setiap periode.
+                        Dikarenakan terbatasnya resolusi display, maka nama Kriteria dan Karyawan dapat dilihat dengan cara hover mouse ke kode. Atau anda dapat melihat Karyawan dan Kriteria yang terlibat di halaman analisis pada setiap periode.
                     </div>
                 </div>
             </div>

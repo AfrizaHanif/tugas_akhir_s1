@@ -21,10 +21,10 @@ class SettingController extends Controller
         $settings = Setting::get(); //GET SETTING VALUES
         if(Auth::user()->part == "Dev"){
             return view('Pages.Developer.setting', compact('criterias', 'settings'));
-        }elseif(Auth::user()->part != "Pegawai"){
+        }elseif(Auth::user()->part != "Karyawan"){
             return view('Pages.Admin.setting', compact('criterias', 'settings'));
         }else{
-            return view('Pages.Officer.setting', compact('criterias', 'settings'));
+            return view('Pages.Employee.setting', compact('criterias', 'settings'));
         }
     }
 
@@ -53,19 +53,19 @@ class SettingController extends Controller
                     return redirect()->route('developer.settings.index')
                     ->withErrors($validator)
                     ->with('code_alert', 1);
-                }elseif(Auth::user()->part != "Pegawai"){
+                }elseif(Auth::user()->part != "Karyawan"){
                     return redirect()->route('admin.settings.index')
                     ->withErrors($validator)
                     ->with('code_alert', 1);
                 }else{
-                    return redirect()->route('officer.settings.index')
+                    return redirect()->route('employee.settings.index')
                     ->withErrors($validator)
                     ->with('code_alert', 1);
                 }
             }
         }
 
-        if(Auth::user()->part != "Pegawai"){
+        if(Auth::user()->part != "Karyawan"){
             //CHECK STATUS
             $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
             if(!empty($latest_per)){
@@ -125,10 +125,10 @@ class SettingController extends Controller
         //RETURN TO VIEW
         if(Auth::user()->part == "Dev"){
             return redirect()->route('developer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
-        }elseif(Auth::user()->part != "Pegawai"){
+        }elseif(Auth::user()->part != "Karyawan"){
             return redirect()->route('admin.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }else{
-            return redirect()->route('officer.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
+            return redirect()->route('employee.settings.index')->with('success','Simpan Berhasil')->with('code_alert', 1);
         }
     }
 }

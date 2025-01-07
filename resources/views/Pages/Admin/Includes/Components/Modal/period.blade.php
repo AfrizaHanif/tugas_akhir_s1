@@ -33,12 +33,12 @@
                         </div>
                         <div class="col">
                             <label for="year" class="form-label">Tahun</label>
-                            <input type="number" class="form-control" id="year" name="year" min="2010" max="2099" required>
+                            <input type="number" class="form-control" id="year" name="year" min="2010" max="2099" value="{{ old('year') }}" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="active_days" class="form-label">Hari Aktif (Setelah dikurangi hari libur)</label>
-                        <input type="number" class="form-control" id="active_days" name="active_days" min="1" max="31" required>
+                        <input type="number" class="form-control" id="active_days" name="active_days" min="1" max="31" value="{{ old('active_days') }}" required>
                     </div>
                 </form>
             </div>

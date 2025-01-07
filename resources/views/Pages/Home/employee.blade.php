@@ -1,0 +1,32 @@
+<!--TEMPLATE-->
+@extends('Templates.Home.template')
+
+<!--TITLE-->
+@section('title')
+<title>Karyawan | Tugas Akhir</title>
+@endsection
+
+<!--CONTENTS-->
+@section('contents')
+@include('Pages.Includes.Contents.employee')
+@endsection
+
+<!--MODALS-->
+@section('modals')
+@include('Templates.Includes.Components.Modal.employee')
+@endsection
+
+<!--SCRIPTS-->
+@push('scripts')
+<script type="text/javascript">
+    var path = "{{ route('json.autocomplete') }}";
+    $('input.typeahead').typeahead({
+        source: function (query, process) {
+        return $.get(path, { query: query }, function (data) {
+                return process(data);
+            });
+        }
+    });
+</script>
+@include('Pages.Home.Includes.Scripts.js')
+@endpush

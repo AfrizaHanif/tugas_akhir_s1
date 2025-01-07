@@ -12,16 +12,16 @@ class Result extends Model
     protected $table = "results";
 
     protected $fillable = [
-        'id_officer',
+        'id_employee',
         'id_period',
         'count',
         'final_score',
     ];
 
     //CONNECT TO ANOTHER TABLE
-    public function officer()
+    public function employee()
     {
-        return $this->belongsTo(Officer::class, 'id_officer', 'id_officer',);
+        return $this->belongsTo(Employee::class, 'id_employee', 'id_employee',);
     }
     public function period()
     {

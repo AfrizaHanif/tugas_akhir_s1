@@ -1,15 +1,15 @@
-<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->name }}</h1>
+<h1 class="text-center mb-4">Selamat Datang, {{ Auth::user()->employee->name }}</h1>
 <!--SCORE ANT VOTE ALERT (OPT: REMOVE)-->
 @if (Auth::user()->part != "Dev")
     @if (!empty($latest_per->progress_status))
         @if ($latest_per->progress_status == 'Scoring' || $latest_per->progress_status == 'Verifying')
         @elseif ($latest_per->progress_status == 'Voting')
-            @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == 0)
+            @if ($vote_check->where('id_period', $latest_per->id_period)->where('id_employee', Auth::user()->id_employee)->count() == 0)
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 Anda belum melakukan voting pemilihan karyawan terbaik. Silahkan buka halaman <strong>Voting</strong> untuk memilih karyawan.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            @elseif ($vote_check->where('id_period', $latest_per->id_period)->where('id_officer', Auth::user()->id_officer)->count() == count($vote_criterias))
+            @elseif ($vote_check->where('id_period', $latest_per->id_period)->where('id_employee', Auth::user()->id_employee)->count() == count($vote_criterias))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Terima kasih anda telah melakukan voting pemilihan karyawan terbaik. Mohon menunggu pengumuman hasil pemilihan karyawan terbaik.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -40,13 +40,13 @@
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             Data nilai yang telah diimport belum dilakukan konversi. Segera lakukan konversi data nilai di halaman <b>Data Input</b>.
         </div>
-        @elseif (($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW OFFICERS HAS NO INPUT DATA-->
+        @elseif (($inputs->count()) != ($employees->count() * $subcriterias->count())) <!--IF FEW EMPLOYEES HAS NO INPUT DATA-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Terdapat beberapa pegawai yang belum memiliki nilai yang lengkap. Silahkan lakukan import data nilai yang kurang di halaman <b>Data Input</b>.
+            Terdapat beberapa karyawan yang belum memiliki nilai yang lengkap. Silahkan lakukan import data nilai yang kurang di halaman <b>Data Input</b>.
         </div>
-        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected'))) <!--IF FEW OFFICERS HAS REJECTED INPUT DATA-->
+        @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected'))) <!--IF FEW EMPLOYEES HAS REJECTED INPUT DATA-->
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Terdapat beberapa pegawai yang nilai akhirnya ditolak. Segera lakukan revisi dan import ulang di halaman <b>Data Input</b>.
+            Terdapat beberapa karyawan yang nilai akhirnya ditolak. Segera lakukan revisi dan import ulang di halaman <b>Data Input</b>.
         </div>
         @elseif (count($scores->where('id_period', $latest_per->id_period)->where('status', 'Revised')) >= 1 && count($scores->where('id_period', $latest_per->id_period)->where('status', 'Rejected')) >= 1) <!--IF FEW INPUT DATA HAS BEEN REVISED-->
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -65,7 +65,7 @@
     <!--KBPS ALERT-->
     @if (Auth::user()->part == "KBPS")
         @if ($latest_per->progress_status == 'Verifying')
-            @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers)) <!--IF ALL SCORE DATA HAS BEEN ACCEPTED-->
+            @if ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees)) <!--IF ALL SCORE DATA HAS BEEN ACCEPTED-->
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 Seluruh nilai akhir telah disetujui semua. Segera lakukan penyelesaian proses penentuan karyawan terbaik di halaman <b>Verifikasi Input</b>.
             </div>
@@ -79,9 +79,9 @@
             </div>
             @endif
         @else
-            @if (($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW OFFICERS HAS NO INPUT DATA-->
+            @if (($inputs->count()) != ($employees->count() * $subcriterias->count())) <!--IF FEW EMPLOYEES HAS NO INPUT DATA-->
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                Terdapat beberapa pegawai yang belum memiliki nilai yang lengkap. Silahkan hubungi <b>Kepegawaian</b> untuk memeriksa data nilai yang kurang.
+                Terdapat beberapa karyawan yang belum memiliki nilai yang lengkap. Silahkan hubungi <b>Kepegawaian</b> untuk memeriksa data nilai yang kurang.
             </div>
             @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off)) <!--IF ALL INPUT DATA HAS BEEN CONVERTED-->
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -90,8 +90,8 @@
             @endif
         @endif
     @endif
-    <!--OFFICER ALERT-->
-    @if (Auth::user()->part == "Pegawai")
+    <!--EMPLOYEE ALERT-->
+    @if (Auth::user()->part == "Karyawan")
         @if (!empty($latest_per))
             @if ($latest_per->progress_status == 'Scoring' || $latest_per->progress_status == 'Verifying')
             <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -115,7 +115,7 @@
         @if (!empty($latest_per))
             @if ($inputs->count() == 0) <!--IF NO INPUT AVAILABLE-->
             <div class="card text-bg-danger h-100">
-            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW INPUT DATA NOT CONVERTED-->
+            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count())) <!--IF FEW INPUT DATA NOT CONVERTED-->
             <div class="card text-bg-warning h-100">
             @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) == count($input_off)) <!--AFTER CONVERTED (SCORING)-->
             <div class="card border-success h-100">
@@ -155,14 +155,14 @@
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted']))*100)/count($input_off) }}%">
                     @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1)
                     <div class="progress-bar bg-dark progress-bar-striped progress-bar-animated" ></div>
-                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                     <div class="progress-bar bg-dark progress-bar-striped progress-bar-animated" ></div>
                     @else
                     <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
                     @endif
                 </div>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) }}" aria-valuemin="0" aria-valuemax="{{ count($input_off) }}" style="width: {{ (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed']))*100)/count($input_off) }}%">
-                    @if (($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                    @if (($inputs->count()) != ($employees->count() * $subcriterias->count()))
                     <div class="progress-bar bg-dark progress-bar-striped progress-bar-animated"></div>
                     @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1)
                     <div class="progress-bar bg-warning bg-opacity-50 progress-bar-striped progress-bar-animated"></div>
@@ -180,7 +180,7 @@
             @if (!empty($latest_per))
                 @if ($inputs->count() == 0)
                 <div class="card-footer">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                 <div class="card-footer">
                 @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) == count($input_off))
                 <div class="card-footer text-body-secondary">
@@ -200,7 +200,7 @@
                         @if (!empty($latest_per))
                             @if ($inputs->count() == 0)
                             <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Cek</button>
-                            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                            @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                             <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Cek</button>
                             @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending', 'In Review', 'Final', 'Need Fix', 'Fixed'])) == count($input_off))
                             <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-inp-view-{{ $latest_per->id_period }}">Cek</button>
@@ -385,7 +385,7 @@
             @if ($latest_per->progress_status == 'Verifying')
                 @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1) <!--IF SCORE DATA HAS BEEN REVISED-->
                 <div class="card text-bg-success h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
                 <div class="card border-warning h-100">
                 @else
                 <div class="card border-success h-100">
@@ -393,7 +393,7 @@
             @elseif ($latest_per->progress_status == 'Scoring')
                 @if ($inputs->count() == 0) <!--IF NO SCORE DATA AVAILABLE-->
                 <div class="card border-danger h-100">
-                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
+                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count())) <!--IF FEW DATA IS NOT CONVERTED-->
                 <div class="card border-warning h-100">
                 @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off)) <!--IF ALL DATA HAS BEEN CONVERTED-->
                 <div class="card text-bg-success h-100">
@@ -426,7 +426,7 @@
                     @if ($latest_per->progress_status == 'Verifying')
                         @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1)
                         <div class="progress-bar bg-success bg-opacity-50 progress-bar-striped progress-bar-animated"></div>
-                        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                         <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
                         @else
                         <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"></div>
@@ -434,7 +434,7 @@
                     @elseif ($latest_per->progress_status == 'Scoring')
                         @if ($inputs->count() == 0)
                         <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"></div>
-                        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                        @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                         <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated"></div>
                         @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
                         <div class="progress-bar bg-success bg-opacity-50 progress-bar-striped progress-bar-animated"></div>
@@ -455,7 +455,7 @@
                 @if ($latest_per->progress_status == 'Verifying')
                     @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1)
                     <div class="card-footer">
-                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                     <div class="card-footer text-body-secondary">
                     @else
                     <div class="card-footer text-body-secondary">
@@ -463,7 +463,7 @@
                 @elseif ($latest_per->progress_status == 'Scoring')
                     @if ($inputs->count() == 0)
                     <div class="card-footer text-body-secondary">
-                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                    @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                     <div class="card-footer text-body-secondary">
                     @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
                     <div class="card-footer">
@@ -485,7 +485,7 @@
                             @if ($latest_per->progress_status == 'Verifying')
                                 @if (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Fixed'])) >= 1)
                                 <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
-                                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
                                 @else
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
@@ -493,7 +493,7 @@
                             @elseif ($latest_per->progress_status == 'Scoring')
                                 @if ($inputs->count() == 0)
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
-                                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($officers->count() * $subcriterias->count()))
+                                @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Not Converted'])) >= 1 || ($inputs->count()) != ($employees->count() * $subcriterias->count()))
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
                                 @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['Pending'])) == count($input_off))
                                 <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal-prg-view-{{ $latest_per->id_period }}">Cek</button>
@@ -519,7 +519,7 @@
                 <div class="card border-warning h-100">
                 @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1) <!--IF ALL DATA ARE NOT BEING VERIFIED-->
                 <div class="card text-bg-warning h-100">
-                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers)) <!--IF ALL DATA HAS BEEN VERIFIED-->
+                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees)) <!--IF ALL DATA HAS BEEN VERIFIED-->
                 <div class="card border-success h-100">
                 @else
                 <div class="card border-secondary h-100">
@@ -575,7 +575,7 @@
                     <div class="card-footer text-body-secondary">
                     @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1)
                     <div class="card-footer">
-                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                    @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees))
                     <div class="card-footer text-body-secondary">
                     @else
                     <div class="card-footer text-body-secondary">
@@ -599,7 +599,7 @@
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-scr-view-{{ $latest_per->id_period }}">Cek</button>
                                 @elseif (count($count->where('id_period', $latest_per->id_period)->whereIn('status', ['In Review'])) >= 1)
                                 <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal-scr-view-{{ $latest_per->id_period }}">Cek</button>
-                                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($officers))
+                                @elseif ($scores->where('id_period', $latest_per->id_period)->whereIn('status', ['Accepted'])->count() == count($employees))
                                 <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modal-scr-view-{{ $latest_per->id_period }}">Cek</button>
                                 @else
                                 <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-scr-view-{{ $latest_per->id_period }}">Cek</button>
@@ -733,7 +733,7 @@
                         <div class="row g-0">
                             <div class="col-auto">
                                 @if (!empty($latest_best))
-                                <img src="{{ url('Images/History/Portrait/'.$latest_best->officer_photo) }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" class="img-fluid" style="height:140px;border-top-left-radius:7px;" alt="...">
+                                <img src="{{ url('Images/History/Portrait/'.$latest_best->employee_photo) }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" class="img-fluid" style="height:140px;border-top-left-radius:7px;" alt="...">
                                 @else
                                 <img src="{{ url('Images/History/Portrait/'.$latest_best) }}" onerror="this.onerror=null; this.src='{{ asset('Images/Default/Portrait.png') }}'" class="img-fluid" style="height:140px;border-top-left-radius:7px;" alt="...">
                                 @endif
@@ -741,14 +741,14 @@
                             <div class="col-auto">
                                 <div class="card-body">
                                     <h4 class="card-title">Karyawan Terbaik Saat Ini</h4>
-                                    <h5 class="card-text">{{ $latest_best->officer_name ?? 'Belum Ada' }}</h5>
+                                    <h5 class="card-text">{{ $latest_best->employee_name ?? 'Belum Ada' }}</h5>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer text-body-secondary">
                             <div class="row align-items-center">
                                 <div class="col-9 px-4">
-                                    Periode: {{ $latest_best->period_name ?? 'Belum Tersedia' }}
+                                    Periode: {{ $latest_best->period->name ?? 'Belum Tersedia' }}
                                 </div>
                                 <div class="col-3 px-4 d-grid gap-2 d-md-flex justify-content-md-end">
                                     @if (count($voteresults) != 0)
@@ -771,7 +771,7 @@
                                     <ol class="card-text">
                                         @if (!empty($history_prd))
                                             @forelse ($latest_top3->where('id_period', $history_prd->id_period)->take(3) as $latest)
-                                            <li>{{ $latest->officer_name}}</li>
+                                            <li>{{ $latest->employee_name}}</li>
                                             @empty
                                             <p>Belum Ada</p>
                                             @endforelse
@@ -785,7 +785,7 @@
                         <div class="card-footer text-body-secondary">
                             <div class="row align-items-center">
                                 <div class="col-9 px-4">
-                                    Periode: {{ $history_prd->period_name ?? 'Belum Aktif' }}
+                                    Periode: {{ $history_prd->period->name ?? 'Belum Aktif' }}
                                 </div>
                                 <div class="col-3 px-4 d-grid gap-2 d-md-flex justify-content-md-end">
                                     @if (!empty($history_prd))
@@ -815,16 +815,16 @@
 @endif
 @if (Auth::user()->part == "Dev")
 <div class="row row-cols-1 row-cols-md-3 align-items-md-stretch g-4">
-    <!--OFFICERS COUNTER CARD-->
+    <!--EMPLOYEES COUNTER CARD-->
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-10">
-                        <h4 class="card-title">Jumlah Pegawai</h4>
+                        <h4 class="card-title">Jumlah Karyawan</h4>
                     </div>
                     <div class="col-2 d-grid gap-2 d-md-flex justify-content-md-end">
-                        <h4>{{ count($officers) }}</h4>
+                        <h4>{{ count($employees) }}</h4>
                     </div>
                 </div>
             </div>
@@ -893,15 +893,15 @@
 </div>
 @endif
 
-<!--OFFICER-->
-@if (Auth::user()->part == "Pegawai")
+<!--EMPLOYEE-->
+@if (Auth::user()->part == "Karyawan")
 <div>
     <form action="" method="GET">
         <div class="input-group input-group-sm mb-3">
             <select class="form-select" id="year" name="year" aria-label="Small select example">
                 <option selected disabled>Pilih Tahun Periode Nilai Akhir</option>
                 @foreach ($hscore_year as $year)
-                <option value="{{ $year->period_year }}" {{ request('year') ==  $year->period_year ? 'selected' : '' }}>{{ $year->period_year }}</option>
+                <option value="{{ $year->year }}" {{ request('year') ==  $year->year ? 'selected' : '' }}>{{ $year->year }}</option>
                 @endforeach
             </select>
             <button id="editsaveBtn" class="btn btn-primary" type="submit">Pilih</button>
@@ -951,7 +951,7 @@
                             @if (!empty($input))
                             <table class="table">
                                 @foreach ($criterias->where('id_period', $latest_per->id_period) as $criteria)
-                                    @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $latest_per->id_period) as $input)
+                                    @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_employee', Auth::user()->id_employee)->where('id_period', $latest_per->id_period) as $input)
                                     <tr>
                                         <th scope="row">{{ $criteria->name }}</th>
                                         <td>{{ $input->input_raw }}</td>
@@ -977,12 +977,12 @@
                     @else
                     <div class="tab-pane fade show active" id="previous-tab-pane" role="tabpanel" aria-labelledby="previous-tab" tabindex="0">
                     @endif
-                        <h5 class="card-title">{{ $hper_latest->period_name ?? '' }}</h5>
+                        <h5 class="card-title">{{ $hper_latest->period->name ?? '' }}</h5>
                         <p class="card-text">
                             @if (!empty($hper_latest))
                             <table class="table">
                                 @foreach ($hcriterias->where('id_period', $hper_latest->id_period) as $criteria)
-                                    @foreach ($histories->where('id_criteria', $criteria->id_criteria)->where('id_officer', Auth::user()->nip)->where('id_period', $hper_latest->id_period) as $input)
+                                    @foreach ($histories->where('id_criteria', $criteria->id_criteria)->where('id_employee', Auth::user()->id_employee)->where('id_period', $hper_latest->id_period) as $input)
                                     <tr>
                                         <th scope="row">{{ $criteria->criteria_name }}</th>
                                         <td>{{ $input->input_raw }} {{ $criteria->unit }}
@@ -1018,7 +1018,7 @@
             </div>
             <div class="card-body">
                 @if (!empty($hper_year))
-                <h5 class="card-title">Riwayat Nilai Akhir ({{ $hper_year->period_year }})</h5>
+                <h5 class="card-title">Riwayat Nilai Akhir ({{ $hper_year->year }})</h5>
                 <p class="card-text">
                     <table class="table">
                         <thead>
@@ -1029,10 +1029,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($hscores->where('id_officer', Auth::user()->nip)->where('period_year', $hper_year->period_year) as $score)
+                            @foreach ($hscores->where('id_employee', Auth::user()->id_employee)->where('year', $hper_year->year) as $score)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $score->period_name }}</td>
+                                <td>{{ $score->period->name }}</td>
                                 <td>{{ $score->final_score }}</td>
                             </tr>
                             @endforeach

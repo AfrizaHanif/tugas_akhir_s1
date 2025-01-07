@@ -13,6 +13,7 @@
 
 <!--MODALS-->
 @section('modals')
+@include('Pages.Includes.Components.Modal.report')
 @endsection
 
 <!--TOASTS-->

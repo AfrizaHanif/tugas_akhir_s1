@@ -40,7 +40,7 @@ class Criteria extends Model
     }
     public function inputraw()
     {
-        return $this->hasMany(InputRAW::class, 'id_officer', 'id_officer');
+        return $this->hasMany(InputRAW::class, 'id_employee', 'id_employee');
     }
     public function crips()
     {

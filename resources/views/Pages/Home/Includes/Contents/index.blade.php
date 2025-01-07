@@ -20,9 +20,9 @@
         </video>
         <div class="container">
             <div class="p-4 text-center rounded-3">
-                <h1 class="text-light">Selamat Kepada {{ $latest_best->officer_name }}</h1>
+                <h1 class="text-light">Selamat Kepada {{ $latest_best->employee_name }}</h1>
                 <p class="text-light lead">
-                    Atas terpilihnya menjadi <strong>KARYAWAN TERBAIK</strong> pada Periode {{ $latest_best->period_name }}
+                    Atas terpilihnya menjadi <strong>KARYAWAN TERBAIK</strong> pada Periode {{ $latest_best->period->name }}
                 </p>
                 <div data-bs-theme="dark">
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample" aria-label="Close"></button>

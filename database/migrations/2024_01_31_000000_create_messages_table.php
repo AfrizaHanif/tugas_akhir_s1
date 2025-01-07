@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->bigIncrements('id');
-            //$table->char('id_officer', 11);
-            $table->char('officer_nip', 11);
-            $table->string('officer_name', 50);
-            //$table->string('officer_position', 50);
+            $table->char('id_employee', 11);
+            $table->foreign('id_employee')->references('id_employee')->on('employees');
+            //$table->char('employee_nip', 11);
+            //$table->string('employee_name', 50);
+            //$table->string('employee_position', 50);
             $table->char('type', 15);
             $table->string('message_in', 200);
             $table->string('message_out', 200)->nullable();

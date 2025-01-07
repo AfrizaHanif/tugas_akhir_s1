@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Log;
 use App\Models\Position;
-use App\Models\Officer;
+use App\Models\Employee;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,9 +18,9 @@ class PositionController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //COMBINE KODE
@@ -28,13 +28,13 @@ class PositionController extends Controller
         $total_id = Position::count();
         $count_id = $total_id += 1;
         $str_id = str_pad($count_id, 3, '0', STR_PAD_LEFT);
-        $id_position = "DPT-".$str_id;
+        $id_position = "POS-".$str_id;
         */
         $id_position = IdGenerator::generate([
             'table'=>'positions',
             'field'=>'id_position',
             'length'=>7,
-            'prefix'=>'DPT-',
+            'prefix'=>'POS-',
             'reset_on_prefix_change'=>true,
         ]);
 
@@ -62,7 +62,7 @@ class PositionController extends Controller
             ]);
 
             //RETURN TO VIEW
-            return redirect()->route($redirect_route)->withErrors($validator)->with('modal_redirect', 'modal-dep-create')->with('code_alert', 3);
+            return redirect()->route($redirect_route)->withErrors($validator)->withInput()->with('modal_redirect', 'modal-dep-create')->with('code_alert', 3);
         }
 
         //STORE DATA
@@ -90,9 +90,9 @@ class PositionController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //VALIDATE DATA
@@ -146,24 +146,26 @@ class PositionController extends Controller
         //SET REDIRECT
         $redirect_route = '';
         if(Auth::user()->part == "Admin"){
-            $redirect_route = 'admin.masters.officers.index';
+            $redirect_route = 'admin.masters.employees.index';
         }else{
-            $redirect_route = 'developer.masters.officers.index';
+            $redirect_route = 'developer.masters.employees.index';
         }
 
         //CHECK IF EXISTS
-        if(Officer::where('id_position', $position->id_position)->exists()) {
+        if(Employee::where('id_position', $position->id_position)
+        //->where('status', 'Active')
+        ->exists()) {
             //CREATE A LOG
             Log::create([
                 'id_user'=>Auth::user()->id_user,
                 'activity'=>'Jabatan',
                 'progress'=>'Delete',
                 'result'=>'Error',
-                'descriptions'=>'Hapus Jabatan Tidak Berhasil (Jabatan '.$position->name.' Terhubung Dengan Beberapa Pegawai)',
+                'descriptions'=>'Hapus Jabatan Tidak Berhasil (Jabatan '.$position->name.' Terhubung Dengan Beberapa Karyawan)',
             ]);
 
             //RETURN TO VIEW
-            return redirect()->route($redirect_route)->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Pegawai)')->with('modal_redirect',  'modal-dep-view')->with('code_alert', 2);
+            return redirect()->route($redirect_route)->with('fail', 'Hapus Jabatan Tidak Berhasil (Terhubung dengan tabel Karyawan)')->with('modal_redirect',  'modal-dep-view')->with('code_alert', 2);
         }else{
             //CLEAR
         }

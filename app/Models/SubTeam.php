@@ -28,12 +28,12 @@ class SubTeam extends Model
     }
 
     //CONNECT FROM ANOTHER TABLE
-    public function officer_1()
+    public function employee_1()
     {
-        return $this->hasMany(Officer::class, 'id_sub_team_1', 'id_sub_team');
+        return $this->hasMany(Employee::class, 'id_sub_team_1', 'id_sub_team');
     }
-    public function officer_2()
+    public function employee_2()
     {
-        return $this->hasMany(Officer::class, 'id_sub_team_2', 'id_sub_team');
+        return $this->hasMany(Employee::class, 'id_sub_team_2', 'id_sub_team');
     }
 }
