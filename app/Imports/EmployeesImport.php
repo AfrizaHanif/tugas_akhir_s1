@@ -66,8 +66,12 @@ class EmployeesImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Wit
             */
 
             //CHECK IF HR
-            if($row['is_hr'] == 'Ya'){
-                $is_hr = true;
+            if(!empty($row['is_hr'])){
+                if($row['is_hr'] == 'Ya'){
+                    $is_hr = true;
+                }else{
+                    $is_hr = false;
+                }
             }else{
                 $is_hr = false;
             }
@@ -75,7 +79,7 @@ class EmployeesImport implements ToCollection, SkipsEmptyRows, SkipsOnError, Wit
             if($this->import_method == 'reset'){
                 //IMPORT DATA
                 if(!empty($positions->id_position) && !empty($subteams1->id_sub_team)){
-                    Employee::insert([
+                    Employee::insertOrIgnore([
                         'id_employee' => $row['nip'],
                         'name'=>$row['nama'],
                         'id_position'=>$positions->id_position,

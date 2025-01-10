@@ -35,6 +35,7 @@ class Employee extends Model
         'religion',
         'is_lead',
         'photo',
+        'is_hr',
         //'leader',
         'status',
     ];

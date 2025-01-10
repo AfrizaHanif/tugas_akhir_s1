@@ -13,7 +13,7 @@
 <!--MENU-->
 <p>
     <!--ADD USER-->
-    @if (count($users) == count($employees)) <!--IF ALL OFFICERS HAS USERS-->
+    @if (count($users) == count($employees)) <!--IF ALL EMPLOYEES HAS USERS-->
     <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Semua pegawai telah memiliki pengguna">
         <a class="btn btn-secondary disabled">
             <i class="bi bi-person-add"></i>

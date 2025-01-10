@@ -38,10 +38,6 @@ class Criteria extends Model
     {
         return $this->hasMany(Input::class, 'id_criteria', 'id_criteria');
     }
-    public function inputraw()
-    {
-        return $this->hasMany(InputRAW::class, 'id_employee', 'id_employee');
-    }
     public function crips()
     {
         return $this->hasMany(Crips::class, 'id_criteria', 'id_criteria');

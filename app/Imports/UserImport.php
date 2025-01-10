@@ -85,7 +85,7 @@ class UserImport implements ToCollection, WithHeadingRow, WithValidation, SkipsO
 
             if($this->import_method == 'reset'){
                 if(!empty($positions->id_position)){
-                    User::insert([
+                    User::insertOrIgnore([
                         'id_user'=>$id_user,
                         'id_employee'=>$row['nip'],
                         'username'=>$row['nip'],

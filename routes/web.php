@@ -4,7 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JSONController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\OfficerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SubTeamsController;
@@ -22,8 +22,8 @@ use App\Http\Controllers\Admin\ScoreController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Home\ScoreController as HomeScoreController;
-use App\Http\Controllers\Officer\ReportController as OfficerReportController;
-use App\Http\Controllers\Officer\ScoreController as OfficerScoreController;
+use App\Http\Controllers\Employee\ReportController as EmployeeReportController;
+use App\Http\Controllers\Employee\ScoreController as EmployeeScoreController;
 //use App\Http\Controllers\ReportController as AllReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Route;
 //FRONT END
 //HOMEPAGE
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::controller(OfficerController::class)->group(function() {
+Route::controller(EmployeeController::class)->group(function() {
     Route::prefix('employees')->name('employees.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/search', 'search')->name('search');
@@ -92,9 +92,9 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         //MASTERS
         Route::prefix('masters')->name('masters.')->group(function () {
-            Route::resource('/employees', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            Route::resource('/employees', EmployeeController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
             Route::prefix('employees')->name('employees.')->group(function () {
-                Route::controller(OfficerController::class)->group(function() {
+                Route::controller(EmployeeController::class)->group(function() {
                     Route::get('/search', 'search')->name('search');
                     Route::post('/import', 'import')->name('import');
                     Route::post('/export', 'export')->name('export');
@@ -226,19 +226,19 @@ Route::middleware(['auth', 'checkAdmin'])->group(function () {
 });
 
 //EMPLOYEE'S DASHBOARD
-Route::middleware(['auth', 'checkOfficer'])->group(function () {
+Route::middleware(['auth', 'checkEmployee'])->group(function () {
     Route::get('/employee', [DashboardController::class, 'employee'])->name('employee');
     Route::prefix('employee')->name('employee.')->group(function () {
         Route::prefix('employees')->name('employees.')->group(function () {
-            Route::controller(OfficerController::class)->group(function() {
+            Route::controller(EmployeeController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::get('/search', 'search')->name('search');
                 Route::post('/export', 'export')->name('export');
             });
         });
-        Route::get('/eotm', [OfficerScoreController::class, 'index'])->name('eotm.index');
+        Route::get('/eotm', [EmployeeScoreController::class, 'index'])->name('eotm.index');
         Route::prefix('reports')->name('reports.')->group(function () {
-            Route::controller(OfficerReportController::class)->group(function() {
+            Route::controller(EmployeeReportController::class)->group(function() {
                 Route::get('/', 'index')->name('index');
                 Route::get('/score/{month}/{year}', 'score')->name('score');
             });
@@ -271,9 +271,9 @@ Route::middleware(['auth', 'checkDev'])->group(function () {
     Route::get('/developer', [DashboardController::class, 'developer'])->name('developer');
     Route::prefix('developer')->name('developer.')->group(function () {
         Route::prefix('masters')->name('masters.')->group(function () {
-            Route::resource('/employees', OfficerController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
+            Route::resource('/employees', EmployeeController::class, ['only' => ['index', 'store', 'update', 'destroy']]);
             Route::prefix('employees')->name('employees.')->group(function () {
-                Route::controller(OfficerController::class)->group(function() {
+                Route::controller(EmployeeController::class)->group(function() {
                     Route::get('/', 'index')->name('index');
                     Route::get('/search', 'search')->name('search');
                     Route::post('/import', 'import')->name('import');

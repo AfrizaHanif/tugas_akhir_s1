@@ -948,13 +948,13 @@
                     @endif
                         <h5 class="card-title">{{ $latest_per->name ?? '' }}</h5>
                         <p class="card-text">
-                            @if (!empty($input))
+                            @if (!empty($latest_per))
                             <table class="table">
-                                @foreach ($criterias->where('id_period', $latest_per->id_period) as $criteria)
+                                @foreach ($criterias as $criteria)
                                     @forelse ($inputs->where('id_criteria', $criteria->id_criteria)->where('id_employee', Auth::user()->id_employee)->where('id_period', $latest_per->id_period) as $input)
                                     <tr>
                                         <th scope="row">{{ $criteria->name }}</th>
-                                        <td>{{ $input->input_raw }}</td>
+                                        <td>{{ $input->input_raw }} {{ $criteria->unit }}</td>
                                     </tr>
                                     @empty
                                     <tr>
