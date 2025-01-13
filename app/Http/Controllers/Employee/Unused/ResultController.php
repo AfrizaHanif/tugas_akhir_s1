@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Employee;
+namespace App\Http\Controllers\Employee\Unused;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;

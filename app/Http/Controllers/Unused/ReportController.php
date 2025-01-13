@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Unused;
 
+use App\Http\Controllers\Controller;
 use App\Models\Position;
 use App\Models\HistoryInput;
 use App\Models\HistoryScore;

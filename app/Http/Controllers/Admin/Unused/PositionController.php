@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Unused;
 
 use App\Http\Controllers\Controller;
 use App\Models\Log;

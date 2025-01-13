@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Developer;
+namespace App\Http\Controllers\Developer\Unused;
 
 use App\Http\Controllers\Controller;
 use App\Imports\EmployeesImport;

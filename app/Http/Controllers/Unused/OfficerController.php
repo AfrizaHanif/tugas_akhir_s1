@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Unused;
 
-use App\Exports\EmployeesExport;
 use App\Http\Controllers\Controller;
+use App\Exports\EmployeesExport;
 use App\Imports\CheckImport;
 use App\Imports\EmployeesImport;
 //use App\Imports\EmployeesModalImport;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home;
+namespace App\Http\Controllers\Home\Unused;
 
 use App\Http\Controllers\Controller;
 use App\Models\Position;

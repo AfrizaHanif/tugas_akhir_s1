@@ -118,13 +118,13 @@ class CripsController extends Controller
                     'activity'=>'Data Crips',
                     'progress'=>'Create',
                     'result'=>'Error',
-                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama) ('.$criteria->name.')',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Pertama lebih besar daripada Angka Range Kedua) ('.$criteria->name.')',
                 ]);
 
                 //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua lebih besar daripada Angka Range Pertama)')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama lebih besar daripada Angka Range Kedua)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $request->id_criteria)
