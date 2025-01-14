@@ -72,6 +72,51 @@ class CripsController extends Controller
             }
         }
 
+        //IF LESS AND MORE THAN ARE EXIST (NEW CODE FOR BUG FIX)
+        $less_crips = Crips::where('id_criteria', $request->id_criteria)->where('value_type', 'Less')->count();
+        $more_crips = Crips::where('id_criteria', $request->id_criteria)->where('value_type', 'More')->count();
+        if($request->value_type == 'Less'){
+            if($less_crips >= 1){
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Tipe Range Kurang Dari telah terdaftar) ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Tipe Range Kurang Dari telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }elseif($request->value_type == 'More'){
+            if($more_crips >= 1){
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Tipe Range Lebih Dari telah terdaftar) ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Tipe Range Lebih Dari telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }
+
         //CHECK INPUT RANGE ABNORMAL
         $check_range = Criteria::where('id_criteria', $request->id_criteria)->first();
         if($request->value_from > $check_range->max){ //IF RANGE FROM EXCEED MAXIMUM SCORE
@@ -214,13 +259,31 @@ class CripsController extends Controller
                     'activity'=>'Data Crips',
                     'progress'=>'Create',
                     'result'=>'Error',
-                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$criteria->name.')',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$criteria->name.')',
                 ]);
 
                 //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $request->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_to >= $crips->value_from) && ($request->value_to <= $crips->criteria->max) && ($crips->value_type == 'More')){ //IF INPUT RANGE TO INSIDE REGISTERED LAST RANGE (NEW CODE FOR BUG FIX)
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Create',
+                    'result'=>'Error',
+                    'descriptions'=>'Tambah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Tambah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $request->id_criteria)
@@ -299,6 +362,51 @@ class CripsController extends Controller
                 return redirect()
                 ->route('admin.masters.criterias.index')
                 ->with('fail','Ubah Data Crips Tidak Berhasil (Proses Verifikasi Sedang Berjalan)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }
+
+        //IF LESS AND MORE THAN ARE EXIST (NEW CODE FOR BUG FIX)
+        $less_crips = Crips::where('id_criteria', $crip->id_criteria)->where('value_type', 'Less')->count();
+        $more_crips = Crips::where('id_criteria', $crip->id_criteria)->where('value_type', 'More')->count();
+        if($request->value_type == 'Less'){
+            if($less_crips >= 1){
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Tipe Range Kurang Dari telah terdaftar) ('.$crip->name.') ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Tipe Range Kurang Dari telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }
+        }elseif($request->value_type == 'More'){
+            if($more_crips >= 1){
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Tipe Range Lebih Dari telah terdaftar) ('.$crip->name.') ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Tipe Range Lebih Dari telah terdaftar)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $crip->id_criteria)
@@ -450,13 +558,31 @@ class CripsController extends Controller
                     'activity'=>'Data Crips',
                     'progress'=>'Update',
                     'result'=>'Error',
-                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$crip->name.') ('.$criteria->name.')',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$crip->name.') ('.$criteria->name.')',
                 ]);
 
                 //RETURN TO VIEW
                 return redirect()
                 ->route('admin.masters.criterias.index')
-                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Pertama yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
+                ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
+                ->with('modal_redirect', 'modal-crp-view')
+                ->with('id_redirect', $crip->id_criteria)
+                ->with('code_alert', 2);
+            }elseif(($request->value_to >= $crips->value_from) && ($request->value_to <= $crips->criteria->max) && ($crips->value_type == 'More')){ //IF INPUT RANGE TO INSIDE REGISTERED LAST RANGE (NEW CODE FOR BUG FIX)
+                //CREATE A LOG
+                Log::create([
+                    'id_user'=>Auth::user()->id_user,
+                    'activity'=>'Data Crips',
+                    'progress'=>'Update',
+                    'result'=>'Error',
+                    'descriptions'=>'Ubah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Lebih Dari) yang telah terdaftar) ('.$crip->name.') ('.$criteria->name.')',
+                ]);
+
+                //RETURN TO VIEW
+                return redirect()
+                ->route('admin.masters.criterias.index')
+                ->with('fail','Ubah Data Crips Tidak Berhasil (Angka Range Kedua yang diisi berada di Range (Lebih Dari) yang telah terdaftar)')
                 ->withInput(['tab_redirect'=>'pills-'.$tab->id_category])
                 ->with('modal_redirect', 'modal-crp-view')
                 ->with('id_redirect', $crip->id_criteria)

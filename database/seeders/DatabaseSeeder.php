@@ -403,7 +403,7 @@ class DatabaseSeeder extends Seeder
             //'nip' => '340018542',
             'name' => 'Peni Meivita, S.Si., M.M.',
             'id_position' => 'POS-006',
-            'id_sub_team_1' => 'STM-009',
+            'id_sub_team_1' => 'STM-002', //STM-009
             'email' => 'peni@bps.com',
             'phone' => '081234567894',
             'place_birth' => 'Surabaya',
@@ -582,7 +582,7 @@ class DatabaseSeeder extends Seeder
         DB::table('criterias')->insert([
             'id_criteria' => 'CRT-003',
             'id_category' => 'CAT-002',
-            'name' => 'Capaian Kinerja Karyawan',
+            'name' => 'Capaian Kinerja Pegawai', //FIXED
             'weight' => '0.15',
             'attribute' => 'Benefit',
             //'level' => '9',

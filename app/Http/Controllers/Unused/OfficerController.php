@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
-class EmployeeController extends Controller
+class OfficerController extends Controller
 {
     public function index()
     {

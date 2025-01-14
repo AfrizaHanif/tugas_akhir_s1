@@ -30,8 +30,8 @@
                         <select class="form-select" id="source" name="source" required>
                             <option selected disabled value="">---Pilih Sumber Data---</option>
                             <option value="Presensi" {{ old('source') == 'Presensi' ? 'selected' : null }}>Presensi</option>
-                            <option value="SKP" {{ old('source') == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Karyawan (SKP)</option>
-                            <option value="CKP" {{ old('source') == 'CKP' ? 'selected' : null }}>Capaian Kinerja Karyawan (CKP)</option>
+                            <option value="SKP" {{ old('source') == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Pegawai (SKP)</option> <!--FIXED-->
+                            <option value="CKP" {{ old('source') == 'CKP' ? 'selected' : null }}>Capaian Kinerja Pegawai (CKP)</option> <!--FIXED-->
                         </select>
                     </div>
                 </div>
@@ -83,8 +83,8 @@
                         <select class="form-select" id="source" name="source" required>
                             <option selected disabled value="">---Pilih Sumber Data---</option>
                             <option value="Presensi" {{ $category->source == 'Presensi' ? 'selected' : null }}>Presensi</option>
-                            <option value="SKP" {{ $category->source == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Karyawan (SKP)</option>
-                            <option value="CKP" {{ $category->source == 'CKP' ? 'selected' : null }}>Capaian Kinerja Karyawan (CKP)</option>
+                            <option value="SKP" {{ $category->source == 'SKP' ? 'selected' : null }}>Sasaran Kinerja Pegawai (SKP)</option> <!--FIXED-->
+                            <option value="CKP" {{ $category->source == 'CKP' ? 'selected' : null }}>Capaian Kinerja Pegawai (CKP)</option> <!--FIXED-->
                         </select>
                     </div>
                 </div>
