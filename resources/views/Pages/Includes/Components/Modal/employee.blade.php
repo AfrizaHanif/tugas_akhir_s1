@@ -228,7 +228,7 @@
                                     <ol>
                                         <li>Sebelum melakukan import, buatlah file Excel baru, dan pastikan file tersebut memenuhi ketentuan berikut:</li>
                                         <ul>
-                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data karyawan.</li>
+                                            <li>Wajib ada <b>NIP</b> agar dapat memasukkan data sesuai dengan data karyawan.</li>
                                             <li>Samakan nama kolom dengan ketentuan yang diberikan di tab <b>Sumber Kolom</b> agar proses Import Karyawan berjalan dengan lancar.</li>
                                             <li>Jika ada penamaan jabatan dan tim (Utama dan cadangan) terdapat kata yang berbeda dengan sumber data, maka sesuaikan dengan sumber data yang ada.</li>
                                             <li>Untuk karyawan yang tidak memiliki tim cadangan dan foto, bisa dikosongkan.</li>

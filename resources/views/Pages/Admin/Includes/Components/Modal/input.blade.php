@@ -77,7 +77,7 @@
                                     <ol>
                                         <li>Sebelum melakukan import, buatlah file Excel baru, dan pastikan file tersebut memenuhi ketentuan berikut:</li>
                                         <ol>
-                                            <li>Wajib ada <b>NIK</b> agar dapat memasukkan data sesuai dengan data karyawan. Anda juga dapat menambahkan kolom <b>Nama Karyawan</b> sebagai pelengkap.</li>
+                                            <li>Wajib ada <b>NIP</b> agar dapat memasukkan data sesuai dengan data karyawan. Anda juga dapat menambahkan kolom <b>Nama Karyawan</b> sebagai pelengkap.</li>
                                             <li>Samakan nama kolom dengan ketentuan yang diberikan di tab <b>Sumber Kolom</b> (Contoh: Jika ingin import <b>Presensi</b>, maka kolom yang harus ada adalah kriteria dari sumber <b>Presensi</b>).</li>
                                         </ol>
                                         <li>Pilih file yang akan di import ke dalam sistem. Pastikan file tersebut mengandung nama seperti berikut:</li>
