@@ -134,7 +134,7 @@ class DashboardController extends Controller
         $latest_per = Period::where('progress_status', 'Scoring')->orWhere('progress_status', 'Verifying')->latest()->first(); //GET CURRENT PERIOD
         $latest_best = HistoryResult::orderBy('id', 'DESC')->latest()->first(); //CURRENT WINNER
         $latest_top3 = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->latest()->get(); //CURRENT TOP 3 BEST SCORES
-        $history_prd = HistoryScore::join('periods', 'periods.id_period', '=', 'periods.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.id_period', 'DESC')->first(); //GET FINISHED PERIOD
+        $history_prd = HistoryScore::join('periods', 'periods.id_period', '=', 'periods.id_period')->select('periods.id_period', 'periods.name')->groupBy('periods.id_period', 'periods.name')->orderBy('periods.updated_at', 'DESC')->where('periods.progress_status', 'Finished')->first(); //GET FINISHED PERIOD
         $voteresults = HistoryResult::orderBy('id_period', 'ASC')->get(); //GET PREVIOUS RESULTS
         $scoreresults = HistoryScore::orderBy('final_score', 'DESC')->orderBy('second_score', 'DESC')->get(); //GET OLD SCORES RESULT
         //dd($scoreresults);
