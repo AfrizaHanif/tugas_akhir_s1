@@ -41,14 +41,16 @@ Pastikan perangkat Anda sudah terinstall:
     composer install
     ```
 
-3. **Konfigurasi Environment Salin file .env.example menjadi .env dan sesuaikan konfigurasi database Anda.**
+3. **Konfigurasi Environment**
+   Salin file .env.example menjadi .env dan sesuaikan konfigurasi database Anda.
 
     ```bash
     cp .env.example .env
     php artisan key:generate
     ```
 
-4. **Migrasi Database & Seeding Jalankan perintah berikut untuk membuat struktur tabel dan mengisi data awal (jika tersedia).**
+4. **Migrasi Database & Seeding**
+   Jalankan perintah berikut untuk membuat struktur tabel dan mengisi data awal (jika tersedia).
 
     ```bash
     php artisan migrate --seed
