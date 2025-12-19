@@ -62,7 +62,9 @@ Pastikan perangkat Anda sudah terinstall:
     php artisan serve
     ```
 
-## 🔑 Akun Demo (Opsional)
+## 🖥️ Testing Aplikasi
+
+### 🔑 Akun Demo
 
 Untuk mencoba fitur hak akses, gunakan akun berikut:
 
