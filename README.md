@@ -6,9 +6,9 @@ Aplikasi berbasis web yang dikembangkan untuk mendigitalisasi dan mengoptimalkan
 
 ## 🚀 Fitur Utama
 
--   **Implementasi Algoritma SAW:** Perhitungan otomatis nilai normalisasi dan peringkat akhir karyawan.
--   **Role-Based Authorization (RBAC):** Perbedaan hak akses antara Admin (Manajemen data & bobot), Kepala BPS Jawa Timur (Verifikasi), dan Pegawai (Melihat laporan).
--   **Dashboard Analytics:** Visualisasi data hasil penilaian.
+-   **Implementasi Algoritma SAW:** Perhitungan otomatis nilai normalisasi dan peringkat nilai akhir karyawan.
+-   **Role-Based Authorization (RBAC):** Perbedaan hak akses antara Admin (Manajemen data, bobot, dan pemasukkan data), Kepala BPS Jawa Timur (Verifikasi nilai akhir), dan Pegawai (Melihat laporan).
+-   **Validasi File:** Sistem dilengkapi dengan validasi nama file, validasi duplikasi data, serta pengecekan kelengkapan data kriteria sebelum diproses oleh algoritma SAW.
 -   **Optimasi Performa:** Memangkas waktu proses penentuan dari 4-5 minggu menjadi **01.79 menit**.
 
 ## 🛠️ Teknologi yang Digunakan
