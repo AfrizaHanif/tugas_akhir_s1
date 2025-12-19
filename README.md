@@ -76,7 +76,7 @@ Untuk mencoba fitur hak akses, gunakan akun berikut:
 
 Aplikasi mendukung pengisian data massal menggunakan Excel untuk mempercepat proses penilaian.
 
--   **Sampel File:** Silakan gunakan [1A. Test Import Presensi Januari 2024.xlsx](./demo-data/1A. Test Import Presensi Januari 2024.xlsx), [1B. Test Import CKP Januari 2024.xlsx](./demo-data/1B. Test Import CKP Januari 2024.xlsx), [1C. Test Import SKP Januari 2024.xlsx](./demo-data/1C. Test Import SKP Januari 2024.xlsx) yang tersedia di folder `demo-data`.
+-   **Sampel File:** Silakan gunakan file Excel yang tersedia di folder `demo-data`.
 -   **Cara Penggunaan:** Login sebagai Admin > Masuk ke menu Data Input > Klik Tombol Import > Upload file yang telah diunduh.
 
 ## 📝 Dokumentasi Akademik
